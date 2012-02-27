@@ -15,7 +15,7 @@
 
 	<!-- Input and output files -->
 	<bean id="inputfile" class="java.io.File">
-		<constructor-arg value="data/herbcat-ce.tsv" />
+		<constructor-arg value="data/herbcat-ce-dedupl-input.tsv" />
 	</bean>
 
 	<bean id="outputfile" class="java.io.File">
