@@ -1,0 +1,45 @@
+package org.kew.shs.dedupl.matchers;
+
+/**
+ * This matcher tests for equality between the two inputs (exact matches).
+ * @author nn00kg
+ *
+ */
+public class InitialSubstringMatcher implements Matcher {
+
+	public static int COST = 0;
+	public int prefixSize;
+	
+	public int getCost() {
+		return COST;
+	}
+
+	public boolean matches(String s1, String s2) {
+		boolean matches = false;
+		if (s1 == null && s2 == null)
+			matches = true;
+		else{
+			if ((s1.length() > prefixSize) && (s2.length() > prefixSize )){
+				matches=s1.substring(0, prefixSize).equals(s2.substring(0, prefixSize));
+			}
+		}
+		return matches;
+	}
+
+	public boolean isExact() {
+		return true;
+	}
+
+	public String getExecutionReport() {
+		return null;
+	}
+
+	public int getPrefixSize() {
+		return prefixSize;
+	}
+
+	public void setPrefixSize(int prefixSize) {
+		this.prefixSize = prefixSize;
+	}
+	
+}

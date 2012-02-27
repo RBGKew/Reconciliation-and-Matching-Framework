@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd">
+	
+	<diskStore path="java.io.tmpdir"/>
+
+	<defaultCache eternal="true" maxElementsInMemory="100" overflowToDisk="false" />
+    
+    <cache name="ldMatchCache" maxElementsInMemory="50000" eternal="true" overflowToDisk="true" 
+    	logging="true" statistics="true" />
+
+    <cache name="ngMatchCache" maxElementsInMemory="50000" eternal="true" overflowToDisk="true" 
+    	logging="true" statistics="true" />
+    
+    <cache name="actMatchCache" maxElementsInMemory="50000" eternal="true" overflowToDisk="true" 
+    	logging="true" statistics="true" />    	
+
+    <cache name="clctMatchCache" maxElementsInMemory="50000" eternal="true" overflowToDisk="true" 
+    	logging="true" statistics="true" />
+    	    	
+    <cache name="nctMatchCache" maxElementsInMemory="50000" eternal="true" overflowToDisk="true" 
+    	logging="true" statistics="true" />    	
+    
+    <!--cache name="lucGetCache" maxElementsInMemory="50000" eternal="false" timeToIdleSeconds="120" overflowToDisk="true" 
+    	logging="true" statistics="true" />
+    
+    <cache name="lucQueryCache" maxElementsInMemory="50000" eternal="false" timeToIdleSeconds="120" overflowToDisk="true" 
+    	logging="true" statistics="true" /-->
+    	
+</ehcache>
