@@ -1,6 +1,5 @@
 package org.kew.shs.dedupl;
 
-import java.io.File;
 
 public interface MatchInvestigator {
 

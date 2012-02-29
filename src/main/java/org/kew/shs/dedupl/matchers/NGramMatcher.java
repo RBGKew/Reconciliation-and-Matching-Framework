@@ -8,7 +8,8 @@ import org.apache.commons.lang.StringUtils;
 import com.googlecode.ehcache.annotations.Cacheable;
 
 /**
- * This matcher tests for common tokens after splitting the input strings into a sequence of ngrams.
+ * This matcher tests for common tokens after splitting the input strings into a sequence of ngrams. 
+ * The ngram length ("n") is configurable.
  * @author nn00kg
  *
  */

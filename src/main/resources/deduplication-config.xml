@@ -15,14 +15,14 @@
 
 	<!-- Input and output files -->
 	<bean id="inputfile" class="java.io.File">
-		<constructor-arg value="data/araceae-dedupl-input.txt" />
+		<constructor-arg value="data/poaceae-dedupl-input.txt" />
 	</bean>
 
 	<bean id="outputfile" class="java.io.File">
-		<constructor-arg value="data/araceae-dedupl-output.txt" />
+		<constructor-arg value="data/poaceae-dedupl-output.txt" />
 	</bean>
 	<bean id="reportfile" class="java.io.File">
-		<constructor-arg value="data/araceae-dedupl-report.txt" />
+		<constructor-arg value="data/poaceae-dedupl-report.txt" />
 	</bean>
 
 	<!-- Matchers:
@@ -63,7 +63,19 @@
 		class="org.kew.shs.dedupl.transformers.ZeroToBlankTransformer" />
 
 	<bean id="collationCleaner" 
-		class="org.kew.shs.dedupl.transformers.StripNonNumericCharactersTransformer" />
+		class="org.kew.shs.dedupl.transformers.CompositeTransformer">
+		<property name="transformers">
+			<util:list id="1">
+				<bean id="icollationCleaner" 
+					class="org.kew.shs.dedupl.transformers.StripNonAlphanumericCharactersTransformer" />
+				<bean id="rcollationCleaner" 
+					class="org.kew.shs.dedupl.transformers.RomanNumeralTransformer" />
+				<!--ref bean="icollationCleaner"/>
+				<ref bean="rcollationCleaner"/-->
+			</util:list>
+		</property>
+	</bean>
+		
 
 	<!-- Column based properties, these define: column index of the property 
 		in the input file, how these should be cleaned prior to storage (using 
@@ -129,7 +141,7 @@
 		p:outputFileDelimiter=":"
 		p:outputFile-ref="outputfile"
 		p:properties-ref="columnProperties"
-		p:loadReportFrequency="50000"
+		p:loadReportFrequency="5000"
 		p:writeComparisonReport="true"
 		p:reportFile-ref="reportfile"/>
 

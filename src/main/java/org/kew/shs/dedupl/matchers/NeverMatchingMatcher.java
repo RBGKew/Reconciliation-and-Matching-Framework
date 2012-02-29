@@ -1,7 +1,7 @@
 package org.kew.shs.dedupl.matchers;
 
 /**
- * This matcher tests for equality between the two inputs (exact matches).
+ * This matcher returns false in all cases.
  * @author nn00kg
  *
  */

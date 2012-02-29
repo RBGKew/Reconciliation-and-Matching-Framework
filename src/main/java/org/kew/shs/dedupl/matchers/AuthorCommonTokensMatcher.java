@@ -3,7 +3,7 @@ package org.kew.shs.dedupl.matchers;
 import com.googlecode.ehcache.annotations.Cacheable;
 
 /**
- * This matcher tests for equality between the two inputs (exact matches).
+ * This matcher tests for common tokens in two authorship strings
  * @author nn00kg
  *
  */
