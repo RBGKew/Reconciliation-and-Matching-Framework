@@ -138,8 +138,6 @@ public class LuceneDeduplicator implements Deduplicator{
 					if (match){
 						numMatches++;
 						bw.write(fromId + configuration.getOutputFileDelimiter() + toId + "\n");
-						//if (config.isWriteComparisonReport())
-						//	bw.write(LuceneUtils.docs2ComparisonString(fromDoc, toDoc, "#"));
 					}
 				}
 			}
@@ -190,7 +188,6 @@ public class LuceneDeduplicator implements Deduplicator{
 				}
 			}
 		}
-		//log.info(sb.toString());
 		return sb.toString();
 	}
 
