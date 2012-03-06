@@ -1,5 +1,7 @@
 package org.kew.shs.dedupl;
 
+import org.kew.shs.dedupl.configuration.DeduplicationConfiguration;;
+
 
 /**
  * This interface defines a Deduplicator
@@ -9,6 +11,7 @@ package org.kew.shs.dedupl;
 public interface Deduplicator{
 
 	public void run();
-	public void setConfiguration(Configuration config);
-	
+	public void setDataLoader(DataLoader dataLoader);
+	public void setConfiguration(DeduplicationConfiguration config);
+	public void setInvestigator(Investigator investigator);
 }

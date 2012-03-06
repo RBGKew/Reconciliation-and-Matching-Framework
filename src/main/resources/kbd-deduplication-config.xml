@@ -57,44 +57,44 @@
 		be used in the select to find possible matches, how these should match 
 		(using references to matchers as defined above) -->
 	<util:list id="columnProperties">
-		<bean class="org.kew.shs.dedupl.Property" 
+		<bean class="org.kew.shs.dedupl.configuration.Property" 
 			p:name="username"
 			p:columnIndex="1"
 			p:matcher-ref="levenshteinMatcher"
 			p:useInSelect="false"/>
-		<bean class="org.kew.shs.dedupl.Property"
+		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="email_address"
 			p:columnIndex="2"
 			p:matcher-ref="alwaysMatchingMatcher"
 			p:useInSelect="false"/>
-		<bean class="org.kew.shs.dedupl.Property"
+		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="email_username"
 			p:columnIndex="3"
 			p:matcher-ref="ngramMatcher"
 			p:indexInitial="true"/>
-		<bean class="org.kew.shs.dedupl.Property"
+		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="email_domain"
 			p:columnIndex="4"
 			p:matcher-ref="exactMatcher"
 			p:transformer-ref="stripNonAlphaCleaner"
 			p:useInSelect="true"
 			p:blanksMatch="false"/>
-		<bean class="org.kew.shs.dedupl.Property"
+		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="realname"
 			p:columnIndex="5"
 			p:matcher-ref="authorCommonTokensMatcher"/>
-		<bean class="org.kew.shs.dedupl.Property"
+		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="organisation"
 			p:columnIndex="6"
 			p:matcher-ref="capitalLettersMatcher"/>
-		<bean class="org.kew.shs.dedupl.Property"
+		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="country"
 			p:columnIndex="7"
 			p:matcher-ref="alwaysMatchingMatcher"
 			p:indexOriginal="true"/>
 	</util:list>
 
-	<bean id="config" class="org.kew.shs.dedupl.Configuration"
+	<bean id="config" class="org.kew.shs.dedupl.configuration.DeduplicationConfiguration"
 		p:inputFile-ref="inputfile"
 		p:inputFileDelimiter="\t"
 		p:outputFileDelimiter=":"

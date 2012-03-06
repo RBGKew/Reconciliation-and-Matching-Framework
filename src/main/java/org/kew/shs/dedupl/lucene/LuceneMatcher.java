@@ -1,13 +1,16 @@
 package org.kew.shs.dedupl.lucene;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
@@ -21,10 +24,9 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
 import org.kew.shs.dedupl.DataLoader;
-import org.kew.shs.dedupl.Deduplicator;
-import org.kew.shs.dedupl.Investigator;
+import org.kew.shs.dedupl.DataMatcher;
 import org.kew.shs.dedupl.configuration.Configuration;
-import org.kew.shs.dedupl.configuration.DeduplicationConfiguration;
+import org.kew.shs.dedupl.configuration.MatchConfiguration;
 import org.kew.shs.dedupl.configuration.Property;
 
 /**
@@ -32,7 +34,7 @@ import org.kew.shs.dedupl.configuration.Property;
  * @author nn00kg
  *
  */
-public class LuceneDeduplicator implements Deduplicator{
+public class LuceneMatcher implements DataMatcher{
 
 	private org.apache.lucene.util.Version luceneVersion;
 	private FSDirectory directory;
@@ -42,16 +44,15 @@ public class LuceneDeduplicator implements Deduplicator{
 	private QueryParser queryParser;
 
 	private DataLoader dataLoader;
-	private DeduplicationConfiguration configuration;
-	private Investigator investigator;
+	private MatchConfiguration configuration;
 	
-	private static Logger log = Logger.getLogger(LuceneDeduplicator.class);
+	private static Logger log = Logger.getLogger(LuceneMatcher.class);
 	
-	public DeduplicationConfiguration getConfiguration() {
+	public MatchConfiguration getConfiguration() {
 		return configuration;
 	}
 
-	public void setConfiguration(DeduplicationConfiguration config) {
+	public void setConfiguration(MatchConfiguration config) {
 		this.configuration = config;
 	}
 
@@ -65,7 +66,7 @@ public class LuceneDeduplicator implements Deduplicator{
 
 	public void loadData(){
 		dataLoader.setConfiguration(configuration);
-		dataLoader.load();
+		dataLoader.load(configuration.getStoreFile());
 	}
 
 	public void run(){
@@ -76,75 +77,62 @@ public class LuceneDeduplicator implements Deduplicator{
 		Set<String> alreadyProcessed = new HashSet<String>();
 		
 		try {
+			
 			log.debug(new java.util.Date(System.currentTimeMillis()));
-			
-			IndexSearcher indexSearcher = new IndexSearcher(directory);
-			
-			// Sort properties in order of cost:
-			Collections.sort(configuration.getProperties(),  new Comparator<Property>() {
-		        public int compare(final Property p1,final Property p2) {
-		        	return Integer.valueOf(p1.getMatcher().getCost()).compareTo(Integer.valueOf(p2.getMatcher().getCost()));
-		        }
-		    });
-			
-			// Open the specified output file for writing 
-			BufferedWriter bw = new BufferedWriter(new FileWriter(configuration.getOutputFile()));
-			
-			// Loop over all documents in index
-			indexReader = IndexReader.open(directory);
-			int numMatches = 0;
-			for (int i=0; i<indexReader.maxDoc(); i++) { 
-			    if (indexReader.isDeleted(i)) 
-			        continue;
-			    if (i % configuration.getAssessReportFrequency() == 0){
-			    	log.info("Assessed " + i + " records, found " + numMatches + " duplicates");
-			    	bw.flush();
-			    }
 
-			    Document fromDoc = getFromLucene(i);
-			    
-			    log.debug(LuceneUtils.doc2String(fromDoc));
-			    
-			    String fromId = fromDoc.get(Configuration.ID_FIELD_NAME);
+			IndexSearcher indexSearcher = new IndexSearcher(directory);
+			indexReader = IndexReader.open(directory);
+			
+			BufferedWriter bw = new BufferedWriter(new FileWriter(configuration.getOutputFile()));
+
+			BufferedWriter bw_report = null;
+			if (configuration.isWriteComparisonReport())
+				bw_report = new BufferedWriter(new FileWriter(configuration.getReportFile()));
+
+			BufferedReader br = new BufferedReader(new FileReader(configuration.getIterateFile()));
+
+			String line = null;
+			int numMatches = 0;
+			int numColumns = LuceneDataLoader.calculateNumberColumns(configuration.getProperties());
+			
+			int i = 0;
+			while ((line = br.readLine()) != null){
+			
+				if (i++ % configuration.getAssessReportFrequency() == 0)
+			    	log.info("Assessed " + i + " records, found " + numMatches + " matches");
+				
+				Map<String,String> map = line2Map(line, numColumns);
+				
+				// We now have this record as a hashmap, transformed etc as the data stored in Lucene has been
+				String fromId = map.get(Configuration.ID_FIELD_NAME);
 			    
 			    // Keep a record of the records already processed, so as not to return 
 			    // matches like id1:id2 *and* id2:id1
 			    alreadyProcessed.add(fromId);
-			    
+				
 			    // Use the properties to select a set of documents which may contain matches
-				String querystr = LuceneUtils.buildQuery(configuration.getProperties(), fromDoc, true);
+				String querystr = LuceneUtils.buildQuery(configuration.getProperties(), map, false);
 
 				TopDocs td = queryLucene(querystr, indexSearcher);
 				log.debug("Found " + td.totalHits + " possibles to assess against " + fromId);
-				
+
 				for (ScoreDoc sd : td.scoreDocs){
 					Document toDoc = getFromLucene(sd.doc);
-					
 					log.debug(LuceneUtils.doc2String(toDoc));
 					
 					String toId = toDoc.get(Configuration.ID_FIELD_NAME);
-					
-					// Skip the processing if we have already encountered this record in the main loop
-				    if (alreadyProcessed.contains(toId))
-				    	continue;
 
-					if (LuceneUtils.recordsMatch(fromDoc, toDoc, configuration.getProperties())){
+					if (LuceneUtils.recordsMatch(map, toDoc, configuration.getProperties())){
 						numMatches++;
 						bw.write(fromId + configuration.getOutputFileDelimiter() + toId + "\n");
+						if (configuration.isWriteComparisonReport()){
+							bw_report.write(fromId + configuration.getOutputFileDelimiter() + toId + "\n");
+							bw_report.write(LuceneUtils.buildComparisonString(map, toDoc));
+						}
 					}
 				}
 			}
 			
-			if (configuration.isWriteComparisonReport()){
-				LuceneDeduplicatorInvestigator i = new LuceneDeduplicatorInvestigator();
-				i.setConfiguration(configuration);
-				i.setDirectory(directory);
-				i.setIndexSearcher(indexSearcher);
-				i.setLuceneVersion(luceneVersion);
-				i.setQueryParser(queryParser);
-				i.setReader(indexReader);
-				i.run();
-			}
 			// Matchers can output a report on their number of executions:
 			for (Property p : configuration.getProperties()){
 				String executionReport = p.getMatcher().getExecutionReport();
@@ -154,21 +142,55 @@ public class LuceneDeduplicator implements Deduplicator{
 			
 			bw.flush();
 			bw.close();
+			bw_report.flush();
+			bw_report.close();
+			
 			indexWriter.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	public Map<String,String> line2Map(String line, int numColumns){
+		Map<String,String> map = new HashMap<String,String>();
+		String[] elem = line.split(configuration.getInputFileDelimiter(), numColumns+1);
+		map.put(Configuration.ID_FIELD_NAME, elem[0]);
+		for (Property p : configuration.getProperties()){
+			String value = elem[p.getColumnIndex()];
+			// Save original value if required
+			if (p.isIndexOriginal())
+				map.put(p.getName() + Configuration.ORIGINAL_SUFFIX,value);
+			// Transform if required
+			if (p.getTransformer()!=null)
+				value = p.getTransformer().transform(value);
+			// Save into map
+			map.put(p.getName(),value);
+			// Save length if required
+			if (p.isIndexLength()){
+				int length = 0;
+				if (value != null)
+					length = value.length();
+				map.put(p.getName() + Configuration.LENGTH_SUFFIX,String.format("%02d", length));
+			}
+			if (p.isIndexInitial()){
+				String init = "";
+				if (StringUtils.isNotBlank(value)) init = value.substring(0,1);
+				map.put(p.getName() + Configuration.INITIAL_SUFFIX, init);
+			}
+		}
+		return map;
+	}
+	
 	public Document getFromLucene(int n) throws IOException{
 		return indexReader.document(n);
 	}
 
 	public TopDocs queryLucene(String query, IndexSearcher indexSearcher) throws IOException, ParseException {
+		log.debug(query);
 		Query q = queryParser.parse(query);
+		log.debug(q);
 		return indexSearcher.search(q, 1000);
 	}
-
 
 	public org.apache.lucene.util.Version getLuceneVersion() {
 		return luceneVersion;
@@ -185,7 +207,6 @@ public class LuceneDeduplicator implements Deduplicator{
 	public void setDirectory(FSDirectory directory) {
 		this.directory = directory;
 	}
-
 	public IndexWriter getIndexWriter() {
 		return indexWriter;
 	}
@@ -216,14 +237,6 @@ public class LuceneDeduplicator implements Deduplicator{
 
 	public void setQueryParser(QueryParser queryParser) {
 		this.queryParser = queryParser;
-	}
-
-	public Investigator getInvestigator() {
-		return investigator;
-	}
-
-	public void setInvestigator(Investigator investigator) {
-		this.investigator = investigator;
 	}
 	
 }

@@ -10,19 +10,19 @@
 
 	<!--  where the lucene indexes are stored -->
 	<bean id="lucene_directory" class="java.lang.String">
-		<constructor-arg value="target/herbcat-ce-deduplicator"/>
+		<constructor-arg value="target/deduplicator"/>
 	</bean> 
 
 	<!-- Input and output files -->
 	<bean id="inputfile" class="java.io.File">
-		<constructor-arg value="data/herbcat-ce-dedupl-input.txt" />
+		<constructor-arg value="data/poaceae-ipni.txt" />
 	</bean>
 
 	<bean id="outputfile" class="java.io.File">
-		<constructor-arg value="data/herbcat-ce-dedupl-output.txt" />
+		<constructor-arg value="data/poaceae-dedupl-output.txt" />
 	</bean>
 	<bean id="reportfile" class="java.io.File">
-		<constructor-arg value="data/herbcat-ce-dedupl-report.txt" />
+		<constructor-arg value="data/poaceae-dedupl-report.txt" />
 	</bean>
 
 	<!-- Matchers:
@@ -32,27 +32,59 @@
 	
 	<bean id="levenshteinMatcher" class="org.kew.shs.dedupl.matchers.LevenshteinMatcher" 
 		p:maxDistance="1"/>
+
+	<bean id="ocrCanonicaliserMatcher" class="org.kew.shs.dedupl.matchers.OcrCanonicaliserMatcher" />
+
+	<bean id="epithetMatcher" class="org.kew.shs.dedupl.matchers.CompositeAnyMatcher">
+		<property name="matchers">
+			<util:list>
+				<ref bean="levenshteinMatcher"/>
+				<ref bean="ocrCanonicaliserMatcher"/>
+			</util:list>
+		</property>
+	</bean>	
 	
+	<bean id="commonTokensMatcher" class="org.kew.shs.dedupl.matchers.CommonTokensMatcher" 
+		p:minRatio="0.5"/>
+
 	<bean id="authorCommonTokensMatcher" class="org.kew.shs.dedupl.matchers.AuthorCommonTokensMatcher" 
 		p:minRatio="0.5"/>
-	
+
 	<bean id="capitalLettersMatcher" class="org.kew.shs.dedupl.matchers.CapitalLettersMatcher" 
+		p:minRatio="0.5"/>
+
+	<bean id="numberMatcher" class="org.kew.shs.dedupl.matchers.NumberMatcher" 
 		p:minRatio="0.5"/>
 
 	<bean id="ngramMatcher" class="org.kew.shs.dedupl.matchers.NGramMatcher" 
 		p:minRatio="0.5" p:nGramLength="2"/>
 	
-	<bean id="alwaysMatchingMatcher" class="org.kew.shs.dedupl.matchers.AlwaysMatchingMatcher" />
+	<bean id="yearMatcher" class="org.kew.shs.dedupl.matchers.InitialSubstringMatcher" 
+		p:prefixSize="3"/>
 
-	<bean id="neverMatchingMatcher" class="org.kew.shs.dedupl.matchers.NeverMatchingMatcher" />
-	
 	<!-- Transformers: 
 		These carry out defined transformations to clean values before storage -->
-	<bean id="stripNonAlphaCleaner"
+	<bean id="genusCleaner"
 		class="org.kew.shs.dedupl.transformers.StripNonAlphabeticCharactersTransformer" />
 
-	<bean id="stripNonNumericsCleaner"
-		class="org.kew.shs.dedupl.transformers.StripNonNumericCharactersTransformer" />
+	<bean id="epithetCleaner"
+		class="org.kew.shs.dedupl.transformers.EpithetTransformer" />
+
+	<bean id="yearCleaner" 
+		class="org.kew.shs.dedupl.transformers.ZeroToBlankTransformer" />
+
+	<bean id="collationCleaner" 
+		class="org.kew.shs.dedupl.transformers.CompositeTransformer">
+		<property name="transformers">
+			<util:list id="1">
+				<bean id="icollationCleaner" 
+					class="org.kew.shs.dedupl.transformers.StripNonAlphanumericCharactersTransformer" />
+				<bean id="rcollationCleaner" 
+					class="org.kew.shs.dedupl.transformers.RomanNumeralTransformer" />
+			</util:list>
+		</property>
+	</bean>
+		
 
 	<!-- Column based properties, these define: column index of the property 
 		in the input file, how these should be cleaned prior to storage (using 
@@ -61,41 +93,64 @@
 		(using references to matchers as defined above) -->
 	<util:list id="columnProperties">
 		<bean class="org.kew.shs.dedupl.configuration.Property" 
-			p:name="scientificName"
+			p:name="family"
 			p:columnIndex="1"
-			p:matcher-ref="alwaysMatchingMatcher"/>
-		<bean class="org.kew.shs.dedupl.configuration.Property"
-			p:name="locality"
-			p:columnIndex="2"
-			p:matcher-ref="ngramMatcher"/>
-		<bean class="org.kew.shs.dedupl.configuration.Property"
-			p:name="collector"
-			p:columnIndex="3"
-			p:matcher-ref="ngramMatcher"/>
-		<bean class="org.kew.shs.dedupl.configuration.Property"
-			p:name="collectorNumber"
-			p:columnIndex="4"
 			p:matcher-ref="exactMatcher"
-			p:transformer-ref="stripNonNumericsCleaner"
 			p:useInSelect="true"/>
 		<bean class="org.kew.shs.dedupl.configuration.Property"
-			p:name="year"
-			p:columnIndex="5"
-			p:matcher-ref="alwaysMatchingMatcher"/>
-		<bean class="org.kew.shs.dedupl.configuration.Property"
-			p:name="family"
-			p:columnIndex="6"
+			p:name="genus"
+			p:columnIndex="2"
 			p:matcher-ref="exactMatcher"
+			p:transformer-ref="genusCleaner"
+			p:useInSelect="true"/>
+		<bean class="org.kew.shs.dedupl.configuration.Property"
+			p:name="species"
+			p:columnIndex="3"
+			p:matcher-ref="epithetMatcher"
+			p:transformer-ref="epithetCleaner"
+			p:useInSelect="true"
+			p:indexLength="true"
+			p:indexInitial="true"/>
+		<bean class="org.kew.shs.dedupl.configuration.Property"
+			p:name="basionymAuthor"
+			p:columnIndex="4"
+			p:matcher-ref="authorCommonTokensMatcher"
+			p:blanksMatch="true"/>
+		<bean class="org.kew.shs.dedupl.configuration.Property"
+			p:name="author"
+			p:columnIndex="5"
+			p:matcher-ref="authorCommonTokensMatcher"/>
+		<bean class="org.kew.shs.dedupl.configuration.Property"
+			p:name="publication"
+			p:columnIndex="6"
+			p:matcher-ref="capitalLettersMatcher"/>
+		<bean class="org.kew.shs.dedupl.configuration.Property"
+			p:name="collation"
+			p:columnIndex="7"
+			p:transformer-ref="collationCleaner"
+			p:matcher-ref="numberMatcher"
+			p:indexOriginal="true"/>
+		<bean class="org.kew.shs.dedupl.configuration.Property"
+			p:name="year"
+			p:columnIndex="8"
+			p:matcher-ref="yearMatcher"
+			p:blanksMatch="true"
+			p:transformer-ref="yearCleaner"/>
+		<bean class="org.kew.shs.dedupl.configuration.Property"
+			p:name="rank"
+			p:columnIndex="9"
+			p:matcher-ref="exactMatcher"
+			p:transformer-ref="epithetCleaner"
 			p:useInSelect="true"/>
 	</util:list>
 
 	<bean id="config" class="org.kew.shs.dedupl.configuration.DeduplicationConfiguration"
 		p:inputFile-ref="inputfile"
 		p:inputFileDelimiter="\t"
-		p:outputFileDelimiter=","
+		p:outputFileDelimiter=":"
 		p:outputFile-ref="outputfile"
 		p:properties-ref="columnProperties"
-		p:loadReportFrequency="10000"
+		p:loadReportFrequency="5000"
 		p:writeComparisonReport="true"
 		p:reportFile-ref="reportfile"/>
 

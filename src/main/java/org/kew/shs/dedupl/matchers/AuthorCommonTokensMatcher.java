@@ -54,7 +54,7 @@ public class AuthorCommonTokensMatcher extends CommonTokensMatcher{
 	}
 	
 	public boolean isExact() {
-		return true;
+		return false;
 	}
 
 	public String getExecutionReport() {

@@ -1,5 +1,7 @@
 package org.kew.shs.dedupl.matchers;
 
+import org.kew.shs.dedupl.transformers.ZeroToBlankTransformer;
+
 /**
  * This matcher tests for initial substring equality between the two inputs.
  * @author nn00kg
@@ -27,7 +29,7 @@ public class InitialSubstringMatcher implements Matcher {
 	}
 
 	public boolean isExact() {
-		return true;
+		return false;
 	}
 
 	public String getExecutionReport() {
@@ -41,5 +43,12 @@ public class InitialSubstringMatcher implements Matcher {
 	public void setPrefixSize(int prefixSize) {
 		this.prefixSize = prefixSize;
 	}
-	
+
+	public static void main(String[] args) {
+		ZeroToBlankTransformer z = new ZeroToBlankTransformer();
+		
+		InitialSubstringMatcher ism = new InitialSubstringMatcher();
+		ism.setPrefixSize(3);
+		System.out.println(ism.matches(z.transform("1794"), z.transform("1802")));
+	}
 }

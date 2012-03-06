@@ -1,6 +1,7 @@
 package org.kew.shs.dedupl.lucene;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.util.Arrays;
 import java.util.List;
@@ -12,9 +13,9 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.FSDirectory;
-import org.kew.shs.dedupl.Configuration;
 import org.kew.shs.dedupl.DataLoader;
-import org.kew.shs.dedupl.Property;
+import org.kew.shs.dedupl.configuration.Configuration;
+import org.kew.shs.dedupl.configuration.Property;
 
 /**
  * This is a Lucene implementation of the DataLoader interface
@@ -33,12 +34,16 @@ public class LuceneDataLoader implements DataLoader{
 	
 	private static Logger log = Logger.getLogger(LuceneDataLoader.class);
 	
-	public void setup(){
+	public void load(){
+		load(configuration.getInputFile());
+	}
+	
+	public void load(File file){
 		int i = 0;
 		
 		try{
 			// Read from the specified input file
-			BufferedReader br = new BufferedReader(new FileReader(configuration.getInputFile()));
+			BufferedReader br = new BufferedReader(new FileReader(file));
 			String line = null;
 			int numColumns = calculateNumberColumns(configuration.getProperties());
 			
@@ -68,10 +73,10 @@ public class LuceneDataLoader implements DataLoader{
 					// For some fields (those which will be passed into a fuzzy matcher like 
 					// Levenshtein), we index the length
 					if (p.isIndexLength()){
-						int length = 0;
+						int length = 0; 
 						if (value != null)
 							length = value.length();
-						Field fl = new Field(p.getName() + Configuration.LENGTH_SUFFIX, Integer.toString(length), Field.Store.YES,Field.Index.ANALYZED);
+						Field fl = new Field(p.getName() + Configuration.LENGTH_SUFFIX, String.format("%02d", length), Field.Store.YES,Field.Index.ANALYZED);
 						doc.add(fl);
 					}
 					if (p.isIndexInitial() & StringUtils.isNotBlank(value)){
@@ -92,7 +97,7 @@ public class LuceneDataLoader implements DataLoader{
 		log.debug("Indexed " + i + " documents");
 	}
 
-	private int calculateNumberColumns(List<Property> properties){
+	public static int calculateNumberColumns(List<Property> properties){
 		int numColumns = 0;
 		for (Property p : properties){
 			if (p.getColumnIndex() > numColumns)

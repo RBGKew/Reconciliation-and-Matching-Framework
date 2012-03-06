@@ -18,7 +18,7 @@ public class NeverMatchingMatcher implements Matcher {
 	}
 
 	public boolean isExact() {
-		return true;
+		return false;
 	}
 
 	public String getExecutionReport() {
