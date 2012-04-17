@@ -1,5 +1,8 @@
 package org.kew.shs.dedupl.matchers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -23,6 +26,16 @@ public class LevenshteinMatcher implements Matcher {
 
 	private static Logger log = Logger.getLogger(LevenshteinMatcher.class);
 	
+	private Map<String,String> falsePositives;
+	
+	public Map<String, String> getFalsePositives() {
+		return falsePositives;
+	}
+
+	public void setFalsePositives(Map<String, String> falsePositives) {
+		this.falsePositives = falsePositives;
+	}
+
 	public int getCost() {
 		return COST;
 	}
@@ -45,7 +58,25 @@ public class LevenshteinMatcher implements Matcher {
 				}
 			}
 		}
+		if (matches){
+			matches = doFalsePositiveCheck(s1,s2);
+		}
 		return matches;
+	}
+	
+	private boolean doFalsePositiveCheck(String s1, String s2){
+		boolean passed = true;
+		if (falsePositives != null){
+			if (falsePositives.containsKey(s1) && falsePositives.get(s1).equals(s2))
+				passed = false;
+			else
+				if (falsePositives.containsKey(s2) && falsePositives.get(s2).equals(s1))
+					passed = false;
+			if (passed == false){
+				log.info("Rejected match (" + s1 + ", " + s2 + ") as false positive");
+			}
+		}
+		return passed;
 	}
 	
 	public Integer calculateLevenshtein(String s1, String s2){
