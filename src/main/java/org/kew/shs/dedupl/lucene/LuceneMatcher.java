@@ -75,7 +75,8 @@ public class LuceneMatcher implements DataMatcher{
 		
 		// Read something
 		Set<String> alreadyProcessed = new HashSet<String>();
-		
+
+		int i = 0;
 		try {
 			
 			log.debug(new java.util.Date(System.currentTimeMillis()));
@@ -95,7 +96,6 @@ public class LuceneMatcher implements DataMatcher{
 			int numMatches = 0;
 			int numColumns = LuceneDataLoader.calculateNumberColumns(configuration.getProperties());
 			
-			int i = 0;
 			while ((line = br.readLine()) != null){
 			
 				if (i++ % configuration.getAssessReportFrequency() == 0)
@@ -116,6 +116,7 @@ public class LuceneMatcher implements DataMatcher{
 				TopDocs td = queryLucene(querystr, indexSearcher);
 				log.debug("Found " + td.totalHits + " possibles to assess against " + fromId);
 
+				StringBuffer sb = new StringBuffer();
 				for (ScoreDoc sd : td.scoreDocs){
 					Document toDoc = getFromLucene(sd.doc);
 					log.debug(LuceneUtils.doc2String(toDoc));
@@ -124,13 +125,16 @@ public class LuceneMatcher implements DataMatcher{
 
 					if (LuceneUtils.recordsMatch(map, toDoc, configuration.getProperties())){
 						numMatches++;
-						bw.write(fromId + configuration.getOutputFileDelimiter() + toId + "\n");
+						if (sb.length() > 0)
+							sb.append(",");
+						sb.append(toId);
 						if (configuration.isWriteComparisonReport()){
 							bw_report.write(fromId + configuration.getOutputFileDelimiter() + toId + "\n");
 							bw_report.write(LuceneUtils.buildComparisonString(map, toDoc));
 						}
 					}
 				}
+				bw.write(fromId + configuration.getOutputFileDelimiter() + sb.toString() + "\n");
 			}
 			
 			// Matchers can output a report on their number of executions:
@@ -147,6 +151,7 @@ public class LuceneMatcher implements DataMatcher{
 			
 			indexWriter.close();
 		} catch (Exception e) {
+			log.error("Error on line : " + i);
 			e.printStackTrace();
 		}
 	}
