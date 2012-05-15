@@ -15,14 +15,17 @@
 
 	<!-- Input and output files -->
 	<bean id="inputfile" class="java.io.File">
-		<constructor-arg value="data/poaceae-ipni.txt" />
+		<constructor-arg value="C:/nicky/rubbish/tpl-2012-05/fern-families.tsv" />
 	</bean>
 
 	<bean id="outputfile" class="java.io.File">
-		<constructor-arg value="data/poaceae-dedupl-output.txt" />
+		<constructor-arg value="C:/nicky/rubbish/tpl-2012-05/dedupl-output.txt" />
 	</bean>
 	<bean id="reportfile" class="java.io.File">
-		<constructor-arg value="data/poaceae-dedupl-report.txt" />
+		<constructor-arg value="C:/nicky/rubbish/tpl-2012-05/dedupl-report.txt" />
+	</bean>
+	<bean id="topcopyfile" class="java.io.File">
+		<constructor-arg value="C:/nicky/rubbish/tpl-2012-05/dedupl-topcopy.txt" />
 	</bean>
 
 	<!-- Matchers:
@@ -62,6 +65,8 @@
 	<bean id="yearMatcher" class="org.kew.shs.dedupl.matchers.InitialSubstringMatcher" 
 		p:prefixSize="3"/>
 
+	<bean id="alwaysMatchingMatcher" class="org.kew.shs.dedupl.matchers.AlwaysMatchingMatcher" />
+
 	<!-- Transformers: 
 		These carry out defined transformations to clean values before storage -->
 	<bean id="genusCleaner"
@@ -97,61 +102,100 @@
 			p:columnIndex="1"
 			p:matcher-ref="exactMatcher"
 			p:useInSelect="true"/>
+		<bean class="org.kew.shs.dedupl.configuration.Property" 
+			p:name="infra_family"
+			p:columnIndex="2"
+			p:matcher-ref="exactMatcher"
+			p:useInSelect="true"/>
 		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="genus"
-			p:columnIndex="2"
+			p:columnIndex="3"
+			p:matcher-ref="exactMatcher"
+			p:transformer-ref="genusCleaner"
+			p:useInSelect="true"/>
+		<bean class="org.kew.shs.dedupl.configuration.Property"
+			p:name="infra_genus"
+			p:columnIndex="4"
 			p:matcher-ref="exactMatcher"
 			p:transformer-ref="genusCleaner"
 			p:useInSelect="true"/>
 		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="species"
-			p:columnIndex="3"
+			p:columnIndex="5"
 			p:matcher-ref="epithetMatcher"
 			p:transformer-ref="epithetCleaner"
 			p:useInSelect="true"
 			p:indexLength="true"
 			p:indexInitial="true"/>
 		<bean class="org.kew.shs.dedupl.configuration.Property"
+			p:name="infra_species"
+			p:columnIndex="6"
+			p:matcher-ref="epithetMatcher"
+			p:transformer-ref="epithetCleaner"
+			p:useInSelect="true"
+			p:indexLength="true"
+			p:indexInitial="true"/>			
+		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="basionymAuthor"
-			p:columnIndex="4"
+			p:columnIndex="7"
 			p:matcher-ref="authorCommonTokensMatcher"
 			p:blanksMatch="true"/>
 		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="author"
-			p:columnIndex="5"
+			p:columnIndex="8"
 			p:matcher-ref="authorCommonTokensMatcher"/>
 		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="publication"
-			p:columnIndex="6"
-			p:matcher-ref="capitalLettersMatcher"/>
+			p:columnIndex="9"
+			p:matcher-ref="capitalLettersMatcher"
+			p:blanksMatch="true"/>
 		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="collation"
-			p:columnIndex="7"
+			p:columnIndex="10"
 			p:transformer-ref="collationCleaner"
 			p:matcher-ref="numberMatcher"
-			p:indexOriginal="true"/>
+			p:indexOriginal="true"
+			p:blanksMatch="true"/>
 		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="year"
-			p:columnIndex="8"
+			p:columnIndex="11"
 			p:matcher-ref="yearMatcher"
 			p:blanksMatch="true"
 			p:transformer-ref="yearCleaner"/>
 		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="rank"
-			p:columnIndex="9"
+			p:columnIndex="12"
 			p:matcher-ref="exactMatcher"
 			p:transformer-ref="epithetCleaner"
 			p:useInSelect="true"/>
+		<bean class="org.kew.shs.dedupl.configuration.Property"
+			p:name="std_score"
+			p:columnIndex="13"
+			p:matcher-ref="alwaysMatchingMatcher"
+			p:useInSelect="false"/>
 	</util:list>
-
+	
 	<bean id="config" class="org.kew.shs.dedupl.configuration.DeduplicationConfiguration"
 		p:inputFile-ref="inputfile"
-		p:inputFileDelimiter="\t"
-		p:outputFileDelimiter=":"
+		p:inputFileDelimiter="&#09;"
+		p:outputFileDelimiter="&#09;"
+		p:outputFileIdDelimiter=","
 		p:outputFile-ref="outputfile"
 		p:properties-ref="columnProperties"
 		p:loadReportFrequency="5000"
-		p:writeComparisonReport="true"
-		p:reportFile-ref="reportfile"/>
 
+		p:writeComparisonReport="true"
+		p:reportFile-ref="reportfile"
+
+		p:writeTopCopyReport="true"
+		p:topCopyFile-ref="topcopyfile"
+		p:scoreFieldName="std_score"/>
+		
+	<bean id="investigator" class="org.kew.shs.dedupl.lucene.LuceneDeduplicatorInvestigator"
+		p:configuration-ref="config"
+		p:directory-ref="luceneFileSystemStore"
+		p:luceneVersion-ref="LUCENE_VERSION"
+		p:queryParser-ref="queryParser"
+	/>
+		
 </beans>
