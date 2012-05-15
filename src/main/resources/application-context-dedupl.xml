@@ -29,7 +29,8 @@
 		static-field="org.apache.lucene.util.Version.LUCENE_31" />
 
 	<!-- Set the analyzer, to be used by the IndexWriter -->
-	<bean id="luceneAnalyzer" class="org.apache.lucene.analysis.standard.StandardAnalyzer">
+	<!--bean id="luceneAnalyzer" class="org.apache.lucene.analysis.standard.StandardAnalyzer"-->
+	<bean id="luceneAnalyzer" class="org.apache.lucene.analysis.WhitespaceAnalyzer">
 		<constructor-arg ref="LUCENE_VERSION" />
 	</bean>
 	
