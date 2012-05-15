@@ -9,6 +9,8 @@ package org.kew.shs.dedupl.util;
 import net.sf.ehcache.CacheManager;
 
 import org.kew.shs.dedupl.Deduplicator;
+import org.kew.shs.dedupl.configuration.DeduplicationConfiguration;
+import org.kew.shs.dedupl.lucene.LuceneDeduplicatorInvestigator;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -33,6 +35,13 @@ public class DeduplApp {
 		// Call the run method
 		deduplicator.run();
 
+		DeduplicationConfiguration config = (DeduplicationConfiguration) factory.getBean("config");
+		
+		if (config.isWriteComparisonReport()){
+			LuceneDeduplicatorInvestigator i = (LuceneDeduplicatorInvestigator) factory.getBean("investigator");
+			i.run();
+		}
+		
 		// Dump the cache statistics
 		CacheManager cacheManager = (CacheManager) factory.getBean("cacheManager");
 	    String[] cacheNames = cacheManager.getCacheNames();
