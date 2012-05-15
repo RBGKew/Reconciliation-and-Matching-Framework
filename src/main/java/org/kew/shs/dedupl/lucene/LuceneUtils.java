@@ -37,6 +37,17 @@ public class LuceneUtils {
 		}
 		return sb.toString();
 	}
+
+	public static String doc2Line(Document doc, String fieldSeparator){
+		StringBuffer sb = new StringBuffer();
+		for (Fieldable f : doc.getFields()){
+			if (sb.length() > 0)
+				sb.append(fieldSeparator);
+			sb.append(doc.getFieldable(f.name()).stringValue());
+		}
+		sb.append("\n");
+		return sb.toString();
+	}
 	
 	public static String buildComparisonString(Document doc1, Document doc2){
 		return buildComparisonString(doc2Map(doc1), doc2Map(doc2), "#");
@@ -114,6 +125,7 @@ public class LuceneUtils {
 	
 	public static boolean recordsMatch(Map<String,String> from, Document to, List<Property> properties){
 		boolean recordMatch = false;
+		log.debug("Comparing records: " + from.get(Configuration.ID_FIELD_NAME) + " " + to.get(Configuration.ID_FIELD_NAME));
 		for (Property p : properties){
 			String s1 = from.get(p.getName());
 			String s2 = to.get(p.getName());
