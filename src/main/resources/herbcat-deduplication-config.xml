@@ -91,12 +91,19 @@
 
 	<bean id="config" class="org.kew.shs.dedupl.configuration.DeduplicationConfiguration"
 		p:inputFile-ref="inputfile"
-		p:inputFileDelimiter="\t"
-		p:outputFileDelimiter=","
+		p:inputFileDelimiter="&#09;"
+		p:outputFileDelimiter="&#09;"
+		p:outputFileIdDelimiter=","
 		p:outputFile-ref="outputfile"
 		p:properties-ref="columnProperties"
 		p:loadReportFrequency="10000"
 		p:writeComparisonReport="true"
 		p:reportFile-ref="reportfile"/>
 
+	<bean id="investigator" class="org.kew.shs.dedupl.lucene.LuceneDeduplicatorInvestigator"
+		p:configuration-ref="config"
+		p:directory-ref="luceneFileSystemStore"
+		p:luceneVersion-ref="LUCENE_VERSION"
+		p:queryParser-ref="queryParser"
+	/>
 </beans>
