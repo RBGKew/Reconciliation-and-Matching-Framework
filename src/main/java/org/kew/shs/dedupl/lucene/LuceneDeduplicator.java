@@ -109,6 +109,8 @@ public class LuceneDeduplicator implements Deduplicator{
 			    
 			    // Keep a record of the records already processed, so as not to return 
 			    // matches like id1:id2 *and* id2:id1
+			    if (alreadyProcessed.contains(fromId))
+			    	continue;
 			    alreadyProcessed.add(fromId);
 			    
 			    // Use the properties to select a set of documents which may contain matches
@@ -117,6 +119,7 @@ public class LuceneDeduplicator implements Deduplicator{
 				TopDocs td = queryLucene(querystr, indexSearcher);
 				log.debug("Found " + td.totalHits + " possibles to assess against " + fromId);
 				
+				StringBuffer sb = new StringBuffer();
 				for (ScoreDoc sd : td.scoreDocs){
 					Document toDoc = getFromLucene(sd.doc);
 					
@@ -130,21 +133,15 @@ public class LuceneDeduplicator implements Deduplicator{
 
 					if (LuceneUtils.recordsMatch(fromDoc, toDoc, configuration.getProperties())){
 						numMatches++;
-						bw.write(fromId + configuration.getOutputFileDelimiter() + toId + "\n");
+						if (sb.length() > 0)
+							sb.append(configuration.getOutputFileIdDelimiter());
+						sb.append(toId);
+						alreadyProcessed.add(toId);
 					}
 				}
+				bw.write(fromId + configuration.getOutputFileDelimiter() + sb.toString() + "\n");
 			}
 			
-			if (configuration.isWriteComparisonReport()){
-				LuceneDeduplicatorInvestigator i = new LuceneDeduplicatorInvestigator();
-				i.setConfiguration(configuration);
-				i.setDirectory(directory);
-				i.setIndexSearcher(indexSearcher);
-				i.setLuceneVersion(luceneVersion);
-				i.setQueryParser(queryParser);
-				i.setReader(indexReader);
-				i.run();
-			}
 			// Matchers can output a report on their number of executions:
 			for (Property p : configuration.getProperties()){
 				String executionReport = p.getMatcher().getExecutionReport();
