@@ -62,7 +62,6 @@ public class CommonTokensMatcher implements Matcher {
 	    
 	    double ratio = (Double.valueOf(numCommon) / Double.valueOf((numCommon + (s1.length - numCommon) + (s2.length - numCommon))));
 	    log.debug("ratio = " + ratio);
-	    //double ratio = (Double.valueOf(numCommon) / Double.valueOf(Math.max(s1.length, s2.length)));
 	    
 	    matches = ratio >= minRatio;
 		
