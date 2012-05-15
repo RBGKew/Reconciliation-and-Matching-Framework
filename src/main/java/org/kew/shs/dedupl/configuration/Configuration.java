@@ -7,10 +7,14 @@ import java.util.List;
 public class Configuration {
 
 	private List<Property> properties;
+	
 	private File inputFile;
 	private String inputFileDelimiter;
+	
 	private File outputFile;
 	private String outputFileDelimiter;
+	private String outputFileIdDelimiter;
+	
 	private File reportFile;
 	
 	private boolean writeComparisonReport=false;
@@ -35,12 +39,6 @@ public class Configuration {
 	}
 	public void setInputFile(File inputFile) {
 		this.inputFile = inputFile;
-	}
-	public String getInputFileDelimiter() {
-		return inputFileDelimiter;
-	}
-	public void setInputFileDelimiter(String inputFileDelimiter) {
-		this.inputFileDelimiter = inputFileDelimiter;
 	}
 	public File getOutputFile() {
 		return outputFile;
@@ -72,11 +70,23 @@ public class Configuration {
 	public void setReportFile(File reportFile) {
 		this.reportFile = reportFile;
 	}
+	public String getInputFileDelimiter() {
+		return inputFileDelimiter;
+	}
+	public void setInputFileDelimiter(String inputFileDelimiter) {
+		this.inputFileDelimiter = inputFileDelimiter;
+	}
 	public String getOutputFileDelimiter() {
 		return outputFileDelimiter;
 	}
 	public void setOutputFileDelimiter(String outputFileDelimiter) {
 		this.outputFileDelimiter = outputFileDelimiter;
 	}
-	
+	public String getOutputFileIdDelimiter() {
+		return outputFileIdDelimiter;
+	}
+	public void setOutputFileIdDelimiter(String outputFileIdDelimiter) {
+		this.outputFileIdDelimiter = outputFileIdDelimiter;
+	}
+
 }
