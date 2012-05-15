@@ -8,6 +8,12 @@
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>ipni-deduplication.properties</value>
+		</property>
+	</bean>
+	
 	<!--  where the lucene indexes are stored -->
 	<bean id="lucene_directory" class="java.lang.String">
 		<constructor-arg value="target/deduplicator"/>
@@ -15,17 +21,17 @@
 
 	<!-- Input and output files -->
 	<bean id="inputfile" class="java.io.File">
-		<constructor-arg value="C:/nicky/rubbish/tpl-2012-05/fern-families.tsv" />
+		<constructor-arg value="${datadir}/input.tsv" />
 	</bean>
 
 	<bean id="outputfile" class="java.io.File">
-		<constructor-arg value="C:/nicky/rubbish/tpl-2012-05/dedupl-output.txt" />
+		<constructor-arg value="${datadir}/output.txt" />
 	</bean>
 	<bean id="reportfile" class="java.io.File">
-		<constructor-arg value="C:/nicky/rubbish/tpl-2012-05/dedupl-report.txt" />
+		<constructor-arg value="${datadir}/report.txt" />
 	</bean>
 	<bean id="topcopyfile" class="java.io.File">
-		<constructor-arg value="C:/nicky/rubbish/tpl-2012-05/dedupl-topcopy.txt" />
+		<constructor-arg value="${datadir}/topcopy.txt" />
 	</bean>
 
 	<!-- Matchers:
@@ -134,40 +140,40 @@
 			p:transformer-ref="epithetCleaner"
 			p:useInSelect="true"
 			p:indexLength="true"
-			p:indexInitial="true"/>			
+			p:indexInitial="true"/>		
+		<bean class="org.kew.shs.dedupl.configuration.Property"
+			p:name="rank"
+			p:columnIndex="7"
+			p:matcher-ref="exactMatcher"
+			p:transformer-ref="epithetCleaner"
+			p:useInSelect="true"/>
 		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="basionymAuthor"
-			p:columnIndex="7"
+			p:columnIndex="8"
 			p:matcher-ref="authorCommonTokensMatcher"
 			p:blanksMatch="true"/>
 		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="author"
-			p:columnIndex="8"
+			p:columnIndex="9"
 			p:matcher-ref="authorCommonTokensMatcher"/>
 		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="publication"
-			p:columnIndex="9"
+			p:columnIndex="10"
 			p:matcher-ref="capitalLettersMatcher"
 			p:blanksMatch="true"/>
 		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="collation"
-			p:columnIndex="10"
+			p:columnIndex="11"
 			p:transformer-ref="collationCleaner"
 			p:matcher-ref="numberMatcher"
 			p:indexOriginal="true"
 			p:blanksMatch="true"/>
 		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="year"
-			p:columnIndex="11"
+			p:columnIndex="12"
 			p:matcher-ref="yearMatcher"
 			p:blanksMatch="true"
 			p:transformer-ref="yearCleaner"/>
-		<bean class="org.kew.shs.dedupl.configuration.Property"
-			p:name="rank"
-			p:columnIndex="12"
-			p:matcher-ref="exactMatcher"
-			p:transformer-ref="epithetCleaner"
-			p:useInSelect="true"/>
 		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="std_score"
 			p:columnIndex="13"
