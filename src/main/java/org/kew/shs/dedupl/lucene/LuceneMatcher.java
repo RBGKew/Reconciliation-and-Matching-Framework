@@ -89,12 +89,19 @@ public class LuceneMatcher implements DataMatcher{
 			BufferedWriter bw_report = null;
 			if (configuration.isWriteComparisonReport())
 				bw_report = new BufferedWriter(new FileWriter(configuration.getReportFile()));
+			
+			
+			BufferedWriter bw_delimitedReport = null;
+			if (configuration.isWriteDelimitedReport())
+				bw_delimitedReport = new BufferedWriter(new FileWriter(configuration.getDelimitedFile()));
+			
 
 			BufferedReader br = new BufferedReader(new FileReader(configuration.getIterateFile()));
 
 			String line = null;
 			int numMatches = 0;
 			int numColumns = LuceneDataLoader.calculateNumberColumns(configuration.getProperties());
+			int anyMatches = 0;
 			
 			while ((line = br.readLine()) != null){
 			
@@ -115,6 +122,8 @@ public class LuceneMatcher implements DataMatcher{
 
 				TopDocs td = queryLucene(querystr, indexSearcher);
 				log.debug("Found " + td.totalHits + " possibles to assess against " + fromId);
+				
+				anyMatches = 0;				
 
 				StringBuffer sb = new StringBuffer();
 				for (ScoreDoc sd : td.scoreDocs){
@@ -125,6 +134,7 @@ public class LuceneMatcher implements DataMatcher{
 
 					if (LuceneUtils.recordsMatch(map, toDoc, configuration.getProperties())){
 						numMatches++;
+						anyMatches++;						
 						if (sb.length() > 0)
 							sb.append(",");
 						sb.append(toId);
@@ -132,9 +142,17 @@ public class LuceneMatcher implements DataMatcher{
 							bw_report.write(fromId + configuration.getOutputFileDelimiter() + toId + "\n");
 							bw_report.write(LuceneUtils.buildComparisonString(map, toDoc));
 						}
+						if (configuration.isWriteDelimitedReport()){
+							bw_delimitedReport.write(LuceneUtils.buildFullComparisonString(map, toDoc));
+						}						
 					}
 				}
 				bw.write(fromId + configuration.getOutputFileDelimiter() + sb.toString() + "\n");
+				//Include the non matched records in the delimited report if specified in the config file.
+				if (anyMatches <= 0) {
+					if (configuration.isWriteDelimitedReport() && configuration.isIncludeNonMatchesInDelimitedReport())
+					  bw_delimitedReport.write(LuceneUtils.buildNoMatchDelimitedString(map));	
+				}				
 			}
 			
 			// Matchers can output a report on their number of executions:
@@ -148,6 +166,8 @@ public class LuceneMatcher implements DataMatcher{
 			bw.close();
 			bw_report.flush();
 			bw_report.close();
+			bw_delimitedReport.flush();
+			bw_delimitedReport.close();			
 			
 			indexWriter.close();
 		} catch (Exception e) {

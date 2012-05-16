@@ -85,6 +85,54 @@ public class LuceneUtils {
 		return sb.toString();
 	}
 	
+	/**
+	 * Return a string containing all the matched field names and comparison metrics
+	 * String is written to a file which can be loaded into a db table for further analysis 
+	 * @param doc1
+	 * @param doc2
+	 * @param prefix
+	 * @return
+	 */
+	public static String buildFullComparisonString(Map<String,String> map, Document doc){
+		return buildFullComparisonString(map, doc2Map(doc), "#");
+	}
+	
+	public static String buildFullComparisonString(Map<String,String> map, Document doc, String prefix){
+		return buildFullComparisonString(map, doc2Map(doc), prefix);
+	}
+	
+	public static String buildFullComparisonString(Map<String,String> map1, Map<String,String> map2, String prefix){
+		StringBuffer sb = new StringBuffer();
+		for (String key : map1.keySet()){
+			   String v1 = map1.get(key);
+			   String v2 = map2.get(key);
+				//if (!v1.equals(v2)){
+					//sb.append(key).append(prefix);
+					sb.append(v1).append(prefix);
+					sb.append(v2).append(prefix);
+					
+				//}
+			
+		}
+		sb.append("\n");
+		return sb.toString();
+	}
+	
+	public static String buildNoMatchDelimitedString(Map<String,String> map){
+		return buildNoMatchDelimitedString(map, "#");
+	}
+	
+	public static String buildNoMatchDelimitedString(Map<String,String> map, String prefix){
+		StringBuffer sb = new StringBuffer();
+		for (String key : map.keySet()){
+			   String v1 = map.get(key);
+			   sb.append(v1).append(prefix);
+			   sb.append("").append(prefix);
+		}
+		       sb.append("\n");
+			   return sb.toString();
+	}	
+	
 	public static String buildQuery(List<Property> properties, Document doc, boolean dedupl){
 		Map<String,String> map = doc2Map(doc);
 		return buildQuery(properties, map, dedupl);

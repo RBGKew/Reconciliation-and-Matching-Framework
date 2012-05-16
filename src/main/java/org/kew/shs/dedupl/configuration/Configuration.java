@@ -16,8 +16,11 @@ public class Configuration {
 	private String outputFileIdDelimiter;
 	
 	private File reportFile;
+	private File delimitedFile;
 	
 	private boolean writeComparisonReport=false;
+	private boolean writeDelimitedReport=false;
+	private boolean includeNonMatchesInDelimitedReport=false;
 	
 	private int loadReportFrequency=50000;
 	private int assessReportFrequency=100;
@@ -87,6 +90,26 @@ public class Configuration {
 	}
 	public void setOutputFileIdDelimiter(String outputFileIdDelimiter) {
 		this.outputFileIdDelimiter = outputFileIdDelimiter;
+	}
+	
+	public boolean isWriteDelimitedReport() {
+		return writeDelimitedReport;
+	}
+	public void setWriteDelimitedReport(boolean writeDelimitedReport) {
+		this.writeDelimitedReport = writeDelimitedReport;
+	}
+	public File getDelimitedFile() {
+		return delimitedFile;
+	}
+	public void setDelimitedFile(File delimitedFile) {
+		this.delimitedFile = delimitedFile;
+	}
+	
+	public boolean isIncludeNonMatchesInDelimitedReport() {
+		return includeNonMatchesInDelimitedReport;
+	}
+	public void setIncludeNonMatchesInDelimitedReport(boolean includeNonMatchesInDelimitedReport) {
+		this.includeNonMatchesInDelimitedReport = includeNonMatchesInDelimitedReport;
 	}
 
 }

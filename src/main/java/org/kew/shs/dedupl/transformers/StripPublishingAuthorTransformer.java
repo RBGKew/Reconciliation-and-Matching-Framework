@@ -13,12 +13,16 @@ public class StripPublishingAuthorTransformer implements Transformer{
 		String transformed = s;
 		if (StringUtils.isNotBlank(s) && ((s.indexOf("(") != -1) && s.indexOf(")") != -1))
 			transformed = s.substring(s.indexOf("(")+1,s.indexOf(")"));
+		else
+			transformed = "";
 		return transformed;
 	}
 	
 	public static void main(String[] args) {
 		StripPublishingAuthorTransformer t  = new StripPublishingAuthorTransformer(); 
 		System.out.println(t.transform("(Author1) Author 2"));
+		System.out.println(t.transform("Author3"));
+		System.out.println(t.transform("(Author4)"));
 	}
 	
 }

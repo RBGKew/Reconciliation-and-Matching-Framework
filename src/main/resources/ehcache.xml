@@ -13,8 +13,11 @@
     	logging="true" statistics="true" />
     
     <cache name="actMatchCache" maxElementsInMemory="50000" eternal="true" overflowToDisk="true" 
-    	logging="true" statistics="true" />    	
-
+    	logging="true" statistics="true" />
+    	
+    <cache name="aabMatchCache" maxElementsInMemory="50000" eternal="true" overflowToDisk="true" 
+    	logging="true" statistics="true" />
+    	
     <cache name="clctMatchCache" maxElementsInMemory="50000" eternal="true" overflowToDisk="true" 
     	logging="true" statistics="true" />
     	    	
