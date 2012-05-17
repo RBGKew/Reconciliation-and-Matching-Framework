@@ -32,7 +32,6 @@ The project is built using maven, so to run:
 mvn clean compile exec:java -Dexec.mainClass=org.kew.shs.dedupl.util.DeduplApp
 mvn clean compile exec:java -Dexec.mainClass=org.kew.shs.dedupl.util.MatchApp
 
-
 =====================
 5 minute introduction
 =====================
