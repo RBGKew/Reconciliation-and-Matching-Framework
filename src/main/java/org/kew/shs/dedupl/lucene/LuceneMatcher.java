@@ -164,11 +164,14 @@ public class LuceneMatcher implements DataMatcher{
 			
 			bw.flush();
 			bw.close();
-			bw_report.flush();
-			bw_report.close();
-			bw_delimitedReport.flush();
-			bw_delimitedReport.close();			
-			
+			if (configuration.isWriteComparisonReport()){
+				bw_report.flush();
+				bw_report.close();
+			}
+			if (configuration.isWriteDelimitedReport()){
+				bw_delimitedReport.flush();
+				bw_delimitedReport.close();			
+			}			
 			indexWriter.close();
 		} catch (Exception e) {
 			log.error("Error on line : " + i);
