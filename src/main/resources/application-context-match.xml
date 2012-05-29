@@ -9,7 +9,7 @@
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
         http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.1.xsd">
 
-	<import resource="ipni-wcs-cyperaceae-match-config.xml"/>
+	<import resource="match-config.xml"/>
 	
 	<!--  caching stuff goes here -->
     <ehcache:annotation-driven />
@@ -29,7 +29,8 @@
 		static-field="org.apache.lucene.util.Version.LUCENE_31" />
 
 	<!-- Set the analyzer, to be used by the IndexWriter -->
-	<bean id="luceneAnalyzer" class="org.apache.lucene.analysis.standard.StandardAnalyzer">
+	<!--bean id="luceneAnalyzer" class="org.apache.lucene.analysis.standard.StandardAnalyzer"-->
+	<bean id="luceneAnalyzer" class="org.apache.lucene.analysis.WhitespaceAnalyzer">
 		<constructor-arg ref="LUCENE_VERSION" />
 	</bean>
 	
