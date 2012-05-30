@@ -140,7 +140,7 @@ public class LuceneDeduplicatorInvestigator implements Investigator {
 					for (String to_id : to_ids){
 						Document to = getDocumentById(to_id);
 						bw.write(line + "\n");
-						bw.write(LuceneUtils.buildComparisonString(from, to));					
+						bw.write(LuceneUtils.buildComparisonString(configuration.getProperties(), from, to));					
 					}
 				}
 			}

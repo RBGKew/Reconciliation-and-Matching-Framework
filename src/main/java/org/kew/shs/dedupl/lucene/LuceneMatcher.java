@@ -163,7 +163,7 @@ public class LuceneMatcher implements DataMatcher{
 						}
 						if (configuration.isWriteComparisonReport()){
 							bw_report.write(fromId + configuration.getOutputFileDelimiter() + toId + "\n");
-							bw_report.write(LuceneUtils.buildComparisonString(map, toDoc));
+							bw_report.write(LuceneUtils.buildComparisonString(configuration.getProperties(), map, toDoc));
 						}
 						if (configuration.isWriteDelimitedReport()){
 							bw_delimitedReport.write(LuceneUtils.buildFullComparisonString(map, toDoc));

@@ -49,8 +49,8 @@ public class LuceneUtils {
 		return sb.toString();
 	}
 	
-	public static String buildComparisonString(Document doc1, Document doc2){
-		return buildComparisonString(doc2Map(doc1), doc2Map(doc2), "#");
+	public static String buildComparisonString(List<Property> properties, Document doc1, Document doc2){
+		return buildComparisonString(properties, doc2Map(doc1), doc2Map(doc2), "#");
 	}
 
 	/**
@@ -61,17 +61,18 @@ public class LuceneUtils {
 	 * @param prefix
 	 * @return
 	 */
-	public static String buildComparisonString(Map<String,String> map, Document doc){
-		return buildComparisonString(map, doc2Map(doc), "#");
+	public static String buildComparisonString(List<Property> properties, Map<String,String> map, Document doc){
+		return buildComparisonString(properties, map, doc2Map(doc), "#");
 	}
 
-	public static String buildComparisonString(Map<String,String> map, Document doc, String prefix){
-		return buildComparisonString(map, doc2Map(doc), prefix);
+	public static String buildComparisonString(List<Property> properties, Map<String,String> map, Document doc, String prefix){
+		return buildComparisonString(properties, map, doc2Map(doc), prefix);
 	}
 	
-	public static String buildComparisonString(Map<String,String> map1, Map<String,String> map2, String prefix){
+	public static String buildComparisonString(List<Property> properties, Map<String,String> map1, Map<String,String> map2, String prefix){
 		StringBuffer sb = new StringBuffer();
-		for (String key : map1.keySet()){
+		for (Property p : properties){
+			String key = p.getName();
 			if (!key.equals(Configuration.ID_FIELD_NAME)){
 				String v1 = map1.get(key);
 				String v2 = map2.get(key);
