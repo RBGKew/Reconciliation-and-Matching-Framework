@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -95,6 +97,10 @@ public class LuceneMatcher implements DataMatcher{
 			if (configuration.isWriteDelimitedReport())
 				bw_delimitedReport = new BufferedWriter(new FileWriter(configuration.getDelimitedFile()));
 			
+			if (configuration.isOutputAllMatches())
+				log.debug("Configured to output all matches");
+			else
+				log.debug("Configured to only output top match");
 
 			BufferedReader br = new BufferedReader(new FileReader(configuration.getIterateFile()));
 
@@ -125,7 +131,15 @@ public class LuceneMatcher implements DataMatcher{
 				
 				anyMatches = 0;				
 
-				StringBuffer sb = new StringBuffer();
+				SortedMap<Object,String> matches = null;
+				if (configuration.isOutputAllMatches()){
+					log.debug("Output all matches");
+					matches = new TreeMap<Object, String>();
+				}
+				else{
+					log.debug("Only output top match");
+					matches = new TreeMap<Object, String>();
+				}
 				for (ScoreDoc sd : td.scoreDocs){
 					Document toDoc = getFromLucene(sd.doc);
 					log.debug(LuceneUtils.doc2String(toDoc));
@@ -134,10 +148,15 @@ public class LuceneMatcher implements DataMatcher{
 
 					if (LuceneUtils.recordsMatch(map, toDoc, configuration.getProperties())){
 						numMatches++;
-						anyMatches++;						
-						if (sb.length() > 0)
-							sb.append(",");
-						sb.append(toId);
+						anyMatches++;
+						if (configuration.isOutputAllMatches()){
+							matches.put(toId, toId);
+						}
+						else{
+							String score = toDoc.get(configuration.getScoreField());
+							log.debug("Match score: " + Integer.valueOf(score));
+							matches.put(Integer.valueOf(score), toId);
+						}
 						if (configuration.isWriteComparisonReport()){
 							bw_report.write(fromId + configuration.getOutputFileDelimiter() + toId + "\n");
 							bw_report.write(LuceneUtils.buildComparisonString(map, toDoc));
@@ -147,7 +166,27 @@ public class LuceneMatcher implements DataMatcher{
 						}						
 					}
 				}
-				bw.write(fromId + configuration.getOutputFileDelimiter() + sb.toString() + "\n");
+				if (configuration.isOutputAllMatches()){
+					StringBuffer sb = new StringBuffer();
+					for (String id : matches.values()){
+						if (sb.length() > 0)
+							sb.append(",");
+						sb.append(id);
+					}
+					bw.write(fromId + configuration.getOutputFileDelimiter() + sb.toString() + "\n");
+				}
+				else{
+					// only output the highest scoring match
+					String bestMatchId = null;
+					if (!matches.isEmpty()){
+						log.debug("Number of matches: " + matches.size() + ", Last key: " + matches.lastKey());
+						bestMatchId = matches.get(matches.lastKey());
+						bw.write(fromId + configuration.getOutputFileDelimiter() + bestMatchId + "\n");
+					}
+					else{
+						bw.write(fromId + configuration.getOutputFileDelimiter() + "\n");
+					}
+				}
 				//Include the non matched records in the delimited report if specified in the config file.
 				if (anyMatches <= 0) {
 					if (configuration.isWriteDelimitedReport() && configuration.isIncludeNonMatchesInDelimitedReport())
