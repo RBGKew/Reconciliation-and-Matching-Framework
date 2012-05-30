@@ -6,8 +6,9 @@ public class MatchConfiguration extends Configuration {
 
 	private File storeFile;
 	private File iterateFile;
-	public boolean outputAllMatches;
-	public String scoreField;
+	private boolean outputAllMatches;
+	private String scoreField;
+	private boolean reuseIndex;
 	
 	public File getStoreFile() {
 		return storeFile;
@@ -33,5 +34,10 @@ public class MatchConfiguration extends Configuration {
 	public void setScoreField(String scoreField) {
 		this.scoreField = scoreField;
 	}
-	 
+	public boolean isReuseIndex() {
+		return reuseIndex;
+	}
+	public void setReuseIndex(boolean reuseIndex) {
+		this.reuseIndex = reuseIndex;
+	}
 }

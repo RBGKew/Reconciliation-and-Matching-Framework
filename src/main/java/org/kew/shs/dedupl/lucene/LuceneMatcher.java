@@ -67,8 +67,12 @@ public class LuceneMatcher implements DataMatcher{
 	}
 
 	public void loadData(){
-		dataLoader.setConfiguration(configuration);
-		dataLoader.load(configuration.getStoreFile());
+		if (!configuration.isReuseIndex()){
+			dataLoader.setConfiguration(configuration);
+			dataLoader.load(configuration.getStoreFile());
+		}
+		else
+			log.info("Reusing existing index");
 	}
 
 	public void run(){
@@ -79,6 +83,7 @@ public class LuceneMatcher implements DataMatcher{
 		Set<String> alreadyProcessed = new HashSet<String>();
 
 		int i = 0;
+		String line = null;
 		try {
 			
 			log.debug(new java.util.Date(System.currentTimeMillis()));
@@ -104,7 +109,6 @@ public class LuceneMatcher implements DataMatcher{
 
 			BufferedReader br = new BufferedReader(new FileReader(configuration.getIterateFile()));
 
-			String line = null;
 			int numMatches = 0;
 			int numColumns = LuceneDataLoader.calculateNumberColumns(configuration.getProperties());
 			int anyMatches = 0;
@@ -213,7 +217,7 @@ public class LuceneMatcher implements DataMatcher{
 			}			
 			indexWriter.close();
 		} catch (Exception e) {
-			log.error("Error on line : " + i);
+			log.error("Error on line : " + i + " (" + line + ")");
 			e.printStackTrace();
 		}
 	}
