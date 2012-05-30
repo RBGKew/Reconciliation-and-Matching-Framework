@@ -6,7 +6,9 @@ public class MatchConfiguration extends Configuration {
 
 	private File storeFile;
 	private File iterateFile;
-
+	public boolean outputAllMatches;
+	public String scoreField;
+	
 	public File getStoreFile() {
 		return storeFile;
 	}
@@ -19,5 +21,17 @@ public class MatchConfiguration extends Configuration {
 	public void setIterateFile(File iterateFile) {
 		this.iterateFile = iterateFile;
 	}
-	
+	public boolean isOutputAllMatches() {
+		return outputAllMatches;
+	}
+	public void setOutputAllMatches(boolean outputAllMatches) {
+		this.outputAllMatches = outputAllMatches;
+	}
+	public String getScoreField() {
+		return scoreField;
+	}
+	public void setScoreField(String scoreField) {
+		this.scoreField = scoreField;
+	}
+	 
 }
