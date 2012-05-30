@@ -16,6 +16,7 @@ public class Property {
 	private Matcher matcher;
 	
 	private boolean useInSelect=false;
+	private boolean useInNegativeSelect=false;
 	private boolean indexLength=false;
 	private boolean blanksMatch=false;
 	private boolean indexOriginal=false;
@@ -76,6 +77,12 @@ public class Property {
 	}
 	public void setIndexInitial(boolean indexInitial) {
 		this.indexInitial = indexInitial;
+	}
+	public boolean isUseInNegativeSelect() {
+		return useInNegativeSelect;
+	}
+	public void setUseInNegativeSelect(boolean useInNegativeSelect) {
+		this.useInNegativeSelect = useInNegativeSelect;
 	}
 	@Override
 	public String toString() {

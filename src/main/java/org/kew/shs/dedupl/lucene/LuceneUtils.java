@@ -148,19 +148,28 @@ public class LuceneUtils {
 			if (p.isUseInSelect()){
 				String value = map.get(p.getName()).toString();
 				if (StringUtils.isNotBlank(value)){
-					if (sb.length() > 0) sb.append(" AND ");
-					if(p.getMatcher().isExact())
+					if(p.getMatcher().isExact()){
+						if (sb.length() > 0) sb.append(" AND ");
 						sb.append(p.getName() + ":" + value);
+					}
 					if (p.isIndexLength()){
 						int low = Math.max(0, value.length()-2);
 						int high = value.length()+2;
+						if (sb.length() > 0) sb.append(" AND ");
 						sb.append(" ").append(p.getName() + Configuration.LENGTH_SUFFIX + ":[").append(String.format("%02d", low)).append(" TO ").append(String.format("%02d", high)).append("]");
 					}
 					if (p.isIndexInitial()){
-						sb.append(" AND ")
-							.append(p.getName() + Configuration.INITIAL_SUFFIX).append(":").append(value.substring(0, 1));
+						if (sb.length() > 0) sb.append(" AND ");
+						sb.append(p.getName() + Configuration.INITIAL_SUFFIX).append(":").append(value.substring(0, 1));
 					}
 				}
+			}
+			if (p.isUseInNegativeSelect()){
+				String value = map.get(p.getName()).toString();
+				if (StringUtils.isNotBlank(value)){
+					if (sb.length() > 0) sb.append(" AND ");
+					sb.append(" NOT " + p.getName() + ":" + value);
+				}				
 			}
 		}
 		return sb.toString();
