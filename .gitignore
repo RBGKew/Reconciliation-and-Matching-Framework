@@ -1,1 +1,6 @@
 target/
+data/
+*.log
+.classpath
+.settings
+.project
