@@ -11,7 +11,6 @@ import net.sf.ehcache.CacheManager;
 import org.kew.shs.dedupl.Deduplicator;
 import org.kew.shs.dedupl.configuration.DeduplicationConfiguration;
 import org.kew.shs.dedupl.lucene.LuceneDeduplicatorInvestigator;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -21,8 +20,7 @@ public class DeduplApp {
 
 		// This command picks up the Spring config file form the classpath
 		ApplicationContext context = new ClassPathXmlApplicationContext(
-				new String[] { "application-context-dedupl.xml" });
-		BeanFactory factory = context;
+				"application-context-dedupl.xml");
 
 		/*
 		 * Get the deduplicator bean from the Spring config - Spring has instantiated
@@ -31,19 +29,19 @@ public class DeduplApp {
 		 *  The string "deduplicator" corresponds to the id attribute of a bean element
 		 *   defined in the Spring config file
 		 */
-		Deduplicator deduplicator = (Deduplicator ) factory.getBean("deduplicator");
+		Deduplicator deduplicator = (Deduplicator ) context.getBean("deduplicator");
 		// Call the run method
 		deduplicator.run();
 
-		DeduplicationConfiguration config = (DeduplicationConfiguration) factory.getBean("config");
+		DeduplicationConfiguration config = (DeduplicationConfiguration) context.getBean("config");
 		
 		if (config.isWriteComparisonReport()){
-			LuceneDeduplicatorInvestigator i = (LuceneDeduplicatorInvestigator) factory.getBean("investigator");
+			LuceneDeduplicatorInvestigator i = (LuceneDeduplicatorInvestigator) context.getBean("investigator");
 			i.run();
 		}
 		
 		// Dump the cache statistics
-		CacheManager cacheManager = (CacheManager) factory.getBean("cacheManager");
+		CacheManager cacheManager = (CacheManager) context.getBean("cacheManager");
 	    String[] cacheNames = cacheManager.getCacheNames();
 	    for (int i = 0; i < cacheNames.length; i++) {
 	        String cacheName = cacheNames[i];

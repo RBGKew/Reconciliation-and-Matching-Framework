@@ -9,7 +9,6 @@ package org.kew.shs.dedupl.util;
 import net.sf.ehcache.CacheManager;
 
 import org.kew.shs.dedupl.DataMatcher;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -19,8 +18,7 @@ public class MatchApp {
 
 		// This command picks up the Spring config file form the classpath
 		ApplicationContext context = new ClassPathXmlApplicationContext(
-				new String[] { "application-context-match.xml" });
-		BeanFactory factory = context;
+				"application-context-match.xml");
 
 		/*
 		 * Get the matcher bean from the Spring config - Spring has instantiated
@@ -29,12 +27,12 @@ public class MatchApp {
 		 *  The string "matcher" corresponds to the id attribute of a bean element
 		 *   defined in the Spring config file
 		 */
-		DataMatcher matcher = (DataMatcher) factory.getBean("matcher");
+		DataMatcher matcher = (DataMatcher) context.getBean("matcher");
 		// Call the run method
 		matcher.run();
 
 		// Dump the cache statistics
-		CacheManager cacheManager = (CacheManager) factory.getBean("cacheManager");
+		CacheManager cacheManager = (CacheManager) context.getBean("cacheManager");
 	    String[] cacheNames = cacheManager.getCacheNames();
 	    for (int i = 0; i < cacheNames.length; i++) {
 	        String cacheName = cacheNames[i];
