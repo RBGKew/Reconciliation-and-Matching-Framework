@@ -204,7 +204,7 @@ public class LuceneUtils {
 				s[1] = s2;
 				Arrays.sort(s);
 				fieldMatch = p.getMatcher().matches(s[0], s[1]);
-				log.debug(s[0] + " : " + s[1] + " : " + recordMatch);
+				log.debug(s[0] + " : " + s[1] + " : " + fieldMatch);
 			}
 			recordMatch = fieldMatch;
 			if (!recordMatch){
