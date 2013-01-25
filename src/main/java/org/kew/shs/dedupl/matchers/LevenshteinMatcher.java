@@ -1,6 +1,5 @@
 package org.kew.shs.dedupl.matchers;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;

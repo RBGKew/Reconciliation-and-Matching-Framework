@@ -163,6 +163,10 @@ public class LuceneUtils {
 						if (sb.length() > 0) sb.append(" AND ");
 						sb.append(p.getName() + Configuration.INITIAL_SUFFIX).append(":").append(value.substring(0, 1));
 					}
+					if (p.isUseWildcard()){
+						if (sb.length() > 0) sb.append(" AND ");
+						sb.append(p.getName()).append(":").append(value).append("~0.5");						
+					}
 				}
 			}
 			if (p.isUseInNegativeSelect()){

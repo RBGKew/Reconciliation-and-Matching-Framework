@@ -21,6 +21,7 @@ public class Property {
 	private boolean blanksMatch=false;
 	private boolean indexOriginal=false;
 	private boolean indexInitial=false;
+	private boolean useWildcard=false;
 	
 	private Transformer transformer;
 
@@ -84,14 +85,20 @@ public class Property {
 	public void setUseInNegativeSelect(boolean useInNegativeSelect) {
 		this.useInNegativeSelect = useInNegativeSelect;
 	}
+	public boolean isUseWildcard() {
+		return useWildcard;
+	}
+	public void setUseWildcard(boolean useWildcard) {
+		this.useWildcard = useWildcard;
+	}
 	@Override
 	public String toString() {
 		return "Property [name=" + name + ", columnIndex=" + columnIndex
 				+ ", matcher=" + matcher + ", useInSelect=" + useInSelect
+				+ ", useInNegativeSelect=" + useInNegativeSelect
 				+ ", indexLength=" + indexLength + ", blanksMatch="
 				+ blanksMatch + ", indexOriginal=" + indexOriginal
-				+ ", indexInitial=" + indexInitial + ", transformer="
-				+ transformer + "]";
+				+ ", indexInitial=" + indexInitial + ", useWildcard="
+				+ useWildcard + ", transformer=" + transformer + "]";
 	}
-	
 }

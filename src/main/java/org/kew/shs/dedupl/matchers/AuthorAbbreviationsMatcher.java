@@ -9,12 +9,15 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 //import java.io.PrintStream;
 import java.util.HashMap;
+import java.util.List;
 //import java.util.Iterator;
 //import java.util.Set;
 import java.text.Normalizer;
 //import java.text.Normalizer.Form;
 
 import org.apache.log4j.Logger;
+import org.kew.shs.dedupl.transformers.Transformer;
+import org.omg.CosNaming.NamingContextExtPackage.AddressHelper;
 
 import com.googlecode.ehcache.annotations.Cacheable;
 
@@ -28,6 +31,12 @@ import com.googlecode.ehcache.annotations.Cacheable;
 public class AuthorAbbreviationsMatcher extends AuthorCommonTokensMatcher{
 
 	public static int COST = 1;
+	
+	private List<Transformer> transformers;
+	
+	public void setTransformers(List<Transformer> transformers){
+		this.transformers = transformers;
+	}
 	
 
 	public int getCost() {
@@ -56,7 +65,41 @@ public class AuthorAbbreviationsMatcher extends AuthorCommonTokensMatcher{
 		authorAbbreviations = loadAbbreviationsList(abbreviationsFile,FILE_DELIMETER);
 		authorSpecialCases =  loadAbbreviationsList(specialCasesFile,FILE_DELIMETER);
 	}
+
+	boolean storeAndReuseTransformations;
+
+	@Cacheable(cacheName="aabMatchCache")
+	public boolean matches_new(String s1, String s2) {
+		// First check for match w/out transform
+		boolean matches = match_inner(s1, s2);
+		if (!matches){
+			String s1_transformed = s1;
+			String s2_transformed = s2;
+			for (Transformer t : transformers){
+				// First attempt to match uses the results of this transformer standalone
+				matches = match_inner(t.transform(s1),t.transform(s2));
+				if (matches) break;
+				if (storeAndReuseTransformations){
+					// Apply transformer to results of previous run and store the results
+					s1_transformed = t.transform(s1_transformed);
+					s2_transformed = t.transform(s2_transformed);
+					matches = match_inner(s1_transformed,s2_transformed);
+				}
+				if (matches) break;
+			}
+        }
+        return matches;
+	}
 	
+
+	public boolean match_inner(String s1, String s2) {
+		boolean matches = false;
+		matches = new ExactMatcher().matches(s1, s2);
+		if (!matches){
+			// TODO : do the common substring calc etc here
+		}
+		return matches;
+	}
 	
 	@Cacheable(cacheName="aabMatchCache")
 	public boolean matches(String s1, String s2) {
@@ -69,7 +112,7 @@ public class AuthorAbbreviationsMatcher extends AuthorCommonTokensMatcher{
 				//are strings equal
 				matches = s1.equals(s2);
 				if (!matches) {
-				
+					
 						//clean the input Strings
 						s1 = clean(s1);
 						s2 = clean(s2);

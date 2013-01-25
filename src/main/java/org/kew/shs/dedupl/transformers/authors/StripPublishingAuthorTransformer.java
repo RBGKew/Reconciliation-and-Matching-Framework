@@ -1,6 +1,7 @@
-package org.kew.shs.dedupl.transformers;
+package org.kew.shs.dedupl.transformers.authors;
 
 import org.apache.commons.lang.StringUtils;
+import org.kew.shs.dedupl.transformers.Transformer;
 
 /**
  * This transformer translates author strings in the form "(Author1) Author2" to "Author1"

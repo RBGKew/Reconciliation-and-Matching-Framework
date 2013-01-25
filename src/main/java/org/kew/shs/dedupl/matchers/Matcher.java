@@ -1,5 +1,6 @@
 package org.kew.shs.dedupl.matchers;
 
+
 /**
  * This interface defines the behaviour expected of Matchers.
  * Some matches are expensive to calculate, so matchers have a cost:
