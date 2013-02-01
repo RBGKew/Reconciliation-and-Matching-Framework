@@ -8,6 +8,6 @@ package org.kew.shs.dedupl;
  */
 public interface Deduplicator extends DataHandler {
 
-	public void setInvestigator(Investigator investigator);
+//	public void setInvestigator(Investigator investigator);
 	
 }

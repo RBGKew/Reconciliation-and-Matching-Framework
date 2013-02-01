@@ -26,10 +26,10 @@ public class DeduplApp extends CoreApp {
 
 		DeduplicationConfiguration config = (DeduplicationConfiguration) context.getBean("config");
 
-		if (config.isWriteComparisonReport()){
-			LuceneDeduplicatorInvestigator i = (LuceneDeduplicatorInvestigator) context.getBean("investigator");
-			i.run();
-		}
+//		if (config.isWriteComparisonReport()){
+//			LuceneDeduplicatorInvestigator i = (LuceneDeduplicatorInvestigator) context.getBean("investigator");
+//			i.run();
+//		}
 
 		// Dump the cache statistics
 		CacheManager cacheManager = (CacheManager) context.getBean("cacheManager");

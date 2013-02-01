@@ -2,9 +2,11 @@ package org.kew.shs.dedupl.lucene;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.lucene.document.Document;
@@ -13,8 +15,8 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.kew.shs.dedupl.Deduplicator;
-import org.kew.shs.dedupl.Investigator;
 import org.kew.shs.dedupl.configuration.Configuration;
+import org.kew.shs.dedupl.configuration.DeduplicationConfiguration;
 import org.kew.shs.dedupl.configuration.Property;
 
 /**
@@ -24,7 +26,16 @@ import org.kew.shs.dedupl.configuration.Property;
  */
 public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 
-	private Investigator investigator;
+	protected DeduplicationConfiguration dedupConfig;
+	
+	public DeduplicationConfiguration getDedupConfig() {
+		if (this.dedupConfig == null) {
+			this.dedupConfig = (DeduplicationConfiguration) this.configuration;
+		}
+		return this.dedupConfig;
+	}
+	private int num_tied_scores = 0;
+//	private Investigator investigator;
 	
 	// TODO: generalise Configuration!
 
@@ -52,12 +63,19 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 		        }
 		    });
 
-			// Open the specified output file for writing
+			// Open the specified output files for writing
 			BufferedWriter bw = new BufferedWriter(new FileWriter(configuration.getOutputFile()));
+			BufferedWriter bw_report = null;
+			BufferedWriter bw_topCopy = null;
+			if (configuration.isWriteComparisonReport())
+				bw_report = new BufferedWriter(new FileWriter(configuration.getReportFile()));
+			if (this.getDedupConfig().isWriteTopCopyReport())
+				bw_topCopy = new BufferedWriter(new FileWriter(this.getDedupConfig().getTopCopyFile()));
 
 			// Loop over all documents in index
 			indexReader = IndexReader.open(directory);
 			int numMatches = 0;
+			List<Document> dupls;
 			for (int i=0; i<indexReader.maxDoc(); i++) {
 				if (indexReader.isDeleted(i))
 					continue;
@@ -67,6 +85,8 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 				}
 
 			    Document fromDoc = getFromLucene(i);
+			    dupls = new ArrayList(); // for each fromDoc we define a new duplicates cluster
+			    dupls.add(fromDoc); // fromDoc itself is always in the cluster
 
 			    log.debug(LuceneUtils.doc2String(fromDoc));
 
@@ -98,13 +118,23 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 
 					if (LuceneUtils.recordsMatch(fromDoc, toDoc, configuration.getProperties())){
 						numMatches++;
+						dupls.add(toDoc);
 						if (sb.length() > 0)
 							sb.append(configuration.getOutputFileIdDelimiter());
 						sb.append(toId);
 						alreadyProcessed.add(toId);
+						if (configuration.isWriteComparisonReport()){
+							bw_report.write(fromId + configuration.getOutputFileDelimiter() + toId + "\n");
+							bw_report.write(LuceneUtils.buildComparisonString(configuration.getProperties(), fromDoc,
+									toDoc));
+						}
 					}
 				}
 				bw.write(fromId + configuration.getOutputFileDelimiter() + sb.toString() + "\n");
+				if (this.getDedupConfig().isWriteTopCopyReport()){
+					Document bestDoc = selectBestDocument(dupls, this.getDedupConfig().getScoreFieldName());
+					bw_topCopy.write(LuceneUtils.doc2Line(bestDoc,configuration.getOutputFileDelimiter()));
+				}
 			}
 
 			// Matchers can output a report on their number of executions:
@@ -116,18 +146,39 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 
 			bw.flush();
 			bw.close();
+			if (configuration.isWriteComparisonReport()){
+				bw_report.flush();
+				bw_report.close();
+			}
+            if (this.getDedupConfig().isWriteTopCopyReport()){
+				bw_topCopy.flush();
+				bw_topCopy.close();
+            }
 			indexWriter.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public Investigator getInvestigator() {
-		return investigator;
+	private Document selectBestDocument(List<Document> docs, String scoreFieldName){
+		Document doc = null;
+		if (docs != null){
+			doc = docs.get(0);
+			if (docs.size() > 1){
+				if (doc.get(scoreFieldName).equals(docs.get(1).get(scoreFieldName))){
+					num_tied_scores++;
+				}
+			}
+		}
+		return doc; 
 	}
 
-	public void setInvestigator(Investigator investigator) {
-		this.investigator = investigator;
-	}
+//	public Investigator getInvestigator() {
+//		return investigator;
+//	}
+//
+//	public void setInvestigator(Investigator investigator) {
+//		this.investigator = investigator;
+//	}
 
 }
