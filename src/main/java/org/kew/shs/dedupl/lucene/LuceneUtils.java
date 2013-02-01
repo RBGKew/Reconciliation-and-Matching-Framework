@@ -45,7 +45,6 @@ public class LuceneUtils {
 				sb.append(fieldSeparator);
 			sb.append(doc.getFieldable(f.name()).stringValue());
 		}
-		sb.append("\n");
 		return sb.toString();
 	}
 	

@@ -1,7 +1,5 @@
 package org.kew.shs.dedupl.lucene;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -18,6 +16,9 @@ import org.kew.shs.dedupl.Deduplicator;
 import org.kew.shs.dedupl.configuration.Configuration;
 import org.kew.shs.dedupl.configuration.DeduplicationConfiguration;
 import org.kew.shs.dedupl.configuration.Property;
+import org.kew.shs.dedupl.reporters.LuceneOutputReporter;
+import org.kew.shs.dedupl.reporters.LuceneReporter;
+import org.kew.shs.dedupl.reporters.Reporter;
 
 /**
  * This is a Lucene implementation of the Deduplicator interface
@@ -27,14 +28,24 @@ import org.kew.shs.dedupl.configuration.Property;
 public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 
 	protected DeduplicationConfiguration dedupConfig;
-	
+
+	protected LuceneReporter[] reporters;
+
+	public Reporter[] getReporters() {
+		return (LuceneReporter[]) reporters;
+	}
+
+	public void setReporters(LuceneReporter[] reporters) {
+		this.reporters = reporters;
+	}
+
 	public DeduplicationConfiguration getDedupConfig() {
 		if (this.dedupConfig == null) {
 			this.dedupConfig = (DeduplicationConfiguration) this.configuration;
 		}
 		return this.dedupConfig;
 	}
-	private int num_tied_scores = 0;
+//	private int num_tied_scores = 0;
 //	private Investigator investigator;
 	
 	// TODO: generalise Configuration!
@@ -63,14 +74,20 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 		        }
 		    });
 
-			// Open the specified output files for writing
-			BufferedWriter bw = new BufferedWriter(new FileWriter(configuration.getOutputFile()));
-			BufferedWriter bw_report = null;
-			BufferedWriter bw_topCopy = null;
-			if (configuration.isWriteComparisonReport())
-				bw_report = new BufferedWriter(new FileWriter(configuration.getReportFile()));
-			if (this.getDedupConfig().isWriteTopCopyReport())
-				bw_topCopy = new BufferedWriter(new FileWriter(this.getDedupConfig().getTopCopyFile()));
+			// intermediate step: set the reporters here
+			DeduplicationConfiguration config = this.getDedupConfig();
+			LuceneReporter outputReporter = new LuceneOutputReporter(config.getOutputFile(),
+					config.getOutputFileDelimiter(), config.getScoreFieldName(), config.ID_FIELD_NAME);
+			this.setReporters(new LuceneReporter[] {outputReporter});
+
+//			// Open the specified output files for writing
+//			BufferedWriter bw = new BufferedWriter(new FileWriter(configuration.getOutputFile()));
+//			BufferedWriter bw_report = null;
+//			BufferedWriter bw_topCopy = null;
+//			if (configuration.isWriteComparisonReport())
+//				bw_report = new BufferedWriter(new FileWriter(configuration.getReportFile()));
+//			if (this.getDedupConfig().isWriteTopCopyReport())
+//				bw_topCopy = new BufferedWriter(new FileWriter(this.getDedupConfig().getTopCopyFile()));
 
 			// Loop over all documents in index
 			indexReader = IndexReader.open(directory);
@@ -81,7 +98,7 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 					continue;
 				if (i % configuration.getAssessReportFrequency() == 0){
 					log.info("Assessed " + i + " records, merged to " + (i - numMatches) + " duplicate clusters");
-					bw.flush();
+//					bw.flush();
 				}
 
 			    Document fromDoc = getFromLucene(i);
@@ -123,18 +140,21 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 							sb.append(configuration.getOutputFileIdDelimiter());
 						sb.append(toId);
 						alreadyProcessed.add(toId);
-						if (configuration.isWriteComparisonReport()){
-							bw_report.write(fromId + configuration.getOutputFileDelimiter() + toId + "\n");
-							bw_report.write(LuceneUtils.buildComparisonString(configuration.getProperties(), fromDoc,
-									toDoc));
-						}
+//						if (configuration.isWriteComparisonReport()){
+//							bw_report.write(fromId + configuration.getOutputFileDelimiter() + toId + "\n");
+//							bw_report.write(LuceneUtils.buildComparisonString(configuration.getProperties(), fromDoc,
+//									toDoc));
+//						}
 					}
 				}
-				bw.write(fromId + configuration.getOutputFileDelimiter() + sb.toString() + "\n");
-				if (this.getDedupConfig().isWriteTopCopyReport()){
-					Document bestDoc = selectBestDocument(dupls, this.getDedupConfig().getScoreFieldName());
-					bw_topCopy.write(LuceneUtils.doc2Line(bestDoc,configuration.getOutputFileDelimiter()));
+				for (LuceneReporter reporter : this.reporters) {
+					reporter.report(dupls);
 				}
+//				bw.write(fromId + configuration.getOutputFileDelimiter() + sb.toString() + "\n");
+//				if (this.getDedupConfig().isWriteTopCopyReport()){
+//					Document bestDoc = selectBestDocument(dupls, this.getDedupConfig().getScoreFieldName());
+//					bw_topCopy.write(LuceneUtils.doc2Line(bestDoc,configuration.getOutputFileDelimiter()));
+//				}
 			}
 
 			// Matchers can output a report on their number of executions:
@@ -144,33 +164,25 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 					log.debug(p.getMatcher().getExecutionReport());
 			}
 
-			bw.flush();
-			bw.close();
-			if (configuration.isWriteComparisonReport()){
-				bw_report.flush();
-				bw_report.close();
-			}
-            if (this.getDedupConfig().isWriteTopCopyReport()){
-				bw_topCopy.flush();
-				bw_topCopy.close();
-            }
+//			bw.flush();
+//			bw.close();
+//			if (configuration.isWriteComparisonReport()){
+//				bw_report.flush();
+//				bw_report.close();
+//			}
+//            if (this.getDedupConfig().isWriteTopCopyReport()){
+//				bw_topCopy.flush();
+//				bw_topCopy.close();
+//            }
 			indexWriter.close();
+			for (Reporter reporter : this.reporters) {
+				reporter.finish();
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
 
-	private Document selectBestDocument(List<Document> docs, String scoreFieldName){
-		Document doc = null;
-		if (docs != null){
-			doc = docs.get(0);
-			if (docs.size() > 1){
-				if (doc.get(scoreFieldName).equals(docs.get(1).get(scoreFieldName))){
-					num_tied_scores++;
-				}
-			}
-		}
-		return doc; 
 	}
 
 //	public Investigator getInvestigator() {
