@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:util="http://www.springframework.org/schema/util"
 	xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:c="http://www.springframework.org/schema/c"
@@ -13,11 +13,11 @@
 			<value>ipni-genera-dedupl.properties</value>
 		</property>
 	</bean>
-	
+
 	<!--  where the lucene indexes are stored -->
 	<bean id="lucene_directory" class="java.lang.String">
 		<constructor-arg value="target/deduplicator"/>
-	</bean> 
+	</bean>
 
 	<!-- Input and output files -->
 	<bean id="inputfile" class="java.io.File">
@@ -31,15 +31,15 @@
 		<constructor-arg value="${datadir}/report.txt" />
 	</bean>
 	<bean id="topcopyfile" class="java.io.File">
-		<constructor-arg value="${datadir}/topcopy.txt" />
+		<constructor-arg value="${datadir}/output_multiline.txt" />
 	</bean>
 
 	<!-- Matchers:
 		These define how two values should be considered matches -->
-		
+
 	<bean id="exactMatcher" class="org.kew.shs.dedupl.matchers.ExactMatcher" />
-	
-	<bean id="levenshteinMatcher" class="org.kew.shs.dedupl.matchers.LevenshteinMatcher" 
+
+	<bean id="levenshteinMatcher" class="org.kew.shs.dedupl.matchers.LevenshteinMatcher"
 		p:maxDistance="1"/>
 
 	<bean id="ocrCanonicaliserMatcher" class="org.kew.shs.dedupl.matchers.OcrCanonicaliserMatcher" />
@@ -51,29 +51,29 @@
 				<ref bean="ocrCanonicaliserMatcher"/>
 			</util:list>
 		</property>
-	</bean>	
-	
-	<bean id="commonTokensMatcher" class="org.kew.shs.dedupl.matchers.CommonTokensMatcher" 
+	</bean>
+
+	<bean id="commonTokensMatcher" class="org.kew.shs.dedupl.matchers.CommonTokensMatcher"
 		p:minRatio="0.5"/>
 
-	<bean id="authorCommonTokensMatcher" class="org.kew.shs.dedupl.matchers.AuthorCommonTokensMatcher" 
+	<bean id="authorCommonTokensMatcher" class="org.kew.shs.dedupl.matchers.AuthorCommonTokensMatcher"
 		p:minRatio="0.5"/>
 
-	<bean id="capitalLettersMatcher" class="org.kew.shs.dedupl.matchers.CapitalLettersMatcher" 
+	<bean id="capitalLettersMatcher" class="org.kew.shs.dedupl.matchers.CapitalLettersMatcher"
 		p:minRatio="0.5"/>
 
-	<bean id="numberMatcher" class="org.kew.shs.dedupl.matchers.NumberMatcher" 
+	<bean id="numberMatcher" class="org.kew.shs.dedupl.matchers.NumberMatcher"
 		p:minRatio="0.5"/>
 
-	<bean id="ngramMatcher" class="org.kew.shs.dedupl.matchers.NGramMatcher" 
+	<bean id="ngramMatcher" class="org.kew.shs.dedupl.matchers.NGramMatcher"
 		p:minRatio="0.5" p:nGramLength="2"/>
-	
-	<bean id="yearMatcher" class="org.kew.shs.dedupl.matchers.InitialSubstringMatcher" 
+
+	<bean id="yearMatcher" class="org.kew.shs.dedupl.matchers.InitialSubstringMatcher"
 		p:prefixSize="3"/>
 
 	<bean id="alwaysMatchingMatcher" class="org.kew.shs.dedupl.matchers.AlwaysMatchingMatcher" />
 
-	<!-- Transformers: 
+	<!-- Transformers:
 		These carry out defined transformations to clean values before storage -->
 	<bean id="genusCleaner"
 		class="org.kew.shs.dedupl.transformers.StripNonAlphabeticCharactersTransformer" />
@@ -81,34 +81,34 @@
 	<bean id="epithetCleaner"
 		class="org.kew.shs.dedupl.transformers.EpithetTransformer" />
 
-	<bean id="yearCleaner" 
+	<bean id="yearCleaner"
 		class="org.kew.shs.dedupl.transformers.ZeroToBlankTransformer" />
 
-	<bean id="collationCleaner" 
+	<bean id="collationCleaner"
 		class="org.kew.shs.dedupl.transformers.CompositeTransformer">
 		<property name="transformers">
 			<util:list id="1">
-				<bean id="icollationCleaner" 
+				<bean id="icollationCleaner"
 					class="org.kew.shs.dedupl.transformers.StripNonAlphanumericCharactersTransformer" />
-				<bean id="rcollationCleaner" 
+				<bean id="rcollationCleaner"
 					class="org.kew.shs.dedupl.transformers.RomanNumeralTransformer" />
 			</util:list>
 		</property>
 	</bean>
-		
 
-	<!-- Column based properties, these define: column index of the property 
-		in the input file, how these should be cleaned prior to storage (using 
-		references to transformers as defined above), if they should 
-		be used in the select to find possible matches, how these should match 
+
+	<!-- Column based properties, these define: column index of the property
+		in the input file, how these should be cleaned prior to storage (using
+		references to transformers as defined above), if they should
+		be used in the select to find possible matches, how these should match
 		(using references to matchers as defined above) -->
 	<util:list id="columnProperties">
-		<bean class="org.kew.shs.dedupl.configuration.Property" 
+		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="family"
 			p:columnIndex="1"
 			p:matcher-ref="alwaysMatchingMatcher"
 			p:useInSelect="false"/>
-		<!--bean class="org.kew.shs.dedupl.configuration.Property" 
+		<!--bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="infra_family"
 			p:columnIndex="2"
 			p:matcher-ref="exactMatcher"
@@ -143,7 +143,7 @@
 			p:transformer-ref="epithetCleaner"
 			p:useInSelect="true"
 			p:indexLength="true"
-			p:indexInitial="true"/-->		
+			p:indexInitial="true"/-->
 		<!--bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="rank"
 			p:columnIndex="3"
@@ -183,7 +183,7 @@
 			p:matcher-ref="alwaysMatchingMatcher"
 			p:useInSelect="false"/>
 	</util:list>
-	
+
 	<bean id="config" class="org.kew.shs.dedupl.configuration.DeduplicationConfiguration"
 		p:inputFile-ref="inputfile"
 		p:inputFileDelimiter="&#09;"
@@ -199,12 +199,12 @@
 		p:writeTopCopyReport="true"
 		p:topCopyFile-ref="topcopyfile"
 		p:scoreFieldName="std_score"/>
-		
+
 	<bean id="investigator" class="org.kew.shs.dedupl.lucene.LuceneDeduplicatorInvestigator"
 		p:configuration-ref="config"
 		p:directory-ref="luceneFileSystemStore"
 		p:luceneVersion-ref="LUCENE_VERSION"
 		p:queryParser-ref="queryParser"
 	/>
-		
+
 </beans>
