@@ -13,14 +13,13 @@ import com.googlecode.ehcache.annotations.Cacheable;
 public class CapitalLettersMatcher extends CommonTokensMatcher{
 
 	public static int COST = 5;
-	private double minRatio=0.5;
-	
-	public double getMinRatio() {
-		return minRatio;
+
+	public CapitalLettersMatcher () {
+		super.setMinRatio(0.5); // that's the only way I can imagine to overwrite commonTokenMatcher's default
 	}
 
 	public void setMinRatio(double minRatio) {
-		this.minRatio = minRatio;
+		super.setMinRatio(minRatio);
 	}
 
 	public int getCost() {
@@ -48,16 +47,16 @@ public class CapitalLettersMatcher extends CommonTokensMatcher{
 	public boolean isExact() {
 		return false;
 	}
-	
+
 	public String getExecutionReport() {
 		return null;
 	}
-	
+
 	public static void main(String[] args) {
 		CapitalLettersMatcher m = new CapitalLettersMatcher();
 		System.out.println(m.matches("Addit. Fl. Jam.", "Bull. Inst. Jamaica, Sci. Ser."));
 		CommonTokensMatcher cm = new CommonTokensMatcher();
 		System.out.println(cm.matches("A F J", "B I J S S"));
 	}
-	
+
 }
