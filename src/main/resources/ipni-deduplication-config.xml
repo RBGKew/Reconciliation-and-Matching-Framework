@@ -197,11 +197,4 @@
 		p:topCopyFile-ref="topcopyfile"
 		p:scoreFieldName="std_score"/>
 		
-	<bean id="investigator" class="org.kew.shs.dedupl.lucene.LuceneDeduplicatorInvestigator"
-		p:configuration-ref="config"
-		p:directory-ref="luceneFileSystemStore"
-		p:luceneVersion-ref="LUCENE_VERSION"
-		p:queryParser-ref="queryParser"
-	/>
-		
 </beans>

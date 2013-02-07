@@ -8,11 +8,20 @@
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
-	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location">
-			<value>ipni-genera-dedupl.properties</value>
+	<!--bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+            <list>
+                <value>file:${NMT_DATADIR}/nmt.properties</value>
+            </list>
 		</property>
-	</bean>
+	</bean-->
+
+    <bean id="preferencePlaceHolder" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
+		<property name="locations">
+            <list>
+            </list>
+		</property>
+    </bean>
 
 	<!--  where the lucene indexes are stored -->
 	<bean id="lucene_directory" class="java.lang.String">
@@ -21,17 +30,17 @@
 
 	<!-- Input and output files -->
 	<bean id="inputfile" class="java.io.File">
-		<constructor-arg value="${datadir}/input.tsv" />
+        <constructor-arg value="${NMT_DATADIR}/../input_sorted.tsv" />
 	</bean>
 
 	<bean id="outputfile" class="java.io.File">
-		<constructor-arg value="${datadir}/output.txt" />
+		<constructor-arg value="${NMT_DATADIR}/output_precleaned-year.txt" />
 	</bean>
 	<bean id="reportfile" class="java.io.File">
-		<constructor-arg value="${datadir}/report.txt" />
+		<constructor-arg value="${NMT_DATADIR}/report_precleaned-year.txt" />
 	</bean>
 	<bean id="topcopyfile" class="java.io.File">
-		<constructor-arg value="${datadir}/output_multiline.txt" />
+		<constructor-arg value="${NMT_DATADIR}/output_multiline_precleaned-year.txt" />
 	</bean>
 
 	<!-- Matchers:
@@ -84,6 +93,12 @@
 	<bean id="yearCleaner"
 		class="org.kew.shs.dedupl.transformers.ZeroToBlankTransformer" />
 
+	<bean id="safeStripNonAlphasTransformer"
+		class="org.kew.shs.dedupl.transformers.SafeStripNonAlphasTransformer" />
+
+	<bean id="safeStripNonAlphanumericsTransformer"
+		class="org.kew.shs.dedupl.transformers.SafeStripNonAlphanumericsTransformer" />
+
 	<bean id="collationCleaner"
 		class="org.kew.shs.dedupl.transformers.CompositeTransformer">
 		<property name="transformers">
@@ -108,11 +123,6 @@
 			p:columnIndex="1"
 			p:matcher-ref="alwaysMatchingMatcher"
 			p:useInSelect="false"/>
-		<!--bean class="org.kew.shs.dedupl.configuration.Property"
-			p:name="infra_family"
-			p:columnIndex="2"
-			p:matcher-ref="exactMatcher"
-			p:useInSelect="true"/-->
 		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="genus"
 			p:columnIndex="2"
@@ -122,47 +132,28 @@
 			p:indexInitial="true"
 			p:indexLength="true"
 			p:useWildcard="true"/>
-		<!--bean class="org.kew.shs.dedupl.configuration.Property"
-			p:name="infra_genus"
-			p:columnIndex="4"
-			p:matcher-ref="exactMatcher"
-			p:transformer-ref="genusCleaner"
-			p:useInSelect="true"/>
 		<bean class="org.kew.shs.dedupl.configuration.Property"
-			p:name="species"
-			p:columnIndex="5"
-			p:matcher-ref="epithetMatcher"
-			p:transformer-ref="epithetCleaner"
-			p:useInSelect="true"
-			p:indexLength="true"
-			p:indexInitial="true"/>
-		<bean class="org.kew.shs.dedupl.configuration.Property"
-			p:name="infra_species"
-			p:columnIndex="6"
-			p:matcher-ref="epithetMatcher"
-			p:transformer-ref="epithetCleaner"
-			p:useInSelect="true"
-			p:indexLength="true"
-			p:indexInitial="true"/-->
-		<!--bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="rank"
 			p:columnIndex="3"
-			p:matcher-ref="exactMatcher"
+            p:matcher-ref="alwaysMatchingMatcher"
 			p:transformer-ref="epithetCleaner"
-			p:useInSelect="true"/-->
+			p:useInSelect="true"/>
 		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="basionymAuthor"
 			p:columnIndex="4"
 			p:matcher-ref="authorCommonTokensMatcher"
+			p:transformer-ref="safeStripNonAlphasTransformer"
 			p:blanksMatch="true"/>
 		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="author"
 			p:columnIndex="5"
+			p:transformer-ref="safeStripNonAlphasTransformer"
 			p:matcher-ref="authorCommonTokensMatcher"/>
 		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="publication"
 			p:columnIndex="6"
 			p:matcher-ref="capitalLettersMatcher"
+			p:transformer-ref="safeStripNonAlphanumericsTransformer"
 			p:blanksMatch="true"/>
 		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="collation"
@@ -174,12 +165,17 @@
 		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="year"
 			p:columnIndex="8"
-			p:matcher-ref="yearMatcher"
+			p:matcher-ref="alwaysMatchingMatcher"
 			p:blanksMatch="true"
 			p:transformer-ref="yearCleaner"/>
 		<bean class="org.kew.shs.dedupl.configuration.Property"
-			p:name="std_score"
+			p:name="year_DIT"
 			p:columnIndex="9"
+			p:matcher-ref="yearMatcher"
+            p:blanksMatch="true"/>
+		<bean class="org.kew.shs.dedupl.configuration.Property"
+			p:name="std_score"
+			p:columnIndex="10"
 			p:matcher-ref="alwaysMatchingMatcher"
 			p:useInSelect="false"/>
 	</util:list>
@@ -187,6 +183,7 @@
 	<bean id="config" class="org.kew.shs.dedupl.configuration.DeduplicationConfiguration"
 		p:inputFile-ref="inputfile"
 		p:inputFileDelimiter="&#09;"
+		p:inputFileIgnoreHeader="true"
 		p:outputFileDelimiter="&#09;"
 		p:outputFileIdDelimiter=","
 		p:outputFile-ref="outputfile"
