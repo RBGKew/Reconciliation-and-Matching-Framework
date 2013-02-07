@@ -1,46 +1,35 @@
 package org.kew.shs.dedupl.matchers;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
-public class NeverMatchingMatcherTest extends TestCase {
+import org.junit.Test;
 
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public NeverMatchingMatcherTest(String testName){
-        super( testName );
-    }
+public class NeverMatchingMatcherTest {
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite(){
-        return new TestSuite( NeverMatchingMatcherTest.class );
-    }
-
+	@Test
 	public void testNullMatches() {
 		Matcher matcher = new NeverMatchingMatcher();
 		assertFalse(matcher.matches(null, null));
 	}
 
+	@Test
 	public void testBlankMatches() {
 		Matcher matcher = new NeverMatchingMatcher();
 		assertFalse(matcher.matches("", ""));
 	}
 
+	@Test
 	public void testNullBlankMatches() {
 		Matcher matcher = new NeverMatchingMatcher();
 		assertFalse(matcher.matches("", null));
 	}
 
+	@Test
 	public void testStringMatches() {
 		Matcher matcher = new NeverMatchingMatcher();
 		assertFalse(matcher.matches("one", "one"));
 	}
-	
+
 
 }

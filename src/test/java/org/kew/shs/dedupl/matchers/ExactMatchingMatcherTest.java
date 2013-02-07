@@ -1,53 +1,44 @@
 package org.kew.shs.dedupl.matchers;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
-public class ExactMatchingMatcherTest extends TestCase {
+import org.junit.Test;
 
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public ExactMatchingMatcherTest(String testName){
-        super( testName );
-    }
+public class ExactMatchingMatcherTest {
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite(){
-        return new TestSuite( ExactMatchingMatcherTest.class );
-    }
-
+	@Test
 	public void testNullMatches() {
 		Matcher matcher = new ExactMatcher();
 		assertTrue(matcher.matches(null, null));
 	}
 
+	@Test
 	public void testBlankMatches() {
 		Matcher matcher = new ExactMatcher();
 		assertTrue(matcher.matches("", ""));
 	}
 
+	@Test
 	public void testNullBlankMatches() {
 		Matcher matcher = new ExactMatcher();
 		assertFalse(matcher.matches("", null));
 		assertFalse(matcher.matches(null,""));
 	}
 
+	@Test
 	public void testStringMatches() {
 		Matcher matcher = new ExactMatcher();
 		assertTrue(matcher.matches("one", "one"));
 	}
-	
+
+	@Test
 	public void testStringCaseMatches() {
 		Matcher matcher = new ExactMatcher();
 		assertFalse(matcher.matches("one", "One"));
 	}
 
+	@Test
 	public void testStringTrimMatches() {
 		Matcher matcher = new ExactMatcher();
 		assertFalse(matcher.matches("one", "one "));

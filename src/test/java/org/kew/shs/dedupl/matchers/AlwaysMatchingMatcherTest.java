@@ -1,27 +1,12 @@
 package org.kew.shs.dedupl.matchers;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.Assert.assertTrue;
 
-public class AlwaysMatchingMatcherTest extends TestCase {
+import org.junit.Test;
 
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AlwaysMatchingMatcherTest(String testName){
-        super( testName );
-    }
+public class AlwaysMatchingMatcherTest {
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite(){
-        return new TestSuite( AlwaysMatchingMatcherTest.class );
-    }
-
+	@Test
 	public void testNullMatches() {
 		Matcher matcher = new AlwaysMatchingMatcher();
 		assertTrue(matcher.matches(null, null));
@@ -41,6 +26,5 @@ public class AlwaysMatchingMatcherTest extends TestCase {
 		Matcher matcher = new AlwaysMatchingMatcher();
 		assertTrue(matcher.matches("one", "two"));
 	}
-	
 
 }
