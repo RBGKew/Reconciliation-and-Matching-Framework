@@ -63,8 +63,6 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 		try {
 			log.debug(new java.util.Date(System.currentTimeMillis()));
 
-			IndexSearcher indexSearcher = new IndexSearcher(directory);
-
 			// Sort properties in order of cost:
 			Collections.sort(configuration.getProperties(),  new Comparator<Property>() {
 				public int compare(final Property p1,final Property p2) {
@@ -77,14 +75,16 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 			// TODO: define the reporters in the configuration
 			DeduplicationConfiguration config = this.getDedupConfig();
 			LuceneReporter outputReporter = new LuceneOutputReporter(config.getOutputFile(),
-					config.getOutputFileDelimiter(), config.getScoreFieldName(), config.ID_FIELD_NAME);
+					config.getOutputFileDelimiter(), config.getScoreFieldName(), Configuration.ID_FIELD_NAME);
 			// for the multiline output we (ab)use the topCopy configuration for now :-|
 			LuceneReporter outputReporterMultiline = new LuceneOutputReporterMultiline(config.getTopCopyFile(),
-					config.getOutputFileDelimiter(), config.getScoreFieldName(), config.ID_FIELD_NAME);
+					config.getOutputFileDelimiter(), config.getScoreFieldName(), Configuration.ID_FIELD_NAME);
 			this.setReporters(new LuceneReporter[] {outputReporter, outputReporterMultiline});
 
 			// Loop over all documents in index
 			indexReader = IndexReader.open(directory);
+			IndexSearcher indexSearcher = new IndexSearcher(indexReader);
+
 			int numMatches = 0;
 			DocList dupls;
 			for (int i=0; i<indexReader.maxDoc(); i++) {

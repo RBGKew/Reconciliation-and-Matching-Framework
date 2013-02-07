@@ -61,12 +61,12 @@ public class LuceneMatcher extends LuceneHandler implements DataMatcher{
 
 		int i = 0;
 		String line = null;
-		try {
+		try (BufferedReader br = new BufferedReader(new FileReader(getMatchConfig().getIterateFile()))) {
 
 			log.debug(new java.util.Date(System.currentTimeMillis()));
 
-			IndexSearcher indexSearcher = new IndexSearcher(directory);
 			indexReader = IndexReader.open(directory);
+			IndexSearcher indexSearcher = new IndexSearcher(indexReader);
 
 			BufferedWriter bw = new BufferedWriter(new FileWriter(configuration.getOutputFile()));
 
@@ -83,8 +83,6 @@ public class LuceneMatcher extends LuceneHandler implements DataMatcher{
 				log.debug("Configured to output all matches");
 			else
 				log.debug("Configured to only output top match");
-
-			BufferedReader br = new BufferedReader(new FileReader(getMatchConfig().getIterateFile()));
 
 			int numMatches = 0;
 			int numColumns = LuceneDataLoader.calculateNumberColumns(configuration.getProperties());

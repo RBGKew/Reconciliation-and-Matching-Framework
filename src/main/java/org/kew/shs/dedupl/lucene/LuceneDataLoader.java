@@ -41,9 +41,8 @@ public class LuceneDataLoader implements DataLoader{
 	public void load(File file){
 		int i = 0;
 
-		try{
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 			// Read from the specified input file
-			BufferedReader br = new BufferedReader(new FileReader(file));
 			String line = null;
 			int numColumns = calculateNumberColumns(configuration.getProperties());
 			if (configuration.isInputFileIgnoreHeader())
@@ -90,7 +89,6 @@ public class LuceneDataLoader implements DataLoader{
 					log.info("Indexed " + i + " documents");
 			}
 			indexWriter.commit();
-			//writer.close();
 		}
 		catch(Exception e){
 			e.printStackTrace();
