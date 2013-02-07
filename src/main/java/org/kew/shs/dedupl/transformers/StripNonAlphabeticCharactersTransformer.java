@@ -8,7 +8,7 @@ package org.kew.shs.dedupl.transformers;
 public class StripNonAlphabeticCharactersTransformer implements Transformer{
 
 	public String transform(String s) {
-		return s.replaceAll("[^A-Za-z]", "");
+		return s.replaceAll("[^A-Za-z]", " ").replaceAll("\\s+", " ");
 	}
-	
+
 }
