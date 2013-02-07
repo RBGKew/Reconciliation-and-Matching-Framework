@@ -10,6 +10,7 @@ public class Configuration {
 	
 	private File inputFile;
 	private String inputFileDelimiter;
+	private boolean inputFileIgnoreHeader = false;
 	
 	private File outputFile;
 	private String outputFileDelimiter;
@@ -42,6 +43,12 @@ public class Configuration {
 	}
 	public void setInputFile(File inputFile) {
 		this.inputFile = inputFile;
+	}
+	public boolean isInputFileIgnoreHeader() {
+		return inputFileIgnoreHeader;
+	}
+	public void setInputFileIgnoreHeader(boolean inputFileIgnoreHeader) {
+		this.inputFileIgnoreHeader = inputFileIgnoreHeader;
 	}
 	public File getOutputFile() {
 		return outputFile;

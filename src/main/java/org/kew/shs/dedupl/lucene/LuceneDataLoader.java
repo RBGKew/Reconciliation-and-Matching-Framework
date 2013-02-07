@@ -29,24 +29,25 @@ public class LuceneDataLoader implements DataLoader{
 	private FSDirectory directory;
 
 	private Analyzer analyzer;
-	
+
 	private Configuration configuration;
-	
+
 	private static Logger log = Logger.getLogger(LuceneDataLoader.class);
-	
+
 	public void load(){
 		load(configuration.getInputFile());
 	}
-	
+
 	public void load(File file){
 		int i = 0;
-		
+
 		try{
 			// Read from the specified input file
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			String line = null;
 			int numColumns = calculateNumberColumns(configuration.getProperties());
-			
+			if (configuration.isInputFileIgnoreHeader())
+				br.readLine();
 			while ((line = br.readLine()) != null){
 				Document doc = new Document();
 				String[] elem = line.split(configuration.getInputFileDelimiter(), numColumns+1);
@@ -57,7 +58,7 @@ public class LuceneDataLoader implements DataLoader{
 				// The remainder of the columns are added as specified in the properties
 				for (Property p : configuration.getProperties()){
 					String value = elem[p.getColumnIndex()];
-					
+
 					if (p.isIndexOriginal()){
 						// Index value in its original state, pre transformation
 						Field f1 = new Field(p.getName() + Configuration.ORIGINAL_SUFFIX, value, Field.Store.YES,Field.Index.ANALYZED);
@@ -69,11 +70,11 @@ public class LuceneDataLoader implements DataLoader{
 						value = p.getTransformer().transform(value);
 					Field f = new Field(p.getName(), value, Field.Store.YES,Field.Index.ANALYZED);
 					doc.add(f);
-					
-					// For some fields (those which will be passed into a fuzzy matcher like 
+
+					// For some fields (those which will be passed into a fuzzy matcher like
 					// Levenshtein), we index the length
 					if (p.isIndexLength()){
-						int length = 0; 
+						int length = 0;
 						if (value != null)
 							length = value.length();
 						Field fl = new Field(p.getName() + Configuration.LENGTH_SUFFIX, String.format("%02d", length), Field.Store.YES,Field.Index.ANALYZED);
@@ -145,5 +146,5 @@ public class LuceneDataLoader implements DataLoader{
 	public void setConfiguration(Configuration configuration) {
 		this.configuration = configuration;
 	}
-	
+
 }
