@@ -85,13 +85,15 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 			indexReader = IndexReader.open(directory);
 			IndexSearcher indexSearcher = new IndexSearcher(indexReader);
 
-			int numMatches = 0;
+			int numClusters = 0;
 			DocList dupls;
 			for (int i=0; i<indexReader.maxDoc(); i++) {
-				if (indexReader.isDeleted(i))
+				if (indexReader.isDeleted(i)) {
+					log.error("this record id appears to be deleted in the index. why??");
 					continue;
+				}
 				if (i % configuration.getAssessReportFrequency() == 0){
-					log.info("Assessed " + i + " records, merged to " + (i - numMatches) + " duplicate clusters");
+					log.info("Assessed " + i + " records, merged to " + (numClusters) + " duplicate clusters");
 				}
 
 				Document fromDoc = getFromLucene(i);
@@ -126,7 +128,6 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 						continue;
 
 					if (LuceneUtils.recordsMatch(fromDoc, toDoc, configuration.getProperties())){
-						numMatches++;
 						dupls.add(toDoc);
 						if (sb.length() > 0)
 							sb.append(configuration.getOutputFileIdDelimiter());
@@ -136,6 +137,7 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 				}
 				// use the DocList's specific sort method to sort on the scoreField.
 				dupls.sort();
+				numClusters ++;
 				// call each reporter that has a say; all they get is a complete list of duplicates for this record.
 				for (LuceneReporter reporter : this.reporters) {
 					reporter.report(dupls);
