@@ -9,6 +9,7 @@ public class Configuration {
 	private List<Property> properties;
 	
 	private File inputFile;
+	private String inputFileEncoding = "UTF8";
 	private String inputFileDelimiter;
 	private boolean inputFileIgnoreHeader = false;
 	
@@ -41,8 +42,14 @@ public class Configuration {
 	public File getInputFile() {
 		return inputFile;
 	}
+	public String getInputFileEncoding() {
+		return inputFileEncoding;
+	}
 	public void setInputFile(File inputFile) {
 		this.inputFile = inputFile;
+	}
+	public void setInputFileEncoding(String inputFileEncoding) {
+		this.inputFileEncoding = inputFileEncoding;
 	}
 	public boolean isInputFileIgnoreHeader() {
 		return inputFileIgnoreHeader;

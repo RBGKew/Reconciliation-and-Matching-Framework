@@ -2,7 +2,8 @@ package org.kew.shs.dedupl.lucene;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,8 +41,8 @@ public class LuceneDataLoader implements DataLoader{
 
 	public void load(File file){
 		int i = 0;
-
-		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		String encoding = configuration.getInputFileEncoding();
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), encoding))) {
 			// Read from the specified input file
 			String line = null;
 			int numColumns = calculateNumberColumns(configuration.getProperties());
