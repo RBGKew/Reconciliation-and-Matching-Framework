@@ -94,7 +94,7 @@ public class LuceneDataLoader implements DataLoader{
 		catch(Exception e){
 			e.printStackTrace();
 		}
-		log.debug("Indexed " + i + " documents");
+		log.info("Indexed " + i + " documents");
 	}
 
 	public static int calculateNumberColumns(List<Property> properties){

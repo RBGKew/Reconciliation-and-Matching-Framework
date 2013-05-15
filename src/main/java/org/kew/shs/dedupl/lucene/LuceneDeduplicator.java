@@ -92,7 +92,7 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 					log.error("this record id appears to be deleted in the index. why??");
 					continue;
 				}
-				if (i % configuration.getAssessReportFrequency() == 0){
+				if (i % configuration.getAssessReportFrequency() == 0 || i == indexReader.maxDoc() - 1){
 					log.info("Assessed " + i + " records, merged to " + (numClusters) + " duplicate clusters");
 				}
 
