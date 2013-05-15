@@ -11,6 +11,7 @@ public class NumberMatcher extends CommonTokensMatcher {
 
 	public static int COST = 5;
 	private double minRatio=0.5;
+	public boolean noNumbersRequireRestMatch = true;
 	
 	public double getMinRatio() {
 		return minRatio;
@@ -31,7 +32,12 @@ public class NumberMatcher extends CommonTokensMatcher {
 			matches = true;
 		else{
 			try{
-				matches = super.matches(doConvert(s1),doConvert(s2));
+				String no1 = doConvert(s1);
+				String no2 = doConvert(s2);
+				if (noNumbersRequireRestMatch && no1.length() == 0 && no2.length() == 0) {
+					return (s1 == s2);
+				}
+				matches = super.matches(no1, no2);
 			}
 			catch (Exception e) {
 				;
@@ -41,7 +47,7 @@ public class NumberMatcher extends CommonTokensMatcher {
 	}
 
 	private String doConvert(String s){
-		return s.replaceAll("[^0-9]", " ").replaceAll("\\s+", " ");
+		return s.replaceAll("[^0-9]", " ").replaceAll("\\s+", " ").trim();
 	}
 	
 	public boolean isExact() {
