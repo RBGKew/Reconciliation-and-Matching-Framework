@@ -44,4 +44,9 @@ public class ExactMatchingMatcherTest {
 		assertFalse(matcher.matches("one", "one "));
 	}
 
+	@Test
+	public void testStringWithWhitespaces () {
+		Matcher matcher = new ExactMatcher();
+		assertTrue(matcher.matches("hello kitty", "hello kitty"));
+	}
 }

@@ -18,4 +18,9 @@ public class SafeStripNonAlphasTransformerTest {
 		assertEquals("Tete a tete en ", transformer.transform("Tête-à-tête en 2"));
 	}
 
+	@Test
+	public void twoStringsWithHyphen () {
+		Transformer transformer = new SafeStripNonAlphasTransformer();
+		assertEquals("hello kitty", transformer.transform("hello-kitty"));
+	}
 }
