@@ -50,7 +50,8 @@ public class LuceneDataLoader implements DataLoader{
 				br.readLine();
 			while ((line = br.readLine()) != null){
 				Document doc = new Document();
-				String[] elem = line.split(configuration.getInputFileDelimiter(), numColumns+1);
+				String[] elem = line.split(configuration.getInputFileDelimiter());
+//				String[] elem = line.split(configuration.getInputFileDelimiter(), numColumns+1);
 				log.debug(Arrays.toString(elem));
 				// The first element is always the ID
 				doc.add(new Field(Configuration.ID_FIELD_NAME, elem[0], Field.Store.YES,Field.Index.ANALYZED));
