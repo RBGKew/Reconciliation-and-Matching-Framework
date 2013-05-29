@@ -15,7 +15,7 @@ import org.kew.shs.dedupl.configuration.Property;
 public class LuceneUtils {
 
 	private static final Logger log = Logger.getLogger(LuceneUtils.class);
-	
+
 	public static String doc2String(Document doc){
 		return doc2String(doc, "");
 	}
@@ -27,7 +27,7 @@ public class LuceneUtils {
 		}
 		return map;
 	}
-	
+
 	public static String doc2String(Document doc, String prefix){
 		StringBuffer sb = new StringBuffer();
 		for (Fieldable f : doc.getFields()){
@@ -47,13 +47,13 @@ public class LuceneUtils {
 		}
 		return sb.toString();
 	}
-	
+
 	public static String buildComparisonString(List<Property> properties, Document doc1, Document doc2){
 		return buildComparisonString(properties, doc2Map(doc1), doc2Map(doc2), "#");
 	}
 
 	/**
-	 * Return a string containing the field names and values for those fields that 
+	 * Return a string containing the field names and values for those fields that
 	 * differ in value between the two records supplied.
 	 * @param doc1
 	 * @param doc2
@@ -67,7 +67,7 @@ public class LuceneUtils {
 	public static String buildComparisonString(List<Property> properties, Map<String,String> map, Document doc, String prefix){
 		return buildComparisonString(properties, map, doc2Map(doc), prefix);
 	}
-	
+
 	public static String buildComparisonString(List<Property> properties, Map<String,String> map1, Map<String,String> map2, String prefix){
 		StringBuffer sb = new StringBuffer();
 		for (Property p : properties){
@@ -84,10 +84,10 @@ public class LuceneUtils {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * Return a string containing all the matched field names and comparison metrics
-	 * String is written to a file which can be loaded into a db table for further analysis 
+	 * String is written to a file which can be loaded into a db table for further analysis
 	 * @param doc1
 	 * @param doc2
 	 * @param prefix
@@ -96,11 +96,11 @@ public class LuceneUtils {
 	public static String buildFullComparisonString(Map<String,String> map, Document doc){
 		return buildFullComparisonString(map, doc2Map(doc), "#");
 	}
-	
+
 	public static String buildFullComparisonString(Map<String,String> map, Document doc, String prefix){
 		return buildFullComparisonString(map, doc2Map(doc), prefix);
 	}
-	
+
 	public static String buildFullComparisonString(Map<String,String> map1, Map<String,String> map2, String prefix){
 		StringBuffer sb = new StringBuffer();
 		for (String key : map1.keySet()){
@@ -110,18 +110,18 @@ public class LuceneUtils {
 					//sb.append(key).append(prefix);
 					sb.append(v1).append(prefix);
 					sb.append(v2).append(prefix);
-					
+
 				//}
-			
+
 		}
 		sb.append("\n");
 		return sb.toString();
 	}
-	
+
 	public static String buildNoMatchDelimitedString(Map<String,String> map){
 		return buildNoMatchDelimitedString(map, "#");
 	}
-	
+
 	public static String buildNoMatchDelimitedString(Map<String,String> map, String prefix){
 		StringBuffer sb = new StringBuffer();
 		for (String key : map.keySet()){
@@ -131,8 +131,8 @@ public class LuceneUtils {
 		}
 		       sb.append("\n");
 			   return sb.toString();
-	}	
-	
+	}
+
 	public static String buildQuery(List<Property> properties, Document doc, boolean dedupl){
 		Map<String,String> map = doc2Map(doc);
 		return buildQuery(properties, map, dedupl);
@@ -145,35 +145,37 @@ public class LuceneUtils {
 			sb.append("NOT " + Configuration.ID_FIELD_NAME + ":" + map.get(Configuration.ID_FIELD_NAME));
 		}
 		for (Property p : properties){
-			if (p.isUseInSelect()){
+			if (p.isUseInSelect() || p.isUseInNegativeSelect()) {
 				String value = map.get(p.getName()).toString();
-				if (StringUtils.isNotBlank(value)){
-					if(p.getMatcher().isExact()){
-						if (sb.length() > 0) sb.append(" AND ");
-						sb.append(p.getName() + ":" + "\"" + value + "\"");
-					}
-					if (p.isIndexLength()){
-						int low = Math.max(0, value.length()-2);
-						int high = value.length()+2;
-						if (sb.length() > 0) sb.append(" AND ");
-						sb.append(" ").append(p.getName() + Configuration.LENGTH_SUFFIX + ":[").append(String.format("%02d", low)).append(" TO ").append(String.format("%02d", high)).append("]");
-					}
-					if (p.isIndexInitial()){
-						if (sb.length() > 0) sb.append(" AND ");
-						sb.append(p.getName() + Configuration.INITIAL_SUFFIX).append(":").append(value.substring(0, 1));
-					}
-					if (p.isUseWildcard()){
-						if (sb.length() > 0) sb.append(" AND ");
-						sb.append(p.getName()).append(":").append(value).append("~0.5");						
+				String quotedValue = "\"" + value + "\"";
+				if (p.isUseInSelect()){
+					if (StringUtils.isNotBlank(value)){
+						if(p.getMatcher().isExact()){
+							if (sb.length() > 0) sb.append(" AND ");
+							sb.append(p.getName() + quotedValue);
+						}
+						if (p.isIndexLength()){
+							int low = Math.max(0, value.length()-2);
+							int high = value.length()+2;
+							if (sb.length() > 0) sb.append(" AND ");
+							sb.append(" ").append(p.getName() + Configuration.LENGTH_SUFFIX + ":[").append(String.format("%02d", low)).append(" TO ").append(String.format("%02d", high)).append("]");
+						}
+						if (p.isIndexInitial()){
+							if (sb.length() > 0) sb.append(" AND ");
+							sb.append(p.getName() + Configuration.INITIAL_SUFFIX).append(":").append(quotedValue.substring(0, 2) + "\"");
+						}
+						if (p.isUseWildcard()){
+							if (sb.length() > 0) sb.append(" AND ");
+							sb.append(p.getName()).append(":").append(quotedValue.subSequence(0, quotedValue.length()-1)).append("~0.5\"");
+						}
 					}
 				}
-			}
-			if (p.isUseInNegativeSelect()){
-				String value = map.get(p.getName()).toString();
-				if (StringUtils.isNotBlank(value)){
-					if (sb.length() > 0) sb.append(" AND ");
-					sb.append(" NOT " + p.getName() + ":" + value);
-				}				
+				else {
+					if (StringUtils.isNotBlank(value)){
+						if (sb.length() > 0) sb.append(" AND ");
+							sb.append(" NOT " + p.getName() + ":" + quotedValue);
+					}
+				}
 			}
 		}
 		return sb.toString();
@@ -183,7 +185,7 @@ public class LuceneUtils {
 		Map<String,String> map = doc2Map(from);
 		return recordsMatch(map, to, properties);
 	}
-	
+
 	public static boolean recordsMatch(Map<String,String> from, Document to, List<Property> properties){
 		boolean recordMatch = false;
 		log.debug("Comparing records: " + from.get(Configuration.ID_FIELD_NAME) + " " + to.get(Configuration.ID_FIELD_NAME));
@@ -192,9 +194,9 @@ public class LuceneUtils {
 			String s2 = to.get(p.getName());
 			boolean fieldMatch = false;
 			if (p.isBlanksMatch()){
-				fieldMatch = (StringUtils.isBlank(s1) || StringUtils.isBlank(s2)); 
+				fieldMatch = (StringUtils.isBlank(s1) || StringUtils.isBlank(s2));
 				if (fieldMatch){
-					log.debug(p.getName() + ": blanks match");				
+					log.debug(p.getName() + ": blanks match");
 				}
 			}
 			if (!fieldMatch){
