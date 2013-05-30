@@ -35,7 +35,7 @@ public class NumberMatcher extends CommonTokensMatcher {
 				String no1 = doConvert(s1);
 				String no2 = doConvert(s2);
 				if (noNumbersRequireRestMatch && no1.length() == 0 && no2.length() == 0) {
-					return (s1 == s2);
+					return (s1.equals(s2));
 				}
 				matches = super.matches(no1, no2);
 			}

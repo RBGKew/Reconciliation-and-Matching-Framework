@@ -15,12 +15,18 @@ public class SafeStripNonAlphasTransformerTest {
 	@Test
 	public void aStringWithDiacritsAndNumbersAndPunctuation () {
 		Transformer transformer = new SafeStripNonAlphasTransformer();
-		assertEquals("Tete a tete en ", transformer.transform("Tête-à-tête en 2"));
+		assertEquals("Tete a tete en", transformer.transform("Tête-à-tête en 2"));
 	}
 
 	@Test
 	public void twoStringsWithHyphen () {
 		Transformer transformer = new SafeStripNonAlphasTransformer();
 		assertEquals("hello kitty", transformer.transform("hello-kitty"));
+	}
+
+	@Test
+	public void stringWithDotAtTheEnd () {
+		Transformer transformer = new SafeStripNonAlphasTransformer();
+		assertEquals("hallo", transformer.transform("hallo."));
 	}
 }

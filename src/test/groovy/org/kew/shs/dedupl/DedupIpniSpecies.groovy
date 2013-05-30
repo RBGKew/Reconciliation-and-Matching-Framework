@@ -1,12 +1,14 @@
 package org.kew.shs.dedupl
 
-import java.io.File.TempDirectory;
 import java.nio.file.Files
 
-import cucumber.api.DataTable
-import cucumber.api.PendingException;
-
 import org.kew.shs.dedupl.util.DeduplApp
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
+import cucumber.api.DataTable
+import cucumber.api.PendingException
 
 this.metaClass.mixin(cucumber.api.groovy.Hooks)
 this.metaClass.mixin(cucumber.api.groovy.EN)
@@ -40,9 +42,16 @@ When(~'^this is run through the Dedupl App$') { ->
 }
 
 Then(~'^a file should have been created in the same folder with the following data:$') { DataTable expectedOutput ->
-	tempOutputFile.toFile().readLines().each {
-		System.out.println(it)
+	def expectedOutputList = expectedOutput.asList()
+	tempOutputFile.toFile().readLines().eachWithIndex { line, i ->
+		def expectedLine = expectedOutputList[i]
+		def lineList = line.split('\t')
+		lineList.eachWithIndex { col, k -> 
+			try { assertThat(col, is(expectedLine[k])) }
+			catch (AssertionError e) {
+				String newE = e.toString() + " -- error occurred in record ${i} at <${expectedOutputList[0][k]}>"
+				throw new AssertionError(newE)
+			} 
+		}
 	}
-	// Express the Regexp above with the code you wish you had
-	throw new PendingException()
 }

@@ -6,7 +6,8 @@ public class NormaliseDiacritsTransformer implements Transformer {
 
 	@Override
 	public String transform(String s) {
-		return Normalizer.normalize(s, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
+		s = Normalizer.normalize(s, Normalizer.Form.NFD);
+		return s.replaceAll("[^\\p{ASCII}]", "");
 	}
 
 }

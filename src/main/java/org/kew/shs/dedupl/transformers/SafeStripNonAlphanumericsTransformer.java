@@ -9,7 +9,7 @@ public class SafeStripNonAlphanumericsTransformer implements Transformer {
 	@Override
 	public String transform(String s) {
 		s = new NormaliseDiacritsTransformer().transform(s);
-		return new StripNonAlphanumericCharactersTransformer().transform(s);
+		return new StripNonAlphanumericCharactersTransformer().transform(s).trim();
 	}
 
 }
