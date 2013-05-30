@@ -152,7 +152,7 @@ public class LuceneUtils {
 					if (StringUtils.isNotBlank(value)){
 						if(p.getMatcher().isExact()){
 							if (sb.length() > 0) sb.append(" AND ");
-							sb.append(p.getName() + quotedValue);
+							sb.append(p.getName() + ":" + quotedValue);
 						}
 						if (p.isIndexLength()){
 							int low = Math.max(0, value.length()-2);
