@@ -18,7 +18,7 @@ this.metaClass.mixin(cucumber.api.groovy.EN)
 def tempDir, tempConfigFile, tempInputFile, tempOutputFile
 
 Before() {
-	tempDir = Files.createTempDirectory("dedup_ipni_species")
+	tempDir = Files.createTempDirectory("dedup_ipni_genus")
 	tempConfigFile = new File([tempDir, "config.xml"].join(File.separator)).toPath()
 	tempInputFile = new File([tempDir, "input.txt"].join(File.separator)).toPath()
 	tempOutputFile = new File([tempDir, "output.txt"].join(File.separator)).toPath()
@@ -29,22 +29,22 @@ After() {
 	new File('target/deduplicator').deleteDir() // removes the lucene index after scenario
 }
 
-Given(~'^Eszter has created an input-file to feed the deduplicator framework containing tab-separated Species data$') {DataTable fileContent ->
+Given(~'^Rachel has created an input-file to feed the deduplicator framework containing tab-separated Genus data$') {DataTable fileContent ->
 	tempInputFile.toFile().withWriter { out ->
 		fileContent.asList().each {out.println it.join("\t")}
 	}
 }
 
-Given(~'^Alecs has set up a species-dedup configuration file in the same folder according to her specs:$') { String configXML ->
+Given(~'^Alecs has set up a genus-dedup configuration file according to her specs:$') { String configXML ->
 	tempConfigFile.toFile().write(configXML.asType(String))
 }
 
-When(~'^this species config is run through the Dedupl App$') { ->
+When(~'^this genus config is run through the Dedupl App$') { ->
 	String[] args = ["-d", tempDir.toString() + "/"]
 	DeduplApp.main(args)
 }
 
-Then(~'^a file should have been created in the same folder with the following species data:$') { DataTable expectedOutput ->
+Then(~'^a file should have been created in the same folder with the following genus data:$') { DataTable expectedOutput ->
 	def expectedOutputList = expectedOutput.asList()
 	tempOutputFile.toFile().readLines().eachWithIndex { line, i ->
 		def expectedLine = expectedOutputList[i]
