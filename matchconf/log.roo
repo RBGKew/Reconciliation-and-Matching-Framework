@@ -1,0 +1,117 @@
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-06-14 10:00:53
+project --topLevelPackage org.kew.shs.dedupl.matchconf --projectName MatchConf --java 7 --packaging JAR
+jpa setup --database HYPERSONIC_PERSISTENT --provider HIBERNATE 
+entity jpa --class org.kew.shs.dedupl.matchconf.Bot
+field string --fieldName name 
+field string --fieldName packageName 
+field string --fieldName className 
+field string --fieldName params
+field set --fieldName composedBy --type Bot --cardinality ONE_TO_MANY --mappedBy composer
+field reference --fieldName composer --type Bot --cardinality MANY_TO_ONE
+entity jpa --class org.kew.shs.dedupl.matchconf.Wire
+field string columnName
+field number columnIndex --type java.lang.Integer
+field reference --fieldName matcher --type Bot
+field reference --fieldName transformer --type Bot
+field boolean useInSelect=false
+field boolean useInNegativeSelect=false
+field boolean indexLength=false
+field boolean blanksMatch=false
+field boolean indexOriginal=false
+field boolean indexInitial=false
+field boolean useWildcard=false
+entity jpa --class org.kew.shs.dedupl.matchconf.Configuration
+field string --fieldName workDirPath
+field string --fieldName inputFileName="input.csv"
+field string --fieldName packageName="org.kew.shs.dedupl.matchconf.configuration"
+field string --fieldName className="DeduplicationConfiguration"
+field set --fieldName wiring --type Wire --cardinality ONE_TO_MANY --mappedBy configuration
+field string inputFileEncoding="UTF8"
+field string inputFileDelimiter
+field boolean inputFileIgnoreHeader=false
+field string outputFileDelimiter
+field number loadReportFrequency=50000 --type java.lang.Number
+field number assessReportFrequency=100 --type java.lang.Number
+field string scoreFieldName="id"
+field reference --class Wire --fieldName configuration --type Configuration --cardinality MANY_TO_ONE
+web mvc setup 
+web mvc all --package org.kew.shs.dedupl.matchconf.web
+// script replay.roo
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-06-14 10:11:41
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-06-14 10:11:56
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-06-14 10:20:45
+hint
+hint
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-06-14 10:38:44
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-06-14 10:39:30
+// [failed] field string --class Configuration --fieldName outputFileIdDelimiter --value "|"
+hint
+perform tests
+// [failed] field string --class Configuration --fieldName outputFileIdDelimiter --value "|"
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-06-14 10:52:47
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-06-14 10:53:01
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-06-14 11:38:59
+hint
+hint fields
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-06-14 11:39:33
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-06-14 11:39:47
+field string --class Configuration --fieldName outputFileIdDelimiter --value "|"
+hint field
+hint fields
+hint relationships
+field string --class Configuration --fieldName outputFileIdDelimiter
+field string --class Configuration --fieldName name
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-06-14 12:02:04
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-06-14 14:43:35
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-06-14 14:43:47
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-06-14 15:25:52
+finder list --class Configuration
+field set --class Bot --fieldName wires --type Wire --cardinality ONE_TO_MANY
+// [failed] field reference --class Wire --fieldName matcher --type Bot --cardinality MANY_TO_ONE --referencedColumnName wire
+field reference --class Wire --fieldName matcher --type Bot --cardinality MANY_TO_ONE
+field set --class Bot --fieldName matched_wires --type Wire --cardinality ONE_TO_MANY --mappedBy matchers
+field set --class Bot --fieldName matched_wires --type Wire --cardinality ONE_TO_MANY --mappedBy matcher
+field set --class Bot --fieldName transformed_wires --type Wire --cardinality ONE_TO_MANY --mappedBy transformer
+field set --class Bot --fieldName matched_wires --type Wire --cardinality ONE_TO_MANY --mappedBy matcher
+field set --class Bot --fieldName transformed_wires --type Wire --cardinality ONE_TO_MANY --mappedBy transformer
+field reference --class Wire --fieldName matcher --type Bot --cardinality MANY_TO_ONE
+field reference --class Wire --fieldName transformer --type Bot --cardinality MANY_TO_ONE
+field reference --class Wire --fieldName transformer --type Bot --cardinality MANY_TO_ONE --joinColumnName matched_wires
+field reference --class Wire --fieldName transformer --type Bot --cardinality MANY_TO_ONE --joinColumnName wireId
+field reference --class Wire --fieldName matcher --type Bot --cardinality MANY_TO_ONE --joinColumnName wireId
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-06-14 16:48:42
+// [failed] field reference --class Wire --fieldName matcher --type Bot --cardinality MANY_TO_ONE --joinColumnName wireMatcherId --referencedColumnName WireId
+// [failed] field reference --class Wire --fieldName matcher --type Bot --cardinality MANY_TO_ONE --joinColumnName wireMatcherId --referencedColumnName WireId
+field reference --class Wire --fieldName matcher --type Bot --cardinality MANY_TO_ONE --joinColumnName wireMatcherId --referencedColumnName WireId
+field set --class Bot --fieldName matched_wires --type Wire --cardinality ONE_TO_MANY --mappedBy matcher
+field reference --class Wire --fieldName matcher --type Bot --cardinality MANY_TO_ONE --joinColumnName wiredMatchers --referencedColumnName WireId
+field set --class Bot --fieldName wiredMatchers --type Wire --cardinality ONE_TO_MANY --mappedBy matcher
+field set --class Bot --fieldName matchedWires --type Wire --cardinality ONE_TO_MANY --mappedBy matcher
+field reference --class Wire --fieldName matcher --type Bot --cardinality MANY_TO_ONE --joinColumnName MatchedWires --referencedColumnName WireId
+field reference --class Wire --fieldName transformer --type Bot --cardinality MANY_TO_ONE --joinColumnName TransformedWires --referencedColumnName WireId
+field set --class Bot --fieldName transformedWires --type Wire --cardinality ONE_TO_MANY --mappedBy transformer
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-06-17 09:33:08
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-06-17 14:05:59
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-06-17 17:01:56
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-06-18 09:32:47
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-06-18 09:39:29
+web mvc controller --class ~.web.ConfigurationController --preferredMapping /configurations/run
+web mvc all --package ~.web
+web mvc controller --class ~.web.RunConfigurationController --preferredMapping /configurations/run
+field set --class ~.Bot --fieldName composedBy --type ~.Bot --cardinality ONE_TO_MANY
+field set --class ~.Bot --fieldName composedBy --type ~.Bot --cardinality MANY_TO_MANY
+field set --class ~.Bot --fieldName composedBy --type ~.Bot --cardinality MANY_TO_MANY --mappedBy composer
+// [failed] field reference --fieldName composer --class ~.Bot --type ~.Bot --cardinality ONE_TO_MANY 
+field reference --fieldName composer --class ~.Bot --type ~.Bot --cardinality MANY_TO_ONE 
+field set --class ~.Bot --fieldName composedBy --type ~.Bot --cardinality MANY_TO_MANY
+// [failed] field set --class ~.Wire --fieldName transformer --type ~.Transformer --cardinality MANY_TO_MANY --sizeMax 1
+field set --fieldName transformer --type ~.Bot --cardinality MANY_TO_MANY --sizeMax 1
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-06-18 12:31:34
+jpa setup --provider HIBERNATE --database HYPERSONIC_IN_MEMORY 
+jpa setup --provider HIBERNATE --database HYPERSONIC_PERSISTENT 
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-06-18 15:14:14
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-06-18 15:25:03
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-06-18 15:25:12
+jpa setup --provider HIBERNATE --database HYPERSONIC_IN_MEMORY 
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-06-18 15:32:09
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-06-18 15:32:17

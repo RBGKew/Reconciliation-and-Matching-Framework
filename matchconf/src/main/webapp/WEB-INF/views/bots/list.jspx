@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_org_kew_shs_dedupl_matchconf_Bot" items="${bots}" z="EPVq9Lv4I8mCl8kWhqwDgPAEgCQ=">
+        <table:table data="${bots}" id="l_org_kew_shs_dedupl_matchconf_Bot" path="/bots" z="KoErCOgofSoFaNK2PhF+v7wYdDI=">
+            <table:column id="c_org_kew_shs_dedupl_matchconf_Bot_name" property="name" z="d9tJ2bbIONGVQ3prXuEOJ15IXz0="/>
+            <table:column id="c_org_kew_shs_dedupl_matchconf_Bot_packageName" property="packageName" z="EicDggvQ801pKS0NK0a6TK6EQG8="/>
+            <table:column id="c_org_kew_shs_dedupl_matchconf_Bot_className" property="className" z="i+ExCpICNr+IkEOkoCMbaAU9dIw="/>
+            <table:column id="c_org_kew_shs_dedupl_matchconf_Bot_params" property="params" z="5Qckw9wBwdV2mLmrELZrV/qgdUs="/>
+            <table:column id="c_org_kew_shs_dedupl_matchconf_Bot_composedBy" property="composedBy" z="HATaDro09wfV2QvtvHSBj1IcmXg="/>
+        </table:table>
+    </page:list>
+</div>

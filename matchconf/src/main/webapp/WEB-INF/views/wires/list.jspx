@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_org_kew_shs_dedupl_matchconf_Wire" items="${wires}" z="pHrV9Tymv8NNGMuYBinlVKivNx0=">
+        <table:table data="${wires}" id="l_org_kew_shs_dedupl_matchconf_Wire" path="/wires" z="mh2j7So59pSqUM85yfvMnKf4ikg=">
+            <table:column id="c_org_kew_shs_dedupl_matchconf_Wire_columnName" property="columnName" z="ffOpKwPPnvxIkrWiVV8NhxfzUxw="/>
+            <table:column id="c_org_kew_shs_dedupl_matchconf_Wire_columnIndex" property="columnIndex" z="K4I6TdbTq21R9YccOADCMPLJeaw="/>
+            <table:column id="c_org_kew_shs_dedupl_matchconf_Wire_useInSelect" property="useInSelect" z="kKh1sMas76ryBoMW2eh+14ZiorA="/>
+            <table:column id="c_org_kew_shs_dedupl_matchconf_Wire_useInNegativeSelect" property="useInNegativeSelect" z="OQfgJg+TKrRVzZ8I7l1UkBC+ObA="/>
+            <table:column id="c_org_kew_shs_dedupl_matchconf_Wire_indexLength" property="indexLength" z="r8Bqtl3Fv3TYgr5O3CH1fkxQJGM="/>
+            <table:column id="c_org_kew_shs_dedupl_matchconf_Wire_blanksMatch" property="blanksMatch" z="cjs2KU0iSqqrVctyKDLwh4h1R3c="/>
+        </table:table>
+    </page:list>
+</div>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:menu="urn:jsptagdir:/WEB-INF/tags/menu" id="menu" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <menu:menu id="_menu" z="nZaf43BjUg1iM0v70HJVEsXDopc=">
+        <menu:category id="c_configuration" z="ex6zSpCyqSksY2xxo+2yaACAxic=">
+            <menu:item id="i_configuration_new" messageCode="global_menu_new" url="/configurations?form" z="PpKhRYSLF3fMvOlr5J8dEALoaF8="/>
+            <menu:item id="i_configuration_list" messageCode="global_menu_list" url="/configurations?page=1&amp;size=${empty param.size ? 10 : param.size}" z="eTnA6q7aRKdliIXm9IDu8P8bUhU="/>
+        </menu:category>
+        <menu:category id="c_wire" z="s/p5G+kP+Boo2NfsF5d106QQ7Xk=">
+            <menu:item id="i_wire_new" messageCode="global_menu_new" url="/wires?form" z="isiKXESbbz89R5RjUxlxXoJu6bA="/>
+            <menu:item id="i_wire_list" messageCode="global_menu_list" url="/wires?page=1&amp;size=${empty param.size ? 10 : param.size}" z="cazBS3Xhest5Zspie4JAO6NqLUk="/>
+        </menu:category>
+        <menu:category id="c_bot" z="qiGM2kGVhf1X7J+DcoFm6E99ZTM=">
+            <menu:item id="i_bot_new" messageCode="global_menu_new" url="/bots?form" z="QAt4IHH1TGOrCMxbKO4rSDVAKuw="/>
+            <menu:item id="i_bot_list" messageCode="global_menu_list" url="/bots?page=1&amp;size=${empty param.size ? 10 : param.size}" z="Gw1o/Qp8ALKjJjLLHVnjps88K94="/>
+        </menu:category>
+        <menu:category id="c_controller" z="nj8Dm3hojIyIEyPkwE1UMDIs+K8=">
+            <menu:item id="i_controller__configurations_runindex_id" messageCode="global_generic" url="/configurations/run/index" z="NC/3VfWO8QW6gHPOaKGxJrt3vz0="/>
+        </menu:category>
+    </menu:menu>
+</div>
