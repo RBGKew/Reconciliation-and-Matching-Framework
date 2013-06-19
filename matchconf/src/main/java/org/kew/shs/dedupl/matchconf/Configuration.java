@@ -1,19 +1,17 @@
 package org.kew.shs.dedupl.matchconf;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 
 @RooJavaBean
 @RooToString
-@RooJpaActiveRecord
+@RooJpaActiveRecord(finders = { "findConfigurationsByNameEquals" })
 public class Configuration {
 
     private String name;
@@ -47,10 +45,9 @@ public class Configuration {
 
     @PrePersist
     @PreUpdate
-    protected void cleanAllPaths () {
+    protected void cleanAllPaths() {
         // TODO: change the following local setting to a real local setting :-)
         String cleanedPath = this.getWorkDirPath().replaceAll("\\\\", "/").replaceAll("T:", "/mnt/t_drive");
         this.setWorkDirPath(cleanedPath);
     }
-
 }

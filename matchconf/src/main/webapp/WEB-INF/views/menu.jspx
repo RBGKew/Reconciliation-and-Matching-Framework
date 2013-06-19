@@ -17,6 +17,8 @@
         </menu:category>
         <menu:category id="c_controller" z="nj8Dm3hojIyIEyPkwE1UMDIs+K8=">
             <menu:item id="i_controller__configurations_runindex_id" messageCode="global_generic" url="/configurations/run/index" z="NC/3VfWO8QW6gHPOaKGxJrt3vz0="/>
+            <menu:item id="i_controller__runindex_id" messageCode="global_generic" url="/run/index" z="zA3YV/JEEtaM1F9ygX0AYLOv0R0="/>
+            <menu:item id="i_controller__runththingindex_id" messageCode="global_generic" url="/runThThing/index" z="ojeeSspxSpLjEfDBshCjR7rjOtU="/>
         </menu:category>
     </menu:menu>
 </div>

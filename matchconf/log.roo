@@ -115,3 +115,17 @@ jpa setup --provider HIBERNATE --database HYPERSONIC_PERSISTENT
 jpa setup --provider HIBERNATE --database HYPERSONIC_IN_MEMORY 
 // Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-06-18 15:32:09
 // Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-06-18 15:32:17
+// Spring Roo 1.2.5.BUILD-SNAPSHOT [rev 61090d2] log opened at 2013-06-19 12:46:20
+hint
+hint logging
+perform tests
+hint
+// [failed] controller class --class ~.web.RunConfigController --preferredMapping configurations/?{configId}/run
+controller class --class ~.web.RunConfigController --preferredMapping configurations/run
+logging setup --level INFO
+logging setup --level DEBUG --package WEB 
+controller class --class ~.web.RunConfigController --preferredMapping run/
+// Spring Roo 1.2.5.BUILD-SNAPSHOT [rev 61090d2] log opened at 2013-06-19 14:21:39
+controller class --class ~.web.RunConfigController --preferredMapping runThThing
+finder list --class ~.Configuration
+finder add --finderName findConfigurationsByNameEquals --class Configuration
