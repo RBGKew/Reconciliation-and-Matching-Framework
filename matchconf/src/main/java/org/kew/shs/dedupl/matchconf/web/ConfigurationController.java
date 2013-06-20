@@ -16,7 +16,9 @@ public class ConfigurationController {
     public String runConfig(@PathVariable("configName") String configName, Model model) {
         Configuration config = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
         try {
-            new ConfigurationEngine(config).runConfiguration();
+            ConfigurationEngine engine = new ConfigurationEngine(config);
+            engine.write_to_filesystem();
+            engine.runConfiguration();
             model.addAttribute("config", config);
             return "configurations/run/index";
         } catch (RuntimeException e) {
