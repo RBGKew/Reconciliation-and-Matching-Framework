@@ -19,6 +19,7 @@ public class Configuration {
     private String workDirPath;
 
     private String inputFileName = "input.tsv";
+    private String outputFileNameExtension = "tsv";
 
     private String packageName = "org.kew.shs.dedupl.configuration";
 

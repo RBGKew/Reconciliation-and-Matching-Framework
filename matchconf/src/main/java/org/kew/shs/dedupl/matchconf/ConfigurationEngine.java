@@ -26,7 +26,8 @@ public class ConfigurationEngine {
 		
 		ArrayList<String> outXML = new ArrayList<String>();
         String inputFilePath = new File(new File(this.config.getWorkDirPath()), this.config.getInputFileName()).getPath();
-        String outputFilePath = new File(new File(this.config.getWorkDirPath()), "output.tsv").getPath();
+        String outputFileName = String.format("output_%s.%s", this.config.getName(), this.config.getOutputFileNameExtension());
+        String outputFilePath = new File(new File(this.config.getWorkDirPath()), outputFileName).getPath();
         String outputMultilineFilePath = new File(new File(this.config.getWorkDirPath()), "output_multiline.tsv").getPath();
 		
 		outXML.add("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");

@@ -17,5 +17,6 @@
         <field:input field="scoreFieldName" id="c_org_kew_shs_dedupl_matchconf_Configuration_scoreFieldName" z="eD+yX69x57/KyHPGWkrevkPRNWw="/>
         <field:input field="outputFileIdDelimiter" id="c_org_kew_shs_dedupl_matchconf_Configuration_outputFileIdDelimiter" z="fa6tCd4y5AaTbgYxtBTnEzl4kC0="/>
         <field:input field="name" id="c_org_kew_shs_dedupl_matchconf_Configuration_name" z="3vEmBizJ9lnbwGZHjPc2LrnXZUU="/>
+        <field:input field="outputFileNameExtension" id="c_org_kew_shs_dedupl_matchconf_Configuration_outputFileNameExtension" z="0SqR469mCAtDS9uEZw2tf2SXnVs="/>
     </form:update>
 </div>

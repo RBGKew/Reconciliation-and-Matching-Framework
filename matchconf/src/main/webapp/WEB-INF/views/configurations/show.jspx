@@ -16,5 +16,6 @@
         <field:display field="scoreFieldName" id="s_org_kew_shs_dedupl_matchconf_Configuration_scoreFieldName" object="${configuration}" z="42QdxGWTMYJUmlOc+BV4aIyC5LQ="/>
         <field:display field="outputFileIdDelimiter" id="s_org_kew_shs_dedupl_matchconf_Configuration_outputFileIdDelimiter" object="${configuration}" z="ZcD5HNKAHkPLEtoUJOXezj5OwBA="/>
         <field:display field="name" id="s_org_kew_shs_dedupl_matchconf_Configuration_name" object="${configuration}" z="JV8b8mLioyIysdWKXG6/FCjoz0U="/>
+        <field:display field="outputFileNameExtension" id="s_org_kew_shs_dedupl_matchconf_Configuration_outputFileNameExtension" object="${configuration}" z="Wf+dUzV7vYEmJm/q6KqDNfzoDTc="/>
     </page:show>
 </div>

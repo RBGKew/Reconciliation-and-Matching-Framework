@@ -43,7 +43,7 @@ Feature: Create a simple configuration
                     <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/input.tsv" />
                 </bean>
                 <bean id="outputfile" class="java.io.File">
-                    <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/output.tsv" />
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/output_simple-config.tsv" />
                 </bean>
                 <bean id="topcopyfile" class="java.io.File">
                     <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/output_multiline.tsv" />
