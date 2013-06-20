@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_org_kew_shs_dedupl_matchconf_Transformer" object="${transformer}" path="/transformers" z="whegg1NrvyJ1uMtLhLZUYYDe1Ig=">
+        <field:display field="composedBy" id="s_org_kew_shs_dedupl_matchconf_Transformer_composedBy" object="${transformer}" z="L4jugSYtRpj5jeuQXuVUcbZza0M="/>
+        <field:display field="name" id="s_org_kew_shs_dedupl_matchconf_Transformer_name" object="${transformer}" z="Z8tX6PEkvKJOABQHrNKdXNy0LeE="/>
+        <field:display field="packageName" id="s_org_kew_shs_dedupl_matchconf_Transformer_packageName" object="${transformer}" z="Xijth8Vn2ZCDg5L2mWdv8u1rZ/A="/>
+        <field:display field="className" id="s_org_kew_shs_dedupl_matchconf_Transformer_className" object="${transformer}" z="CQTROvEOFSjxABmtN52WHpaeThM="/>
+        <field:display field="params" id="s_org_kew_shs_dedupl_matchconf_Transformer_params" object="${transformer}" z="LovCXm/h6mtKLyGUSw4FLzK4KJs="/>
+    </page:show>
+</div>

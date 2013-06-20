@@ -7,7 +7,6 @@
         <field:input field="inputFileName" id="c_org_kew_shs_dedupl_matchconf_Configuration_inputFileName" z="+v63eaNvzEgohBK7u/P/fpVdZhg="/>
         <field:input field="packageName" id="c_org_kew_shs_dedupl_matchconf_Configuration_packageName" z="SUZQ124bLC0HVMOBNhuw3N+u+Nc="/>
         <field:input field="className" id="c_org_kew_shs_dedupl_matchconf_Configuration_className" z="igG0PJRHigVdpILEQF3h6uDO17c="/>
-        <field:simple field="wiring" id="c_org_kew_shs_dedupl_matchconf_Configuration_wiring" messageCode="entity_reference_not_managed" messageCodeAttribute="Wire" z="EEeRR4GWKvEBiYSS+u/qDNpPwBM="/>
         <field:input field="inputFileEncoding" id="c_org_kew_shs_dedupl_matchconf_Configuration_inputFileEncoding" z="qeTeRLeMHS19Gx7L5YtoCM5JzGc="/>
         <field:input field="inputFileDelimiter" id="c_org_kew_shs_dedupl_matchconf_Configuration_inputFileDelimiter" z="J92V2mm/ZJ2LrTg+53YWJDOio6c="/>
         <field:checkbox field="inputFileIgnoreHeader" id="c_org_kew_shs_dedupl_matchconf_Configuration_inputFileIgnoreHeader" z="a4NiGkG6aQR9iKDyJrRab9IY7ng="/>
@@ -18,5 +17,6 @@
         <field:input field="outputFileIdDelimiter" id="c_org_kew_shs_dedupl_matchconf_Configuration_outputFileIdDelimiter" z="fa6tCd4y5AaTbgYxtBTnEzl4kC0="/>
         <field:input field="name" id="c_org_kew_shs_dedupl_matchconf_Configuration_name" z="3vEmBizJ9lnbwGZHjPc2LrnXZUU="/>
         <field:input field="outputFileNameExtension" id="c_org_kew_shs_dedupl_matchconf_Configuration_outputFileNameExtension" z="0SqR469mCAtDS9uEZw2tf2SXnVs="/>
+        <field:select field="wiring" id="c_org_kew_shs_dedupl_matchconf_Configuration_wiring" itemValue="id" items="${wires}" multiple="true" path="/wires" z="dE3AA0t3Tmh2i7gBbxSbT1XvGOk="/>
     </form:update>
 </div>

@@ -17,5 +17,6 @@
         <field:display field="outputFileIdDelimiter" id="s_org_kew_shs_dedupl_matchconf_Configuration_outputFileIdDelimiter" object="${configuration}" z="ZcD5HNKAHkPLEtoUJOXezj5OwBA="/>
         <field:display field="name" id="s_org_kew_shs_dedupl_matchconf_Configuration_name" object="${configuration}" z="JV8b8mLioyIysdWKXG6/FCjoz0U="/>
         <field:display field="outputFileNameExtension" id="s_org_kew_shs_dedupl_matchconf_Configuration_outputFileNameExtension" object="${configuration}" z="Wf+dUzV7vYEmJm/q6KqDNfzoDTc="/>
+        <field:display field="wiring" id="s_org_kew_shs_dedupl_matchconf_Configuration_wiring" object="${configuration}" z="fWSJpXexHLvrLM5Mc2e9lpYagy4="/>
     </page:show>
 </div>

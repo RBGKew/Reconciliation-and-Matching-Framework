@@ -17,6 +17,11 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooToString
 @RooJpaActiveRecord()
 public class Transformer extends Bot {
+
+    private String name;
+    private String packageName;
+    private String className;
+    private String params;
 	
     @ManyToMany(cascade = CascadeType.ALL)
     @Sort(type=SortType.NATURAL)

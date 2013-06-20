@@ -49,7 +49,7 @@
     </context:component-scan>
     <bean class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" id="dataSource">
         <property name="driverClassName" value="${database.driverClassName}"/>
-        <property name="url" value="${database.url}"/>
+        <property name="url" value="${database.url.test}"/>
         <property name="username" value="${database.username}"/>
         <property name="password" value="${database.password}"/>
         <property name="testOnBorrow" value="true"/>
@@ -64,7 +64,7 @@
     </bean>
     <tx:annotation-driven mode="aspectj" transaction-manager="transactionManager"/>
     <bean class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" id="entityManagerFactory">
-        <property name="persistenceUnitName" value="persistenceUnit"/>
+        <property name="persistenceUnitName" value="testPersistenceUnit"/>
         <property name="dataSource" ref="dataSource"/>
     </bean>
 </beans>

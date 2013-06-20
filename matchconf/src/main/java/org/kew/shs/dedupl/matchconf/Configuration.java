@@ -1,10 +1,14 @@
 package org.kew.shs.dedupl.matchconf;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
@@ -25,8 +29,9 @@ public class Configuration {
 
     private String className = "DeduplicationConfiguration";
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "configuration")
-    private Set<Wire> wiring = new HashSet<Wire>();
+    @ManyToMany(cascade = CascadeType.ALL)
+    @Sort(type=SortType.NATURAL)
+    private List<Wire> wiring = new ArrayList<Wire>();
 
     private String inputFileEncoding = "UTF8";
 

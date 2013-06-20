@@ -10,6 +10,38 @@ import org.kew.shs.dedupl.matchconf.Wire;
 
 privileged aspect Matcher_Roo_JavaBean {
     
+    public String Matcher.getName() {
+        return this.name;
+    }
+    
+    public void Matcher.setName(String name) {
+        this.name = name;
+    }
+    
+    public String Matcher.getPackageName() {
+        return this.packageName;
+    }
+    
+    public void Matcher.setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+    
+    public String Matcher.getClassName() {
+        return this.className;
+    }
+    
+    public void Matcher.setClassName(String className) {
+        this.className = className;
+    }
+    
+    public String Matcher.getParams() {
+        return this.params;
+    }
+    
+    public void Matcher.setParams(String params) {
+        this.params = params;
+    }
+    
     public Set<Wire> Matcher.getMatchedWires() {
         return this.matchedWires;
     }

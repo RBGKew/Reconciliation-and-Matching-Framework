@@ -3,130 +3,130 @@
 
 package org.kew.shs.dedupl.matchconf;
 
-import java.util.Set;
+import java.util.List;
 import org.kew.shs.dedupl.matchconf.Configuration;
 import org.kew.shs.dedupl.matchconf.Wire;
 
 privileged aspect Configuration_Roo_JavaBean {
-
+    
     public String Configuration.getName() {
         return this.name;
     }
-
+    
     public void Configuration.setName(String name) {
         this.name = name;
     }
-
+    
     public String Configuration.getWorkDirPath() {
         return this.workDirPath;
     }
-
+    
     public void Configuration.setWorkDirPath(String workDirPath) {
         this.workDirPath = workDirPath;
     }
-
+    
     public String Configuration.getInputFileName() {
         return this.inputFileName;
     }
-
+    
     public void Configuration.setInputFileName(String inputFileName) {
         this.inputFileName = inputFileName;
     }
-
+    
     public String Configuration.getOutputFileNameExtension() {
         return this.outputFileNameExtension;
     }
-
+    
     public void Configuration.setOutputFileNameExtension(String outputFileNameExtension) {
         this.outputFileNameExtension = outputFileNameExtension;
     }
-
+    
     public String Configuration.getPackageName() {
         return this.packageName;
     }
-
+    
     public void Configuration.setPackageName(String packageName) {
         this.packageName = packageName;
     }
-
+    
     public String Configuration.getClassName() {
         return this.className;
     }
-
+    
     public void Configuration.setClassName(String className) {
         this.className = className;
     }
-
-    public Set<Wire> Configuration.getWiring() {
+    
+    public List<Wire> Configuration.getWiring() {
         return this.wiring;
     }
-
-    public void Configuration.setWiring(Set<Wire> wiring) {
+    
+    public void Configuration.setWiring(List<Wire> wiring) {
         this.wiring = wiring;
     }
-
+    
     public String Configuration.getInputFileEncoding() {
         return this.inputFileEncoding;
     }
-
+    
     public void Configuration.setInputFileEncoding(String inputFileEncoding) {
         this.inputFileEncoding = inputFileEncoding;
     }
-
+    
     public String Configuration.getInputFileDelimiter() {
         return this.inputFileDelimiter;
     }
-
+    
     public void Configuration.setInputFileDelimiter(String inputFileDelimiter) {
         this.inputFileDelimiter = inputFileDelimiter;
     }
-
+    
     public Boolean Configuration.getInputFileIgnoreHeader() {
         return this.inputFileIgnoreHeader;
     }
-
+    
     public void Configuration.setInputFileIgnoreHeader(Boolean inputFileIgnoreHeader) {
         this.inputFileIgnoreHeader = inputFileIgnoreHeader;
     }
-
+    
     public String Configuration.getOutputFileDelimiter() {
         return this.outputFileDelimiter;
     }
-
+    
     public void Configuration.setOutputFileDelimiter(String outputFileDelimiter) {
         this.outputFileDelimiter = outputFileDelimiter;
     }
-
+    
     public String Configuration.getOutputFileIdDelimiter() {
         return this.outputFileIdDelimiter;
     }
-
+    
     public void Configuration.setOutputFileIdDelimiter(String outputFileIdDelimiter) {
         this.outputFileIdDelimiter = outputFileIdDelimiter;
     }
-
+    
     public String Configuration.getLoadReportFrequency() {
         return this.loadReportFrequency;
     }
-
+    
     public void Configuration.setLoadReportFrequency(String loadReportFrequency) {
         this.loadReportFrequency = loadReportFrequency;
     }
-
+    
     public String Configuration.getAssessReportFrequency() {
         return this.assessReportFrequency;
     }
-
+    
     public void Configuration.setAssessReportFrequency(String assessReportFrequency) {
         this.assessReportFrequency = assessReportFrequency;
     }
-
+    
     public String Configuration.getScoreFieldName() {
         return this.scoreFieldName;
     }
-
+    
     public void Configuration.setScoreFieldName(String scoreFieldName) {
         this.scoreFieldName = scoreFieldName;
     }
-
+    
 }

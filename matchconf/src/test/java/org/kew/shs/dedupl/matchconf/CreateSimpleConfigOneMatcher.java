@@ -6,10 +6,8 @@ import static org.hamcrest.Matchers.is;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 
@@ -97,7 +95,6 @@ public class CreateSimpleConfigOneMatcher {
         this.config.persist();
         assert (Configuration.findConfiguration(this.config.getId()) != null);
         Wire wire = new Wire();
-        wire.setConfiguration(this.config);
         wire.setColumnName(this.secondColName);
         wire.setColumnIndex(1);
         wire.setMatcher(this.matcher);
@@ -109,9 +106,7 @@ public class CreateSimpleConfigOneMatcher {
         this.matcher.merge();
         this.config.getWiring().add(wire);
         this.config.merge();
-        Set<Wire> wiring = new HashSet<Wire>();
-        wiring.add(wire);
-        assertThat(this.config.getWiring(), is(wiring));
+        assertThat(this.config.getWiring().toArray(new Wire[1]), is(new Wire[] {wire}));
     }
 
     @When("^he asks to write the configuration out to the filesystem$")

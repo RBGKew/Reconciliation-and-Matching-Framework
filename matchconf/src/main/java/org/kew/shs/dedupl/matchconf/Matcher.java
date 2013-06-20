@@ -21,6 +21,11 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooJpaActiveRecord
 public class Matcher extends Bot {
 
+    private String name;
+    private String packageName;
+    private String className;
+    private String params;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "matcher")
     private Set<Wire> matchedWires = new HashSet<Wire>();
 

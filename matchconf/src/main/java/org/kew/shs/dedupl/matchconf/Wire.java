@@ -35,9 +35,6 @@ public class Wire implements Comparable<Wire> {
     private Boolean useWildcard = false;
 
     @ManyToOne
-    private Configuration configuration;
-
-    @ManyToOne
     private Matcher matcher;
 
     @Size(max = 1)

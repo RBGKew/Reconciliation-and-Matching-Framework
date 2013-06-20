@@ -12,7 +12,6 @@
         <field:checkbox field="indexOriginal" id="c_org_kew_shs_dedupl_matchconf_Wire_indexOriginal" z="8MIVMKs9ajdmJ4GYDgSSIOgrVUI="/>
         <field:checkbox field="indexInitial" id="c_org_kew_shs_dedupl_matchconf_Wire_indexInitial" z="4Um0XUlwGw1gsH3hQKMnvD0woj4="/>
         <field:checkbox field="useWildcard" id="c_org_kew_shs_dedupl_matchconf_Wire_useWildcard" z="H2cXRwoDy3CUtITSjtFU3P46ja8="/>
-        <field:select field="configuration" id="c_org_kew_shs_dedupl_matchconf_Wire_configuration" itemValue="id" items="${configurations}" path="/configurations" z="mt11rs6InvFf1CJZOy+5B2dnniw="/>
         <field:select field="transformer" id="c_org_kew_shs_dedupl_matchconf_Wire_transformer" itemValue="id" items="${transformers}" multiple="true" path="/transformers" z="u44GvGQJEd7YffoTFop0kCmdii0="/>
         <field:select field="matcher" id="c_org_kew_shs_dedupl_matchconf_Wire_matcher" itemValue="id" items="${matchers}" path="/matchers" z="lXk5z0p02X2K5OrJ2d71mUvWp+E="/>
     </form:create>

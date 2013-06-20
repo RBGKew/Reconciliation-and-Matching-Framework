@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default" name="transformers/list">
+        <put-attribute name="body" value="/WEB-INF/views/transformers/list.jspx"/>
+    </definition>
+<definition extends="default" name="transformers/show">
+        <put-attribute name="body" value="/WEB-INF/views/transformers/show.jspx"/>
+    </definition>
+<definition extends="default" name="transformers/create">
+        <put-attribute name="body" value="/WEB-INF/views/transformers/create.jspx"/>
+    </definition>
+<definition extends="default" name="transformers/update">
+        <put-attribute name="body" value="/WEB-INF/views/transformers/update.jspx"/>
+    </definition>
+</tiles-definitions>

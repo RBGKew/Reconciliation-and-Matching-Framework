@@ -11,14 +11,18 @@
             <menu:item id="i_wire_new" messageCode="global_menu_new" url="/wires?form" z="isiKXESbbz89R5RjUxlxXoJu6bA="/>
             <menu:item id="i_wire_list" messageCode="global_menu_list" url="/wires?page=1&amp;size=${empty param.size ? 10 : param.size}" z="cazBS3Xhest5Zspie4JAO6NqLUk="/>
         </menu:category>
-        <menu:category id="c_bot" z="qiGM2kGVhf1X7J+DcoFm6E99ZTM=">
-            <menu:item id="i_bot_new" messageCode="global_menu_new" url="/bots?form" z="QAt4IHH1TGOrCMxbKO4rSDVAKuw="/>
-            <menu:item id="i_bot_list" messageCode="global_menu_list" url="/bots?page=1&amp;size=${empty param.size ? 10 : param.size}" z="Gw1o/Qp8ALKjJjLLHVnjps88K94="/>
-        </menu:category>
         <menu:category id="c_controller" z="nj8Dm3hojIyIEyPkwE1UMDIs+K8=">
             <menu:item id="i_controller__configurations_runindex_id" messageCode="global_generic" url="/configurations/run/index" z="NC/3VfWO8QW6gHPOaKGxJrt3vz0="/>
             <menu:item id="i_controller__runindex_id" messageCode="global_generic" url="/run/index" z="zA3YV/JEEtaM1F9ygX0AYLOv0R0="/>
             <menu:item id="i_controller__runththingindex_id" messageCode="global_generic" url="/runThThing/index" z="ojeeSspxSpLjEfDBshCjR7rjOtU="/>
+        </menu:category>
+        <menu:category id="c_transformer" z="oh5Htcz9cR6h107G798liiW83DQ=">
+            <menu:item id="i_transformer_new" messageCode="global_menu_new" url="/transformers?form" z="QWvIvdMk7BpQ+wJb8YqjSp7QFfQ="/>
+            <menu:item id="i_transformer_list" messageCode="global_menu_list" url="/transformers?page=1&amp;size=${empty param.size ? 10 : param.size}" z="NTnk70aAVoGhgabCJkPoCOei1cU="/>
+        </menu:category>
+        <menu:category id="c_matcher" z="RelTazqVpEywN+H5dzsYDS0MkFY=">
+            <menu:item id="i_matcher_new" messageCode="global_menu_new" url="/matchers?form" z="GA9mNp+vNXH6cNwUvU+JVGqovWc="/>
+            <menu:item id="i_matcher_list" messageCode="global_menu_list" url="/matchers?page=1&amp;size=${empty param.size ? 10 : param.size}" z="ZWx9y9di4UT7tZRj7dlPztdkPuQ="/>
         </menu:category>
     </menu:menu>
 </div>

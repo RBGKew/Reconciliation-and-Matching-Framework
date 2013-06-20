@@ -3,8 +3,9 @@
 
 package org.kew.shs.dedupl.matchconf.web;
 
-import org.kew.shs.dedupl.matchconf.Bot;
 import org.kew.shs.dedupl.matchconf.Configuration;
+import org.kew.shs.dedupl.matchconf.Matcher;
+import org.kew.shs.dedupl.matchconf.Transformer;
 import org.kew.shs.dedupl.matchconf.Wire;
 import org.kew.shs.dedupl.matchconf.web.ApplicationConversionServiceFactoryBean;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -14,30 +15,6 @@ import org.springframework.format.FormatterRegistry;
 privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService {
     
     declare @type: ApplicationConversionServiceFactoryBean: @Configurable;
-    
-    public Converter<Bot, String> ApplicationConversionServiceFactoryBean.getBotToStringConverter() {
-        return new org.springframework.core.convert.converter.Converter<org.kew.shs.dedupl.matchconf.Bot, java.lang.String>() {
-            public String convert(Bot bot) {
-                return new StringBuilder().append(bot.getName()).append(' ').append(bot.getPackageName()).append(' ').append(bot.getClassName()).append(' ').append(bot.getParams()).toString();
-            }
-        };
-    }
-    
-    public Converter<Long, Bot> ApplicationConversionServiceFactoryBean.getIdToBotConverter() {
-        return new org.springframework.core.convert.converter.Converter<java.lang.Long, org.kew.shs.dedupl.matchconf.Bot>() {
-            public org.kew.shs.dedupl.matchconf.Bot convert(java.lang.Long id) {
-                return Bot.findBot(id);
-            }
-        };
-    }
-    
-    public Converter<String, Bot> ApplicationConversionServiceFactoryBean.getStringToBotConverter() {
-        return new org.springframework.core.convert.converter.Converter<java.lang.String, org.kew.shs.dedupl.matchconf.Bot>() {
-            public org.kew.shs.dedupl.matchconf.Bot convert(String id) {
-                return getObject().convert(getObject().convert(id, Long.class), Bot.class);
-            }
-        };
-    }
     
     public Converter<Configuration, String> ApplicationConversionServiceFactoryBean.getConfigurationToStringConverter() {
         return new org.springframework.core.convert.converter.Converter<org.kew.shs.dedupl.matchconf.Configuration, java.lang.String>() {
@@ -59,6 +36,54 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
         return new org.springframework.core.convert.converter.Converter<java.lang.String, org.kew.shs.dedupl.matchconf.Configuration>() {
             public org.kew.shs.dedupl.matchconf.Configuration convert(String id) {
                 return getObject().convert(getObject().convert(id, Long.class), Configuration.class);
+            }
+        };
+    }
+    
+    public Converter<Matcher, String> ApplicationConversionServiceFactoryBean.getMatcherToStringConverter() {
+        return new org.springframework.core.convert.converter.Converter<org.kew.shs.dedupl.matchconf.Matcher, java.lang.String>() {
+            public String convert(Matcher matcher) {
+                return new StringBuilder().append(matcher.getName()).append(' ').append(matcher.getPackageName()).append(' ').append(matcher.getClassName()).append(' ').append(matcher.getParams()).toString();
+            }
+        };
+    }
+    
+    public Converter<Long, Matcher> ApplicationConversionServiceFactoryBean.getIdToMatcherConverter() {
+        return new org.springframework.core.convert.converter.Converter<java.lang.Long, org.kew.shs.dedupl.matchconf.Matcher>() {
+            public org.kew.shs.dedupl.matchconf.Matcher convert(java.lang.Long id) {
+                return Matcher.findMatcher(id);
+            }
+        };
+    }
+    
+    public Converter<String, Matcher> ApplicationConversionServiceFactoryBean.getStringToMatcherConverter() {
+        return new org.springframework.core.convert.converter.Converter<java.lang.String, org.kew.shs.dedupl.matchconf.Matcher>() {
+            public org.kew.shs.dedupl.matchconf.Matcher convert(String id) {
+                return getObject().convert(getObject().convert(id, Long.class), Matcher.class);
+            }
+        };
+    }
+    
+    public Converter<Transformer, String> ApplicationConversionServiceFactoryBean.getTransformerToStringConverter() {
+        return new org.springframework.core.convert.converter.Converter<org.kew.shs.dedupl.matchconf.Transformer, java.lang.String>() {
+            public String convert(Transformer transformer) {
+                return new StringBuilder().append(transformer.getName()).append(' ').append(transformer.getPackageName()).append(' ').append(transformer.getClassName()).append(' ').append(transformer.getParams()).toString();
+            }
+        };
+    }
+    
+    public Converter<Long, Transformer> ApplicationConversionServiceFactoryBean.getIdToTransformerConverter() {
+        return new org.springframework.core.convert.converter.Converter<java.lang.Long, org.kew.shs.dedupl.matchconf.Transformer>() {
+            public org.kew.shs.dedupl.matchconf.Transformer convert(java.lang.Long id) {
+                return Transformer.findTransformer(id);
+            }
+        };
+    }
+    
+    public Converter<String, Transformer> ApplicationConversionServiceFactoryBean.getStringToTransformerConverter() {
+        return new org.springframework.core.convert.converter.Converter<java.lang.String, org.kew.shs.dedupl.matchconf.Transformer>() {
+            public org.kew.shs.dedupl.matchconf.Transformer convert(String id) {
+                return getObject().convert(getObject().convert(id, Long.class), Transformer.class);
             }
         };
     }
@@ -88,12 +113,15 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
     }
     
     public void ApplicationConversionServiceFactoryBean.installLabelConverters(FormatterRegistry registry) {
-        registry.addConverter(getBotToStringConverter());
-        registry.addConverter(getIdToBotConverter());
-        registry.addConverter(getStringToBotConverter());
         registry.addConverter(getConfigurationToStringConverter());
         registry.addConverter(getIdToConfigurationConverter());
         registry.addConverter(getStringToConfigurationConverter());
+        registry.addConverter(getMatcherToStringConverter());
+        registry.addConverter(getIdToMatcherConverter());
+        registry.addConverter(getStringToMatcherConverter());
+        registry.addConverter(getTransformerToStringConverter());
+        registry.addConverter(getIdToTransformerConverter());
+        registry.addConverter(getStringToTransformerConverter());
         registry.addConverter(getWireToStringConverter());
         registry.addConverter(getIdToWireConverter());
         registry.addConverter(getStringToWireConverter());

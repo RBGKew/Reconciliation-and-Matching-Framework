@@ -4,7 +4,6 @@
 package org.kew.shs.dedupl.matchconf;
 
 import java.util.Set;
-import org.kew.shs.dedupl.matchconf.Configuration;
 import org.kew.shs.dedupl.matchconf.Matcher;
 import org.kew.shs.dedupl.matchconf.Transformer;
 import org.kew.shs.dedupl.matchconf.Wire;
@@ -81,14 +80,6 @@ privileged aspect Wire_Roo_JavaBean {
     
     public void Wire.setUseWildcard(Boolean useWildcard) {
         this.useWildcard = useWildcard;
-    }
-    
-    public Configuration Wire.getConfiguration() {
-        return this.configuration;
-    }
-    
-    public void Wire.setConfiguration(Configuration configuration) {
-        this.configuration = configuration;
     }
     
     public Matcher Wire.getMatcher() {

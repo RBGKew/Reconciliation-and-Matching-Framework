@@ -16,6 +16,18 @@ privileged aspect Bot_Roo_Jpa_ActiveRecord {
     
     public static final EntityManager Bot.entityManager() {
         EntityManager em = new Bot() {
+            public java.lang.String getName() {
+                throw new UnsupportedOperationException();
+            }
+            public java.lang.String getPackageName() {
+                throw new UnsupportedOperationException();
+            }
+            public java.lang.String getClassName() {
+                throw new UnsupportedOperationException();
+            }
+            public java.lang.String getParams() {
+                throw new UnsupportedOperationException();
+            }
             public java.util.List<? extends org.kew.shs.dedupl.matchconf.Bot> getComposedBy() {
                 throw new UnsupportedOperationException();
             }

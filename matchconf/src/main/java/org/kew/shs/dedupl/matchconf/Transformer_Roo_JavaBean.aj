@@ -8,6 +8,38 @@ import org.kew.shs.dedupl.matchconf.Transformer;
 
 privileged aspect Transformer_Roo_JavaBean {
     
+    public String Transformer.getName() {
+        return this.name;
+    }
+    
+    public void Transformer.setName(String name) {
+        this.name = name;
+    }
+    
+    public String Transformer.getPackageName() {
+        return this.packageName;
+    }
+    
+    public void Transformer.setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+    
+    public String Transformer.getClassName() {
+        return this.className;
+    }
+    
+    public void Transformer.setClassName(String className) {
+        this.className = className;
+    }
+    
+    public String Transformer.getParams() {
+        return this.params;
+    }
+    
+    public void Transformer.setParams(String params) {
+        this.params = params;
+    }
+    
     public List<Transformer> Transformer.getComposedBy() {
         return this.composedBy;
     }

@@ -13,14 +13,14 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooJpaActiveRecord(mappedSuperclass=true)
 public abstract class Bot implements Comparable<Bot> {
 
-    private String name;
-    private String packageName;
-    private String className;
-    private String params;
-
     public int compareTo(Bot o) {
-        return this.name.compareTo(o.name);
+        return this.getName().compareTo(o.getName());
     }
+
+    public abstract String getName();
+    public abstract String getPackageName();
+    public abstract String getClassName();
+    public abstract String getParams();
 
     public abstract List<? extends Bot> getComposedBy();
 
