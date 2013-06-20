@@ -1,6 +1,6 @@
 package org.kew.shs.dedupl.transformers;
 
-public class fakeHybridSignCleaner implements Transformer {
+public class FakeHybridSignCleaner implements Transformer {
 
 	/*
 	 * First replaces diacritic characters with their ASCII equivalent, then removes
