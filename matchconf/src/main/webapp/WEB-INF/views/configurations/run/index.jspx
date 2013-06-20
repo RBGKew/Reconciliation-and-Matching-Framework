@@ -7,7 +7,7 @@
     <h3>
       Either it has worked now or not :-)
     </h3>
-    <h4>${exception}</h4>
+    <h2>${exception}</h2>
 	  
     <p>
       Tried to run configuration ${config.name}; if all has worked well the results should have been written to ${config.workDirPath}..

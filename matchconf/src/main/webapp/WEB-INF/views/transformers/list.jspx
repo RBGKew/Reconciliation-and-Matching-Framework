@@ -4,11 +4,8 @@
     <jsp:output omit-xml-declaration="yes"/>
     <page:list id="pl_org_kew_shs_dedupl_matchconf_Transformer" items="${transformers}" z="NKGWQsy2Zjz2O0wsV6cSgwN25LY=">
         <table:table data="${transformers}" id="l_org_kew_shs_dedupl_matchconf_Transformer" path="/transformers" z="TL1w2oH+CaTlj1F13L0E9F8TF7w=">
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Transformer_composedBy" property="composedBy" z="8S3JAzDOC33PuuaLdmrVB9iWnDk="/>
             <table:column id="c_org_kew_shs_dedupl_matchconf_Transformer_name" property="name" z="IL+pRledm5Ed7uhhud8XN3ra+nA="/>
             <table:column id="c_org_kew_shs_dedupl_matchconf_Transformer_packageName" property="packageName" z="zmBhTfJU2l+NVqESvob5wEJ6iF4="/>
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Transformer_className" property="className" z="zh4Y+9WUMYmQNqBPjIzN4Nb/t7U="/>
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Transformer_params" property="params" z="8MbPOMPCX0ZgbhStIgtWRlmfA/0="/>
         </table:table>
     </page:list>
 </div>
