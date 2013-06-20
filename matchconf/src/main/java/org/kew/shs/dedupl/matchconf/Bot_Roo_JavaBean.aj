@@ -3,10 +3,7 @@
 
 package org.kew.shs.dedupl.matchconf;
 
-import java.util.List;
-import java.util.Set;
 import org.kew.shs.dedupl.matchconf.Bot;
-import org.kew.shs.dedupl.matchconf.Wire;
 
 privileged aspect Bot_Roo_JavaBean {
     
@@ -40,22 +37,6 @@ privileged aspect Bot_Roo_JavaBean {
     
     public void Bot.setParams(String params) {
         this.params = params;
-    }
-    
-    public Set<Wire> Bot.getMatchedWires() {
-        return this.matchedWires;
-    }
-    
-    public void Bot.setMatchedWires(Set<Wire> matchedWires) {
-        this.matchedWires = matchedWires;
-    }
-    
-    public List<Bot> Bot.getComposedBy() {
-        return this.composedBy;
-    }
-    
-    public void Bot.setComposedBy(List<Bot> composedBy) {
-        this.composedBy = composedBy;
     }
     
 }

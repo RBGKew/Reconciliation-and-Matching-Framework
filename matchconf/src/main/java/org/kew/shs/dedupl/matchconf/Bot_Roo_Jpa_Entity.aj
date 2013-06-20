@@ -4,7 +4,6 @@
 package org.kew.shs.dedupl.matchconf;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,8 +11,6 @@ import javax.persistence.Version;
 import org.kew.shs.dedupl.matchconf.Bot;
 
 privileged aspect Bot_Roo_Jpa_Entity {
-    
-    declare @type: Bot: @Entity;
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

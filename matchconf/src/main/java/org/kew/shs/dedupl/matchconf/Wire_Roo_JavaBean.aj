@@ -4,8 +4,9 @@
 package org.kew.shs.dedupl.matchconf;
 
 import java.util.Set;
-import org.kew.shs.dedupl.matchconf.Bot;
 import org.kew.shs.dedupl.matchconf.Configuration;
+import org.kew.shs.dedupl.matchconf.Matcher;
+import org.kew.shs.dedupl.matchconf.Transformer;
 import org.kew.shs.dedupl.matchconf.Wire;
 
 privileged aspect Wire_Roo_JavaBean {
@@ -90,19 +91,19 @@ privileged aspect Wire_Roo_JavaBean {
         this.configuration = configuration;
     }
     
-    public Bot Wire.getMatcher() {
+    public Matcher Wire.getMatcher() {
         return this.matcher;
     }
     
-    public void Wire.setMatcher(Bot matcher) {
+    public void Wire.setMatcher(Matcher matcher) {
         this.matcher = matcher;
     }
     
-    public Set<Bot> Wire.getTransformer() {
+    public Set<Transformer> Wire.getTransformer() {
         return this.transformer;
     }
     
-    public void Wire.setTransformer(Set<Bot> transformer) {
+    public void Wire.setTransformer(Set<Transformer> transformer) {
         this.transformer = transformer;
     }
     

@@ -6,8 +6,9 @@ package org.kew.shs.dedupl.matchconf.web;
 import java.io.UnsupportedEncodingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import org.kew.shs.dedupl.matchconf.Bot;
 import org.kew.shs.dedupl.matchconf.Configuration;
+import org.kew.shs.dedupl.matchconf.Matcher;
+import org.kew.shs.dedupl.matchconf.Transformer;
 import org.kew.shs.dedupl.matchconf.Wire;
 import org.kew.shs.dedupl.matchconf.web.WireController;
 import org.springframework.ui.Model;
@@ -88,8 +89,9 @@ privileged aspect WireController_Roo_Controller {
     
     void WireController.populateEditForm(Model uiModel, Wire wire) {
         uiModel.addAttribute("wire", wire);
-        uiModel.addAttribute("bots", Bot.findAllBots());
         uiModel.addAttribute("configurations", Configuration.findAllConfigurations());
+        uiModel.addAttribute("matchers", Matcher.findAllMatchers());
+        uiModel.addAttribute("transformers", Transformer.findAllTransformers());
     }
     
     String WireController.encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {

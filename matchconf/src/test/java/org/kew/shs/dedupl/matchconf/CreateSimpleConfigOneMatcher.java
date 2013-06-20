@@ -27,8 +27,8 @@ public class CreateSimpleConfigOneMatcher {
     File tempDir;
 
     String secondColName;
-    Bot transformer;
-    Bot matcher;
+    Transformer transformer;
+    Matcher matcher;
     Configuration config;
 
     @Before
@@ -54,7 +54,7 @@ public class CreateSimpleConfigOneMatcher {
     @Given("^he has added a composite transformer for the first column:$")
     public void he_has_added_a_composite_transformer_for_the_first_column(DataTable transformerDefTable) throws Throwable {
         List<Map<String,String>> transformerDef = transformerDefTable.asMaps();
-        this.transformer = new Bot();
+        this.transformer = new Transformer();
         this.transformer.setName(transformerDef.get(0).get("name"));
         this.transformer.setPackageName(transformerDef.get(0).get("packageName"));
         this.transformer.setClassName(transformerDef.get(0).get("className"));
@@ -64,9 +64,9 @@ public class CreateSimpleConfigOneMatcher {
 
     @Given("^this Composite Transformer contains the following transformers$")
     public void this_Composite_Transformer_contains_the_following_transformers(DataTable transformerDefTable) throws Throwable {
-        List<Bot> components = new ArrayList<Bot>();
+        List<Transformer> components = new ArrayList<Transformer>();
         for (Map<String,String> transDef:transformerDefTable.asMaps()) {
-            Bot component = new Bot();
+            Transformer component = new Transformer();
             component.setName(transDef.get("name"));
             component.setPackageName(transDef.get("packageName"));
             component.setClassName(transDef.get("className"));
@@ -79,13 +79,13 @@ public class CreateSimpleConfigOneMatcher {
     @Given("^he has added a matcher for the first column:$")
     public void he_has_added_a_matcher_for_the_first_column(DataTable matcherDefTable) throws Throwable {
         List<Map<String,String>> matcherDef = matcherDefTable.asMaps();
-        this.matcher = new Bot();
+        this.matcher = new Matcher();
         this.matcher.setName(matcherDef.get(0).get("name"));
         this.matcher.setPackageName(matcherDef.get(0).get("packageName"));
         this.matcher.setClassName(matcherDef.get(0).get("className"));
         this.matcher.setParams(matcherDef.get(0).get("params"));
         this.matcher.persist();
-        assert (Bot.findBot(this.matcher.getId()) != null);
+        assert (Matcher.findMatcher(this.matcher.getId()) != null);
     }
 
     @Given("^he has wired the matcher and the transformer to the column in a new configuration:$")

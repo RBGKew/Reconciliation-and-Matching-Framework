@@ -15,7 +15,11 @@ privileged aspect Bot_Roo_Jpa_ActiveRecord {
     transient EntityManager Bot.entityManager;
     
     public static final EntityManager Bot.entityManager() {
-        EntityManager em = new Bot().entityManager;
+        EntityManager em = new Bot() {
+            public java.util.List<? extends org.kew.shs.dedupl.matchconf.Bot> getComposedBy() {
+                throw new UnsupportedOperationException();
+            }
+        }.entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
         return em;
     }

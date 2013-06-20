@@ -13,7 +13,7 @@
         <field:display field="indexInitial" id="s_org_kew_shs_dedupl_matchconf_Wire_indexInitial" object="${wire}" z="5+3Yne/ww2WSvtjXxb05pJV5VDY="/>
         <field:display field="useWildcard" id="s_org_kew_shs_dedupl_matchconf_Wire_useWildcard" object="${wire}" z="dBlTpNI6eKdFXn1gBDxc8NDRfwY="/>
         <field:display field="configuration" id="s_org_kew_shs_dedupl_matchconf_Wire_configuration" object="${wire}" z="ScGGBqJA/JoKW04mwojIHQpmSNk="/>
-        <field:display field="matcher" id="s_org_kew_shs_dedupl_matchconf_Wire_matcher" object="${wire}" z="oTIDlesPA+JhqAeVKu73P6cNXYI="/>
         <field:display field="transformer" id="s_org_kew_shs_dedupl_matchconf_Wire_transformer" object="${wire}" z="AeAxXhk91hNClP8c3j7H/YV8Sag="/>
+        <field:display field="matcher" id="s_org_kew_shs_dedupl_matchconf_Wire_matcher" object="${wire}" z="oTIDlesPA+JhqAeVKu73P6cNXYI="/>
     </page:show>
 </div>
