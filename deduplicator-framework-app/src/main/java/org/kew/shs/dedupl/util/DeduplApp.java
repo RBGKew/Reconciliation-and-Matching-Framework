@@ -11,7 +11,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 public class DeduplApp extends CoreApp {
 
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args) throws Exception {
 
 		ConfigurableApplicationContext context = getContext(args, "application-context-dedupl.xml");
 

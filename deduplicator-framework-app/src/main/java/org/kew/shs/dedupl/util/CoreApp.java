@@ -53,7 +53,7 @@ public class CoreApp {
 		return line;
 	}
 
-	protected static void runEngineAndCache (ConfigurableApplicationContext context) {
+	protected static void runEngineAndCache (ConfigurableApplicationContext context) throws Exception {
 		/*
 		* Get the "engine" bean from the Spring config - Spring has instantiated it
 		* with the values set in the application-context file, which defaults to

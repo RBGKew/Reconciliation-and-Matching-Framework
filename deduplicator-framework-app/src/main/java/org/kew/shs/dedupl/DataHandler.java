@@ -14,7 +14,7 @@ public interface DataHandler {
  
 	public void setConfiguration(Configuration config);
 	public void setDataLoader(DataLoader dataLoader);
-	public void loadData();
-	public void run();
+	public void loadData() throws Exception;
+	public void run() throws Exception;
 	
 }

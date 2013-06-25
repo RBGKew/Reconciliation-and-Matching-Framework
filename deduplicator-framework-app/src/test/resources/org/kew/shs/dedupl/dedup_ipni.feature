@@ -79,7 +79,7 @@ Feature: Deduplicate Ipni
 			                <bean id="safeStripNonAlphasTransformer"
 			                    class="org.kew.shs.dedupl.transformers.SafeStripNonAlphasTransformer" />
                             <bean id="fakeHybridSignCleaner"
-                                class="org.kew.shs.dedupl.transformers.fakeHybridSignCleaner" />
+                                class="org.kew.shs.dedupl.transformers.FakeHybridSignCleaner" />
                         </util:list>
                     </property>
                 </bean>
@@ -279,7 +279,7 @@ Feature: Deduplicate Ipni
 			                <bean id="safeStripNonAlphasTransformer"
 			                    class="org.kew.shs.dedupl.transformers.SafeStripNonAlphasTransformer" />
                             <bean id="fakeHybridSignCleaner"
-                                class="org.kew.shs.dedupl.transformers.fakeHybridSignCleaner" />
+                                class="org.kew.shs.dedupl.transformers.FakeHybridSignCleaner" />
                         </util:list>
                     </property>
                 </bean>

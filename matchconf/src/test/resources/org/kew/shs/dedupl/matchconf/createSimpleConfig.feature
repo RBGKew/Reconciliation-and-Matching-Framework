@@ -26,7 +26,7 @@ Feature: Create a simple configuration
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:util="http://www.springframework.org/schema/util"
                 xmlns:p="http://www.springframework.org/schema/p"
-                xmlns:p="http://www.springframework.org/schema/c"
+                xmlns:c="http://www.springframework.org/schema/c"
                 xsi:schemaLocation="
                     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
                     http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
@@ -46,7 +46,7 @@ Feature: Create a simple configuration
                     <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/output_simple-config.tsv" />
                 </bean>
                 <bean id="topcopyfile" class="java.io.File">
-                    <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/output_multiline.tsv" />
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/output-multiline_simple-config.tsv" />
                 </bean>
                 <bean id="matchExactly" class="org.kew.shs.dedupl.matchers.ExactMatcher"
                     p:blanksMatch="false"/>

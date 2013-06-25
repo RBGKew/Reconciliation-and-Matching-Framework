@@ -46,12 +46,12 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 	}
 	// TODO: generalise Configuration!
 
-	public void loadData(){
+	public void loadData() throws Exception{
 		dataLoader.setConfiguration(configuration);
 		dataLoader.load();
 	}
 
-	public void run(){
+	public void run() throws Exception{
 
 		loadData(); // writes the index according to the configuration
 

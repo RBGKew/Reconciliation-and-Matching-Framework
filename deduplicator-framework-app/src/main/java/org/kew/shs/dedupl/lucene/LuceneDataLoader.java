@@ -35,11 +35,11 @@ public class LuceneDataLoader implements DataLoader{
 
 	private static Logger log = Logger.getLogger(LuceneDataLoader.class);
 
-	public void load(){
+	public void load() throws Exception{
 		load(configuration.getInputFile());
 	}
 
-	public void load(File file){
+	public void load(File file) throws Exception{
 		int i = 0;
 		String encoding = configuration.getInputFileEncoding();
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), encoding))) {
@@ -93,7 +93,7 @@ public class LuceneDataLoader implements DataLoader{
 			indexWriter.commit();
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			throw e;
 		}
 		log.info("Indexed " + i + " documents");
 	}

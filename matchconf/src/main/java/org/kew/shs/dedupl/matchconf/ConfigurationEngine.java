@@ -6,10 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.kew.shs.dedupl.util.DeduplApp;
 
 public class ConfigurationEngine {
@@ -28,14 +31,15 @@ public class ConfigurationEngine {
         String inputFilePath = new File(new File(this.config.getWorkDirPath()), this.config.getInputFileName()).getPath();
         String outputFileName = String.format("output_%s.%s", this.config.getName(), this.config.getOutputFileNameExtension());
         String outputFilePath = new File(new File(this.config.getWorkDirPath()), outputFileName).getPath();
-        String outputMultilineFilePath = new File(new File(this.config.getWorkDirPath()), "output_multiline.tsv").getPath();
+        String outputMultilineFileName = String.format("output-multiline_%s.%s", this.config.getName(), this.config.getOutputFileNameExtension());
+        String outputMultilineFilePath = new File(new File(this.config.getWorkDirPath()), outputMultilineFileName).getPath();
 		
 		outXML.add("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		outXML.add("<beans xmlns=\"http://www.springframework.org/schema/beans\"");
 		outXML.add(String.format("%sxmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", shift));
 		outXML.add(String.format("%sxmlns:util=\"http://www.springframework.org/schema/util\"", shift));
 		outXML.add(String.format("%sxmlns:p=\"http://www.springframework.org/schema/p\"", shift));
-		outXML.add(String.format("%sxmlns:p=\"http://www.springframework.org/schema/c\"", shift));
+		outXML.add(String.format("%sxmlns:c=\"http://www.springframework.org/schema/c\"", shift));
 		outXML.add(String.format("%sxsi:schemaLocation=\"", shift));
 		outXML.add(String.format("%s%shttp://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd", shift, shift));
 		outXML.add(String.format("%s%shttp://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd\">", shift, shift));
@@ -91,16 +95,16 @@ public class ConfigurationEngine {
 		return outXML;
 	}
 
-	public ArrayList<Bot> getMatchers() {
-		ArrayList<Bot> matchers = new ArrayList<Bot>();
+	public SortedSet<Bot> getMatchers() {
+		SortedSet<Bot> matchers = new TreeSet<Bot>();
 		for (Wire wire:this.config.getWiring()) {
 			matchers.add(wire.getMatcher());
 		}
 		return matchers;
 	}
 	
-	public ArrayList<Bot> getTransformers() {
-		ArrayList<Bot> transformers= new ArrayList<Bot>();
+	public SortedSet<Bot> getTransformers() {
+		SortedSet<Bot> transformers= new TreeSet<Bot>();
 		for (Wire wire:this.config.getWiring()) {
 			for (Bot transformer:wire.getTransformer()) {
 				transformers.add(transformer);
@@ -119,19 +123,21 @@ public class ConfigurationEngine {
 		// 2. does the input file exist?
 		File inputFile = new File(workDir, config.getInputFileName());
 		if (!inputFile.exists()) {
-			throw new FileNotFoundException("There is no file found at the specified location of the input-file ${inputFile.toPath()}. Move the input file there with the specified inputFileName.");
+			throw new FileNotFoundException(String.format("There is no file found at the specified location of the input-file %s. Move the input file there with the specified inputFileName.", inputFile.toPath()));
 		}
 		// 3. write out the xml-configuration file
 		File configFile = new File(workDir, "config_" + config.getName() + ".xml");
 		if (configFile.exists()) {
-			configFile = new File(workDir, "config_" + config.getName() + new DateTime().toString() + ".xml");
+			// rename existing config file and save new one under the actual name 
+			configFile.renameTo(new File(configFile.toString() + "_older_than_" + DateTimeFormat.forPattern("yyyy-MM-dd_HH-mm-ss").print(new DateTime())));
+			configFile = new File(workDir, "config_" + config.getName() +  ".xml");
 		}
 		try (BufferedWriter br = new BufferedWriter(new FileWriter(configFile))) {
 			br.write(StringUtils.join(this.toXML(), System.getProperty("line.separator")));
 		}
 	}
 	
-	public void runConfiguration () throws ParseException {
+	public void runConfiguration () throws Exception {
 		File workDir = new File(this.config.getWorkDirPath());
 		assert workDir.exists();
 		DeduplApp.main(new String[] {"-d " + workDir.toString(), "-c config_" + this.config.getName() + ".xml"});

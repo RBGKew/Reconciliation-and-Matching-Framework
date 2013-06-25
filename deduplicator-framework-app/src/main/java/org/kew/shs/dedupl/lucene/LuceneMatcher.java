@@ -43,7 +43,7 @@ public class LuceneMatcher extends LuceneHandler implements DataMatcher{
 		return this.matchConfig;
 	}
 	
-	public void loadData(){ // from DataMatcher
+	public void loadData() throws Exception{ // from DataMatcher
 		if (!getMatchConfig().isReuseIndex()){
 			dataLoader.setConfiguration(this.getMatchConfig());
 			dataLoader.load(this.getMatchConfig().getStoreFile());
@@ -52,7 +52,7 @@ public class LuceneMatcher extends LuceneHandler implements DataMatcher{
 			log.info("Reusing existing index");
 	}
 
-	public void run(){ // from DataMatcher
+	public void run() throws Exception{ // from DataMatcher
 		
 		loadData();
 
