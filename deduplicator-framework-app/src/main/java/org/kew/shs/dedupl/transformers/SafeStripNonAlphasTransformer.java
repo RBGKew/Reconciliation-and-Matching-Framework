@@ -9,7 +9,6 @@ public class SafeStripNonAlphasTransformer implements Transformer {
 	@Override
 	public String transform(String s) {
 		s = new NormaliseDiacritsTransformer().transform(s);
-		s = s.replaceAll("[^\\p{ASCII}]", "");
 		return s.replaceAll("[^A-Za-z]", " ").replaceAll("\\s+", " ").trim();
 	}
 
