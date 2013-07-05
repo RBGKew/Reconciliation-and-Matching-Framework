@@ -23,6 +23,16 @@ public class RemoveBracketedTextTransformerTest {
 		Transformer transformer = new RemoveBracketedTextTransformer();
 		assertEquals("text", transformer.transform("text (text)"));
 	}
+	@Test
+	public void removeRoundBracketsWithSpecificTextInRoundBrackets () {
+		Transformer transformer = new RemoveBracketedTextTransformer();
+		assertEquals("Prodr.", transformer.transform("Prodr. (DC.)"));
+	}
+	@Test
+	public void removeRoundBracketsWithSpecificTextInSquaredBrackets () {
+		Transformer transformer = new RemoveBracketedTextTransformer();
+		assertEquals("Bot. Voy. Herald", transformer.transform("Bot. Voy. Herald [Seemann]"));
+	}
 
 	@Test
 	public void removeSquareBracketsWithText () {
