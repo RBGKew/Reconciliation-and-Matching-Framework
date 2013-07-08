@@ -36,4 +36,12 @@ public class NumberMatcherTest {
 		assertTrue(matcher.matches("1a2b3", "1 2 3"));
 	}
 
+	@Test
+	public void testChangeMinRatio () {
+		NumberMatcher matcher = new NumberMatcher();
+		// minRatio expected to be (1)/1+(1+2) == 0.25, which is below the allowed limit (default==0.5)
+		assertFalse(matcher.matches("1 23", "1 2 3"));
+		matcher.setMinRatio(0.25);
+		assertTrue(matcher.matches("1 23", "1 2 3"));
+	}
 }
