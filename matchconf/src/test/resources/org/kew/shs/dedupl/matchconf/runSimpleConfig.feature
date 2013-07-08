@@ -70,16 +70,16 @@ Feature: run a simple configuration
             """
         And some mysterious data-improver has put a file "input.tsv" in the same directory containing the following data:
             | id      | data_col  | transformer_comments                               | matcher_comments |
-            | 1      | 0         | zero should be replaced with blank                 | stays alone      |
-            | 2      | some-name | hyphen should be replaced with white space         | 3 cluster items  |
-            | 3      |           | blank stays blank                                  | stays alone      |
-            | 4      | some name | stays the same                                     | 3 cluster items  |
-            | 5      |           | blank stays blank                                  | stays alone      |
-            | 6      | sóme namê | diacrits should be replaced with ascii equivalents | 3 cluster items  |
+            | 1       | 0         | zero should be replaced with blank                 | stays alone      |
+            | 2       | some-name | hyphen should be replaced with white space         | 3 cluster items  |
+            | 3       |           | blank stays blank                                  | stays alone      |
+            | 4       | some name | stays the same                                     | 3 cluster items  |
+            | 5       |           | blank stays blank                                  | stays alone      |
+            | 6       | sóme namê | diacrits should be replaced with ascii equivalents | 3 cluster items  |
         When asking MatchConf to run this configuration
         Then the deduplication program should run smoothly and produce the following file "output.tsv" in the same directory:
             | id      | data_col  | cluster_size | from_id | ids_in_cluster |
-            | 1      |           | 1            | 1       | 1              |
-            | 6      | some name | 3            | 2       | 6 \| 4 \| 2    |
-            | 3      |           | 1            | 3       | 3              |
-            | 5      |           | 1            | 5       | 5              |
+            | 1       |           | 1            | 1       | 1              |
+            | 6       | some name | 3            | 2       | 6 \| 4 \| 2    |
+            | 3       |           | 1            | 3       | 3              |
+            | 5       |           | 1            | 5       | 5              |

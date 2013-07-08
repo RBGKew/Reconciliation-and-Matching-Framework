@@ -19,11 +19,7 @@ import org.kew.shs.dedupl.reporters.LuceneOutputReporterMultiline;
 import org.kew.shs.dedupl.reporters.LuceneReporter;
 import org.kew.shs.dedupl.reporters.Reporter;
 
-/**
- * This is a Lucene implementation of the Deduplicator interface
- * @author nn00kg
- *
- */
+
 public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 
 	protected DeduplicationConfiguration dedupConfig;
@@ -47,13 +43,13 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 	// TODO: generalise Configuration!
 
 	public void loadData() throws Exception{
-		dataLoader.setConfiguration(configuration);
-		dataLoader.load();
+		this.dataLoader.setConfiguration(configuration);
+		this.dataLoader.load();
 	}
 
-	public void run() throws Exception{
+	public void run() throws Exception {
 
-		loadData(); // writes the index according to the configuration
+		this.loadData(); // writes the index according to the configuration
 
 		// Read something
 		Set<String> alreadyProcessed = new HashSet<String>();
@@ -150,9 +146,6 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 				if (executionReport != null)
 					log.debug(p.getMatcher().getExecutionReport());
 			}
-
-			indexWriter.close();
-
 			// make all reporters finish properly (close open files, etc.)
 			for (Reporter reporter : this.reporters) {
 				reporter.finish();
@@ -160,6 +153,8 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			indexWriter.close();
 		}
 
 	}

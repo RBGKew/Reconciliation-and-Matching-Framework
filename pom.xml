@@ -35,6 +35,7 @@
         <servlet-api.version>2.5</servlet-api.version>
         <slf4j.version>1.7.2</slf4j.version>
         <spring.version>3.1.0.RELEASE</spring.version>
+	    <super-csv.version>2.1.0</super-csv.version>
 	</properties>
 
 	<dependencyManagement>
@@ -247,6 +248,11 @@
 	            <groupId>org.apache.commons</groupId>
 	            <artifactId>commons-lang3</artifactId>
 	            <version>${commons-lang3.version}</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>net.sf.supercsv</groupId>
+	            <artifactId>super-csv</artifactId>
+	            <version>${super-csv.version}</version>
 	        </dependency>
 	        <!-- ROO dependencies -->
 	        <dependency>

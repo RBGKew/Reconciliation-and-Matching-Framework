@@ -7,7 +7,7 @@ Feature: Deduplicate Ipni
 
 	Scenario: Genus level
 		Given Rachel has created an input-file to feed the deduplicator framework containing tab-separated Genus data
-			| Id         | Family      | Genus           | Authors     | Basionym_author | Publishing_author | Full_name_without_family_and_authors | Publication              | Collation     | Publication_year | Reference_remarks | Remarks | std_score | Test_concern                                                                                      |
+			| id         | family      | genus           | authors     | basionym_author | publishing_author | full_name_without_family_and_authors | publication              | collation     | publication_year | reference_remarks | remarks | std_score | test_concern                                                                                      |
 			| 30022170-2 | Rapateaceae | Saxo-fridericia | R.H.Schomb. |                 | R.H.Schomb.       | Saxo-fridericia                      | Rapatea                  | 13            | 1845             |                   |         | 9         | Does presence of hyphen in genus name prevent clustering                                          |
 			| 1001-1     | Ericaceae   | Leucothoë       | D.Don       |                 | D.Don             | Leucothoë                            | Edinburgh New Philos. J. | 17: 159       | 1834             |                   |         | 9         | Does presence of diacritic character at end of name prevent clustering                            |
 			| 1001-2     | Ericaceae   | Leucothoë       | D.Don       |                 | D.Don             | Leucothoë                            | Edinburgh New Philos. J. | 17: 159       | 1834             |                   |         | 9         | Does presence of diacritic character at end of name prevent clustering                            |
@@ -83,14 +83,14 @@ Feature: Deduplicate Ipni
                         </util:list>
                     </property>
                 </bean>
-                <bean id="safeStripNonAlphanumericsTransformer"
-                    class="org.kew.shs.dedupl.transformers.SafeStripNonAlphanumericsTransformer" />
+                <bean id="safeStripNonAlphaNumericsTransformer"
+                    class="org.kew.shs.dedupl.transformers.SafeStripNonAlphaNumericsTransformer" />
                 <bean id="collationCleaner"
                     class="org.kew.shs.dedupl.transformers.CompositeTransformer">
                     <property name="transformers">
                         <util:list id="1">
                             <bean id="icollationCleaner"
-                                class="org.kew.shs.dedupl.transformers.SafeStripNonAlphanumericsTransformer" />
+                                class="org.kew.shs.dedupl.transformers.SafeStripNonAlphaNumericsTransformer" />
                             <bean id="rcollationCleaner"
                                 class="org.kew.shs.dedupl.transformers.RomanNumeralTransformer" />
                         </util:list>
@@ -132,7 +132,7 @@ Feature: Deduplicate Ipni
                         p:name="publication"
                         p:columnIndex="7"
                         p:matcher-ref="capitalLettersMatcher"
-                        p:transformer-ref="safeStripNonAlphanumericsTransformer"
+                        p:transformer-ref="safeStripNonAlphaNumericsTransformer"
                         p:blanksMatch="true"/>
                     <bean class="org.kew.shs.dedupl.configuration.Property"
                         p:name="collation"
@@ -200,15 +200,15 @@ Feature: Deduplicate Ipni
 
 	Scenario: Species level
 		Given Eszter has created an input-file to feed the deduplicator framework containing tab-separated Species data
-            |         Id |          Family |       Genus |  Rank | Basionym_author |                   Publishing_author | Full_name_without_family_and_authors |                       Publication |            Collation | Publication_year | Reference_remarks |             Remarks | std_score |      DIT_Family |                                                                                                                                           Test_concern |
-            |   307089-2 |        Fabaceae |    Baptisia | spec. |                 | "Kosnik, Diggs, Redshaw & Lipscomb" |                Baptisia × variicolor |                              Sida |              17: 498 |             1996 |                   |                     |        13 |     Leguminosae |                                                  Does presence of multiplication sign and whitespace between genus and species name prevent clustering |
+            |         id |          family |       genus |  rank | basionym_author |                   publishing_author | full_name_without_family_and_authors |                       publication |            collation | publication_year | reference_remarks |             remarks | std_score |      dit_family |                                                                                                                                           test_concern |
+            |   307089-2 |        Fabaceae |    Baptisia | spec. |                 | Kosnik, Diggs, Redshaw & Lipscomb   |                Baptisia × variicolor |                              Sida |              17: 498 |             1996 |                   |                     |        13 |     Leguminosae |                                                  Does presence of multiplication sign and whitespace between genus and species name prevent clustering |
             |   300547-2 |     Orchidaceae |    Barkeria | spec. |                 |                         Soto Arenas |         Barkeria fritz-halbingeriana |            Orquidea (Mexico City) | 13: 245 (-246; fig.) |             1993 |                   |                     |        13 |     Orchidaceae |                                                                                          Does presence of hyphen in species epithet prevent clustering |
             |   300068-2 | Dryopteridaceae | Dryostichum | spec. |                 |                          W.H.Wagner |              × Dryostichum singulare |                    Canad. J. Bot. |      "70: 248, figs" |             1992 |                   |                     |        12 | Dryopteridaceae |                                                          Does presence of multiplication sign and whitespace at start of genus name prevent clustering |
             |   312304-2 |     Orchidaceae |    Barkeria | spec. |                 |                         Soto Arenas |         Barkeria fritz-halbingeriana |            Orquidea (Mexico City) |      13: 245-246 fig |             1993 |                   |                     |        12 |     Orchidaceae |                                                                                          Does presence of hyphen in species epithet prevent clustering |
             |   319079-2 |     Begoniaceae |     Begonia | spec. |                 |                                  L. |                      Begonia obliqua |                           Sp. Pl. |              2: 1056 |             1753 |                   | [Gandhi 1 Dec 1999] |        12 |     Begoniaceae |                                                                                Will these be clustered now? First attempt didn't clustered these names |
             |     1001-2 |     Begoniaceae |     Begonia | spec. |                 |                                  L. |                      Begonia obliqua |                           Sp. Pl. |              2: 1056 |             1753 |                   | [Gandhi 1 Dec 1999] |        12 |     Begoniaceae |                                                                                Will these be clustered now? First attempt didn't clustered these names |
             |   289660-2 |     Orchidaceae |     Dracula | spec. |                 |                                Luer |           Dracula × radio-syndactyla |                          Selbyana |         5: 389(-390) |             1981 |                   |                     |        12 |     Orchidaceae |                    Does presence of multiplication sign and whitespace between genus and species name and hyphen in species epithet prevent clustering |
-            |   993921-1 |     Leguminosae |    Baptisia | spec. |                 | "Kosnik, Diggs, Redshaw & Lipscomb" |                Baptisia × variicolor |                              Sida |           17(2): 498 |             1996 |                   |                     |        11 |     Leguminosae |                                                  Does presence of multiplication sign and whitespace between genus and species name prevent clustering |
+            |   993921-1 |     Leguminosae |    Baptisia | spec. |                 | Kosnik, Diggs, Redshaw & Lipscomb   |                Baptisia × variicolor |                              Sida |           17(2): 498 |             1996 |                   |                     |        11 |     Leguminosae |                                                  Does presence of multiplication sign and whitespace between genus and species name prevent clustering |
             |    30810-2 |     Begoniaceae |     Begonia | spec. |                 |                        Sessé & Moc. |                      Begonia peltata |               "Fl. Mexic., ed. 2" |                  219 |             1894 |                   |                     |        11 |     Begoniaceae | Does presence of diacritic character at end of author prevent clustering also these names didn't cluster for the first attempt (cannot see difference) |
             |     1003-2 |     Begoniaceae |     Begonia | spec. |                 |                        Sessé & Moc. |                      Begonia peltata |               "Fl. Mexic., ed. 2" |                  219 |             1894 |                   |                     |        11 |     Begoniaceae | Does presence of diacritic character at end of author prevent clustering also these names didn't cluster for the first attempt (cannot see difference) |
             |    30866-2 |     Begoniaceae |     Begonia | spec. |                 |                        Sessé & Moc. |                       Begonia repens |               "Fl. Mexic., ed. 2" |                  219 |             1894 |                   |                     |        11 |     Begoniaceae | Does presence of diacritic character at end of author prevent clustering also these names didn't cluster for the first attempt (cannot see difference) |
@@ -283,14 +283,14 @@ Feature: Deduplicate Ipni
                         </util:list>
                     </property>
                 </bean>
-                <bean id="safeStripNonAlphanumericsTransformer"
-                    class="org.kew.shs.dedupl.transformers.SafeStripNonAlphanumericsTransformer" />
+                <bean id="safeStripNonAlphaNumericsTransformer"
+                    class="org.kew.shs.dedupl.transformers.SafeStripNonAlphaNumericsTransformer" />
                 <bean id="collationCleaner"
                     class="org.kew.shs.dedupl.transformers.CompositeTransformer">
                     <property name="transformers">
                         <util:list id="1">
                             <bean id="icollationCleaner"
-                                class="org.kew.shs.dedupl.transformers.SafeStripNonAlphanumericsTransformer" />
+                                class="org.kew.shs.dedupl.transformers.SafeStripNonAlphaNumericsTransformer" />
                             <bean id="rcollationCleaner"
                                 class="org.kew.shs.dedupl.transformers.RomanNumeralTransformer" />
                         </util:list>
@@ -334,7 +334,7 @@ Feature: Deduplicate Ipni
                         p:name="publication"
                         p:columnIndex="7"
                         p:matcher-ref="capitalLettersMatcher"
-                        p:transformer-ref="safeStripNonAlphanumericsTransformer"
+                        p:transformer-ref="safeStripNonAlphaNumericsTransformer"
                         p:blanksMatch="true"/>
                     <bean class="org.kew.shs.dedupl.configuration.Property"
                         p:name="collation"
@@ -389,9 +389,9 @@ Feature: Deduplicate Ipni
 		When this species config is run through the Dedupl App
 		Then a file should have been created in the same folder with the following species data:
             |       id |          family |  genus_orig |       genus | genus_length | genus_init | basionym_author |                   publishing_author_orig |             publishing_author | full_name_without_family_and_authors_orig | full_name_without_family_and_authors |                    publication |       collation_orig |      collation | publication_year | reference_remarks |             remarks | std_score |      dit_family | cluster_size |  from_id |                           ids_in_cluster |
-            | 307089-2 |        Fabaceae |    Baptisia |    Baptisia |           08 |          B |                 |      "Kosnik, Diggs, Redshaw & Lipscomb" | Kosnik Diggs Redshaw Lipscomb |                     Baptisia × variicolor |                  Baptisia variicolor |                           Sida |              17: 498 |         17 498 |             1996 |                   |                     |        13 |     Leguminosae |            2 | 307089-2 |                     307089-2 \| 993921-1 |
+            | 307089-2 |        Fabaceae |    Baptisia |    Baptisia |           08 |          B |                 |      Kosnik, Diggs, Redshaw & Lipscomb   | Kosnik Diggs Redshaw Lipscomb |                     Baptisia × variicolor |                  Baptisia variicolor |                           Sida |              17: 498 |         17 498 |             1996 |                   |                     |        13 |     Leguminosae |            2 | 307089-2 |                     307089-2 \| 993921-1 |
             | 300547-2 |     Orchidaceae |    Barkeria |    Barkeria |           08 |          B |                 |                              Soto Arenas |                   Soto Arenas |              Barkeria fritz-halbingeriana |         Barkeria fritz halbingeriana |           Orquidea Mexico City | 13: 245 (-246; fig.) | 13 245 246 fig |             1993 |                   |                     |        13 |     Orchidaceae |            2 | 300547-2 |                     300547-2 \| 312304-2 |
-            | 300068-2 | Dryopteridaceae | Dryostichum | Dryostichum |           11 |          D |                 |                               W.H.Wagner |                    W H Wagner |                   × Dryostichum singulare |                Dryostichum singulare |                    Canad J Bot |      "70: 248, figs" |    70 248 figs |             1992 |                   |                     |        12 | Dryopteridaceae |            2 | 300068-2 |                   300068-2 \| 17542760-1 |
+            | 300068-2 | Dryopteridaceae | Dryostichum | Dryostichum |           11 |          D |                 |                               W.H.Wagner |                    W H Wagner |                   × Dryostichum singulare |                Dryostichum singulare |                    Canad J Bot |      70: 248, figs   |    70 248 figs |             1992 |                   |                     |        12 | Dryopteridaceae |            2 | 300068-2 |                   300068-2 \| 17542760-1 |
             | 319079-2 |     Begoniaceae |     Begonia |     Begonia |           07 |          B |                 |                                       L. |                             L |                           Begonia obliqua |                      Begonia obliqua |                          Sp Pl |              2: 1056 |         2 1056 |             1753 |                   | [Gandhi 1 Dec 1999] |        12 |     Begoniaceae |            4 | 319079-2 | 319079-2 \| 1001-2 \| 105293-1 \| 1002-1 |
             | 289660-2 |     Orchidaceae |     Dracula |     Dracula |           07 |          D |                 |                                     Luer |                          Luer |                Dracula × radio-syndactyla |             Dracula radio syndactyla |                       Selbyana |         5: 389(-390) |      5 389 390 |             1981 |                   |                     |        12 |     Orchidaceae |            2 | 289660-2 |                     289660-2 \| 897642-1 |
             |  30810-2 |     Begoniaceae |     Begonia |     Begonia |           07 |          B |                 |                             Sessé & Moc. |                     Sesse Moc |                           Begonia peltata |                      Begonia peltata |                  Fl Mexic ed 2 |                  219 |            219 |             1894 |                   |                     |        11 |     Begoniaceae |            4 |  30810-2 |  30810-2 \| 1003-2 \| 105394-1 \| 1004-1 |

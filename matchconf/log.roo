@@ -141,3 +141,4 @@ web mvc all --package org.kew.shs.dedupl.matchconf.web
 // Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-06-21 13:57:27
 logging setup --level INFO
 // Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-07-05 13:59:21
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-07-05 17:09:49

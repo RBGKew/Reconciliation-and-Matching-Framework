@@ -10,17 +10,8 @@ import com.googlecode.ehcache.annotations.Cacheable;
 public class NumberMatcher extends CommonTokensMatcher {
 
 	public static int COST = 5;
-	private double minRatio=0.5;
 	public boolean noNumbersRequireRestMatch = true;
 	
-	public double getMinRatio() {
-		return minRatio;
-	}
-
-	public void setMinRatio(double minRatio) {
-		this.minRatio = minRatio;
-	}
-
 	public int getCost() {
 		return COST;
 	}

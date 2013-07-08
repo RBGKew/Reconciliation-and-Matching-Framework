@@ -96,15 +96,15 @@
 	<bean id="safeStripNonAlphasTransformer"
 		class="org.kew.shs.dedupl.transformers.SafeStripNonAlphasTransformer" />
 
-	<bean id="safeStripNonAlphanumericsTransformer"
-		class="org.kew.shs.dedupl.transformers.SafeStripNonAlphanumericsTransformer" />
+	<bean id="safeStripNonAlphaNumericsTransformer"
+		class="org.kew.shs.dedupl.transformers.SafeStripNonAlphaNumericsTransformer" />
 
 	<bean id="collationCleaner"
 		class="org.kew.shs.dedupl.transformers.CompositeTransformer">
 		<property name="transformers">
 			<util:list id="1">
 				<bean id="icollationCleaner"
-					class="org.kew.shs.dedupl.transformers.StripNonAlphanumericCharactersTransformer" />
+					class="org.kew.shs.dedupl.transformers.StripNonAlphaNumericCharactersTransformer" />
 				<bean id="rcollationCleaner"
 					class="org.kew.shs.dedupl.transformers.RomanNumeralTransformer" />
 			</util:list>
@@ -153,7 +153,7 @@
 			p:name="publication"
 			p:columnIndex="6"
 			p:matcher-ref="capitalLettersMatcher"
-			p:transformer-ref="safeStripNonAlphanumericsTransformer"
+			p:transformer-ref="safeStripNonAlphaNumericsTransformer"
 			p:blanksMatch="true"/>
 		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:name="collation"
