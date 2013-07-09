@@ -99,15 +99,6 @@ public class LuceneDataLoader implements DataLoader {
         log.info("Indexed " + i + " documents");
     }
 
-    public static int calculateNumberColumns(List<Property> properties) {
-        int numColumns = 0;
-        for (Property p : properties){
-            if (p.getColumnIndex() > numColumns)
-                numColumns = p.getColumnIndex();
-        }
-        return numColumns;
-    }
-
     public org.apache.lucene.util.Version getLuceneVersion() {
         return luceneVersion;
     }

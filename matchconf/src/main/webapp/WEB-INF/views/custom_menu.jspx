@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:menu="urn:jsptagdir:/WEB-INF/tags/menu" id="menu" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <menu:menu id="_menu" z="nZaf43BjUg1iM0v70HJVEsXDopc=">
+        <menu:category id="c_configuration" z="">
+            <menu:item id="i_configuration_new" messageCode="dedup_config_new" url="/dedup_configs?form" z="PpKhRYSLF3fMvOlr5J8dEALoaF8="/>
+            <menu:item id="i_configuration_list" messageCode="dedup_config_list" url="/dedup_configs?page=1&amp;size=${empty param.size ? 10 : param.size}" z="eTnA6q7aRKdliIXm9IDu8P8bUhU="/>
+            <menu:item id="i_configuration_new" messageCode="match_config_new" url="/match_configs?form" z="PpKhRYSLF3fMvOlr5J8dEALoaF8="/>
+            <menu:item id="i_configuration_list" messageCode="match_config_list" url="/match_configs?page=1&amp;size=${empty param.size ? 10 : param.size}" z="eTnA6q7aRKdliIXm9IDu8P8bUhU="/>
+        </menu:category>
+    </menu:menu>
+</div>

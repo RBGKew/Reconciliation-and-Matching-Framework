@@ -49,8 +49,35 @@ public class CreateSimpleConfigOneMatcher {
         new File(workDir, "input.tsv").createNewFile();
     }
 
-    @Given("^he has added a composite transformer for the first column:$")
-    public void he_has_added_a_composite_transformer_for_the_first_column(DataTable transformerDefTable) throws Throwable {
+	@Given("^he has created a new configuration:$")
+    public void he_has_created_a_new_configuration(DataTable colDefTable) throws Throwable {
+        List<Map<String,String>> colDef = colDefTable.asMaps();
+        this.config = new Configuration();
+        this.config.setName(colDef.get(0).get("name"));
+        this.config.setWorkDirPath(new File(this.tempDir, colDef.get(0).get("workDirPath")).getPath());
+        this.config.persist();
+        assert (Configuration.findConfiguration(this.config.getId()) != null);
+    }
+
+    @Given("^he has set up a wire for the second column:$")
+    public void he_has_wired_the_matcher_and_the_transformer_to_the_column_in_a_new_configuration(DataTable colDefTable) throws Throwable {
+        List<Map<String,String>> colDef = colDefTable.asMaps();
+        Wire wire = new Wire();
+        wire.setSourceColumnName(this.secondColName);
+        wire.setMatcher(this.matcher);
+        wire.setConfiguration(this.config);
+        wire.persist();
+        wire.getSourceTransformers().add(this.transformer);
+        wire = wire.merge();
+        assert (Wire.findWire(wire.getId()) != null);
+        this.config.getWiring().add(wire);
+        this.config.merge();
+        assertThat(this.config.getWiring().toArray(new Wire[1]), is(new Wire[] {wire}));
+    }
+
+
+    @Given("^he has added a composite transformer for the second column:$")
+    public void he_has_added_a_composite_transformer_for_the_second_column(DataTable transformerDefTable) throws Throwable {
         List<Map<String,String>> transformerDef = transformerDefTable.asMaps();
         this.transformer = new Transformer();
         this.transformer.setName(transformerDef.get(0).get("name"));
@@ -74,8 +101,8 @@ public class CreateSimpleConfigOneMatcher {
             this.transformer.setComposedBy(components);
     }
 
-    @Given("^he has added a matcher for the first column:$")
-    public void he_has_added_a_matcher_for_the_first_column(DataTable matcherDefTable) throws Throwable {
+    @Given("^he has added a matcher for the second column:$")
+    public void he_has_added_a_matcher_for_the_second_column(DataTable matcherDefTable) throws Throwable {
         List<Map<String,String>> matcherDef = matcherDefTable.asMaps();
         this.matcher = new Matcher();
         this.matcher.setName(matcherDef.get(0).get("name"));
@@ -84,29 +111,6 @@ public class CreateSimpleConfigOneMatcher {
         this.matcher.setParams(matcherDef.get(0).get("params"));
         this.matcher.persist();
         assert (Matcher.findMatcher(this.matcher.getId()) != null);
-    }
-
-    @Given("^he has wired the matcher and the transformer to the column in a new configuration:$")
-    public void he_has_wired_the_matcher_and_the_transformer_to_the_column_in_a_new_configuration(DataTable colDefTable) throws Throwable {
-        List<Map<String,String>> colDef = colDefTable.asMaps();
-        this.config = new Configuration();
-        this.config.setName(colDef.get(0).get("name"));
-        this.config.setWorkDirPath(new File(this.tempDir, colDef.get(0).get("workDirPath")).getPath());
-        this.config.persist();
-        assert (Configuration.findConfiguration(this.config.getId()) != null);
-        Wire wire = new Wire();
-        wire.setColumnName(this.secondColName);
-        wire.setColumnIndex(1);
-        wire.setMatcher(this.matcher);
-        wire.persist();
-        wire.getTransformer().add(this.transformer);
-        wire = wire.merge();
-        assert (Wire.findWire(wire.getId()) != null);
-        this.matcher.getMatchedWires().add(wire);
-        this.matcher.merge();
-        this.config.getWiring().add(wire);
-        this.config.merge();
-        assertThat(this.config.getWiring().toArray(new Wire[1]), is(new Wire[] {wire}));
     }
 
     @When("^he asks to write the configuration out to the filesystem$")

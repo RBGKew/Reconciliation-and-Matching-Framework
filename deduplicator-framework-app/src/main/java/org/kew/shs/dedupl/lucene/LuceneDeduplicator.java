@@ -52,7 +52,7 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 		this.loadData(); // writes the index according to the configuration
 
 		// Read something
-		Set<String> alreadyProcessed = new HashSet<String>();
+		Set<String> alreadyProcessed = new HashSet<>();
 
 		// TODO: implement autoclose on reporters and use then this nice try (with reporters = ..) way.
 		// 	that would make explicit closing obsolete and would perform better in case sth goes wrong.

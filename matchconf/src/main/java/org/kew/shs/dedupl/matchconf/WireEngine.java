@@ -19,10 +19,9 @@ public class WireEngine {
 		}
 		ArrayList<String> outXML = new ArrayList<String>();
 		outXML.add(String.format("%s<bean class=\"org.kew.shs.dedupl.configuration.Property\"", indent));
-		outXML.add(String.format("%s%sp:name=\"%s\"", indent, shift, this.wire.getColumnName()));
-		outXML.add(String.format("%s%sp:columnIndex=\"%s\"", indent, shift, this.wire.getColumnIndex()));
+		outXML.add(String.format("%s%sp:name=\"%s\"", indent, shift, this.wire.getName()));
 		outXML.add(String.format("%s%sp:matcher-ref=\"%s\"", indent, shift, this.wire.getMatcher().getName()));
-		for (Bot transformer:this.wire.getTransformer()) {
+		for (Bot transformer:this.wire.getSourceTransformers()) {
 			outXML.add(String.format("%s%sp:transformer-ref=\"%s\"", indent, shift, transformer.getName()));
 		}
 		outXML.add(String.format("%s%sp:useInSelect=\"%s\"", indent, shift, this.wire.getUseInSelect()));

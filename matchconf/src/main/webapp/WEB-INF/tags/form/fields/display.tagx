@@ -26,6 +26,18 @@
         :
       </label>
       <div class="box" id="_${fn:escapeXml(id)}_${fn:escapeXml(field)}_id">
+
+       <c:if test='${ object.getClass().toString().endsWith("Configuration") }'>
+        <c:choose>
+          <c:when test='${object["className"].equals("MatchConfiguration")}'>
+            <c:set value="match_configs" var="configType" />
+          </c:when>
+          <c:otherwise>
+            <c:set value="dedup_configs" var="configType" />
+          </c:otherwise>
+        </c:choose>
+       </c:if>
+
         <c:choose>
           <c:when test="${date}">
             <spring:escapeBody>
@@ -36,6 +48,15 @@
             <spring:escapeBody>
               <fmt:formatDate value="${object[field].time}" pattern="${fn:escapeXml(dateTimePattern)}" />
             </spring:escapeBody>
+          </c:when>
+          <c:when test='${ field.equals("wiring") }'>
+            <a href='/MatchConf/${ configType }/${ object.getName() }/wires'>${ object[field] } </a>
+          </c:when>
+          <c:when test='${ field.equals("transformers") }'>
+            <a href='/MatchConf/${ configType }/${ object.getName() }/transformers'>${ object[field] } </a>
+          </c:when>
+          <c:when test='${ field.equals("matchers") }'>
+            <a href='/MatchConf/${ configType }/${ object.getName() }/matchers'>${ object[field] } </a>
           </c:when>
           <c:otherwise>
             <spring:eval expression="object[field]" />

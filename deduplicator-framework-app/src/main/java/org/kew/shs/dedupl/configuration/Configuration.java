@@ -13,7 +13,6 @@ public class Configuration {
     private File inputFile;
     private String inputFileEncoding = "UTF8";
     private String inputFileDelimiter;
-    private boolean inputFileIgnoreHeader = false;
 
     private File outputFile;
     private String outputFileDelimiter;
@@ -59,12 +58,6 @@ public class Configuration {
     }
     public void setInputFileEncoding(String inputFileEncoding) {
         this.inputFileEncoding = inputFileEncoding;
-    }
-    public boolean isInputFileIgnoreHeader() {
-        return inputFileIgnoreHeader;
-    }
-    public void setInputFileIgnoreHeader(boolean inputFileIgnoreHeader) {
-        this.inputFileIgnoreHeader = inputFileIgnoreHeader;
     }
     public File getOutputFile() {
         return outputFile;

@@ -4,9 +4,6 @@
     
     <display-name>MatchConf</display-name>
     
-    <description>Roo generated MatchConf application</description>
-
-    
     <!-- Enable escaping of form submission contents -->
     <context-param>
         <param-name>defaultHtmlEscape</param-name>

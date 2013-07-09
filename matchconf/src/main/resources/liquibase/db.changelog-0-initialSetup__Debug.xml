@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+    <changeSet author="Alecs Geuder" id="1373619725329-1">
+        <createTable catalogName="PUBLIC" schemaName="PUBLIC" tableName="CONFIGURATION_WIRING">
+            <column name="CONFIGURATION" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="WIRING" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Alecs Geuder" id="1373619725329-2">
+        <createTable catalogName="PUBLIC" schemaName="PUBLIC" tableName="TRANSFORMER">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="SYS_PK_10090"/>
+            </column>
+            <column name="VERSION" type="INT"/>
+            <column name="CLASS_NAME" type="VARCHAR(255)"/>
+            <column name="NAME" type="VARCHAR(255)"/>
+            <column name="PACKAGE_NAME" type="VARCHAR(255)"/>
+            <column name="PARAMS" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Alecs Geuder" id="1373619725329-3">
+        <createTable catalogName="PUBLIC" schemaName="PUBLIC" tableName="CONFIGURATION">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="SYS_PK_10066"/>
+            </column>
+            <column name="ASSESS_REPORT_FREQUENCY" type="VARCHAR(255)"/>
+            <column name="CLASS_NAME" type="VARCHAR(255)"/>
+            <column name="INPUT_FILE_DELIMITER" type="VARCHAR(255)"/>
+            <column name="INPUT_FILE_ENCODING" type="VARCHAR(255)"/>
+            <column name="INPUT_FILE_IGNORE_HEADER" type="BOOLEAN"/>
+            <column name="INPUT_FILE_NAME" type="VARCHAR(255)"/>
+            <column name="LOAD_REPORT_FREQUENCY" type="VARCHAR(255)"/>
+            <column name="NAME" type="VARCHAR(255)"/>
+            <column name="OUTPUT_FILE_DELIMITER" type="VARCHAR(255)"/>
+            <column name="OUTPUT_FILE_ID_DELIMITER" type="VARCHAR(255)"/>
+            <column name="OUTPUT_FILE_NAME_EXTENSION" type="VARCHAR(255)"/>
+            <column name="PACKAGE_NAME" type="VARCHAR(255)"/>
+            <column name="SCORE_FIELD_NAME" type="VARCHAR(255)"/>
+            <column name="VERSION" type="INT"/>
+            <column name="WORK_DIR_PATH" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Alecs Geuder" id="1373619725329-4">
+        <createTable catalogName="PUBLIC" schemaName="PUBLIC" tableName="WIRE_TRANSFORMER">
+            <column name="WIRE" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TRANSFORMER" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Alecs Geuder" id="1373619725329-5">
+        <createTable catalogName="PUBLIC" schemaName="PUBLIC" tableName="MATCHER_COMPOSED_BY">
+            <column name="MATCHER" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COMPOSED_BY" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Alecs Geuder" id="1373619725329-6">
+        <createTable catalogName="PUBLIC" schemaName="PUBLIC" tableName="MATCHER">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="SYS_PK_10077"/>
+            </column>
+            <column name="VERSION" type="INT"/>
+            <column name="CLASS_NAME" type="VARCHAR(255)"/>
+            <column name="NAME" type="VARCHAR(255)"/>
+            <column name="PACKAGE_NAME" type="VARCHAR(255)"/>
+            <column name="PARAMS" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Alecs Geuder" id="1373619725329-7">
+        <createTable catalogName="PUBLIC" schemaName="PUBLIC" tableName="WIRE">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="SYS_PK_10103"/>
+            </column>
+            <column name="BLANKS_MATCH" type="BOOLEAN"/>
+            <column name="COLUMN_INDEX" type="INT"/>
+            <column name="COLUMN_NAME" type="VARCHAR(255)"/>
+            <column name="INDEX_INITIAL" type="BOOLEAN"/>
+            <column name="INDEX_LENGTH" type="BOOLEAN"/>
+            <column name="INDEX_ORIGINAL" type="BOOLEAN"/>
+            <column name="USE_IN_NEGATIVE_SELECT" type="BOOLEAN"/>
+            <column name="USE_IN_SELECT" type="BOOLEAN"/>
+            <column name="USE_WILDCARD" type="BOOLEAN"/>
+            <column name="VERSION" type="INT"/>
+            <column name="MATCHER" type="BIGINT"/>
+            <column name="CONFIGURATION" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Alecs Geuder" id="1373619725329-8">
+        <createTable catalogName="PUBLIC" schemaName="PUBLIC" tableName="TRANSFORMER_COMPOSED_BY">
+            <column name="TRANSFORMER" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COMPOSED_BY" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Alecs Geuder" id="1373619725329-9">
+        <addPrimaryKey catalogName="PUBLIC" columnNames="WIRE, TRANSFORMER" constraintName="SYS_PK_10113" schemaName="PUBLIC" tableName="WIRE_TRANSFORMER"/>
+    </changeSet>
+    <changeSet author="Alecs Geuder" id="1373619725329-10">
+        <addUniqueConstraint catalogName="PUBLIC" columnNames="CONFIGURATION, COLUMN_NAME" constraintName="UK_B0EX1PEQYFLFY21CTQT9MTYIN" deferrable="false" disabled="false" initiallyDeferred="false" schemaName="PUBLIC" tableName="WIRE"/>
+    </changeSet>
+    <changeSet author="Alecs Geuder" id="1373619725329-11">
+        <addForeignKeyConstraint baseColumnNames="CONFIGURATION" baseTableCatalogName="PUBLIC" baseTableName="WIRE" baseTableSchemaName="PUBLIC" constraintName="FK_GICC16P9I17SE6SHFH6UAS50K" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="PUBLIC" referencedTableName="CONFIGURATION" referencedTableSchemaName="PUBLIC"/>
+    </changeSet>
+    <changeSet author="Alecs Geuder" id="1373619725329-12">
+        <addForeignKeyConstraint baseColumnNames="COMPOSED_BY" baseTableCatalogName="PUBLIC" baseTableName="MATCHER_COMPOSED_BY" baseTableSchemaName="PUBLIC" constraintName="FK_G2HI3W2SG57UKRVJY1R3YPYOL" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="PUBLIC" referencedTableName="MATCHER" referencedTableSchemaName="PUBLIC"/>
+    </changeSet>
+    <changeSet author="Alecs Geuder" id="1373619725329-13">
+        <addForeignKeyConstraint baseColumnNames="COMPOSED_BY" baseTableCatalogName="PUBLIC" baseTableName="TRANSFORMER_COMPOSED_BY" baseTableSchemaName="PUBLIC" constraintName="FK_EV0S39V48LG7PVUX42WJ5X30A" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="PUBLIC" referencedTableName="TRANSFORMER" referencedTableSchemaName="PUBLIC"/>
+    </changeSet>
+    <changeSet author="Alecs Geuder" id="1373619725329-14">
+        <addForeignKeyConstraint baseColumnNames="CONFIGURATION" baseTableCatalogName="PUBLIC" baseTableName="CONFIGURATION_WIRING" baseTableSchemaName="PUBLIC" constraintName="FK_CC8Q983YOXJ6NE0VS70DV03VX" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="PUBLIC" referencedTableName="CONFIGURATION" referencedTableSchemaName="PUBLIC"/>
+    </changeSet>
+    <changeSet author="Alecs Geuder" id="1373619725329-15">
+        <addForeignKeyConstraint baseColumnNames="TRANSFORMER" baseTableCatalogName="PUBLIC" baseTableName="WIRE_TRANSFORMER" baseTableSchemaName="PUBLIC" constraintName="FK_KREDLHE27PK58PV8JU2UKGFXP" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="PUBLIC" referencedTableName="TRANSFORMER" referencedTableSchemaName="PUBLIC"/>
+    </changeSet>
+</databaseChangeLog>

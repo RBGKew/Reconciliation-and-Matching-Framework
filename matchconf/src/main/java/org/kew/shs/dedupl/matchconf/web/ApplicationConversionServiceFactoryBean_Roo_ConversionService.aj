@@ -19,7 +19,7 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
     public Converter<Configuration, String> ApplicationConversionServiceFactoryBean.getConfigurationToStringConverter() {
         return new org.springframework.core.convert.converter.Converter<org.kew.shs.dedupl.matchconf.Configuration, java.lang.String>() {
             public String convert(Configuration configuration) {
-                return new StringBuilder().append(configuration.getName()).append(' ').append(configuration.getWorkDirPath()).append(' ').append(configuration.getInputFileName()).append(' ').append(configuration.getOutputFileNameExtension()).toString();
+                return new StringBuilder().append(configuration.getName()).append(' ').append(configuration.getWorkDirPath()).append(' ').append(configuration.getSourceFileName()).append(' ').append(configuration.getSourceFileEncoding()).toString();
             }
         };
     }
@@ -91,7 +91,7 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
     public Converter<Wire, String> ApplicationConversionServiceFactoryBean.getWireToStringConverter() {
         return new org.springframework.core.convert.converter.Converter<org.kew.shs.dedupl.matchconf.Wire, java.lang.String>() {
             public String convert(Wire wire) {
-                return new StringBuilder().append(wire.getColumnName()).append(' ').append(wire.getColumnIndex()).toString();
+                return new StringBuilder().append(wire.getSourceColumnName()).append(' ').append(wire.getLookupColumnName()).toString();
             }
         };
     }

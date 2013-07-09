@@ -12,7 +12,6 @@ import org.kew.shs.dedupl.transformers.Transformer;
 public class Property {
 
 	private String name;
-	private int columnIndex;
 	private Matcher matcher;
 	
 	private boolean useInSelect=false;
@@ -30,12 +29,6 @@ public class Property {
 	}
 	public void setName(String name) {
 		this.name = name;
-	}
-	public int getColumnIndex() {
-		return columnIndex;
-	}
-	public void setColumnIndex(int columnIndex) {
-		this.columnIndex = columnIndex;
 	}
 	public Matcher getMatcher() {
 		return matcher;
@@ -93,9 +86,8 @@ public class Property {
 	}
 	@Override
 	public String toString() {
-		return "Property [name=" + name + ", columnIndex=" + columnIndex
-				+ ", matcher=" + matcher + ", useInSelect=" + useInSelect
-				+ ", useInNegativeSelect=" + useInNegativeSelect
+		return "Property [name=" + name + ", matcher=" + matcher + ", useInSelect="
+			    + useInSelect + ", useInNegativeSelect=" + useInNegativeSelect
 				+ ", indexLength=" + indexLength + ", blanksMatch="
 				+ blanksMatch + ", indexOriginal=" + indexOriginal
 				+ ", indexInitial=" + indexInitial + ", useWildcard="

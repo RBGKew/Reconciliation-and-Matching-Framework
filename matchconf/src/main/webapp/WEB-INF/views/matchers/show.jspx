@@ -8,5 +8,6 @@
         <field:display field="packageName" id="s_org_kew_shs_dedupl_matchconf_Matcher_packageName" object="${matcher}" z="R+aWzB84o50VH39h3I7A6FyPi/M="/>
         <field:display field="className" id="s_org_kew_shs_dedupl_matchconf_Matcher_className" object="${matcher}" z="5YuhCncu9jMk9lbwuSu/6mIXizA="/>
         <field:display field="params" id="s_org_kew_shs_dedupl_matchconf_Matcher_params" object="${matcher}" z="u3RCOvukwGs+aFb2YZ1xQxEgzr4="/>
+        <field:display field="configuration" id="s_org_kew_shs_dedupl_matchconf_Matcher_configuration" object="${matcher}" z="ncek6VZfQYSOjmKHz08ZKAYJANE="/>
     </page:show>
 </div>

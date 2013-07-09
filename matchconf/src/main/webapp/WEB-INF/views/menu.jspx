@@ -3,6 +3,13 @@
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
     <menu:menu id="_menu" z="nZaf43BjUg1iM0v70HJVEsXDopc=">
+        <menu:category id="c_controller" z="nj8Dm3hojIyIEyPkwE1UMDIs+K8=">
+            <menu:item id="i_controller__configsindex_id" messageCode="global_generic" url="/configs/"/>
+            <menu:item id="i_controller__customwireindex_id" messageCode="global_generic" url="/customwire/index" z="2Iir6uyOb0q72rEitsLkNw2MKrc="/>
+            <menu:item id="i_controller__customtransformerindex_id" messageCode="global_generic" url="/customtransformer/index" z="3aiV6nomir3T1j++osr0tfCq58w="/>
+            <menu:item id="i_controller__custommatcherindex_id" messageCode="global_generic" url="/custommatcher/index" z="xGD+lTPqd9rumBdLygx6QLydkZY="/>
+            <menu:item id="i_controller__configurationindex_id" messageCode="global_generic" url="/configuration/index" z="If/PNKqpxW/sLYv2Hq8Ufp51N5M="/>
+        </menu:category>
         <menu:category id="c_configuration" z="ex6zSpCyqSksY2xxo+2yaACAxic=">
             <menu:item id="i_configuration_new" messageCode="global_menu_new" url="/configurations?form" z="PpKhRYSLF3fMvOlr5J8dEALoaF8="/>
             <menu:item id="i_configuration_list" messageCode="global_menu_list" url="/configurations?page=1&amp;size=${empty param.size ? 10 : param.size}" z="eTnA6q7aRKdliIXm9IDu8P8bUhU="/>
@@ -10,11 +17,6 @@
         <menu:category id="c_wire" z="s/p5G+kP+Boo2NfsF5d106QQ7Xk=">
             <menu:item id="i_wire_new" messageCode="global_menu_new" url="/wires?form" z="isiKXESbbz89R5RjUxlxXoJu6bA="/>
             <menu:item id="i_wire_list" messageCode="global_menu_list" url="/wires?page=1&amp;size=${empty param.size ? 10 : param.size}" z="cazBS3Xhest5Zspie4JAO6NqLUk="/>
-        </menu:category>
-        <menu:category id="c_controller" z="nj8Dm3hojIyIEyPkwE1UMDIs+K8=">
-            <menu:item id="i_controller__configurations_runindex_id" messageCode="global_generic" url="/configurations/run/index" z="NC/3VfWO8QW6gHPOaKGxJrt3vz0="/>
-            <menu:item id="i_controller__runindex_id" messageCode="global_generic" url="/run/index" z="zA3YV/JEEtaM1F9ygX0AYLOv0R0="/>
-            <menu:item id="i_controller__runththingindex_id" messageCode="global_generic" url="/runThThing/index" z="ojeeSspxSpLjEfDBshCjR7rjOtU="/>
         </menu:category>
         <menu:category id="c_transformer" z="oh5Htcz9cR6h107G798liiW83DQ=">
             <menu:item id="i_transformer_new" messageCode="global_menu_new" url="/transformers?form" z="QWvIvdMk7BpQ+wJb8YqjSp7QFfQ="/>

@@ -5,6 +5,8 @@ package org.kew.shs.dedupl.matchconf;
 
 import java.util.List;
 import org.kew.shs.dedupl.matchconf.Configuration;
+import org.kew.shs.dedupl.matchconf.Matcher;
+import org.kew.shs.dedupl.matchconf.Transformer;
 import org.kew.shs.dedupl.matchconf.Wire;
 
 privileged aspect Configuration_Roo_JavaBean {
@@ -25,12 +27,68 @@ privileged aspect Configuration_Roo_JavaBean {
         this.workDirPath = workDirPath;
     }
     
-    public String Configuration.getInputFileName() {
-        return this.inputFileName;
+    public String Configuration.getSourceFileName() {
+        return this.sourceFileName;
     }
     
-    public void Configuration.setInputFileName(String inputFileName) {
-        this.inputFileName = inputFileName;
+    public void Configuration.setSourceFileName(String sourceFileName) {
+        this.sourceFileName = sourceFileName;
+    }
+    
+    public String Configuration.getSourceFileEncoding() {
+        return this.sourceFileEncoding;
+    }
+    
+    public void Configuration.setSourceFileEncoding(String sourceFileEncoding) {
+        this.sourceFileEncoding = sourceFileEncoding;
+    }
+    
+    public String Configuration.getSourceFileDelimiter() {
+        return this.sourceFileDelimiter;
+    }
+    
+    public void Configuration.setSourceFileDelimiter(String sourceFileDelimiter) {
+        this.sourceFileDelimiter = sourceFileDelimiter;
+    }
+    
+    public String Configuration.getLookupFileName() {
+        return this.lookupFileName;
+    }
+    
+    public void Configuration.setLookupFileName(String lookupFileName) {
+        this.lookupFileName = lookupFileName;
+    }
+    
+    public String Configuration.getLookupFileEncoding() {
+        return this.lookupFileEncoding;
+    }
+    
+    public void Configuration.setLookupFileEncoding(String lookupFileEncoding) {
+        this.lookupFileEncoding = lookupFileEncoding;
+    }
+    
+    public String Configuration.getLookupFileDelimiter() {
+        return this.lookupFileDelimiter;
+    }
+    
+    public void Configuration.setLookupFileDelimiter(String lookupFileDelimiter) {
+        this.lookupFileDelimiter = lookupFileDelimiter;
+    }
+    
+    public String Configuration.getOutputFileDelimiter() {
+        return this.outputFileDelimiter;
+    }
+    
+    public void Configuration.setOutputFileDelimiter(String outputFileDelimiter) {
+        this.outputFileDelimiter = outputFileDelimiter;
+    }
+    
+    public String Configuration.getOutputFileIdDelimiter() {
+        return this.outputFileIdDelimiter;
+    }
+    
+    public void Configuration.setOutputFileIdDelimiter(String outputFileIdDelimiter) {
+        this.outputFileIdDelimiter = outputFileIdDelimiter;
     }
     
     public String Configuration.getOutputFileNameExtension() {
@@ -57,54 +115,6 @@ privileged aspect Configuration_Roo_JavaBean {
         this.className = className;
     }
     
-    public List<Wire> Configuration.getWiring() {
-        return this.wiring;
-    }
-    
-    public void Configuration.setWiring(List<Wire> wiring) {
-        this.wiring = wiring;
-    }
-    
-    public String Configuration.getInputFileEncoding() {
-        return this.inputFileEncoding;
-    }
-    
-    public void Configuration.setInputFileEncoding(String inputFileEncoding) {
-        this.inputFileEncoding = inputFileEncoding;
-    }
-    
-    public String Configuration.getInputFileDelimiter() {
-        return this.inputFileDelimiter;
-    }
-    
-    public void Configuration.setInputFileDelimiter(String inputFileDelimiter) {
-        this.inputFileDelimiter = inputFileDelimiter;
-    }
-    
-    public Boolean Configuration.getInputFileIgnoreHeader() {
-        return this.inputFileIgnoreHeader;
-    }
-    
-    public void Configuration.setInputFileIgnoreHeader(Boolean inputFileIgnoreHeader) {
-        this.inputFileIgnoreHeader = inputFileIgnoreHeader;
-    }
-    
-    public String Configuration.getOutputFileDelimiter() {
-        return this.outputFileDelimiter;
-    }
-    
-    public void Configuration.setOutputFileDelimiter(String outputFileDelimiter) {
-        this.outputFileDelimiter = outputFileDelimiter;
-    }
-    
-    public String Configuration.getOutputFileIdDelimiter() {
-        return this.outputFileIdDelimiter;
-    }
-    
-    public void Configuration.setOutputFileIdDelimiter(String outputFileIdDelimiter) {
-        this.outputFileIdDelimiter = outputFileIdDelimiter;
-    }
-    
     public String Configuration.getLoadReportFrequency() {
         return this.loadReportFrequency;
     }
@@ -127,6 +137,30 @@ privileged aspect Configuration_Roo_JavaBean {
     
     public void Configuration.setScoreFieldName(String scoreFieldName) {
         this.scoreFieldName = scoreFieldName;
+    }
+    
+    public List<Wire> Configuration.getWiring() {
+        return this.wiring;
+    }
+    
+    public void Configuration.setWiring(List<Wire> wiring) {
+        this.wiring = wiring;
+    }
+    
+    public List<Transformer> Configuration.getTransformers() {
+        return this.transformers;
+    }
+    
+    public void Configuration.setTransformers(List<Transformer> transformers) {
+        this.transformers = transformers;
+    }
+    
+    public List<Matcher> Configuration.getMatchers() {
+        return this.matchers;
+    }
+    
+    public void Configuration.setMatchers(List<Matcher> matchers) {
+        this.matchers = matchers;
     }
     
 }

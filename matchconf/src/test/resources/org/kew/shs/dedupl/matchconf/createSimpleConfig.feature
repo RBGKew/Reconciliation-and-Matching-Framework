@@ -5,24 +5,25 @@ Feature: Create a simple configuration
 
     Scenario: DedupConf, one column, one matcher, one composite-transformer with two transformers, rest default values
         Given Alecs has a file containing data in two columns, ("id_col", "data_col") in a directory "some_path"
-        And he has added a composite transformer for the first column:
-            | name         		| packageName                 	  | className  		     | params |
+        And he has created a new configuration:
+            | name             | workDirPath |
+            | simple-config | some_path   |
+        And he has set up a Wire for the second column
+        And he has added a composite transformer for the second column:
+            | name                 | packageName                       | className       | params |
             | compiTransformer  | org.kew.shs.dedupl.transformers | CompositeTransformer |        |
         And this Composite Transformer contains the following transformers
-            | name         		 | packageName                 	   | className    		    	   | params |
-            | 02BlankTransformer | org.kew.shs.dedupl.transformers | ZeroToBlankTransformer 	   |        |
+            | name                  | packageName                        | className               | params |
+            | 02BlankTransformer | org.kew.shs.dedupl.transformers | ZeroToBlankTransformer        |        |
             | anotherTransformer | org.kew.shs.dedupl.transformers | SafeStripNonAlphasTransformer |        |
-        And he has added a matcher for the first column:
+        And he has added a matcher for the second column:
             | name         | packageName                 | className    | params            |
             | matchExactly | org.kew.shs.dedupl.matchers | ExactMatcher | blanksMatch=false |
-        And he has wired the matcher and the transformer to the column in a new configuration:
-        	| name 			| workDirPath |
-        	| simple-config | some_path   |
         When he asks to write the configuration out to the filesystem
         Then the following content will be written to "some_path/config_simple-config.xml":
             """
             <?xml version="1.0" encoding="UTF-8"?>
-			<beans xmlns="http://www.springframework.org/schema/beans"
+            <beans xmlns="http://www.springframework.org/schema/beans"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:util="http://www.springframework.org/schema/util"
                 xmlns:p="http://www.springframework.org/schema/p"
@@ -61,7 +62,6 @@ Feature: Create a simple configuration
                 <util:list id="columnProperties">
                     <bean class="org.kew.shs.dedupl.configuration.Property"
                         p:name="data_col"
-                        p:columnIndex="1"
                         p:matcher-ref="matchExactly"
                         p:transformer-ref="compiTransformer"
                         p:useInSelect="false"
@@ -80,7 +80,6 @@ Feature: Create a simple configuration
                     p:scoreFieldName="id"
                     p:inputFileEncoding="UTF8"
                     p:inputFileDelimiter="&#09;"
-                    p:inputFileIgnoreHeader="false"
                     p:outputFileDelimiter="&#09;"
                     p:outputFileIdDelimiter="|"
                     p:loadReportFrequency="50000"

@@ -34,8 +34,8 @@ public class ConfigurationController {
                 File luceneDir = new File("target/deduplicator");
                 if (luceneDir.exists()) {
                     FileUtils.deleteDirectory(new File("target/deduplicator"));
-            }
-            return "configurations/run/index";
+	            }
+	        return "configurations/run/index";
         }
     }
 }

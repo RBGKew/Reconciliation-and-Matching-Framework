@@ -7,6 +7,8 @@ import java.io.UnsupportedEncodingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.kew.shs.dedupl.matchconf.Configuration;
+import org.kew.shs.dedupl.matchconf.Matcher;
+import org.kew.shs.dedupl.matchconf.Transformer;
 import org.kew.shs.dedupl.matchconf.Wire;
 import org.kew.shs.dedupl.matchconf.web.ConfigurationController;
 import org.springframework.ui.Model;
@@ -87,6 +89,8 @@ privileged aspect ConfigurationController_Roo_Controller {
     
     void ConfigurationController.populateEditForm(Model uiModel, Configuration configuration) {
         uiModel.addAttribute("configuration", configuration);
+        uiModel.addAttribute("matchers", Matcher.findAllMatchers());
+        uiModel.addAttribute("transformers", Transformer.findAllTransformers());
         uiModel.addAttribute("wires", Wire.findAllWires());
     }
     

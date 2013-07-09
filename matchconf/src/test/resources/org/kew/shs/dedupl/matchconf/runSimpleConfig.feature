@@ -42,7 +42,6 @@ Feature: run a simple configuration
                 <util:list id="columnProperties">
                     <bean class="org.kew.shs.dedupl.configuration.Property"
                         p:name="data_col"
-                        p:columnIndex="1"
                         p:matcher-ref="matchExactly"
                         p:transformer-ref="compiTransformer"
                         p:useInSelect="true"
@@ -61,7 +60,6 @@ Feature: run a simple configuration
                     p:scoreFieldName="id"
                     p:inputFileEncoding="UTF8"
                     p:inputFileDelimiter="&#09;"
-                    p:inputFileIgnoreHeader="true"
                     p:outputFileDelimiter="&#09;"
                     p:outputFileIdDelimiter="|"
                     p:loadReportFrequency="50000"

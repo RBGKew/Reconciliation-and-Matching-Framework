@@ -8,7 +8,7 @@
         <field:input field="packageName" id="c_org_kew_shs_dedupl_matchconf_Matcher_packageName" z="5Uxlum2gTx8Fu4G3YdVEkQzIrsA="/>
         <field:input field="className" id="c_org_kew_shs_dedupl_matchconf_Matcher_className" z="eRUO2ZzUHuot4r1pbHBxyUIQnKY="/>
         <field:input field="params" id="c_org_kew_shs_dedupl_matchconf_Matcher_params" z="Zch43MLyLNXl+8ktqvZOnz54C18="/>
-        <field:simple field="matchedWires" id="c_org_kew_shs_dedupl_matchconf_Matcher_matchedWires" messageCode="entity_reference_not_managed" messageCodeAttribute="Wire" z="o6VTjQ15tEd1ZoEz+j4b78b19+0="/>
+        <field:select field="configuration" id="c_org_kew_shs_dedupl_matchconf_Matcher_configuration" itemValue="id" items="${configurations}" path="/configurations" z="6MGKoQjpp4g+gduHHNaohkCHinc="/>
     </form:create>
     <form:dependency dependencies="${dependencies}" id="d_org_kew_shs_dedupl_matchconf_Matcher" render="${not empty dependencies}" z="MwvcYymAUiYs+TQwM4NTHVK/Lhc="/>
 </div>

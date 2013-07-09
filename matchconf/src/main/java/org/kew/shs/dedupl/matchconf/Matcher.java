@@ -7,7 +7,10 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
@@ -19,6 +22,7 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord
+@Table(uniqueConstraints=@UniqueConstraint(columnNames={"configuration", "name"}))
 public class Matcher extends Bot {
 
     private String name;
@@ -26,11 +30,15 @@ public class Matcher extends Bot {
     private String className;
     private String params;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "matcher")
-    private Set<Wire> matchedWires = new HashSet<Wire>();
-
     @ManyToMany(cascade = CascadeType.ALL)
     @Sort(type=SortType.NATURAL)
     private List<Matcher> composedBy = new ArrayList<Matcher>();
+
+    @ManyToOne
+    private Configuration configuration;
+
+    public String toString () {
+        return this.getName();
+    }
 
 }

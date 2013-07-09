@@ -24,4 +24,8 @@ public abstract class Bot implements Comparable<Bot> {
 
     public abstract List<? extends Bot> getComposedBy();
 
+    public String toString () {
+        return this.getName();
+    }
+
 }

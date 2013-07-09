@@ -142,3 +142,47 @@ web mvc all --package org.kew.shs.dedupl.matchconf.web
 logging setup --level INFO
 // Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-07-05 13:59:21
 // Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-07-05 17:09:49
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-07-09 15:54:32
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-07-09 17:19:35
+proxy configuration
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-07-09 17:39:09
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-07-09 17:39:18
+// Spring Roo 1.2.5.BUILD-SNAPSHOT [rev 61090d2] log opened at 2013-07-10 12:15:34
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-07-11 12:47:37
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-07-11 12:47:47
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-07-11 13:21:29
+finder list --class ~.Wire
+finder list --class ~.Configuration
+// [failed] web mvc controller --class ~.web.CustomWireController --preferredMapping /configs/{configName}/wires/
+web mvc controller --class ~.web.CustomWireController
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-07-11 15:37:02
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-07-11 15:37:17
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-07-11 15:41:10
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-07-11 15:41:19
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-07-12 09:45:44
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-07-12 10:28:18
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-07-12 15:33:35
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-07-16 09:52:08
+finder list --class Wire
+finder add --finderName findWiresByNameEquals --class Wire
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-07-16 15:32:24
+finder list --class Configuration
+finder list --class Wire
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-07-17 09:51:11
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-07-17 10:35:52
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-07-17 14:40:54
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-07-17 15:12:24
+web mvc controller --class CustomTransformer
+web mvc controller --class ~.web.CustomTransformerController
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-07-17 16:31:40
+web mvc controller --class ~.web.CustomMatcherController
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-07-17 16:50:22
+// Spring Roo 1.2.5.BUILD-SNAPSHOT [rev 61090d2] log opened at 2013-07-18 08:54:15
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-07-19 09:22:53
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-07-19 09:41:53
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-07-22 09:52:16
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-07-22 15:41:52
+finder list --class Wire
+web mvc controller --class Configuration
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-07-23 09:12:23
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-07-23 09:39:57

@@ -3,8 +3,6 @@
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
     <page:show id="ps_org_kew_shs_dedupl_matchconf_Wire" object="${wire}" path="/wires" z="wPM2z0vZzvoUxt5ig5gnHIJxV1Y=">
-        <field:display field="columnName" id="s_org_kew_shs_dedupl_matchconf_Wire_columnName" object="${wire}" z="do1DuGhVxe4FEywPeJE9Hsdfx1c="/>
-        <field:display field="columnIndex" id="s_org_kew_shs_dedupl_matchconf_Wire_columnIndex" object="${wire}" z="Cl9IUHW864AVYKdODx2SEjh1JrM="/>
         <field:display field="useInSelect" id="s_org_kew_shs_dedupl_matchconf_Wire_useInSelect" object="${wire}" z="QH+/PNxnNT9KeYOkFilJrnIxklQ="/>
         <field:display field="useInNegativeSelect" id="s_org_kew_shs_dedupl_matchconf_Wire_useInNegativeSelect" object="${wire}" z="2G8VyleON7DaZ9oGgR6ZXWnl5WI="/>
         <field:display field="indexLength" id="s_org_kew_shs_dedupl_matchconf_Wire_indexLength" object="${wire}" z="IX1KeCqzJjwlz56uEzANKqzAuV8="/>
@@ -12,7 +10,11 @@
         <field:display field="indexOriginal" id="s_org_kew_shs_dedupl_matchconf_Wire_indexOriginal" object="${wire}" z="OgFkfTSMiYPC1xzCFAJ81jBq3yU="/>
         <field:display field="indexInitial" id="s_org_kew_shs_dedupl_matchconf_Wire_indexInitial" object="${wire}" z="5+3Yne/ww2WSvtjXxb05pJV5VDY="/>
         <field:display field="useWildcard" id="s_org_kew_shs_dedupl_matchconf_Wire_useWildcard" object="${wire}" z="dBlTpNI6eKdFXn1gBDxc8NDRfwY="/>
-        <field:display field="transformer" id="s_org_kew_shs_dedupl_matchconf_Wire_transformer" object="${wire}" z="AeAxXhk91hNClP8c3j7H/YV8Sag="/>
         <field:display field="matcher" id="s_org_kew_shs_dedupl_matchconf_Wire_matcher" object="${wire}" z="oTIDlesPA+JhqAeVKu73P6cNXYI="/>
+        <field:display field="sourceColumnName" id="s_org_kew_shs_dedupl_matchconf_Wire_sourceColumnName" object="${wire}" z="HKBdq/G/SKatOc8AkWPUUk0KTkA="/>
+        <field:display field="lookupColumnName" id="s_org_kew_shs_dedupl_matchconf_Wire_lookupColumnName" object="${wire}" z="8rfE46rT84te7h1tZQHzBRGUAS0="/>
+        <field:display field="configuration" id="s_org_kew_shs_dedupl_matchconf_Wire_configuration" object="${wire}" z="ScGGBqJA/JoKW04mwojIHQpmSNk="/>
+        <field:display field="sourceTransformers" id="s_org_kew_shs_dedupl_matchconf_Wire_sourceTransformers" object="${wire}" z="SpBa5kQrilbTcclnoEJjiSoDHEc="/>
+        <field:display field="lookupTransformers" id="s_org_kew_shs_dedupl_matchconf_Wire_lookupTransformers" object="${wire}" z="Q+vEbVzr50jeTW9RFAeNikx7VV4="/>
     </page:show>
 </div>

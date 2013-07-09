@@ -9,6 +9,7 @@
             <table:column id="c_org_kew_shs_dedupl_matchconf_Transformer_className" property="className" z="zh4Y+9WUMYmQNqBPjIzN4Nb/t7U="/>
             <table:column id="c_org_kew_shs_dedupl_matchconf_Transformer_params" property="params" z="8MbPOMPCX0ZgbhStIgtWRlmfA/0="/>
             <table:column id="c_org_kew_shs_dedupl_matchconf_Transformer_composedBy" property="composedBy" z="8S3JAzDOC33PuuaLdmrVB9iWnDk="/>
+            <table:column id="c_org_kew_shs_dedupl_matchconf_Transformer_configuration" property="configuration" z="Ba+uWJxXxmFrM//9GSoI1owDA3U="/>
         </table:table>
     </page:list>
 </div>

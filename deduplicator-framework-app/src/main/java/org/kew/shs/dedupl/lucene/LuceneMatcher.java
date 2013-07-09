@@ -85,7 +85,8 @@ public class LuceneMatcher extends LuceneHandler implements DataMatcher{
 				log.debug("Configured to only output top match");
 
 			int numMatches = 0;
-			int numColumns = LuceneDataLoader.calculateNumberColumns(configuration.getProperties());
+			// TODO: fix this using super-csv
+			int numColumns = 0;//LuceneDataLoader.calculateNumberColumns(configuration.getProperties());
 			int anyMatches = 0;
 
 			while ((line = br.readLine()) != null){
@@ -202,7 +203,8 @@ public class LuceneMatcher extends LuceneHandler implements DataMatcher{
 		String[] elem = line.split(configuration.getInputFileDelimiter(), numColumns+1);
 		map.put(Configuration.ID_FIELD_NAME, elem[0]);
 		for (Property p : configuration.getProperties()){
-			String value = elem[p.getColumnIndex()];
+			// TODO: fix this using super-csv
+			String value = "hallo";//elem[p.getColumnIndex()];
 			// Save original value if required
 			if (p.isIndexOriginal())
 				map.put(p.getName() + Configuration.ORIGINAL_SUFFIX,value);

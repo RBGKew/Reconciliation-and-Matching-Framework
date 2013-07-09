@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_org_kew_shs_dedupl_matchconf_Wire" modelAttribute="wire" path="/match_configs/${ configName }/wires" versionField="Version" z="KIOFyddiGDqdzu87ppIkV+87Zqs=">
+
+        <br/> <div id="config-link">for configuration: <a href="/MatchConf/match_configs/${ configName }">${ configName }</a></div> <br/>
+
+        <field:input field="lookupColumnName" id="c_org_kew_shs_dedupl_matchconf_Wire_lookupColumnName" z="acpNUyZ2hyPEw0qgiaFL7zaONbU="/>
+        <field:input field="sourceColumnName" id="c_org_kew_shs_dedupl_matchconf_Wire_sourceColumnName" z="Iyj1E63QgPFC+EHUH9g08zRtbLU="/>
+
+        <field:checkbox field="useInSelect" id="c_org_kew_shs_dedupl_matchconf_Wire_useInSelect" z="TTpnxEuYpzEvKPuXK5cTGD09y2Q="/>
+        <field:checkbox field="useInNegativeSelect" id="c_org_kew_shs_dedupl_matchconf_Wire_useInNegativeSelect" z="g6Fqf7lac9bj4i6phpDcyTMnAeg="/>
+        <field:checkbox field="indexLength" id="c_org_kew_shs_dedupl_matchconf_Wire_indexLength" z="6QgSy9T5WBzy83anNlEpwpqWz64="/>
+        <field:checkbox field="blanksMatch" id="c_org_kew_shs_dedupl_matchconf_Wire_blanksMatch" z="FLk6m3nIf+vniTawpdo+i0UjsKE="/>
+        <field:checkbox field="indexOriginal" id="c_org_kew_shs_dedupl_matchconf_Wire_indexOriginal" z="8MIVMKs9ajdmJ4GYDgSSIOgrVUI="/>
+        <field:checkbox field="indexInitial" id="c_org_kew_shs_dedupl_matchconf_Wire_indexInitial" z="4Um0XUlwGw1gsH3hQKMnvD0woj4="/>
+        <field:checkbox field="useWildcard" id="c_org_kew_shs_dedupl_matchconf_Wire_useWildcard" z="H2cXRwoDy3CUtITSjtFU3P46ja8="/>
+
+        <field:select field="sourceTransformers" id="c_org_kew_shs_dedupl_matchconf_Wire_sourceTransformers" itemValue="id" items="${transformers}" multiple="true" path="/dedup_configs/${ configName }/transformers" z="voeNY9FXQVoLlheVCxJHfcQTScQ="/>
+        <field:select field="lookupTransformers" id="c_org_kew_shs_dedupl_matchconf_Wire_lookupTransformers" itemValue="id" items="${transformers}" multiple="true" path="/dedup_configs/${ configName }/transformers" z="o7MbdgLFHHykZhwugO+cbL5XwPw="/>
+
+        <field:select field="matcher" id="c_org_kew_shs_dedupl_matchconf_Wire_matcher" itemValue="id" items="${matchers}" path="/match_configs/${ configName }/matchers" z="lXk5z0p02X2K5OrJ2d71mUvWp+E="/>
+    </form:update>
+</div>

@@ -4,9 +4,8 @@
 package org.kew.shs.dedupl.matchconf;
 
 import java.util.List;
-import java.util.Set;
+import org.kew.shs.dedupl.matchconf.Configuration;
 import org.kew.shs.dedupl.matchconf.Matcher;
-import org.kew.shs.dedupl.matchconf.Wire;
 
 privileged aspect Matcher_Roo_JavaBean {
     
@@ -42,20 +41,20 @@ privileged aspect Matcher_Roo_JavaBean {
         this.params = params;
     }
     
-    public Set<Wire> Matcher.getMatchedWires() {
-        return this.matchedWires;
-    }
-    
-    public void Matcher.setMatchedWires(Set<Wire> matchedWires) {
-        this.matchedWires = matchedWires;
-    }
-    
     public List<Matcher> Matcher.getComposedBy() {
         return this.composedBy;
     }
     
     public void Matcher.setComposedBy(List<Matcher> composedBy) {
         this.composedBy = composedBy;
+    }
+    
+    public Configuration Matcher.getConfiguration() {
+        return this.configuration;
+    }
+    
+    public void Matcher.setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
     }
     
 }

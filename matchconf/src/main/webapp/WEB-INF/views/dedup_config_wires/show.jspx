@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_org_kew_shs_dedupl_matchconf_Wire" object="${wire}" path="/dedup_configs/${configName}/wires" z="wPM2z0vZzvoUxt5ig5gnHIJxV1Y=">
+
+        <br/> <div id="config-link">for configuration: <a href="/MatchConf/dedup_configs/${ configName }">${ configName }</a></div> <br/>
+
+        <field:display field="lookupColumnName" id="s_org_kew_shs_dedupl_matchconf_Wire_lookupColumnName" object="${wire}" z="8rfE46rT84te7h1tZQHzBRGUAS0="/>
+        <field:display field="sourceColumnName" id="s_org_kew_shs_dedupl_matchconf_Wire_sourceColumnName" object="${wire}" z="HKBdq/G/SKatOc8AkWPUUk0KTkA="/>
+
+        <field:display field="useInSelect" id="s_org_kew_shs_dedupl_matchconf_Wire_useInSelect" object="${wire}" z="QH+/PNxnNT9KeYOkFilJrnIxklQ="/>
+        <field:display field="useInNegativeSelect" id="s_org_kew_shs_dedupl_matchconf_Wire_useInNegativeSelect" object="${wire}" z="2G8VyleON7DaZ9oGgR6ZXWnl5WI="/>
+        <field:display field="indexLength" id="s_org_kew_shs_dedupl_matchconf_Wire_indexLength" object="${wire}" z="IX1KeCqzJjwlz56uEzANKqzAuV8="/>
+        <field:display field="blanksMatch" id="s_org_kew_shs_dedupl_matchconf_Wire_blanksMatch" object="${wire}" z="azdKPveuZK36wgpsRH3CHgT1ie8="/>
+        <field:display field="indexOriginal" id="s_org_kew_shs_dedupl_matchconf_Wire_indexOriginal" object="${wire}" z="OgFkfTSMiYPC1xzCFAJ81jBq3yU="/>
+        <field:display field="indexInitial" id="s_org_kew_shs_dedupl_matchconf_Wire_indexInitial" object="${wire}" z="5+3Yne/ww2WSvtjXxb05pJV5VDY="/>
+        <field:display field="useWildcard" id="s_org_kew_shs_dedupl_matchconf_Wire_useWildcard" object="${wire}" z="dBlTpNI6eKdFXn1gBDxc8NDRfwY="/>
+
+        <field:display field="sourceTransformers" id="s_org_kew_shs_dedupl_matchconf_Wire_sourceTransformers" object="${wire}" z="SpBa5kQrilbTcclnoEJjiSoDHEc="/>
+        <field:display field="lookupTransformers" id="s_org_kew_shs_dedupl_matchconf_Wire_lookupTransformers" object="${wire}" z="Q+vEbVzr50jeTW9RFAeNikx7VV4="/>
+
+        <field:display field="matcher" id="s_org_kew_shs_dedupl_matchconf_Wire_matcher" object="${wire}" z="oTIDlesPA+JhqAeVKu73P6cNXYI="/>
+    </page:show>
+</div>

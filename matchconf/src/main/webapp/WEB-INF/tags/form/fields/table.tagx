@@ -22,8 +22,9 @@
 
     <jsp:doBody />
 
+
     <c:if test="${empty typeIdFieldName}">
-      <c:set var="typeIdFieldName" value="id" />
+        <c:set var="typeIdFieldName" value="name" />
     </c:if>
 
     <c:if test="${empty update}">

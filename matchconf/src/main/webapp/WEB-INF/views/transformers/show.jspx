@@ -8,5 +8,6 @@
         <field:display field="packageName" id="s_org_kew_shs_dedupl_matchconf_Transformer_packageName" object="${transformer}" z="Xijth8Vn2ZCDg5L2mWdv8u1rZ/A="/>
         <field:display field="className" id="s_org_kew_shs_dedupl_matchconf_Transformer_className" object="${transformer}" z="CQTROvEOFSjxABmtN52WHpaeThM="/>
         <field:display field="params" id="s_org_kew_shs_dedupl_matchconf_Transformer_params" object="${transformer}" z="LovCXm/h6mtKLyGUSw4FLzK4KJs="/>
+        <field:display field="configuration" id="s_org_kew_shs_dedupl_matchconf_Transformer_configuration" object="${transformer}" z="fAivRZy7umnbFAxxvV3tqK5+YY4="/>
     </page:show>
 </div>

@@ -4,26 +4,27 @@
 package org.kew.shs.dedupl.matchconf;
 
 import java.util.Set;
+import org.kew.shs.dedupl.matchconf.Configuration;
 import org.kew.shs.dedupl.matchconf.Matcher;
 import org.kew.shs.dedupl.matchconf.Transformer;
 import org.kew.shs.dedupl.matchconf.Wire;
 
 privileged aspect Wire_Roo_JavaBean {
     
-    public String Wire.getColumnName() {
-        return this.columnName;
+    public String Wire.getSourceColumnName() {
+        return this.sourceColumnName;
     }
     
-    public void Wire.setColumnName(String columnName) {
-        this.columnName = columnName;
+    public void Wire.setSourceColumnName(String sourceColumnName) {
+        this.sourceColumnName = sourceColumnName;
     }
     
-    public Integer Wire.getColumnIndex() {
-        return this.columnIndex;
+    public String Wire.getLookupColumnName() {
+        return this.lookupColumnName;
     }
     
-    public void Wire.setColumnIndex(Integer columnIndex) {
-        this.columnIndex = columnIndex;
+    public void Wire.setLookupColumnName(String lookupColumnName) {
+        this.lookupColumnName = lookupColumnName;
     }
     
     public Boolean Wire.getUseInSelect() {
@@ -90,12 +91,28 @@ privileged aspect Wire_Roo_JavaBean {
         this.matcher = matcher;
     }
     
-    public Set<Transformer> Wire.getTransformer() {
-        return this.transformer;
+    public Configuration Wire.getConfiguration() {
+        return this.configuration;
     }
     
-    public void Wire.setTransformer(Set<Transformer> transformer) {
-        this.transformer = transformer;
+    public void Wire.setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
+    }
+    
+    public Set<Transformer> Wire.getSourceTransformers() {
+        return this.sourceTransformers;
+    }
+    
+    public void Wire.setSourceTransformers(Set<Transformer> sourceTransformers) {
+        this.sourceTransformers = sourceTransformers;
+    }
+    
+    public Set<Transformer> Wire.getLookupTransformers() {
+        return this.lookupTransformers;
+    }
+    
+    public void Wire.setLookupTransformers(Set<Transformer> lookupTransformers) {
+        this.lookupTransformers = lookupTransformers;
     }
     
 }

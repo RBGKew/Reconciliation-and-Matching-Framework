@@ -4,12 +4,12 @@
     <jsp:output omit-xml-declaration="yes"/>
     <page:list id="pl_org_kew_shs_dedupl_matchconf_Configuration" items="${configurations}" z="a1d5BtDYh8Mz2Ep3BwX49DXT4Oc=">
         <table:table data="${configurations}" id="l_org_kew_shs_dedupl_matchconf_Configuration" path="/configurations" z="aus204+Lk8UgdI/ClERnW6QndJg=">
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Configuration_className" property="className" z="Rlrz9Bi9TpOpeCZWynlhDCT03Ec="/>
             <table:column id="c_org_kew_shs_dedupl_matchconf_Configuration_name" property="name" z="kqBZWMv85DrJ69bsGnntbCqXBso="/>
             <table:column id="c_org_kew_shs_dedupl_matchconf_Configuration_workDirPath" property="workDirPath" z="hXVNwodY16KUNk3/eK3h7+BsmiU="/>
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Configuration_inputFileName" property="inputFileName" z="G+UrZ19Wzcm3uFdh2t/DJlwIIfs="/>
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Configuration_outputFileNameExtension" property="outputFileNameExtension" z="tXFN3lMIuBOZMMAL/K+vlKVpAh8="/>
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Configuration_packageName" property="packageName" z="FRCblvrFTQ/TMPDK1hSIFXweJRE="/>
+            <table:column id="c_org_kew_shs_dedupl_matchconf_Configuration_sourceFileName" property="sourceFileName" z="3lSCK/1vX5B3RPHxjUa6geSJe08="/>
+            <table:column id="c_org_kew_shs_dedupl_matchconf_Configuration_lookupFileName" property="lookupFileName" z="8H+D+jYuaJVp5tRpFvBtT9cyNC0="/>
+            <table:column id="c_org_kew_shs_dedupl_matchconf_Configuration_sourceFileEncoding" property="sourceFileEncoding" z="5DUA6Qc2ZO+9Kji1TH1Z6wndCOA="/>
+            <table:column id="c_org_kew_shs_dedupl_matchconf_Configuration_sourceFileDelimiter" property="sourceFileDelimiter" z="3SeT4DlC6Qxp8fJD8s3tRoPxZsA="/>
         </table:table>
     </page:list>
 </div>

@@ -1,0 +1,21 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+	<changeSet author="Alecs Geuder" id="1-WireManyToOneToConfiguration-1">
+	    <addColumn catalogName="PUBLIC" schemaName="PUBLIC" tableName="WIRE">
+	        <column name="CONFIGURATION" type="BIGINT"/>
+		</addColumn>
+	</changeSet>
+	<changeSet author="Alecs Geuder" id="1-WireManyToOneToConfiguration-2">
+		<addForeignKeyConstraint
+		       baseColumnNames="CONFIGURATION"
+		       baseTableName="WIRE"
+		       baseTableSchemaName="PUBLIC"
+		       constraintName="FK_ADDRESS_CONFIGURATION"
+		       deferrable="false"
+		       initiallyDeferred="false"
+		       onDelete="NO ACTION"
+		       onUpdate="NO ACTION"
+		       referencedColumnNames="ID"
+		       referencedTableName="CONFIGURATION"
+		       referencedTableSchemaName="PUBLIC"/>
+	</changeSet>
+</databaseChangeLog>

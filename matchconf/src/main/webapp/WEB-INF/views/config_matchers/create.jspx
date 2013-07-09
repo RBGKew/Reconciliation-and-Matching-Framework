@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:create id="fc_org_kew_shs_dedupl_matchconf_Matcher" modelAttribute="matcher" path="/match_configs/${ configName }/matchers" render="${empty dependencies}" z="kBxNjGuopIrUQcPTlTw4/1LdRWI=">
+        <field:select field="composedBy" id="c_org_kew_shs_dedupl_matchconf_Matcher_composedBy" itemValue="id" items="${matchers}" multiple="true" path="/match_configs/${ configName }/matchers" z="lg7HXlHmAV4nN84WqZeazq8aLbQ="/>
+        <field:input field="name" id="c_org_kew_shs_dedupl_matchconf_Matcher_name" z="Al1NPPXchxS30hT+j26vnNg5kP0="/>
+        <field:input field="packageName" id="c_org_kew_shs_dedupl_matchconf_Matcher_packageName" z="5Uxlum2gTx8Fu4G3YdVEkQzIrsA="/>
+        <field:input field="className" id="c_org_kew_shs_dedupl_matchconf_Matcher_className" z="eRUO2ZzUHuot4r1pbHBxyUIQnKY="/>
+        <field:input field="params" id="c_org_kew_shs_dedupl_matchconf_Matcher_params" z="Zch43MLyLNXl+8ktqvZOnz54C18="/>
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_org_kew_shs_dedupl_matchconf_Matcher" render="${not empty dependencies}" z="MwvcYymAUiYs+TQwM4NTHVK/Lhc="/>
+</div>

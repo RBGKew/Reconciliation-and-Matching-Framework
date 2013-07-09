@@ -4,6 +4,7 @@
 package org.kew.shs.dedupl.matchconf;
 
 import java.util.List;
+import org.kew.shs.dedupl.matchconf.Configuration;
 import org.kew.shs.dedupl.matchconf.Transformer;
 
 privileged aspect Transformer_Roo_JavaBean {
@@ -46,6 +47,14 @@ privileged aspect Transformer_Roo_JavaBean {
     
     public void Transformer.setComposedBy(List<Transformer> composedBy) {
         this.composedBy = composedBy;
+    }
+    
+    public Configuration Transformer.getConfiguration() {
+        return this.configuration;
+    }
+    
+    public void Transformer.setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
     }
     
 }

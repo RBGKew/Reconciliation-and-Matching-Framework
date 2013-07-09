@@ -1,0 +1,12 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+	<changeSet author="liquibase-docs" id="2-WireAddUniqueConstraintForNameAndConfig-1">
+	    <addUniqueConstraint catalogName="cat"
+	            columnNames="CONFIGURATION, COLUMN_NAME"
+	            constraintName="UNIQUE_TOGETHER_CONFIGURATION_NAME"
+	            deferrable="true"
+	            disabled="true"
+	            initiallyDeferred="true"
+	            schemaName="PUBLIC"
+	            tableName="WIRE"/>
+	</changeSet>
+</databaseChangeLog>
