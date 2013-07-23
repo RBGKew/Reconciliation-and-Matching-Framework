@@ -63,7 +63,7 @@
 		p:indexWriter-ref="indexWriter"
 		p:analyzer-ref="luceneAnalyzer"
 		p:directory-ref="luceneFileSystemStore"
-		p:configuration-ref="config"/>
+		p:config-ref="config"/>
 
 	<bean id="queryParser" class="org.apache.lucene.queryParser.QueryParser">
 		<constructor-arg ref="LUCENE_VERSION" />

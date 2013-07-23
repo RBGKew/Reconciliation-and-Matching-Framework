@@ -72,17 +72,8 @@ Feature: Deduplicate Ipni
                     class="org.kew.shs.dedupl.transformers.ZeroToBlankTransformer" />
                 <bean id="safeStripNonAlphasTransformer"
                     class="org.kew.shs.dedupl.transformers.SafeStripNonAlphasTransformer" />
-                <bean id="epithetCleanerDIT"
-                    class="org.kew.shs.dedupl.transformers.CompositeTransformer">
-                    <property name="transformers">
-                        <util:list id="1">
-			                <bean id="safeStripNonAlphasTransformer"
-			                    class="org.kew.shs.dedupl.transformers.SafeStripNonAlphasTransformer" />
-                            <bean id="fakeHybridSignCleaner"
-                                class="org.kew.shs.dedupl.transformers.FakeHybridSignCleaner" />
-                        </util:list>
-                    </property>
-                </bean>
+                <bean id="fakeHybridSignCleaner"
+                    class="org.kew.shs.dedupl.transformers.FakeHybridSignCleaner" />
                 <bean id="safeStripNonAlphaNumericsTransformer"
                     class="org.kew.shs.dedupl.transformers.SafeStripNonAlphaNumericsTransformer" />
                 <bean id="collationCleaner"
@@ -97,68 +88,106 @@ Feature: Deduplicate Ipni
                     </property>
                 </bean>
                 <util:list id="columnProperties">
-                    <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="family"
-                        p:matcher-ref="alwaysMatchingMatcher"
-                        p:useInSelect="false"/>
-                    <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="genus"
-                        p:matcher-ref="exactMatcher"
-                        p:transformer-ref="epithetCleanerDIT"
-                        p:useInSelect="true"
-                        p:indexInitial="true"
-                        p:indexLength="true"
-                        p:indexOriginal="true"/>
-                    <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="basionym_author"
-                        p:matcher-ref="authorCommonTokensMatcher"
-                        p:transformer-ref="safeStripNonAlphasTransformer"
-                        p:blanksMatch="true"/>
-                    <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="publishing_author"
-                        p:transformer-ref="safeStripNonAlphasTransformer"
-                        p:matcher-ref="authorCommonTokensMatcher"
-                        p:indexOriginal="true"/>
-                    <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="full_name_without_family_and_authors"
-                        p:matcher-ref="alwaysMatchingMatcher"
-                        p:useInSelect="false"/>
-                    <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="publication"
-                        p:matcher-ref="capitalLettersMatcher"
-                        p:transformer-ref="safeStripNonAlphaNumericsTransformer"
-                        p:blanksMatch="true"/>
-                    <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="collation"
-                        p:transformer-ref="collationCleaner"
-                        p:matcher-ref="numberMatcher"
-                        p:indexOriginal="true"
-                        p:blanksMatch="true"/>
-                    <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="publication_year"
-                        p:matcher-ref="alwaysMatchingMatcher"
-                        p:blanksMatch="true"
-                        p:transformer-ref="yearCleaner"/>
-                    <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="reference_remarks"
-                        p:matcher-ref="alwaysMatchingMatcher"
-                        p:useInSelect="false"/>
-                    <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="remarks"
-                        p:matcher-ref="alwaysMatchingMatcher"
-                        p:useInSelect="false"/>
-                    <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="std_score"
-                        p:matcher-ref="alwaysMatchingMatcher"
-                        p:useInSelect="false"/>
-                    <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="test_concern"
-                        p:matcher-ref="alwaysMatchingMatcher"
-                        p:useInSelect="false"/>
+                    <bean class="org.kew.shs.dedupl.configuration.Property">
+                        <property name="name" value="family"/>
+                        <property name="matcher" ref="alwaysMatchingMatcher"/>
+                        <property name="useInSelect" value="false"/>
+                    </bean>
+                    <bean class="org.kew.shs.dedupl.configuration.Property">
+                        <property name="name" value="genus"/>
+                        <property name="matcher" ref="exactMatcher"/>
+                        <property name="lookupTransformers">
+                            <util:list id="1">
+                                <ref bean="fakeHybridSignCleaner"/>
+                                <ref bean="safeStripNonAlphasTransformer"/>
+                            </util:list>
+                        </property>
+                        <property name="useInSelect" value="true"/>
+                        <property name="indexInitial" value="true"/>
+                        <property name="indexLength" value="true"/>
+                        <property name="indexOriginal" value="true"/>
+                    </bean>
+                    <bean class="org.kew.shs.dedupl.configuration.Property">
+                        <property name="name" value="basionym_author"/>
+                        <property name="matcher" ref="authorCommonTokensMatcher"/>
+                        <property name="lookupTransformers">
+                            <util:list id="1">
+                                <ref bean="safeStripNonAlphasTransformer"/>
+                            </util:list>
+                        </property>
+                        <property name="blanksMatch" value="true"/>
+                    </bean>
+                    <bean class="org.kew.shs.dedupl.configuration.Property">
+                        <property name="name" value="publishing_author"/>
+                        <property name="lookupTransformers">
+                            <util:list id="1">
+                                <ref bean="safeStripNonAlphasTransformer"/>
+                            </util:list>
+                        </property>
+                        <property name="matcher" ref="authorCommonTokensMatcher"/>
+                        <property name="indexOriginal" value="true"/>
+                    </bean>
+                    <bean class="org.kew.shs.dedupl.configuration.Property">
+                        <property name="name" value="full_name_without_family_and_authors"/>
+                        <property name="matcher" ref="alwaysMatchingMatcher"/>
+                        <property name="useInSelect" value="false"/>
+                    </bean>
+                    <bean class="org.kew.shs.dedupl.configuration.Property">
+                        <property name="name" value="publication"/>
+                        <property name="matcher" ref="capitalLettersMatcher"/>
+                        <property name="lookupTransformers">
+                            <util:list id="1">
+                                <ref bean="safeStripNonAlphasTransformer"/>
+                            </util:list>
+                        </property>
+                        <property name="blanksMatch" value="true"/>
+                    </bean>
+                    <bean class="org.kew.shs.dedupl.configuration.Property">
+                        <property name="name" value="collation"/>
+
+                        <property name="lookupTransformers">
+                            <util:list id="1">
+                                <ref bean="collationCleaner"/>
+                            </util:list>
+                        </property>
+                        <property name="matcher" ref="numberMatcher"/>
+                        <property name="indexOriginal" value="true"/>
+                        <property name="blanksMatch" value="true"/>
+                    </bean>
+                    <bean class="org.kew.shs.dedupl.configuration.Property">
+                        <property name="name" value="publication_year"/>
+                        <property name="matcher" ref="alwaysMatchingMatcher"/>
+                        <property name="blanksMatch" value="true"/>
+                        <property name="lookupTransformers">
+                            <util:list id="1">
+                                <ref bean="yearCleaner"/>
+                            </util:list>
+                        </property>
+                    </bean>
+                    <bean class="org.kew.shs.dedupl.configuration.Property">
+                        <property name="name" value="reference_remarks"/>
+                        <property name="matcher" ref="alwaysMatchingMatcher"/>
+                        <property name="useInSelect" value="false"/>
+                    </bean>
+                    <bean class="org.kew.shs.dedupl.configuration.Property">
+                        <property name="name" value="remarks"/>
+                        <property name="matcher" ref="alwaysMatchingMatcher"/>
+                        <property name="useInSelect" value="false"/>
+                    </bean>
+                    <bean class="org.kew.shs.dedupl.configuration.Property">
+                        <property name="name" value="std_score"/>
+                        <property name="matcher" ref="alwaysMatchingMatcher"/>
+                        <property name="useInSelect" value="false"/>
+                    </bean>
+                    <bean class="org.kew.shs.dedupl.configuration.Property">
+                        <property name="name" value="test_concern"/>
+                        <property name="matcher" ref="alwaysMatchingMatcher"/>
+                        <property name="useInSelect" value="false"/>
+                    </bean>
                 </util:list>
                 <bean id="config" class="org.kew.shs.dedupl.configuration.DeduplicationConfiguration"
-                    p:inputFile-ref="inputfile"
-                    p:inputFileDelimiter="&#09;"
+                    p:sourceFile-ref="inputfile"
+                    p:sourceFileDelimiter="&#09;"
                     p:outputFileDelimiter="&#09;"
                     p:outputFileIdDelimiter=","
                     p:outputFile-ref="outputfile"
@@ -166,7 +195,6 @@ Feature: Deduplicate Ipni
                     p:loadReportFrequency="5000"
                     p:writeComparisonReport="true"
                     p:reportFile-ref="reportfile"
-                    p:writeTopCopyReport="true"
                     p:topCopyFile-ref="topcopyfile"
                     p:scoreFieldName="std_score"/>
             </beans>
@@ -175,7 +203,7 @@ Feature: Deduplicate Ipni
 		Then a file should have been created in the same folder with the following genus data:
             | id         | family      | genus_orig      | genus           | genus_length | genus_init | basionym_author | publishing_author_orig | publishing_author | full_name_without_family_and_authors | publication              | collation_orig | collation     | publication_year | reference_remarks | remarks | std_score | test_concern                                                                                      | cluster_size | from_id    | ids_in_cluster                  |
             | 30022170-2 | Rapateaceae | Saxo-fridericia | Saxo fridericia | 15           | S          |                 | R.H.Schomb.            | R H Schomb        | Saxo-fridericia                      | Rapatea                  | 13             | 13            | 1845             |                   |         | 9         | Does presence of hyphen in genus name prevent clustering                                          | 3            | 30022170-2 | 30022170-2 \| 33288-1 \| 9999-1 |
-            | 1001-1     | Ericaceae   | Leucothoë       | Leucothoe       | 09           | L          |                 | D.Don                  | D Don             | Leucothoë                            | Edinburgh New Philos J   | 17: 159        | 17 159        | 1834             |                   |         | 9         | Does presence of diacritic character at end of name prevent clustering                            | 2            | 1001-1     | 1001-1 \| 1001-2                | 
+            | 1001-1     | Ericaceae   | Leucothoë       | Leucothoe       | 09           | L          |                 | D.Don                  | D Don             | Leucothoë                            | Edinburgh New Philos J   | 17: 159        | 17 159        | 1834             |                   |         | 9         | Does presence of diacritic character at end of name prevent clustering                            | 2            | 1001-1     | 1001-1 \| 1001-2                |
             | 2001-1     | Ericaceae   | Lëucothoe       | Leucothoe       | 09           | L          |                 | D.Don                  | D Don             | Lëucothoe                            | Edinburgh New Philos J   | 17: 158        | 17 158        | 1834             |                   |         | 9         | Does presence of diacritic character in middle of name prevent clustering                         | 2            | 2001-1     | 2001-1 \| 2001-2                |
             | 6001-1     | Ericaceae   | Leucothoe       | Leucothoe       | 09           | L          |                 | D.Dön                  | D Don             | Leucothoe                            | Edinburgh New Philos J   | 16: 158        | 16 158        | 1834             |                   |         | 9         | Does presence of diacritic character in middle of author prevent clustering                       | 2            | 6001-1     | 6001-1 \| 6001-2                |
             | 7001-1     | Ericaceae   | Leucothoe       | Leucothoe       | 09           | L          |                 | D.Donë                 | D Done            | Leucothoe                            | Edinburgh New Philos J   | 15: 158        | 15 158        | 1834             |                   |         | 9         | Does presence of diacritic character at end of author prevent clustering                          | 2            | 7001-1     | 7001-1 \| 7001-2                |
@@ -213,7 +241,7 @@ Feature: Deduplicate Ipni
             |   106995-1 |   Berberidaceae |    Berberis | spec. |                 |                        Sessé & Moc. |                     Berberis pinnata |               "Fl. Mexic., ed. 2" |                   84 |             1894 |                   |                     |         9 |   Berberidaceae |                                                  "These names got clustered for first attempt, cannot see difference between these and Begonia repens" |
             |     1008-1 |   Berberidaceae |    Berberis | spec. |                 |                        Sessé & Moc. |                     Berberis pinnata |               "Fl. Mexic., ed. 2" |                   84 |             1894 |                   |                     |         9 |   Berberidaceae |                                                  "These names got clustered for first attempt, cannot see difference between these and Begonia repens" |
             |   331017-1 |       Ericaceae |   Leucothoë | spec. |                 |                             Sleumer |                 Leucothoë columbiana | Notizbl. Bot. Gart. Berlin-Dahlem |              12: 479 |             1935 |                   |                     |         9 |       Ericaceae |                                                                           Does presence of diacritic character at end of genus name prevent clustering |
-            | 17542760-1 | Dryopteridaceae | Dryostichum | spec. |                 |                          W.H.Wagner |              × Dryostichum singulare |                    Canad. J. Bot. |    70(2): 248 (1992) |                0 |                   |                     |         8 | Dryopteridaceae |                                                          Does presence of multiplication sign and whitespace at start of genus name prevent clustering |  
+            | 17542760-1 | Dryopteridaceae | Dryostichum | spec. |                 |                          W.H.Wagner |              × Dryostichum singulare |                    Canad. J. Bot. |    70(2): 248 (1992) |                0 |                   |                     |         8 | Dryopteridaceae |                                                          Does presence of multiplication sign and whitespace at start of genus name prevent clustering |
 
 		And Alecs has set up a species-dedup configuration file in the same folder according to her specs:
             """
@@ -259,17 +287,8 @@ Feature: Deduplicate Ipni
                     class="org.kew.shs.dedupl.transformers.ZeroToBlankTransformer" />
                 <bean id="safeStripNonAlphasTransformer"
                     class="org.kew.shs.dedupl.transformers.SafeStripNonAlphasTransformer" />
-                <bean id="epithetCleanerDIT"
-                    class="org.kew.shs.dedupl.transformers.CompositeTransformer">
-                    <property name="transformers">
-                        <util:list id="1">
-			                <bean id="safeStripNonAlphasTransformer"
-			                    class="org.kew.shs.dedupl.transformers.SafeStripNonAlphasTransformer" />
-                            <bean id="fakeHybridSignCleaner"
-                                class="org.kew.shs.dedupl.transformers.FakeHybridSignCleaner" />
-                        </util:list>
-                    </property>
-                </bean>
+                <bean id="fakeHybridSignCleaner"
+                    class="org.kew.shs.dedupl.transformers.FakeHybridSignCleaner" />
                 <bean id="safeStripNonAlphaNumericsTransformer"
                     class="org.kew.shs.dedupl.transformers.SafeStripNonAlphaNumericsTransformer" />
                 <bean id="collationCleaner"
@@ -284,70 +303,112 @@ Feature: Deduplicate Ipni
                     </property>
                 </bean>
                 <util:list id="columnProperties">
-                    <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="family"
-                        p:matcher-ref="alwaysMatchingMatcher"
-                        p:useInSelect="false"/>
-                    <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="genus"
-                        p:matcher-ref="exactMatcher"
-                        p:transformer-ref="epithetCleanerDIT"
-                        p:useInSelect="true"
-                        p:indexInitial="true"
-                        p:indexLength="true"
-                        p:indexOriginal="true"/>
-                    <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="basionym_author"
-                        p:matcher-ref="authorCommonTokensMatcher"
-                        p:transformer-ref="safeStripNonAlphasTransformer"
-                        p:blanksMatch="true"/>
-                    <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="publishing_author"
-                        p:transformer-ref="safeStripNonAlphasTransformer"
-                        p:matcher-ref="authorCommonTokensMatcher"
-                        p:indexOriginal="true"/>
-                    <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="full_name_without_family_and_authors"
-                        p:matcher-ref="exactMatcher"
-                        p:transformer-ref="epithetCleanerDIT"
-                        p:indexOriginal="true"
-                        p:useInSelect="true"/>
-                    <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="publication"
-                        p:matcher-ref="capitalLettersMatcher"
-                        p:transformer-ref="safeStripNonAlphaNumericsTransformer"
-                        p:blanksMatch="true"/>
-                    <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="collation"
-                        p:transformer-ref="collationCleaner"
-                        p:matcher-ref="numberMatcher"
-                        p:indexOriginal="true"
-                        p:blanksMatch="true"/>
-                    <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="publication_year"
-                        p:matcher-ref="alwaysMatchingMatcher"
-                        p:blanksMatch="true"
-                        p:transformer-ref="yearCleaner"/>
-                    <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="reference_remarks"
-                        p:matcher-ref="alwaysMatchingMatcher"
-                        p:useInSelect="false"/>
-                    <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="remarks"
-                        p:matcher-ref="alwaysMatchingMatcher"
-                        p:useInSelect="false"/>
-                    <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="std_score"
-                        p:matcher-ref="alwaysMatchingMatcher"
-                        p:useInSelect="false"/>
-                    <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="dit_family"
-                        p:matcher-ref="alwaysMatchingMatcher"
-                        p:useInSelect="false"/>
+                    <bean class="org.kew.shs.dedupl.configuration.Property">
+                        <property name="name" value="family" />
+                        <property name="matcher" ref="alwaysMatchingMatcher"/>
+                        <property name="useInSelect" value="false"/>
+                    </bean>
+                    <bean class="org.kew.shs.dedupl.configuration.Property">
+                        <property name="name" value="genus"/>
+                        <property name="matcher" ref="exactMatcher"/>
+                        <property name="lookupTransformers">
+                            <util:list id="1">
+                                <ref bean="fakeHybridSignCleaner"/>
+                                <ref bean="safeStripNonAlphasTransformer"/>
+                            </util:list>
+                        </property>
+                        <property name="useInSelect" value="true"/>
+                        <property name="indexInitial" value="true"/>
+                        <property name="indexLength" value="true"/>
+                        <property name="indexOriginal" value="true"/>
+                    </bean>
+                    <bean class="org.kew.shs.dedupl.configuration.Property">
+                        <property name="name" value="basionym_author"/>
+                        <property name="matcher" ref="authorCommonTokensMatcher"/>
+                        <property name="lookupTransformers">
+                            <util:list id="1">
+                                <ref bean="safeStripNonAlphasTransformer"/>
+                            </util:list>
+                        </property>
+                        <property name="blanksMatch" value="true"/>
+                    </bean>
+                    <bean class="org.kew.shs.dedupl.configuration.Property">
+                        <property name="name" value="publishing_author"/>
+                        <property name="lookupTransformers">
+                            <util:list id="1">
+                                <ref bean="safeStripNonAlphasTransformer"/>
+                            </util:list>
+                        </property>
+                        <property name="matcher" ref="authorCommonTokensMatcher"/>
+                        <property name="indexOriginal" value="true"/>
+                    </bean>
+                    <bean class="org.kew.shs.dedupl.configuration.Property">
+                        <property name="name" value="full_name_without_family_and_authors"/>
+                        <property name="matcher" ref="exactMatcher"/>
+                        <property name="lookupTransformers">
+                            <util:list id="1">
+                                <ref bean="fakeHybridSignCleaner"/>
+                                <ref bean="safeStripNonAlphasTransformer"/>
+                            </util:list>
+                        </property>
+                        <property name="indexOriginal" value="true"/>
+                        <property name="useInSelect" value="true"/>
+                    </bean>
+                    <bean class="org.kew.shs.dedupl.configuration.Property">
+                        <property name="name" value="publication"/>
+                        <property name="matcher" ref="capitalLettersMatcher"/>
+                        <property name="lookupTransformers">
+                            <util:list id="1">
+		                        <ref bean="safeStripNonAlphaNumericsTransformer"/>
+                            </util:list>
+                        </property>
+                        <property name="blanksMatch" value="true"/>
+                    </bean>
+                    <bean class="org.kew.shs.dedupl.configuration.Property">
+                        <property name="name" value="collation"/>
+                        <property name="lookupTransformers">
+                            <util:list id="1">
+		                        <ref bean="collationCleaner"/>
+                            </util:list>
+                        </property>
+                        <property name="matcher" ref="numberMatcher"/>
+                        <property name="indexOriginal" value="true"/>
+                        <property name="blanksMatch" value="true"/>
+                    </bean>
+                    <bean class="org.kew.shs.dedupl.configuration.Property">
+                        <property name="name" value="publication_year"/>
+                        <property name="matcher" ref="alwaysMatchingMatcher"/>
+                        <property name="blanksMatch" value="true" />
+						<property name="lookupTransformers">
+                            <util:list id="1">
+		                        <ref bean="collationCleaner"/>
+                            </util:list>
+                        </property>
+                    </bean>
+                    <bean class="org.kew.shs.dedupl.configuration.Property">
+                        <property name="name" value="reference_remarks"/>
+                        <property name="matcher" ref="alwaysMatchingMatcher"/>
+                        <property name="useInSelect" value="false"/>
+                    </bean>
+                    <bean class="org.kew.shs.dedupl.configuration.Property">
+                        <property name="name" value="remarks"/>
+                        <property name="matcher" ref="alwaysMatchingMatcher"/>
+                        <property name="useInSelect" value="false"/>
+                    </bean>
+                    <bean class="org.kew.shs.dedupl.configuration.Property">
+                        <property name="name" value="std_score"/>
+                        <property name="matcher" ref="alwaysMatchingMatcher"/>
+                        <property name="useInSelect" value="false"/>
+                    </bean>
+                    <bean class="org.kew.shs.dedupl.configuration.Property">
+                        <property name="name" value="dit_family"/>
+                        <property name="matcher" ref="alwaysMatchingMatcher"/>
+                        <property name="useInSelect" value="false"/>
+                    </bean>
                 </util:list>
                 <bean id="config" class="org.kew.shs.dedupl.configuration.DeduplicationConfiguration"
-                    p:inputFile-ref="inputfile"
-                    p:inputFileDelimiter="&#09;"
+                    p:sourceFile-ref="inputfile"
+                    p:sourceFileDelimiter="&#09;"
                     p:outputFileDelimiter="&#09;"
                     p:outputFileIdDelimiter=","
                     p:outputFile-ref="outputfile"
@@ -355,7 +416,6 @@ Feature: Deduplicate Ipni
                     p:loadReportFrequency="5000"
                     p:writeComparisonReport="true"
                     p:reportFile-ref="reportfile"
-                    p:writeTopCopyReport="true"
                     p:topCopyFile-ref="topcopyfile"
                     p:scoreFieldName="std_score"/>
             </beans>

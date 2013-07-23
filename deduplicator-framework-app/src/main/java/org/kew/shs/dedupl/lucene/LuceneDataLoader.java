@@ -16,6 +16,7 @@ import org.apache.lucene.store.FSDirectory;
 import org.kew.shs.dedupl.DataLoader;
 import org.kew.shs.dedupl.configuration.Configuration;
 import org.kew.shs.dedupl.configuration.Property;
+import org.kew.shs.dedupl.transformers.Transformer;
 import org.supercsv.io.CsvMapReader;
 import org.supercsv.prefs.CsvPreference;
 
@@ -37,13 +38,13 @@ public class LuceneDataLoader implements DataLoader {
     private static Logger log = Logger.getLogger(LuceneDataLoader.class);
 
     public void load() throws Exception {
-        load(config.getInputFile());
+        load(this.getConfig().getSourceFile());
     }
 
     public void load(File file) throws Exception {
         int i = 0;
         // TODO: either make quote characters and line break characters configurable or simplify even more?
-        CsvPreference customCsvPref = new CsvPreference.Builder('"', this.config.getInputFileDelimiter().charAt(0), "\n").build();
+        CsvPreference customCsvPref = new CsvPreference.Builder('"', this.config.getSourceFileDelimiter().charAt(0), "\n").build();
         try (CsvMapReader mr = new CsvMapReader(new FileReader(file), customCsvPref)) {
             final String[] header = mr.getHeader(true);
             // check whether the header column names fit to the ones specified in the configuration
@@ -72,8 +73,9 @@ public class LuceneDataLoader implements DataLoader {
                     }
 
                     // Transform the value if necessary
-                    if (p.getTransformer() !=null)
-                        value = p.getTransformer().transform(value);
+                    for (Transformer t:p.getLookupTransformers()) {
+                        value = t.transform(value);
+                    }
                     Field f = new Field(p.getName(), value, Field.Store.YES,Field.Index.ANALYZED);
                     doc.add(f);
 
@@ -131,11 +133,11 @@ public class LuceneDataLoader implements DataLoader {
         this.analyzer = analyzer;
     }
 
-    public Configuration getConfiguration() {
+    public Configuration getConfig() {
         return this.config;
     }
 
-    public void setConfiguration(Configuration config) {
+    public void setConfig(Configuration config) {
         this.config = config;
     }
 

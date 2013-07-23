@@ -24,27 +24,23 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 
 	protected DeduplicationConfiguration dedupConfig;
 
-	protected LuceneReporter[] reporters;
-
-	public Reporter[] getReporters() {
-		return (LuceneReporter[]) reporters;
-	}
-
-	public void setReporters(LuceneReporter[] reporters) {
-		this.reporters = reporters;
-	}
-
+	/**
+	 * Type-casting config to matchConfig here, so that all the time a match
+	 * config is needed it can be acquired in a cached(ish) way - not sure whether
+	 * that's the way to do it..
+	 */
 	public DeduplicationConfiguration getDedupConfig() {
 		if (this.dedupConfig == null) {
-			this.dedupConfig = (DeduplicationConfiguration) this.configuration;
+			this.dedupConfig = (DeduplicationConfiguration) this.getConfig();
 		}
 		return this.dedupConfig;
 	}
-	// TODO: generalise Configuration!
 
 	public void loadData() throws Exception{
-		this.dataLoader.setConfiguration(configuration);
-		this.dataLoader.load();
+		if (!getDedupConfig().isReuseIndex()){
+			dataLoader.setConfig(this.getDedupConfig());
+			dataLoader.load();
+		}
 	}
 
 	public void run() throws Exception {
@@ -59,8 +55,9 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 		try {
 			log.debug(new java.util.Date(System.currentTimeMillis()));
 
+			DeduplicationConfiguration config = this.getDedupConfig();
 			// Sort properties in order of cost:
-			Collections.sort(configuration.getProperties(),  new Comparator<Property>() {
+			Collections.sort(config.getProperties(),  new Comparator<Property>() {
 				public int compare(final Property p1,final Property p2) {
 					return Integer.valueOf(p1.getMatcher().getCost()).compareTo(Integer.valueOf(
 							p2.getMatcher().getCost()));
@@ -69,7 +66,6 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 
 			// intermediate step: set the reporters here
 			// TODO: define the reporters in the configuration
-			DeduplicationConfiguration config = this.getDedupConfig();
 			LuceneReporter outputReporter = new LuceneOutputReporter(config.getOutputFile(),
 					config.getOutputFileDelimiter(), config.getScoreFieldName(), Configuration.ID_FIELD_NAME);
 			// for the multiline output we (ab)use the topCopy configuration for now :-|
@@ -88,7 +84,7 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 					log.error("this record id appears to be deleted in the index. why??");
 					continue;
 				}
-				if (i % configuration.getAssessReportFrequency() == 0 || i == indexReader.maxDoc() - 1){
+				if (i % config.getAssessReportFrequency() == 0 || i == indexReader.maxDoc() - 1){
 					log.info("Assessed " + i + " records, merged to " + (numClusters) + " duplicate clusters");
 				}
 
@@ -106,7 +102,7 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 				alreadyProcessed.add(fromId);
 
 				// Use the properties to select a set of documents which may contain matches
-				String querystr = LuceneUtils.buildQuery(configuration.getProperties(), fromDoc, true);
+				String querystr = LuceneUtils.buildQuery(config.getProperties(), fromDoc, true);
 
 				TopDocs td = queryLucene(querystr, indexSearcher);
 				log.debug("Found " + td.totalHits + " possibles to assess against " + fromId);
@@ -123,10 +119,10 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 					if (alreadyProcessed.contains(toId))
 						continue;
 
-					if (LuceneUtils.recordsMatch(fromDoc, toDoc, configuration.getProperties())){
+					if (LuceneUtils.recordsMatch(fromDoc, toDoc, config.getProperties())){
 						dupls.add(toDoc);
 						if (sb.length() > 0)
-							sb.append(configuration.getOutputFileIdDelimiter());
+							sb.append(config.getOutputFileIdDelimiter());
 						sb.append(toId);
 						alreadyProcessed.add(toId);
 					}
@@ -141,7 +137,7 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 			}
 
 			// Matchers can output a report on their number of executions:
-			for (Property p : configuration.getProperties()){
+			for (Property p : config.getProperties()){
 				String executionReport = p.getMatcher().getExecutionReport();
 				if (executionReport != null)
 					log.debug(p.getMatcher().getExecutionReport());

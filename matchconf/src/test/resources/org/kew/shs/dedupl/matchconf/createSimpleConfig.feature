@@ -8,17 +8,14 @@ Feature: Create a simple configuration
         And he has created a new configuration:
             | name             | workDirPath |
             | simple-config | some_path   |
-        And he has set up a Wire for the second column
-        And he has added a composite transformer for the second column:
-            | name                 | packageName                       | className       | params |
-            | compiTransformer  | org.kew.shs.dedupl.transformers | CompositeTransformer |        |
-        And this Composite Transformer contains the following transformers
+        And he has added the following lookupTransformers
             | name                  | packageName                        | className               | params |
             | 02BlankTransformer | org.kew.shs.dedupl.transformers | ZeroToBlankTransformer        |        |
             | anotherTransformer | org.kew.shs.dedupl.transformers | SafeStripNonAlphasTransformer |        |
         And he has added a matcher for the second column:
             | name         | packageName                 | className    | params            |
             | matchExactly | org.kew.shs.dedupl.matchers | ExactMatcher | blanksMatch=false |
+        And he has wired them together at the second column
         When he asks to write the configuration out to the filesystem
         Then the following content will be written to "some_path/config_simple-config.xml":
             """
@@ -40,8 +37,8 @@ Feature: Create a simple configuration
                 <bean id="lucene_directory" class="java.lang.String">
                     <constructor-arg value="target/deduplicator"/>
                 </bean>
-                <bean id="inputfile" class="java.io.File">
-                    <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/input.tsv" />
+                <bean id="sourcefile" class="java.io.File">
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/source.tsv" />
                 </bean>
                 <bean id="outputfile" class="java.io.File">
                     <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/output_simple-config.tsv" />
@@ -51,35 +48,35 @@ Feature: Create a simple configuration
                 </bean>
                 <bean id="matchExactly" class="org.kew.shs.dedupl.matchers.ExactMatcher"
                     p:blanksMatch="false"/>
-                <bean id="compiTransformer" class="org.kew.shs.dedupl.transformers.CompositeTransformer">
-                    <property name="transformers">
-                        <util:list id="1">
-                            <bean id="02BlankTransformer" class="org.kew.shs.dedupl.transformers.ZeroToBlankTransformer" />
-                            <bean id="anotherTransformer" class="org.kew.shs.dedupl.transformers.SafeStripNonAlphasTransformer" />
-                        </util:list>
-                    </property>
-                </bean>
+                <bean id="02BlankTransformer" class="org.kew.shs.dedupl.transformers.ZeroToBlankTransformer" />
+                <bean id="anotherTransformer" class="org.kew.shs.dedupl.transformers.SafeStripNonAlphasTransformer" />
                 <util:list id="columnProperties">
                     <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="data_col"
-                        p:matcher-ref="matchExactly"
-                        p:transformer-ref="compiTransformer"
+                        p:name="data_col_"
                         p:useInSelect="false"
                         p:useInNegativeSelect="false"
                         p:indexLength="false"
                         p:blanksMatch="false"
                         p:indexOriginal="false"
                         p:indexInitial="false"
-                        p:useWildcard="false"/>
+                        p:useWildcard="false"
+                        p:matcher-ref="matchExactly">
+                        <property name="lookupTransformers">
+                            <util:list id="1">
+                                <ref bean="02BlankTransformer"/>
+                                <ref bean="anotherTransformer"/>
+                            </util:list>
+                        </property>
+                    </bean>
                 </util:list>
                 <bean id="config" class="org.kew.shs.dedupl.configuration.DeduplicationConfiguration"
-                    p:inputFile-ref="inputfile"
+                    p:sourceFile-ref="sourcefile"
                     p:outputFile-ref="outputfile"
                     p:topCopyFile-ref="topcopyfile"
                     p:properties-ref="columnProperties"
                     p:scoreFieldName="id"
-                    p:inputFileEncoding="UTF8"
-                    p:inputFileDelimiter="&#09;"
+                    p:sourceFileEncoding="UTF8"
+                    p:sourceFileDelimiter="&#09;"
                     p:outputFileDelimiter="&#09;"
                     p:outputFileIdDelimiter="|"
                     p:loadReportFrequency="50000"

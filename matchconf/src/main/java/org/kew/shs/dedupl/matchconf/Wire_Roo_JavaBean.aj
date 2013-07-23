@@ -3,7 +3,7 @@
 
 package org.kew.shs.dedupl.matchconf;
 
-import java.util.Set;
+import java.util.List;
 import org.kew.shs.dedupl.matchconf.Configuration;
 import org.kew.shs.dedupl.matchconf.Matcher;
 import org.kew.shs.dedupl.matchconf.Transformer;
@@ -99,19 +99,19 @@ privileged aspect Wire_Roo_JavaBean {
         this.configuration = configuration;
     }
     
-    public Set<Transformer> Wire.getSourceTransformers() {
+    public List<Transformer> Wire.getSourceTransformers() {
         return this.sourceTransformers;
     }
     
-    public void Wire.setSourceTransformers(Set<Transformer> sourceTransformers) {
+    public void Wire.setSourceTransformers(List<Transformer> sourceTransformers) {
         this.sourceTransformers = sourceTransformers;
     }
     
-    public Set<Transformer> Wire.getLookupTransformers() {
+    public List<Transformer> Wire.getLookupTransformers() {
         return this.lookupTransformers;
     }
     
-    public void Wire.setLookupTransformers(Set<Transformer> lookupTransformers) {
+    public void Wire.setLookupTransformers(List<Transformer> lookupTransformers) {
         this.lookupTransformers = lookupTransformers;
     }
     

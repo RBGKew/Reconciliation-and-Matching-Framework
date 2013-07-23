@@ -1,5 +1,7 @@
 package org.kew.shs.dedupl.matchconf;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.ManyToMany;
@@ -8,6 +10,8 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
@@ -43,11 +47,12 @@ public class Wire implements Comparable<Wire> {
 
     @ManyToMany
     @Size(min=0)
-    private Set<Transformer> sourceTransformers = new HashSet<Transformer>();
+    @Sort(type=SortType.NATURAL)
+    private List<Transformer> sourceTransformers = new ArrayList<Transformer>();
 
     @ManyToMany
     @Size(min=0)
-    private Set<Transformer> lookupTransformers = new HashSet<Transformer>();
+    private List<Transformer> lookupTransformers = new ArrayList<Transformer>();
 
     public String getName() {
         return this.getSourceColumnName() + "_" + this.getLookupColumnName();

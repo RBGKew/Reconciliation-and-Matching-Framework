@@ -20,8 +20,8 @@ Feature: run a simple configuration
                 <bean id="lucene_directory" class="java.lang.String">
                     <constructor-arg value="target/deduplicator"/>
                 </bean>
-                <bean id="inputfile" class="java.io.File">
-                    <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/input.tsv" />
+                <bean id="sourcefile" class="java.io.File">
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/source.tsv" />
                 </bean>
                 <bean id="outputfile" class="java.io.File">
                     <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/output.tsv" />
@@ -31,42 +31,42 @@ Feature: run a simple configuration
                 </bean>
                 <bean id="matchExactly" class="org.kew.shs.dedupl.matchers.ExactMatcher"
                     p:blanksMatch="false"/>
-                <bean id="compiTransformer" class="org.kew.shs.dedupl.transformers.CompositeTransformer">
-                    <property name="transformers">
-                        <util:list id="1">
-                            <bean id="02BlankTransformer" class="org.kew.shs.dedupl.transformers.ZeroToBlankTransformer" />
-                            <bean id="anotherTransformer" class="org.kew.shs.dedupl.transformers.SafeStripNonAlphasTransformer" />
-                        </util:list>
-                    </property>
-                </bean>
+                <bean id="02BlankTransformer" class="org.kew.shs.dedupl.transformers.ZeroToBlankTransformer" />
+                <bean id="anotherTransformer" class="org.kew.shs.dedupl.transformers.SafeStripNonAlphasTransformer" />
                 <util:list id="columnProperties">
                     <bean class="org.kew.shs.dedupl.configuration.Property"
                         p:name="data_col"
-                        p:matcher-ref="matchExactly"
-                        p:transformer-ref="compiTransformer"
                         p:useInSelect="true"
                         p:useInNegativeSelect="false"
                         p:indexLength="false"
                         p:blanksMatch="false"
                         p:indexOriginal="false"
                         p:indexInitial="false"
-                        p:useWildcard="false"/>
+                        p:useWildcard="false"
+                        p:matcher-ref="matchExactly">
+                        <property name="lookupTransformers">
+                            <util:list id="1">
+                                <ref bean="02BlankTransformer"/>
+                                <ref bean="anotherTransformer"/>
+                            </util:list>
+                        </property>
+                    </bean>
                 </util:list>
                 <bean id="config" class="org.kew.shs.dedupl.configuration.DeduplicationConfiguration"
-                    p:inputFile-ref="inputfile"
+                    p:sourceFile-ref="sourcefile"
                     p:outputFile-ref="outputfile"
                     p:topCopyFile-ref="topcopyfile"
                     p:properties-ref="columnProperties"
                     p:scoreFieldName="id"
-                    p:inputFileEncoding="UTF8"
-                    p:inputFileDelimiter="&#09;"
+                    p:sourceFileEncoding="UTF8"
+                    p:sourceFileDelimiter="&#09;"
                     p:outputFileDelimiter="&#09;"
                     p:outputFileIdDelimiter="|"
                     p:loadReportFrequency="50000"
                     p:assessReportFrequency="100"/>
             </beans>
             """
-        And some mysterious data-improver has put a file "input.tsv" in the same directory containing the following data:
+        And some mysterious data-improver has put a file "source.tsv" in the same directory containing the following data:
             | id      | data_col  | transformer_comments                               | matcher_comments |
             | 1       | 0         | zero should be replaced with blank                 | stays alone      |
             | 2       | some-name | hyphen should be replaced with white space         | 3 cluster items  |

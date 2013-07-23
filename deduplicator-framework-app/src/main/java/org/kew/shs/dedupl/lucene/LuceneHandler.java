@@ -15,6 +15,8 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
 import org.kew.shs.dedupl.DataLoader;
 import org.kew.shs.dedupl.configuration.Configuration;
+import org.kew.shs.dedupl.reporters.LuceneReporter;
+import org.kew.shs.dedupl.reporters.Reporter;
 
 
 public class LuceneHandler {
@@ -27,19 +29,21 @@ public class LuceneHandler {
 	protected IndexReader indexReader;
 	private QueryParser queryParser;
 	protected DataLoader dataLoader;
-	protected Configuration configuration;
+	protected Configuration config;
 	protected Logger log = Logger.getLogger(this.getClass());
+
+	protected LuceneReporter[] reporters;
 
 	public LuceneHandler() {
 		super();
 	}
 
-	public Configuration getConfiguration() {
-		return configuration;
+	public Configuration getConfig() {
+		return this.config;
 	}
 
-	public void setConfiguration(Configuration config) {
-		this.configuration = config;
+	public void setConfig(Configuration config) {
+		this.config = config;
 	}
 
 	public DataLoader getDataLoader() {
@@ -109,5 +113,15 @@ public class LuceneHandler {
 	public void setQueryParser(QueryParser queryParser) {
 		this.queryParser = queryParser;
 	}
+
+	public Reporter[] getReporters() {
+		return (LuceneReporter[]) reporters;
+	}
+
+	public void setReporters(LuceneReporter[] reporters) {
+		this.reporters = reporters;
+	}
+
+
 
 }

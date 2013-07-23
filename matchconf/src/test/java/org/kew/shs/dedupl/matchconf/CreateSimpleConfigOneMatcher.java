@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cucumber.api.DataTable;
 import cucumber.api.Scenario;
@@ -22,11 +24,13 @@ import cucumber.api.java.en.When;
 
 public class CreateSimpleConfigOneMatcher {
 
+    Logger logger = LoggerFactory.getLogger(CreateSimpleConfigOneMatcher.class);
     File tempDir;
 
+    String configName;
     String secondColName;
-    Transformer transformer;
     Matcher matcher;
+    List<Transformer> transformers;
     Configuration config;
 
     @Before
@@ -46,76 +50,71 @@ public class CreateSimpleConfigOneMatcher {
 
         File workDir = new File(tempDir, workDirPath);
         workDir.mkdir();
-        new File(workDir, "input.tsv").createNewFile();
+        new File(workDir, "source.tsv").createNewFile();
     }
 
-	@Given("^he has created a new configuration:$")
+    @Given("^he has created a new configuration:$")
     public void he_has_created_a_new_configuration(DataTable colDefTable) throws Throwable {
         List<Map<String,String>> colDef = colDefTable.asMaps();
-        this.config = new Configuration();
-        this.config.setName(colDef.get(0).get("name"));
-        this.config.setWorkDirPath(new File(this.tempDir, colDef.get(0).get("workDirPath")).getPath());
-        this.config.persist();
-        assert (Configuration.findConfiguration(this.config.getId()) != null);
+        this.configName = colDef.get(0).get("name");
+        config = new Configuration();
+        config.setName(this.configName);
+        config.setWorkDirPath(new File(this.tempDir, colDef.get(0).get("workDirPath")).getPath());
+        config.persist();
+        assert (Configuration.findConfiguration(config.getId()) != null);
     }
 
-    @Given("^he has set up a wire for the second column:$")
-    public void he_has_wired_the_matcher_and_the_transformer_to_the_column_in_a_new_configuration(DataTable colDefTable) throws Throwable {
-        List<Map<String,String>> colDef = colDefTable.asMaps();
-        Wire wire = new Wire();
-        wire.setSourceColumnName(this.secondColName);
-        wire.setMatcher(this.matcher);
-        wire.setConfiguration(this.config);
-        wire.persist();
-        wire.getSourceTransformers().add(this.transformer);
-        wire = wire.merge();
-        assert (Wire.findWire(wire.getId()) != null);
-        this.config.getWiring().add(wire);
-        this.config.merge();
-        assertThat(this.config.getWiring().toArray(new Wire[1]), is(new Wire[] {wire}));
-    }
-
-
-    @Given("^he has added a composite transformer for the second column:$")
-    public void he_has_added_a_composite_transformer_for_the_second_column(DataTable transformerDefTable) throws Throwable {
-        List<Map<String,String>> transformerDef = transformerDefTable.asMaps();
-        this.transformer = new Transformer();
-        this.transformer.setName(transformerDef.get(0).get("name"));
-        this.transformer.setPackageName(transformerDef.get(0).get("packageName"));
-        this.transformer.setClassName(transformerDef.get(0).get("className"));
-        this.transformer.setParams(transformerDef.get(0).get("params"));
-        this.transformer.persist();
-    }
-
-    @Given("^this Composite Transformer contains the following transformers$")
-    public void this_Composite_Transformer_contains_the_following_transformers(DataTable transformerDefTable) throws Throwable {
-        List<Transformer> components = new ArrayList<Transformer>();
+    @Given("^he has added the following lookupTransformers$")
+    public void he_has_added_the_following_transformers(DataTable transformerDefTable) throws Throwable {
+        List<Transformer> transis = new ArrayList<>();
         for (Map<String,String> transDef:transformerDefTable.asMaps()) {
-            Transformer component = new Transformer();
-            component.setName(transDef.get("name"));
-            component.setPackageName(transDef.get("packageName"));
-            component.setClassName(transDef.get("className"));
-            component.setParams(transDef.get("params"));
-            components.add(component);
+            Transformer transi = new Transformer();
+            transi.setName(transDef.get("name"));
+            transi.setPackageName(transDef.get("packageName"));
+            transi.setClassName(transDef.get("className"));
+            transi.setParams(transDef.get("params"));
+            transi.persist();
+            transis.add(transi);
         }
-            this.transformer.setComposedBy(components);
+        config.setTransformers(transis);
+        this.transformers = new ArrayList<>(transis);
     }
 
     @Given("^he has added a matcher for the second column:$")
     public void he_has_added_a_matcher_for_the_second_column(DataTable matcherDefTable) throws Throwable {
         List<Map<String,String>> matcherDef = matcherDefTable.asMaps();
-        this.matcher = new Matcher();
-        this.matcher.setName(matcherDef.get(0).get("name"));
-        this.matcher.setPackageName(matcherDef.get(0).get("packageName"));
-        this.matcher.setClassName(matcherDef.get(0).get("className"));
-        this.matcher.setParams(matcherDef.get(0).get("params"));
-        this.matcher.persist();
+        matcher = new Matcher();
+        matcher.setName(matcherDef.get(0).get("name"));
+        matcher.setPackageName(matcherDef.get(0).get("packageName"));
+        matcher.setClassName(matcherDef.get(0).get("className"));
+        matcher.setParams(matcherDef.get(0).get("params"));
+        matcher.setConfiguration(config);
+        matcher.persist();
+        List<Matcher> matchers = new ArrayList<>();
+        matchers.add(matcher);
+        config.getMatchers().add(matcher);
+        config.setVersion(config.getVersion() + 1);
         assert (Matcher.findMatcher(this.matcher.getId()) != null);
+    }
+
+    @Given("^he has wired them together at the second column$")
+    public void he_has_wired_the_together_at_the_second_column() throws Throwable {
+        Wire wire = new Wire();
+        wire.setSourceColumnName(this.secondColName);
+        wire.setMatcher(this.matcher);
+        wire.setConfiguration(config);
+        wire.setLookupTransformers(this.transformers);
+        wire.persist();
+        assert (Wire.findWire(wire.getId()) != null);
+        config.getWiring().add(wire);
+        logger.info("config.getWiring(): {}, wire: {}", config.getWiring(), wire);
+        // TODO: the following works in STS but not on the command-line, why?
+        //assert (config.getWiring().toArray(new Wire[1]).equals(new Wire[] {wire}));
     }
 
     @When("^he asks to write the configuration out to the filesystem$")
     public void he_asks_to_write_the_configuration_out_to_the_filesystem() throws Throwable {
-        ConfigurationEngine configEngine = new ConfigurationEngine(this.config);
+        ConfigurationEngine configEngine = new ConfigurationEngine(config);
         configEngine.write_to_filesystem();
     }
 

@@ -10,9 +10,9 @@ public class Configuration {
 
     private List<Property> properties;
 
-    private File inputFile;
-    private String inputFileEncoding = "UTF8";
-    private String inputFileDelimiter;
+    private File sourceFile;
+    private String sourceFileEncoding = "UTF8";
+    private String sourceFileDelimiter;
 
     private File outputFile;
     private String outputFileDelimiter;
@@ -27,6 +27,8 @@ public class Configuration {
 
     private int loadReportFrequency=50000;
     private int assessReportFrequency=100;
+
+	private boolean reuseIndex;
 
     public static String ID_FIELD_NAME ="id";
 
@@ -47,17 +49,17 @@ public class Configuration {
     public void setProperties(List<Property> properties) {
         this.properties = properties;
     }
-    public File getInputFile() {
-        return inputFile;
+    public File getSourceFile() {
+        return sourceFile;
     }
-    public String getInputFileEncoding() {
-        return inputFileEncoding;
+    public String getSourceFileEncoding() {
+        return sourceFileEncoding;
     }
-    public void setInputFile(File inputFile) {
-        this.inputFile = inputFile;
+    public void setSourceFile(File sourceFile) {
+        this.sourceFile = sourceFile;
     }
-    public void setInputFileEncoding(String inputFileEncoding) {
-        this.inputFileEncoding = inputFileEncoding;
+    public void setSourceFileEncoding(String sourceFileEncoding) {
+        this.sourceFileEncoding = sourceFileEncoding;
     }
     public File getOutputFile() {
         return outputFile;
@@ -89,11 +91,11 @@ public class Configuration {
     public void setReportFile(File reportFile) {
         this.reportFile = reportFile;
     }
-    public String getInputFileDelimiter() {
-        return inputFileDelimiter;
+    public String getSourceFileDelimiter() {
+        return sourceFileDelimiter;
     }
-    public void setInputFileDelimiter(String inputFileDelimiter) {
-        this.inputFileDelimiter = inputFileDelimiter;
+    public void setSourceFileDelimiter(String sourceFileDelimiter) {
+        this.sourceFileDelimiter = sourceFileDelimiter;
     }
     public String getOutputFileDelimiter() {
         return outputFileDelimiter;
@@ -107,7 +109,6 @@ public class Configuration {
     public void setOutputFileIdDelimiter(String outputFileIdDelimiter) {
         this.outputFileIdDelimiter = outputFileIdDelimiter;
     }
-
     public boolean isWriteDelimitedReport() {
         return writeDelimitedReport;
     }
@@ -120,12 +121,16 @@ public class Configuration {
     public void setDelimitedFile(File delimitedFile) {
         this.delimitedFile = delimitedFile;
     }
-
     public boolean isIncludeNonMatchesInDelimitedReport() {
         return includeNonMatchesInDelimitedReport;
     }
     public void setIncludeNonMatchesInDelimitedReport(boolean includeNonMatchesInDelimitedReport) {
         this.includeNonMatchesInDelimitedReport = includeNonMatchesInDelimitedReport;
     }
-
+	public boolean isReuseIndex() {
+		return reuseIndex;
+	}
+	public void setReuseIndex(boolean reuseIndex) {
+		this.reuseIndex = reuseIndex;
+	}
 }

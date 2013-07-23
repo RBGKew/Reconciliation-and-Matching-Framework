@@ -6,7 +6,6 @@ package org.kew.shs.dedupl.util;
  * Spring-defined matcher bean and run it.
  *
  */
-import org.apache.commons.cli.ParseException;
 import org.springframework.context.ConfigurableApplicationContext;
 
 public class MatchApp extends CoreApp {

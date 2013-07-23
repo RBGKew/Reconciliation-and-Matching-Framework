@@ -18,6 +18,6 @@
 		p:analyzer-ref="luceneAnalyzer"
 		p:directory-ref="luceneFileSystemStore"
 		p:queryParser-ref="queryParser"
-		p:configuration-ref="config"/>
+		p:config-ref="config"/>
 
 </beans>

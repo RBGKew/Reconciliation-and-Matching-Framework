@@ -1,5 +1,8 @@
 package org.kew.shs.dedupl.configuration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.kew.shs.dedupl.matchers.Matcher;
 import org.kew.shs.dedupl.transformers.Transformer;
 
@@ -22,7 +25,8 @@ public class Property {
 	private boolean indexInitial=false;
 	private boolean useWildcard=false;
 	
-	private Transformer transformer;
+	private List<Transformer> sourceTransformers = new ArrayList<>();
+	private List<Transformer> lookupTransformers = new ArrayList<>();
 
 	public String getName() {
 		return name;
@@ -35,12 +39,6 @@ public class Property {
 	}
 	public void setMatcher(Matcher matcher) {
 		this.matcher = matcher;
-	}
-	public Transformer getTransformer() {
-		return transformer;
-	}
-	public void setTransformer(Transformer transformer) {
-		this.transformer = transformer;
 	}
 	public boolean isUseInSelect() {
 		return useInSelect;
@@ -91,6 +89,18 @@ public class Property {
 				+ ", indexLength=" + indexLength + ", blanksMatch="
 				+ blanksMatch + ", indexOriginal=" + indexOriginal
 				+ ", indexInitial=" + indexInitial + ", useWildcard="
-				+ useWildcard + ", transformer=" + transformer + "]";
+				+ useWildcard + ", transformers=" + sourceTransformers + "_" + lookupTransformers + "]";
+	}
+	public List<Transformer> getSourceTransformers() {
+		return sourceTransformers;
+	}
+	public void setSourceTransformers(List<Transformer> sourceTransformers) {
+		this.sourceTransformers = sourceTransformers;
+	}
+	public List<Transformer> getLookupTransformers() {
+		return lookupTransformers;
+	}
+	public void setLookupTransformers(List<Transformer> lookupTransformers) {
+		this.lookupTransformers = lookupTransformers;
 	}
 }

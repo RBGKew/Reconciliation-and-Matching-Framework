@@ -51,7 +51,7 @@ public class ConfigurationEngine {
 		outXML.add(String.format("%s<bean id=\"lucene_directory\" class=\"java.lang.String\">", shift, shift));
 		outXML.add(String.format("%s%s<constructor-arg value=\"target/deduplicator\"/>", shift, shift));
 		outXML.add(String.format("%s</bean>", shift));
-		outXML.add(String.format("%s<bean id=\"inputfile\" class=\"java.io.File\">", shift, shift));
+		outXML.add(String.format("%s<bean id=\"sourcefile\" class=\"java.io.File\">", shift, shift));
 		outXML.add(String.format("%s%s<constructor-arg value=\"%s\" />", shift, shift, sourceFilePath));
 		outXML.add(String.format("%s</bean>", shift));
 		outXML.add(String.format("%s<bean id=\"outputfile\" class=\"java.io.File\">", shift));
@@ -61,29 +61,29 @@ public class ConfigurationEngine {
 	    outXML.add(String.format("%s%s<constructor-arg value=\"%s\" />", shift, shift, outputMultilineFilePath));
 		outXML.add(String.format("%s</bean>", shift));
 			
-		for (Bot bot:this.getMatchers()) {
+		for (Bot bot:this.config.getMatchers()) {
 			outXML.addAll(new BotEngine(bot).toXML("matchers", 1));
 		}
-		for (Bot bot:this.getTransformers()) {
+		
+		for (Bot bot:this.config.getTransformers()) {
 			outXML.addAll(new BotEngine(bot).toXML("transformers", 1));
 		}
 
 		outXML.add(String.format("%s<util:list id=\"columnProperties\">", shift));
 		for (Wire wire:this.config.getWiring()) {
-
 			outXML.addAll(new WireEngine(wire).toXML(2));
-			
 		}
+
 		outXML.add(String.format("%s</util:list>", shift));
 
 		outXML.add(String.format("%s<bean id=\"config\" class=\"%s.%s\"", shift, this.config.getPackageName(), this.config.getClassName()));
-		outXML.add(String.format("%s%sp:inputFile-ref=\"inputfile\"", shift, shift));
+		outXML.add(String.format("%s%sp:sourceFile-ref=\"sourcefile\"", shift, shift));
 		outXML.add(String.format("%s%sp:outputFile-ref=\"outputfile\"", shift, shift));
 		outXML.add(String.format("%s%sp:topCopyFile-ref=\"topcopyfile\"", shift, shift));
 		outXML.add(String.format("%s%sp:properties-ref=\"columnProperties\"", shift, shift));
 		outXML.add(String.format("%s%sp:scoreFieldName=\"%s\"", shift, shift, this.config.getScoreFieldName()));
-		outXML.add(String.format("%s%sp:inputFileEncoding=\"%s\"", shift, shift, this.config.getSourceFileEncoding()));
-		outXML.add(String.format("%s%sp:inputFileDelimiter=\"%s\"", shift, shift, this.config.getSourceFileDelimiter()));
+		outXML.add(String.format("%s%sp:sourceFileEncoding=\"%s\"", shift, shift, this.config.getSourceFileEncoding()));
+		outXML.add(String.format("%s%sp:sourceFileDelimiter=\"%s\"", shift, shift, this.config.getSourceFileDelimiter()));
 		outXML.add(String.format("%s%sp:outputFileDelimiter=\"%s\"", shift, shift, this.config.getOutputFileDelimiter()));
 		outXML.add(String.format("%s%sp:outputFileIdDelimiter=\"%s\"", shift, shift, this.config.getOutputFileIdDelimiter()));
 		outXML.add(String.format("%s%sp:loadReportFrequency=\"%s\"", shift, shift, this.config.getLoadReportFrequency()));
@@ -93,35 +93,17 @@ public class ConfigurationEngine {
 		return outXML;
 	}
 
-	public SortedSet<Bot> getMatchers() {
-		SortedSet<Bot> matchers = new TreeSet<Bot>();
-		for (Wire wire:this.config.getWiring()) {
-			matchers.add(wire.getMatcher());
-		}
-		return matchers;
-	}
-	
-	public SortedSet<Bot> getTransformers() {
-		SortedSet<Bot> transformers= new TreeSet<Bot>();
-		for (Wire wire:this.config.getWiring()) {
-			for (Bot transformer:wire.getSourceTransformers()) {
-				transformers.add(transformer);
-			}
-		}
-		return transformers;
-	}
-	
 	public void write_to_filesystem () throws IOException {
 		// Perform a few checks:
 		// 1. does the working directory exist?
 		File workDir = new File(this.config.getWorkDirPath());
 		if (!workDir.exists()) {
-			throw new FileNotFoundException("The specified working directory ${config.workDirPath} does not exist! You need to create it and put the input file in it.");
+			throw new FileNotFoundException("The specified working directory ${config.workDirPath} does not exist! You need to create it and put the source file in it.");
 		}
-		// 2. does the input file exist?
+		// 2. does the source file exist?
 		File sourceFile = new File(workDir, config.getSourceFileName());
 		if (!sourceFile.exists()) {
-			throw new FileNotFoundException(String.format("There is no file found at the specified location of the input-file %s. Move the source file there with the specified inputFileName.", sourceFile.toPath()));
+			throw new FileNotFoundException(String.format("There is no file found at the specified location of the source-file %s. Move the source file there with the specified sourceFileName.", sourceFile.toPath()));
 		}
 		// 3. write out the xml-configuration file
 		File configFile = new File(workDir, "config_" + config.getName() + ".xml");

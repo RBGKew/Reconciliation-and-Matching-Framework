@@ -14,6 +14,6 @@ public interface DataLoader{
 
 	public void load() throws Exception;
 	public void load(File f) throws Exception;
-	public void setConfiguration(Configuration configuration);
+	public void setConfig(Configuration config);
 	
 }
