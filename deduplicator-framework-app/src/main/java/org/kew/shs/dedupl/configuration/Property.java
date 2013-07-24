@@ -24,10 +24,27 @@ public class Property {
 	private boolean indexOriginal=false;
 	private boolean indexInitial=false;
 	private boolean useWildcard=false;
+
+    private boolean addOriginalSourceValue = false;
+    private boolean addTransformedSourceValue = false;
+    // Matching specific as obsolete for Deduplication tasks
+    private boolean addOriginalLookupValue = false;
+    private boolean addTransformedLookupValue = false;
 	
 	private List<Transformer> sourceTransformers = new ArrayList<>();
 	private List<Transformer> lookupTransformers = new ArrayList<>();
 
+	@Override
+	public String toString() {
+		return "Property [name=" + name + ", matcher=" + matcher + ", useInSelect="
+			    + useInSelect + ", useInNegativeSelect=" + useInNegativeSelect
+				+ ", indexLength=" + indexLength + ", blanksMatch="
+				+ blanksMatch + ", indexOriginal=" + indexOriginal
+				+ ", indexInitial=" + indexInitial + ", useWildcard="
+				+ useWildcard + ", transformers=" + sourceTransformers + "_" + lookupTransformers + "]";
+	}
+
+	// Getters and Setters
 	public String getName() {
 		return name;
 	}
@@ -82,15 +99,6 @@ public class Property {
 	public void setUseWildcard(boolean useWildcard) {
 		this.useWildcard = useWildcard;
 	}
-	@Override
-	public String toString() {
-		return "Property [name=" + name + ", matcher=" + matcher + ", useInSelect="
-			    + useInSelect + ", useInNegativeSelect=" + useInNegativeSelect
-				+ ", indexLength=" + indexLength + ", blanksMatch="
-				+ blanksMatch + ", indexOriginal=" + indexOriginal
-				+ ", indexInitial=" + indexInitial + ", useWildcard="
-				+ useWildcard + ", transformers=" + sourceTransformers + "_" + lookupTransformers + "]";
-	}
 	public List<Transformer> getSourceTransformers() {
 		return sourceTransformers;
 	}
@@ -102,5 +110,33 @@ public class Property {
 	}
 	public void setLookupTransformers(List<Transformer> lookupTransformers) {
 		this.lookupTransformers = lookupTransformers;
+	}
+	public boolean isAddOriginalLookupValue() {
+		return addOriginalLookupValue;
+	}
+	public void setAddOriginalLookupValue(boolean addOriginalLookupValue) {
+		this.addOriginalLookupValue = addOriginalLookupValue;
+	}
+	public boolean isAddTransformedLookupValue() {
+		return addTransformedLookupValue;
+	}
+	public void setAddTransformedLookupValue(boolean addTransformedLookupValue) {
+		this.addTransformedLookupValue = addTransformedLookupValue;
+	}
+
+	public boolean isAddOriginalSourceValue() {
+		return addOriginalSourceValue;
+	}
+
+	public void setAddOriginalSourceValue(boolean addOriginalSourceValue) {
+		this.addOriginalSourceValue = addOriginalSourceValue;
+	}
+
+	public boolean isAddTransformedSourceValue() {
+		return addTransformedSourceValue;
+	}
+
+	public void setAddTransformedSourceValue(boolean addTransformedSourceValue) {
+		this.addTransformedSourceValue = addTransformedSourceValue;
 	}
 }

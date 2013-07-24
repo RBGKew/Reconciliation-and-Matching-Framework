@@ -9,6 +9,7 @@
             <menu:item id="i_controller__customtransformerindex_id" messageCode="global_generic" url="/customtransformer/index" z="3aiV6nomir3T1j++osr0tfCq58w="/>
             <menu:item id="i_controller__custommatcherindex_id" messageCode="global_generic" url="/custommatcher/index" z="xGD+lTPqd9rumBdLygx6QLydkZY="/>
             <menu:item id="i_controller__configurationindex_id" messageCode="global_generic" url="/configuration/index" z="If/PNKqpxW/sLYv2Hq8Ufp51N5M="/>
+            <menu:item id="i_controller__customlucenereporterindex_id" messageCode="global_generic" url="/customlucenereporter/index" z="0MYK2WuMz74ghkMn5eF3NjQpqOU="/>
         </menu:category>
         <menu:category id="c_configuration" z="ex6zSpCyqSksY2xxo+2yaACAxic=">
             <menu:item id="i_configuration_new" messageCode="global_menu_new" url="/configurations?form" z="PpKhRYSLF3fMvOlr5J8dEALoaF8="/>

@@ -1,7 +1,6 @@
 package org.kew.shs.dedupl.matchconf.web;
 import java.io.File;
 import java.io.IOException;
-
 import org.apache.commons.io.FileUtils;
 import org.kew.shs.dedupl.matchconf.Configuration;
 import org.kew.shs.dedupl.matchconf.ConfigurationEngine;
@@ -31,11 +30,11 @@ public class ConfigurationController {
         } catch (Error e) {
             model.addAttribute("exception", e.toString());
         } finally {
-                File luceneDir = new File("target/deduplicator");
-                if (luceneDir.exists()) {
-                    FileUtils.deleteDirectory(new File("target/deduplicator"));
-	            }
-	        return "configurations/run/index";
+            File luceneDir = new File("target/deduplicator");
+            if (luceneDir.exists()) {
+                FileUtils.deleteDirectory(new File("target/deduplicator"));
+            }
+            return "configurations/run/index";
         }
     }
 }

@@ -57,7 +57,7 @@
 	</bean>
 
 	<!-- This defines a LuceneDataLoader, and passes in some Lucene-specific object
-	references (defined above) and the de-duplication configuration ("config") -->
+	references (defined above) and the dedup/match configuration ("config") -->
 	<bean id="dataLoader" class="org.kew.shs.dedupl.lucene.LuceneDataLoader"
 		p:luceneVersion-ref="LUCENE_VERSION"
 		p:indexWriter-ref="indexWriter"

@@ -59,12 +59,36 @@ privileged aspect Wire_Roo_JavaBean {
         this.blanksMatch = blanksMatch;
     }
     
-    public Boolean Wire.getIndexOriginal() {
-        return this.indexOriginal;
+    public Boolean Wire.getAddOriginalSourceValue() {
+        return this.addOriginalSourceValue;
     }
     
-    public void Wire.setIndexOriginal(Boolean indexOriginal) {
-        this.indexOriginal = indexOriginal;
+    public void Wire.setAddOriginalSourceValue(Boolean addOriginalSourceValue) {
+        this.addOriginalSourceValue = addOriginalSourceValue;
+    }
+    
+    public Boolean Wire.getAddOriginalLookupValue() {
+        return this.addOriginalLookupValue;
+    }
+    
+    public void Wire.setAddOriginalLookupValue(Boolean addOriginalLookupValue) {
+        this.addOriginalLookupValue = addOriginalLookupValue;
+    }
+    
+    public Boolean Wire.getAddTransformedSourceValue() {
+        return this.addTransformedSourceValue;
+    }
+    
+    public void Wire.setAddTransformedSourceValue(Boolean addTransformedSourceValue) {
+        this.addTransformedSourceValue = addTransformedSourceValue;
+    }
+    
+    public Boolean Wire.getAddTransformedLookupValue() {
+        return this.addTransformedLookupValue;
+    }
+    
+    public void Wire.setAddTransformedLookupValue(Boolean addTransformedLookupValue) {
+        this.addTransformedLookupValue = addTransformedLookupValue;
     }
     
     public Boolean Wire.getIndexInitial() {

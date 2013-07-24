@@ -6,11 +6,18 @@ public class WireEngine {
 
     Wire wire;
 
+    private final String[] defaultFalseList = new String[] {
+            "useInSelect", "useInNegativeSelect", "indexLength", "blanksMatch",
+            "addOriginalSourceValue", "addOriginalLookupValue",
+            "addTransformedSourceValue", "addTransformedLookupValue", "indexInitial",
+            "useWildcard"};
+
+
     public WireEngine(Wire wire) {
         this.wire = wire;
     }
 
-    public ArrayList<String> toXML(int indentLevel) {
+    public ArrayList<String> toXML(int indentLevel) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
         int shiftWidth = 4;
         String shift = String.format("%" + shiftWidth + "s", " ");
         String indent = "";
@@ -20,13 +27,13 @@ public class WireEngine {
         ArrayList<String> outXML = new ArrayList<String>();
         outXML.add(String.format("%s<bean class=\"org.kew.shs.dedupl.configuration.Property\"", indent));
         outXML.add(String.format("%s%sp:name=\"%s\"", indent, shift, this.wire.getName()));
-        outXML.add(String.format("%s%sp:useInSelect=\"%s\"", indent, shift, this.wire.getUseInSelect()));
-        outXML.add(String.format("%s%sp:useInNegativeSelect=\"%s\"", indent, shift, this.wire.getUseInNegativeSelect()));
-        outXML.add(String.format("%s%sp:indexLength=\"%s\"", indent, shift, this.wire.getIndexLength()));
-        outXML.add(String.format("%s%sp:blanksMatch=\"%s\"", indent, shift, this.wire.getBlanksMatch()));
-        outXML.add(String.format("%s%sp:indexOriginal=\"%s\"", indent, shift, this.wire.getIndexOriginal()));
-        outXML.add(String.format("%s%sp:indexInitial=\"%s\"", indent, shift, this.wire.getIndexInitial()));
-        outXML.add(String.format("%s%sp:useWildcard=\"%s\"", indent, shift, this.wire.getUseWildcard()));
+
+        // all boolean attributes default to false and we only want to write them if they are set to true
+        for (String attr:this.defaultFalseList) {
+            boolean value = (boolean) this.wire.getClass().getField(attr).get(this.wire);
+            if (value) outXML.add(String.format("%s%sp:%s=\"%s\"", indent, shift, attr, value));
+        }
+
         outXML.add(String.format("%s%sp:matcher-ref=\"%s\">", indent, shift, this.wire.getMatcher().getName()));
 
         if (this.wire.getSourceTransformers().size() > 0) {
@@ -53,7 +60,7 @@ public class WireEngine {
         return outXML;
     }
 
-    public ArrayList<String> toXML() {
+    public ArrayList<String> toXML() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
         return toXML(0);
     }
 

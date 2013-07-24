@@ -1,6 +1,8 @@
 package org.kew.shs.dedupl.matchconf;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.EntityManager;
@@ -25,19 +27,20 @@ public class Configuration {
     private String workDirPath;
 
     private String sourceFileName = "source.tsv";
+
     private String sourceFileEncoding = "UTF8";
+
     private String sourceFileDelimiter = "&#09;";
 
     // lookupFileName being populated decides over being a MatchConfig
     private String lookupFileName = "";
+
     private String lookupFileEncoding = "UTF8";
+
     private String lookupFileDelimiter = "&#09;";
 
-    private String outputFileDelimiter = "&#09;";
-    private String outputFileIdDelimiter = "|";
-    private String outputFileNameExtension = "tsv";
-
     private String packageName = "org.kew.shs.dedupl.configuration";
+
     private String className = "DeduplicationConfiguration";
 
     private String loadReportFrequency = "50000";
@@ -46,15 +49,18 @@ public class Configuration {
 
     private String scoreFieldName = "id";
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true)
-    @Sort(type=SortType.NATURAL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Sort(type = SortType.NATURAL)
     private List<Wire> wiring = new ArrayList<Wire>();
 
-    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transformer> transformers = new ArrayList<>();
 
-    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Matcher> matchers = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reporter> reporters = new ArrayList<Reporter>();
 
     @PrePersist
     @PreUpdate
@@ -123,22 +129,29 @@ public class Configuration {
     }
 
     public Wire getWireForName(String wireName) {
-        for (Wire wire:this.getWiring()) {
+        for (Wire wire : this.getWiring()) {
             if (wire.getName().equals(wireName)) return wire;
         }
         return null;
     }
 
     public Transformer getTransformerForName(String transformerName) {
-        for (Transformer transformer:this.getTransformers()) {
+        for (Transformer transformer : this.getTransformers()) {
             if (transformer.getName().equals(transformerName)) return transformer;
         }
         return null;
     }
 
     public Matcher getMatcherForName(String matcherName) {
-        for (Matcher matcher:this.getMatchers()) {
+        for (Matcher matcher : this.getMatchers()) {
             if (matcher.getName().equals(matcherName)) return matcher;
+        }
+        return null;
+    }
+
+    public Reporter getReporterForName(String reporterName) {
+        for (Reporter reporter: this.getReporters()) {
+            if (reporter.getName().equals(reporterName)) return reporter;
         }
         return null;
     }
@@ -158,4 +171,8 @@ public class Configuration {
         this.merge();
     }
 
+    public void removeReporter(String reporterName) {
+        this.getReporters().remove(this.getReporterForName(reporterName));
+        this.merge();
+    }
 }

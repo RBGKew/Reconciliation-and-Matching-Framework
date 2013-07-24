@@ -6,6 +6,7 @@ package org.kew.shs.dedupl.matchconf;
 import java.util.List;
 import org.kew.shs.dedupl.matchconf.Configuration;
 import org.kew.shs.dedupl.matchconf.Matcher;
+import org.kew.shs.dedupl.matchconf.Reporter;
 import org.kew.shs.dedupl.matchconf.Transformer;
 import org.kew.shs.dedupl.matchconf.Wire;
 
@@ -75,30 +76,6 @@ privileged aspect Configuration_Roo_JavaBean {
         this.lookupFileDelimiter = lookupFileDelimiter;
     }
     
-    public String Configuration.getOutputFileDelimiter() {
-        return this.outputFileDelimiter;
-    }
-    
-    public void Configuration.setOutputFileDelimiter(String outputFileDelimiter) {
-        this.outputFileDelimiter = outputFileDelimiter;
-    }
-    
-    public String Configuration.getOutputFileIdDelimiter() {
-        return this.outputFileIdDelimiter;
-    }
-    
-    public void Configuration.setOutputFileIdDelimiter(String outputFileIdDelimiter) {
-        this.outputFileIdDelimiter = outputFileIdDelimiter;
-    }
-    
-    public String Configuration.getOutputFileNameExtension() {
-        return this.outputFileNameExtension;
-    }
-    
-    public void Configuration.setOutputFileNameExtension(String outputFileNameExtension) {
-        this.outputFileNameExtension = outputFileNameExtension;
-    }
-    
     public String Configuration.getPackageName() {
         return this.packageName;
     }
@@ -161,6 +138,14 @@ privileged aspect Configuration_Roo_JavaBean {
     
     public void Configuration.setMatchers(List<Matcher> matchers) {
         this.matchers = matchers;
+    }
+    
+    public List<Reporter> Configuration.getReporters() {
+        return this.reporters;
+    }
+    
+    public void Configuration.setReporters(List<Reporter> reporters) {
+        this.reporters = reporters;
     }
     
 }

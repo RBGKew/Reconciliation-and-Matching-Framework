@@ -7,7 +7,6 @@
         <field:checkbox field="useInNegativeSelect" id="c_org_kew_shs_dedupl_matchconf_Wire_useInNegativeSelect" z="g6Fqf7lac9bj4i6phpDcyTMnAeg="/>
         <field:checkbox field="indexLength" id="c_org_kew_shs_dedupl_matchconf_Wire_indexLength" z="6QgSy9T5WBzy83anNlEpwpqWz64="/>
         <field:checkbox field="blanksMatch" id="c_org_kew_shs_dedupl_matchconf_Wire_blanksMatch" z="FLk6m3nIf+vniTawpdo+i0UjsKE="/>
-        <field:checkbox field="indexOriginal" id="c_org_kew_shs_dedupl_matchconf_Wire_indexOriginal" z="8MIVMKs9ajdmJ4GYDgSSIOgrVUI="/>
         <field:checkbox field="indexInitial" id="c_org_kew_shs_dedupl_matchconf_Wire_indexInitial" z="4Um0XUlwGw1gsH3hQKMnvD0woj4="/>
         <field:checkbox field="useWildcard" id="c_org_kew_shs_dedupl_matchconf_Wire_useWildcard" z="H2cXRwoDy3CUtITSjtFU3P46ja8="/>
         <field:select field="matcher" id="c_org_kew_shs_dedupl_matchconf_Wire_matcher" itemValue="id" items="${matchers}" path="/matchers" z="lXk5z0p02X2K5OrJ2d71mUvWp+E="/>
@@ -16,6 +15,10 @@
         <field:select field="configuration" id="c_org_kew_shs_dedupl_matchconf_Wire_configuration" itemValue="id" items="${configurations}" path="/configurations" z="mt11rs6InvFf1CJZOy+5B2dnniw="/>
         <field:select field="sourceTransformers" id="c_org_kew_shs_dedupl_matchconf_Wire_sourceTransformers" itemValue="id" items="${transformers}" multiple="true" path="/transformers" z="voeNY9FXQVoLlheVCxJHfcQTScQ="/>
         <field:select field="lookupTransformers" id="c_org_kew_shs_dedupl_matchconf_Wire_lookupTransformers" itemValue="id" items="${transformers}" multiple="true" path="/transformers" z="o7MbdgLFHHykZhwugO+cbL5XwPw="/>
+        <field:checkbox field="addOriginalSourceValue" id="c_org_kew_shs_dedupl_matchconf_Wire_addOriginalSourceValue" z="FBobAPBovYc4gqRvKOcr0T+nySg="/>
+        <field:checkbox field="addOriginalLookupValue" id="c_org_kew_shs_dedupl_matchconf_Wire_addOriginalLookupValue" z="OTGOwNh7sNQWPa9RQlE91VCN5n8="/>
+        <field:checkbox field="addTransformedSourceValue" id="c_org_kew_shs_dedupl_matchconf_Wire_addTransformedSourceValue" z="gz9SC9WXQU9Q8G7eX3YXT9eMaK8="/>
+        <field:checkbox field="addTransformedLookupValue" id="c_org_kew_shs_dedupl_matchconf_Wire_addTransformedLookupValue" z="hgjah26dH9JrPRn+D6KcMTzQTrg="/>
     </form:create>
     <form:dependency dependencies="${dependencies}" id="d_org_kew_shs_dedupl_matchconf_Wire" render="${not empty dependencies}" z="fkPS5x/iTzfV7WY7RGqu+n52bSc="/>
 </div>

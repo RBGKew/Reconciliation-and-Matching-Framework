@@ -1,6 +1,5 @@
 package org.kew.shs.dedupl.reporters;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -8,7 +7,6 @@ import org.kew.shs.dedupl.lucene.DocList;
 
 public abstract class LuceneReporter extends Reporter {
 
-	private int num_tied_scores = 0;
 	protected static String[] AVAILABLE_FIELDS = new String[] {"from_id"};
 	protected boolean isStart = true;
 
@@ -16,8 +14,8 @@ public abstract class LuceneReporter extends Reporter {
 		return (String[]) ArrayUtils.addAll(super.getAvailableFields(), LuceneReporter.AVAILABLE_FIELDS);
 	}
 
-	public LuceneReporter(File file, String delimiter, String scoreFieldName, String idFieldName) throws IOException {
-		super(file, delimiter, scoreFieldName, idFieldName);
+	public LuceneReporter() {
+		super();
 	}
 
 	protected void writeHeader(DocList docs) throws IOException {

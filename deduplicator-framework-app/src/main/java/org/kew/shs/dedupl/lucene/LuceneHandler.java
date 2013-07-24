@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.queryParser.ParseException;
@@ -19,17 +20,18 @@ import org.kew.shs.dedupl.reporters.LuceneReporter;
 import org.kew.shs.dedupl.reporters.Reporter;
 
 
-public class LuceneHandler {
+public class LuceneHandler<Config extends Configuration> {
 
 	private org.apache.lucene.util.Version luceneVersion;
 
 	protected FSDirectory directory;
+	private IndexSearcher indexSearcher;
 	protected IndexWriter indexWriter;
 	private Analyzer analyzer;
-	protected IndexReader indexReader;
+	private IndexReader indexReader;
 	private QueryParser queryParser;
 	protected DataLoader dataLoader;
-	protected Configuration config;
+	protected Config config;
 	protected Logger log = Logger.getLogger(this.getClass());
 
 	protected LuceneReporter[] reporters;
@@ -38,22 +40,15 @@ public class LuceneHandler {
 		super();
 	}
 
-	public Configuration getConfig() {
-		return this.config;
+	public IndexReader getIndexReader() throws CorruptIndexException, IOException {
+		if (this.indexReader == null) this.indexReader = IndexReader.open(this.directory);
+		return this.indexReader;
 	}
 
-	public void setConfig(Configuration config) {
-		this.config = config;
+	public IndexSearcher getIndexSearcher() throws CorruptIndexException, IOException {
+		if (this.indexSearcher == null) this.indexSearcher = new IndexSearcher(this.getIndexReader());
+		return this.indexSearcher;
 	}
-
-	public DataLoader getDataLoader() {
-		return dataLoader;
-	}
-
-	public void setDataLoader(DataLoader dataLoader) {
-		this.dataLoader = dataLoader;
-	}
-
 	public Document getFromLucene(int n) throws IOException {
 		return indexReader.document(n);
 	}
@@ -65,6 +60,23 @@ public class LuceneHandler {
 				log.debug(q);
 				return indexSearcher.search(q, 1000);
 			}
+
+	// Getters and Setters
+	public Config getConfig() {
+		return this.config;
+	}
+
+	public void setConfig(Config config) {
+		this.config = config;
+	}
+
+	public DataLoader getDataLoader() {
+		return dataLoader;
+	}
+
+	public void setDataLoader(DataLoader dataLoader) {
+		this.dataLoader = dataLoader;
+	}
 
 	public org.apache.lucene.util.Version getLuceneVersion() {
 		return luceneVersion;
@@ -98,14 +110,6 @@ public class LuceneHandler {
 		this.analyzer = analyzer;
 	}
 
-	public IndexReader getIndexReader() {
-		return indexReader;
-	}
-
-	public void setIndexReader(IndexReader indexReader) {
-		this.indexReader = indexReader;
-	}
-
 	public QueryParser getQueryParser() {
 		return queryParser;
 	}
@@ -121,7 +125,4 @@ public class LuceneHandler {
 	public void setReporters(LuceneReporter[] reporters) {
 		this.reporters = reporters;
 	}
-
-
-
 }

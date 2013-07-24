@@ -20,16 +20,12 @@ public class ConfigurationEngine {
 		this.config = config;
 	}
 
-	public ArrayList<String> toXML() {
+	public ArrayList<String> toXML() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		int shiftWidth = 4;
 		String shift = String.format("%" + shiftWidth + "s", " ");
 		
 		ArrayList<String> outXML = new ArrayList<String>();
         String sourceFilePath = new File(new File(this.config.getWorkDirPath()), this.config.getSourceFileName()).getPath();
-        String outputFileName = String.format("output_%s.%s", this.config.getName(), this.config.getOutputFileNameExtension());
-        String outputFilePath = new File(new File(this.config.getWorkDirPath()), outputFileName).getPath();
-        String outputMultilineFileName = String.format("output-multiline_%s.%s", this.config.getName(), this.config.getOutputFileNameExtension());
-        String outputMultilineFilePath = new File(new File(this.config.getWorkDirPath()), outputMultilineFileName).getPath();
 		
 		outXML.add("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		outXML.add("<beans xmlns=\"http://www.springframework.org/schema/beans\"");
@@ -52,12 +48,6 @@ public class ConfigurationEngine {
 		outXML.add(String.format("%s<bean id=\"sourcefile\" class=\"java.io.File\">", shift, shift));
 		outXML.add(String.format("%s%s<constructor-arg value=\"%s\" />", shift, shift, sourceFilePath));
 		outXML.add(String.format("%s</bean>", shift));
-		outXML.add(String.format("%s<bean id=\"outputfile\" class=\"java.io.File\">", shift));
-		outXML.add(String.format("%s%s<constructor-arg value=\"%s\" />", shift, shift, outputFilePath));
-		outXML.add(String.format("%s</bean>", shift));
-	    outXML.add(String.format("%s<bean id=\"topcopyfile\" class=\"java.io.File\">", shift));
-	    outXML.add(String.format("%s%s<constructor-arg value=\"%s\" />", shift, shift, outputMultilineFilePath));
-		outXML.add(String.format("%s</bean>", shift));
 			
 		for (Bot bot:this.config.getMatchers()) {
 			outXML.addAll(new BotEngine(bot).toXML("matchers", 1));
@@ -66,6 +56,15 @@ public class ConfigurationEngine {
 		for (Bot bot:this.config.getTransformers()) {
 			outXML.addAll(new BotEngine(bot).toXML("transformers", 1));
 		}
+
+		if (this.config.getReporters().size() > 0) {
+			outXML.add(String.format("%s<util:list id=\"reporters\">", shift));
+			for (Reporter reporter:this.config.getReporters()) {
+				outXML.addAll(new ReporterEngine(reporter).toXML(2));
+			}
+			outXML.add(String.format("%s</util:list>", shift));
+		}
+		
 
 		outXML.add(String.format("%s<util:list id=\"columnProperties\">", shift));
 		for (Wire wire:this.config.getWiring()) {
@@ -76,16 +75,13 @@ public class ConfigurationEngine {
 
 		outXML.add(String.format("%s<bean id=\"config\" class=\"%s.%s\"", shift, this.config.getPackageName(), this.config.getClassName()));
 		outXML.add(String.format("%s%sp:sourceFile-ref=\"sourcefile\"", shift, shift));
-		outXML.add(String.format("%s%sp:outputFile-ref=\"outputfile\"", shift, shift));
-		outXML.add(String.format("%s%sp:topCopyFile-ref=\"topcopyfile\"", shift, shift));
 		outXML.add(String.format("%s%sp:properties-ref=\"columnProperties\"", shift, shift));
 		outXML.add(String.format("%s%sp:scoreFieldName=\"%s\"", shift, shift, this.config.getScoreFieldName()));
 		outXML.add(String.format("%s%sp:sourceFileEncoding=\"%s\"", shift, shift, this.config.getSourceFileEncoding()));
 		outXML.add(String.format("%s%sp:sourceFileDelimiter=\"%s\"", shift, shift, this.config.getSourceFileDelimiter()));
-		outXML.add(String.format("%s%sp:outputFileDelimiter=\"%s\"", shift, shift, this.config.getOutputFileDelimiter()));
-		outXML.add(String.format("%s%sp:outputFileIdDelimiter=\"%s\"", shift, shift, this.config.getOutputFileIdDelimiter()));
 		outXML.add(String.format("%s%sp:loadReportFrequency=\"%s\"", shift, shift, this.config.getLoadReportFrequency()));
-		outXML.add(String.format("%s%sp:assessReportFrequency=\"%s\"/>", shift, shift, this.config.getAssessReportFrequency()));
+		outXML.add(String.format("%s%sp:assessReportFrequency=\"%s\"", shift, shift, this.config.getAssessReportFrequency()));
+		if (this.config.getReporters().size() > 0) outXML.add(String.format("%s%sp:reporters-ref=\"reporters\"/>", shift, shift));
 
 		outXML.add(String.format("%s<!-- import the generic application-context (equal for dedup/match configurations) -->", shift));
 		outXML.add(String.format("%s<import resource=\"classpath*:application-context.xml\"/>", shift));
@@ -97,7 +93,7 @@ public class ConfigurationEngine {
 		return outXML;
 	}
 
-	public void write_to_filesystem () throws IOException {
+	public void write_to_filesystem () throws IOException, IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		// Perform a few checks:
 		// 1. does the working directory exist?
 		File workDir = new File(this.config.getWorkDirPath());

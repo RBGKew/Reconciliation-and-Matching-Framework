@@ -25,19 +25,16 @@ public class Wire implements Comparable<Wire> {
     private String sourceColumnName;
     private String lookupColumnName = "";
 
-    private Boolean useInSelect = false;
-
-    private Boolean useInNegativeSelect = false;
-
-    private Boolean indexLength = false;
-
-    private Boolean blanksMatch = false;
-
-    private Boolean indexOriginal = false;
-
-    private Boolean indexInitial = false;
-
-    private Boolean useWildcard = false;
+    public Boolean useInSelect = false;
+    public Boolean useInNegativeSelect = false;
+    public Boolean indexLength = false;
+    public Boolean blanksMatch = false;
+    public Boolean addOriginalSourceValue = false;
+    public Boolean addOriginalLookupValue = false;
+    public Boolean addTransformedSourceValue = false;
+    public Boolean addTransformedLookupValue = false;
+    public Boolean indexInitial = false;
+    public Boolean useWildcard = false;
 
     @ManyToOne
     private Matcher matcher;

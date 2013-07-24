@@ -1,202 +1,117 @@
 package org.kew.shs.dedupl.lucene;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileReader;
-import java.io.FileWriter;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
-import org.kew.shs.dedupl.DataMatcher;
+import org.kew.shs.dedupl.DataHandler;
 import org.kew.shs.dedupl.configuration.Configuration;
 import org.kew.shs.dedupl.configuration.MatchConfiguration;
 import org.kew.shs.dedupl.configuration.Property;
+import org.kew.shs.dedupl.reporters.LuceneReporter;
 import org.kew.shs.dedupl.transformers.Transformer;
+import org.supercsv.io.CsvMapReader;
+import org.supercsv.prefs.CsvPreference;
 
-/**
- * This is a Lucene implementation of the Deduplicator interface
- * @author nn00kg
- *
- */
-public class LuceneMatcher extends LuceneHandler implements DataMatcher {
+
+public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements DataHandler<MatchConfiguration> {
 
     protected MatchConfiguration matchConfig;
 
-    /**
-     * Type-casting config to matchConfig here, so that all the time a match
-     * config is needed it can be acquired in a cached(ish) way - not sure whether
-     * that's the way to do it..
-     */
-    public MatchConfiguration getMatchConfig() {
-        if (this.matchConfig == null) {
-            this.matchConfig = (MatchConfiguration) this.getConfig();
-        }
-        return this.matchConfig;
-    }
-
     public void loadData() throws Exception{ // from DataMatcher
-        if (!getMatchConfig().isReuseIndex()){
-            this.dataLoader.setConfig(this.getMatchConfig());
-            this.dataLoader.load(this.getMatchConfig().getStoreFile());
+        if (!getConfig().isReuseIndex()){
+            this.dataLoader.setConfig(this.getConfig());
+            this.dataLoader.load(this.getConfig().getStoreFile());
         }
         else
             log.info("Reusing existing index");
     }
 
-    public void run() throws Exception{ // from DataMatcher
+    public void run() throws Exception {
 
-        loadData();
+        this.loadData(); // writes the index according to the configuration
 
-        MatchConfiguration config = this.getMatchConfig();
-        // Read something
         Set<String> alreadyProcessed = new HashSet<String>();
 
+        // TODO: either make quote characters and line break characters configurable or simplify even more?
+        CsvPreference customCsvPref = new CsvPreference.Builder('"', this.getConfig().getSourceFileDelimiter().charAt(0), "\n").build();
         int i = 0;
-        String line = null;
-        try (BufferedReader br = new BufferedReader(new FileReader(config.getSourceFile()))) {
+        try (MatchConfiguration config = this.getConfig();
+             IndexWriter indexWriter = this.indexWriter;
+             CsvMapReader mr = new CsvMapReader(new FileReader(this.getConfig().getSourceFile()), customCsvPref)) {
 
             log.debug(new java.util.Date(System.currentTimeMillis()));
 
-            indexReader = IndexReader.open(directory);
-            IndexSearcher indexSearcher = new IndexSearcher(indexReader);
-
-            BufferedWriter bw = new BufferedWriter(new FileWriter(config.getOutputFile()));
-
-            BufferedWriter bw_report = null;
-            if (config.isWriteComparisonReport())
-                bw_report = new BufferedWriter(new FileWriter(config.getReportFile()));
-
-
-            BufferedWriter bw_delimitedReport = null;
-            if (config.isWriteDelimitedReport())
-                bw_delimitedReport = new BufferedWriter(new FileWriter(config.getDelimitedFile()));
-
-            if (getMatchConfig().isOutputAllMatches())
-                log.debug("Configured to output all matches");
-            else
-                log.debug("Configured to only output top match");
-
+            // Sort properties in order of cost:
+            Collections.sort(config.getProperties(),  new Comparator<Property>() {
+                public int compare(final Property p1,final Property p2) {
+                    return Integer.valueOf(p1.getMatcher().getCost()).compareTo(Integer.valueOf(
+                            p2.getMatcher().getCost()));
+                }
+            });
+            // loop over the sourceFile
             int numMatches = 0;
-            // TODO: fix this using super-csv
-            int numColumns = 0;//LuceneDataLoader.calculateNumberColumns(config.getProperties());
-            int anyMatches = 0;
-
-            while ((line = br.readLine()) != null){
+            final String[] header = mr.getHeader(true);
+            // check whether the header column names fit to the ones specified in the configuration
+            List<String> headerList = Arrays.asList(header);
+            for (String name:this.config.getPropertyNames()) {
+                if (!headerList.contains(name)) throw new Exception(String.format("Header doesn't contain field name < %s > as defined in config.", name));
+            }
+            // same for the id-field
+            String idFieldName = Configuration.ID_FIELD_NAME;
+            if (!headerList.contains(idFieldName)) throw new Exception(String.format("Id field name not found in header, should be %s!", idFieldName));
+            Map<String, String> record;
+            while((record = mr.read(header)) != null) {
 
                 if (i++ % config.getAssessReportFrequency() == 0)
                     log.info("Assessed " + i + " records, found " + numMatches + " matches");
 
-                Map<String,String> map = line2Map(line, numColumns);
-
                 // We now have this record as a hashmap, transformed etc as the data stored in Lucene has been
-                String fromId = map.get(Configuration.ID_FIELD_NAME);
+                String fromId = record.get(Configuration.ID_FIELD_NAME);
 
                 // Keep a record of the records already processed, so as not to return
                 // matches like id1:id2 *and* id2:id1
                 alreadyProcessed.add(fromId);
 
                 // Use the properties to select a set of documents which may contain matches
-                String querystr = LuceneUtils.buildQuery(config.getProperties(), map, false);
+                String querystr = LuceneUtils.buildQuery(config.getProperties(), record, false);
 
-                TopDocs td = queryLucene(querystr, indexSearcher);
+                TopDocs td = queryLucene(querystr, this.getIndexSearcher());
                 log.debug("Found " + td.totalHits + " possibles to assess against " + fromId);
 
-                anyMatches = 0;
+                DocList matches = null;
 
-                SortedMap<Object,String> matches = null;
-                if (getMatchConfig().isOutputAllMatches()){
-                    log.debug("Output all matches");
-                    matches = new TreeMap<Object, String>();
-                }
-                else{
-                    log.debug("Only output top match");
-                    matches = new TreeMap<Object, String>();
-                }
                 for (ScoreDoc sd : td.scoreDocs){
                     Document toDoc = getFromLucene(sd.doc);
                     log.debug(LuceneUtils.doc2String(toDoc));
 
-                    String toId = toDoc.get(Configuration.ID_FIELD_NAME);
-
-                    if (LuceneUtils.recordsMatch(map, toDoc, config.getProperties())){
+                    if (LuceneUtils.recordsMatch(record, toDoc, config.getProperties())){
                         numMatches++;
-                        anyMatches++;
-                        if (getMatchConfig().isOutputAllMatches()){
-                            matches.put(toId, toId);
-                        }
-                        else{
-                            String score = toDoc.get(getMatchConfig().getScoreField());
-                            log.debug("Match score: " + Integer.valueOf(score));
-                            matches.put(Integer.valueOf(score), toId);
-                        }
-                        if (config.isWriteComparisonReport()){
-                            bw_report.write(fromId + config.getOutputFileDelimiter() + toId + "\n");
-                            bw_report.write(LuceneUtils.buildComparisonString(config.getProperties(), map, toDoc));
-                        }
-                        if (config.isWriteDelimitedReport()){
-                            bw_delimitedReport.write(LuceneUtils.buildFullComparisonString(map, toDoc));
-                        }
+                        if (matches == null) {
+                            // TODO: might have to convert the sourceRecord to a Document instead, not sure..
+                            matches = new DocList(toDoc, config.getScoreField());
+                        } else matches.add(toDoc);
                     }
                 }
-                if (getMatchConfig().isOutputAllMatches()){
-                    StringBuffer sb = new StringBuffer();
-                    for (String id : matches.values()){
-                        if (sb.length() > 0)
-                            sb.append(",");
-                        sb.append(id);
-                    }
-                    bw.write(fromId + config.getOutputFileDelimiter() + sb.toString() + "\n");
-                }
-                else{
-                    // only output the highest scoring match
-                    String bestMatchId = null;
-                    if (!matches.isEmpty()){
-                        log.debug("Number of matches: " + matches.size() + ", Last key: " + matches.lastKey());
-                        bestMatchId = matches.get(matches.lastKey());
-                        bw.write(fromId + config.getOutputFileDelimiter() + bestMatchId + "\n");
-                    }
-                    else{
-                        bw.write(fromId + config.getOutputFileDelimiter() + "\n");
-                    }
-                }
-                //Include the non matched records in the delimited report if specified in the config file.
-                if (anyMatches <= 0) {
-                    if (config.isWriteDelimitedReport() && config.isIncludeNonMatchesInDelimitedReport())
-                      bw_delimitedReport.write(LuceneUtils.buildNoMatchDelimitedString(map));
+                matches.sort();
+                // call each reporter that has a say; all they get is a complete list of duplicates for this record.
+                for (LuceneReporter reporter : config.getReporters()) {
+                    // TODO: make idFieldName configurable, but not on reporter level
+                    reporter.setIdFieldName(Configuration.ID_FIELD_NAME);
+                    reporter.report(matches);
                 }
             }
-
-            // Matchers can output a report on their number of executions:
-            for (Property p : config.getProperties()){
-                String executionReport = p.getMatcher().getExecutionReport();
-                if (executionReport != null)
-                    log.debug(p.getMatcher().getExecutionReport());
-            }
-
-            bw.flush();
-            bw.close();
-            if (config.isWriteComparisonReport()){
-                bw_report.flush();
-                bw_report.close();
-            }
-            if (config.isWriteDelimitedReport()){
-                bw_delimitedReport.flush();
-                bw_delimitedReport.close();
-            }
-            indexWriter.close();
-        } catch (Exception e) {
-            log.error("Error on line : " + i + " (" + line + ")");
-            e.printStackTrace();
         }
     }
 

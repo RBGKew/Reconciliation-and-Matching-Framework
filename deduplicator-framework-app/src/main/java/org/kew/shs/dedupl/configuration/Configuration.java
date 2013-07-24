@@ -1,12 +1,12 @@
 package org.kew.shs.dedupl.configuration;
 
 import java.io.File;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
+import org.kew.shs.dedupl.reporters.LuceneReporter;
 
 
-public class Configuration {
+public class Configuration implements AutoCloseable {
 
     private List<Property> properties;
 
@@ -14,10 +14,7 @@ public class Configuration {
     private String sourceFileEncoding = "UTF8";
     private String sourceFileDelimiter;
 
-    private File outputFile;
-    private String outputFileDelimiter;
-    private String outputFileIdDelimiter;
-
+    // TODO: make use of or delete or rename or move to reporters
     private File reportFile;
     private File delimitedFile;
 
@@ -28,7 +25,9 @@ public class Configuration {
     private int loadReportFrequency=50000;
     private int assessReportFrequency=100;
 
-	private boolean reuseIndex;
+    private List<? extends LuceneReporter> reporters;
+
+    private boolean reuseIndex;
 
     public static String ID_FIELD_NAME ="id";
 
@@ -43,6 +42,13 @@ public class Configuration {
         }
         return propertyNames;
     }
+
+    @Override
+    public void close() throws Exception {
+        for (LuceneReporter reporter:this.reporters) reporter.close();
+    }
+
+    // Getters and Setters
     public List<Property> getProperties() {
         return properties;
     }
@@ -60,12 +66,6 @@ public class Configuration {
     }
     public void setSourceFileEncoding(String sourceFileEncoding) {
         this.sourceFileEncoding = sourceFileEncoding;
-    }
-    public File getOutputFile() {
-        return outputFile;
-    }
-    public void setOutputFile(File outputFile) {
-        this.outputFile = outputFile;
     }
     public int getLoadReportFrequency() {
         return loadReportFrequency;
@@ -97,18 +97,6 @@ public class Configuration {
     public void setSourceFileDelimiter(String sourceFileDelimiter) {
         this.sourceFileDelimiter = sourceFileDelimiter;
     }
-    public String getOutputFileDelimiter() {
-        return outputFileDelimiter;
-    }
-    public void setOutputFileDelimiter(String outputFileDelimiter) {
-        this.outputFileDelimiter = outputFileDelimiter;
-    }
-    public String getOutputFileIdDelimiter() {
-        return outputFileIdDelimiter;
-    }
-    public void setOutputFileIdDelimiter(String outputFileIdDelimiter) {
-        this.outputFileIdDelimiter = outputFileIdDelimiter;
-    }
     public boolean isWriteDelimitedReport() {
         return writeDelimitedReport;
     }
@@ -127,10 +115,17 @@ public class Configuration {
     public void setIncludeNonMatchesInDelimitedReport(boolean includeNonMatchesInDelimitedReport) {
         this.includeNonMatchesInDelimitedReport = includeNonMatchesInDelimitedReport;
     }
-	public boolean isReuseIndex() {
-		return reuseIndex;
-	}
-	public void setReuseIndex(boolean reuseIndex) {
-		this.reuseIndex = reuseIndex;
-	}
+    public boolean isReuseIndex() {
+        return reuseIndex;
+    }
+    public void setReuseIndex(boolean reuseIndex) {
+        this.reuseIndex = reuseIndex;
+    }
+    public List<? extends LuceneReporter> getReporters() {
+        return reporters;
+    }
+    public void setReporters(List<? extends LuceneReporter> reporters) {
+        this.reporters = reporters;
+    }
+
 }

@@ -1,6 +1,5 @@
 package org.kew.shs.dedupl.reporters;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -12,9 +11,8 @@ public class LuceneOutputReporter extends LuceneReporter {
 
 	protected static String[] AVAILABLE_FIELDS = new String[] {"ids_in_cluster"};
 
-	public LuceneOutputReporter(File file, String delimiter, String scoreFieldName, String idFieldName)
-			throws IOException {
-		super(file, delimiter, scoreFieldName, idFieldName);
+	public LuceneOutputReporter() {
+		super();
 		log.info("I will be creating an enhanced output file for you with additional fields: " +
 				this.getAvailableFieldsAsString());
 	}

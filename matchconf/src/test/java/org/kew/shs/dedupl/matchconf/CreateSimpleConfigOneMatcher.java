@@ -31,6 +31,7 @@ public class CreateSimpleConfigOneMatcher {
     String secondColName;
     Matcher matcher;
     List<Transformer> transformers;
+    List<Reporter> reporters;
     Configuration config;
 
     @Before
@@ -64,7 +65,7 @@ public class CreateSimpleConfigOneMatcher {
         assert (Configuration.findConfiguration(config.getId()) != null);
     }
 
-    @Given("^he has added the following lookupTransformers$")
+    @Given("^he has added the following sourceTransformers$")
     public void he_has_added_the_following_transformers(DataTable transformerDefTable) throws Throwable {
         List<Transformer> transis = new ArrayList<>();
         for (Map<String,String> transDef:transformerDefTable.asMaps()) {
@@ -103,13 +104,31 @@ public class CreateSimpleConfigOneMatcher {
         wire.setSourceColumnName(this.secondColName);
         wire.setMatcher(this.matcher);
         wire.setConfiguration(config);
-        wire.setLookupTransformers(this.transformers);
+        wire.setSourceTransformers(this.transformers);
         wire.persist();
         assert (Wire.findWire(wire.getId()) != null);
         config.getWiring().add(wire);
         logger.info("config.getWiring(): {}, wire: {}", config.getWiring(), wire);
         // TODO: the following works in STS but not on the command-line, why?
         //assert (config.getWiring().toArray(new Wire[1]).equals(new Wire[] {wire}));
+    }
+
+    @Given("^he has added the following reporters:$")
+        public void he_has_added_the_following_reporters(DataTable reporterDefTable) throws Throwable {
+        List<Reporter> reps = new ArrayList<>();
+        for (Map<String,String> repDef:reporterDefTable.asMaps()) {
+            Reporter rep = new Reporter();
+            rep.setName(repDef.get("name"));
+            rep.setFileName(repDef.get("fileName"));
+            rep.setPackageName(repDef.get("packageName"));
+            rep.setClassName(repDef.get("className"));
+            rep.setParams(repDef.get("params"));
+            rep.setConfig(this.config);
+            rep.persist();
+            reps.add(rep);
+        }
+        config.setReporters(reps);
+        this.reporters = new ArrayList<>(reps);
     }
 
     @When("^he asks to write the configuration out to the filesystem$")

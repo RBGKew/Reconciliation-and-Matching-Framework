@@ -187,3 +187,16 @@ web mvc controller --class Configuration
 // Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-07-23 09:12:23
 // Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-07-23 09:39:57
 // Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-07-23 15:13:54
+// Spring Roo 1.2.5.BUILD-SNAPSHOT [rev 61090d2] log opened at 2013-07-24 14:28:14
+entity jpa --class LuceneReporter
+field string --fieldName name
+field string --fieldName delimiter
+field string --fieldName idDelimiter
+field string --fieldName fileName
+field reference --fieldName config --type Configuration
+field set --fieldName reporters --type ~.LuceneReporter --class ~.Configuration
+web mvc scaffold --class ~.LuceneReporter
+web mvc controller --class ~.CustomLuceneReporterController
+field string --fieldName params --class LuceneReporter
+field string --fieldName packageName
+field string --fieldName className

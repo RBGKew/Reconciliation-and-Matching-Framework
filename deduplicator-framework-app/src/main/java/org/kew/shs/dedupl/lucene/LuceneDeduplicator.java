@@ -6,39 +6,23 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
-import org.kew.shs.dedupl.Deduplicator;
+import org.kew.shs.dedupl.DataHandler;
 import org.kew.shs.dedupl.configuration.Configuration;
 import org.kew.shs.dedupl.configuration.DeduplicationConfiguration;
 import org.kew.shs.dedupl.configuration.Property;
-import org.kew.shs.dedupl.reporters.LuceneOutputReporter;
-import org.kew.shs.dedupl.reporters.LuceneOutputReporterMultiline;
 import org.kew.shs.dedupl.reporters.LuceneReporter;
-import org.kew.shs.dedupl.reporters.Reporter;
 
 
-public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
+public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration> implements DataHandler<DeduplicationConfiguration> {
 
 	protected DeduplicationConfiguration dedupConfig;
 
-	/**
-	 * Type-casting config to matchConfig here, so that all the time a match
-	 * config is needed it can be acquired in a cached(ish) way - not sure whether
-	 * that's the way to do it..
-	 */
-	public DeduplicationConfiguration getDedupConfig() {
-		if (this.dedupConfig == null) {
-			this.dedupConfig = (DeduplicationConfiguration) this.getConfig();
-		}
-		return this.dedupConfig;
-	}
-
-	public void loadData() throws Exception{
-		if (!getDedupConfig().isReuseIndex()){
-			dataLoader.setConfig(this.getDedupConfig());
+	public void loadData() throws Exception {
+		if (!getConfig().isReuseIndex()){
+			dataLoader.setConfig(this.getConfig());
 			dataLoader.load();
 		}
 	}
@@ -47,15 +31,15 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 
 		this.loadData(); // writes the index according to the configuration
 
-		// Read something
 		Set<String> alreadyProcessed = new HashSet<>();
 
 		// TODO: implement autoclose on reporters and use then this nice try (with reporters = ..) way.
 		// 	that would make explicit closing obsolete and would perform better in case sth goes wrong.
-		try {
+		try (DeduplicationConfiguration config = this.getConfig();
+		     IndexWriter indexWriter = this.indexWriter) {
+
 			log.debug(new java.util.Date(System.currentTimeMillis()));
 
-			DeduplicationConfiguration config = this.getDedupConfig();
 			// Sort properties in order of cost:
 			Collections.sort(config.getProperties(),  new Comparator<Property>() {
 				public int compare(final Property p1,final Property p2) {
@@ -63,28 +47,15 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 							p2.getMatcher().getCost()));
 				}
 			});
-
-			// intermediate step: set the reporters here
-			// TODO: define the reporters in the configuration
-			LuceneReporter outputReporter = new LuceneOutputReporter(config.getOutputFile(),
-					config.getOutputFileDelimiter(), config.getScoreFieldName(), Configuration.ID_FIELD_NAME);
-			// for the multiline output we (ab)use the topCopy configuration for now :-|
-			LuceneReporter outputReporterMultiline = new LuceneOutputReporterMultiline(config.getTopCopyFile(),
-					config.getOutputFileDelimiter(), config.getScoreFieldName(), Configuration.ID_FIELD_NAME);
-			this.setReporters(new LuceneReporter[] {outputReporter, outputReporterMultiline});
-
 			// Loop over all documents in index
-			indexReader = IndexReader.open(directory);
-			IndexSearcher indexSearcher = new IndexSearcher(indexReader);
-
 			int numClusters = 0;
 			DocList dupls;
-			for (int i=0; i<indexReader.maxDoc(); i++) {
-				if (indexReader.isDeleted(i)) {
+			for (int i=0; i<this.getIndexReader().maxDoc(); i++) {
+				if (this.getIndexReader().isDeleted(i)) {
 					log.error("this record id appears to be deleted in the index. why??");
 					continue;
 				}
-				if (i % config.getAssessReportFrequency() == 0 || i == indexReader.maxDoc() - 1){
+				if (i % config.getAssessReportFrequency() == 0 || i == this.getIndexReader().maxDoc() - 1){
 					log.info("Assessed " + i + " records, merged to " + (numClusters) + " duplicate clusters");
 				}
 
@@ -104,13 +75,11 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 				// Use the properties to select a set of documents which may contain matches
 				String querystr = LuceneUtils.buildQuery(config.getProperties(), fromDoc, true);
 
-				TopDocs td = queryLucene(querystr, indexSearcher);
+				TopDocs td = queryLucene(querystr, this.getIndexSearcher());
 				log.debug("Found " + td.totalHits + " possibles to assess against " + fromId);
 
-				StringBuffer sb = new StringBuffer();
 				for (ScoreDoc sd : td.scoreDocs){
 					Document toDoc = getFromLucene(sd.doc);
-
 					log.debug(LuceneUtils.doc2String(toDoc));
 
 					String toId = toDoc.get(Configuration.ID_FIELD_NAME);
@@ -121,9 +90,6 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 
 					if (LuceneUtils.recordsMatch(fromDoc, toDoc, config.getProperties())){
 						dupls.add(toDoc);
-						if (sb.length() > 0)
-							sb.append(config.getOutputFileIdDelimiter());
-						sb.append(toId);
 						alreadyProcessed.add(toId);
 					}
 				}
@@ -131,7 +97,9 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 				dupls.sort();
 				numClusters ++;
 				// call each reporter that has a say; all they get is a complete list of duplicates for this record.
-				for (LuceneReporter reporter : this.reporters) {
+				for (LuceneReporter reporter : config.getReporters()) {
+					// TODO: make idFieldName configurable, but not on reporter level
+					reporter.setIdFieldName(Configuration.ID_FIELD_NAME);
 					reporter.report(dupls);
 				}
 			}
@@ -142,15 +110,6 @@ public class LuceneDeduplicator extends LuceneHandler implements Deduplicator {
 				if (executionReport != null)
 					log.debug(p.getMatcher().getExecutionReport());
 			}
-			// make all reporters finish properly (close open files, etc.)
-			for (Reporter reporter : this.reporters) {
-				reporter.finish();
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			indexWriter.close();
 		}
 
 	}

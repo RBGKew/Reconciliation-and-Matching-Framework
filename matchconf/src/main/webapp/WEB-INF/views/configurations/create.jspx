@@ -6,13 +6,10 @@
         <field:input field="workDirPath" id="c_org_kew_shs_dedupl_matchconf_Configuration_workDirPath" z="CXfStjcGuxcfE6dfM+7XqPl9Y10="/>
         <field:input field="packageName" id="c_org_kew_shs_dedupl_matchconf_Configuration_packageName" z="SUZQ124bLC0HVMOBNhuw3N+u+Nc="/>
         <field:input field="className" id="c_org_kew_shs_dedupl_matchconf_Configuration_className" z="igG0PJRHigVdpILEQF3h6uDO17c="/>
-        <field:input field="outputFileDelimiter" id="c_org_kew_shs_dedupl_matchconf_Configuration_outputFileDelimiter" z="yS/lZj9zzO6CNou3RWW/Tg8v1u4="/>
         <field:input field="loadReportFrequency" id="c_org_kew_shs_dedupl_matchconf_Configuration_loadReportFrequency" z="mBoLFpuK1YzFd1H+conojUVjvPo="/>
         <field:input field="assessReportFrequency" id="c_org_kew_shs_dedupl_matchconf_Configuration_assessReportFrequency" z="kUCN8SWATVpCbwc2GZ1jJZy5FMw="/>
         <field:input field="scoreFieldName" id="c_org_kew_shs_dedupl_matchconf_Configuration_scoreFieldName" z="eD+yX69x57/KyHPGWkrevkPRNWw="/>
-        <field:input field="outputFileIdDelimiter" id="c_org_kew_shs_dedupl_matchconf_Configuration_outputFileIdDelimiter" z="fa6tCd4y5AaTbgYxtBTnEzl4kC0="/>
         <field:input field="name" id="c_org_kew_shs_dedupl_matchconf_Configuration_name" z="3vEmBizJ9lnbwGZHjPc2LrnXZUU="/>
-        <field:input field="outputFileNameExtension" id="c_org_kew_shs_dedupl_matchconf_Configuration_outputFileNameExtension" z="0SqR469mCAtDS9uEZw2tf2SXnVs="/>
         <field:simple field="wiring" id="c_org_kew_shs_dedupl_matchconf_Configuration_wiring" messageCode="entity_reference_not_managed" messageCodeAttribute="Wire" z="EEeRR4GWKvEBiYSS+u/qDNpPwBM="/>
         <field:simple field="transformers" id="c_org_kew_shs_dedupl_matchconf_Configuration_transformers" messageCode="entity_reference_not_managed" messageCodeAttribute="Transformer" z="+KP027XP575EYoMNyeKY4xL1VUA="/>
         <field:simple field="matchers" id="c_org_kew_shs_dedupl_matchconf_Configuration_matchers" messageCode="entity_reference_not_managed" messageCodeAttribute="Matcher" z="VHY4i8/EwxndzKMk/xfw6XM0O5o="/>
@@ -22,6 +19,7 @@
         <field:input field="sourceFileDelimiter" id="c_org_kew_shs_dedupl_matchconf_Configuration_sourceFileDelimiter" z="xTUiFAy070C340Xm5+DIXkCFqCI="/>
         <field:input field="lookupFileEncoding" id="c_org_kew_shs_dedupl_matchconf_Configuration_lookupFileEncoding" z="nIW4RKilaNTPUKc9d5nswIsET3g="/>
         <field:input field="lookupFileDelimiter" id="c_org_kew_shs_dedupl_matchconf_Configuration_lookupFileDelimiter" z="wdmGp4zNTXYZTlVaoShLBtxJL7E="/>
+        <field:simple field="reporters" id="c_org_kew_shs_dedupl_matchconf_Configuration_reporters" messageCode="entity_reference_not_managed" messageCodeAttribute="Reporter" z="fcss3mBGR03Ok8XPxKW99yLzIpI="/>
     </form:create>
     <form:dependency dependencies="${dependencies}" id="d_org_kew_shs_dedupl_matchconf_Configuration" render="${not empty dependencies}" z="0C0vyFYOe+A8T8VgmDKsxBtFphQ="/>
 </div>
