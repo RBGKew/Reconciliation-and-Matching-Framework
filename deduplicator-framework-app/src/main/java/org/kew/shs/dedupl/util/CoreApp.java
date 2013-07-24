@@ -11,34 +11,26 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.kew.shs.dedupl.DataHandler;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.support.GenericXmlApplicationContext;
 
 public class CoreApp {
 
-	protected static ClassPathXmlApplicationContext getContext(String[] args, String generalConfig) throws ParseException{
+	public static void main(String[] args) throws Exception {
 
 		// Some arguments possibly want to be picked up from the command-line
 		CommandLine line = getParsedCommandLine(args);
 
-		/* first define the location of the spring context configuration that contains
-		 * the design of the dedup/matching process; this can be overwritten by
-		 * command-line args
-		 */
-		String dataDir = ".";
-		if (line.hasOption("d")) {
-			dataDir = line.getOptionValue("d").trim();
-		}
+		// where is the work directory that contains the design configuration as well
+		// as the data files?
+		String workDir = ".";
+		if (line.hasOption("d")) workDir = line.getOptionValue("d").trim();
+		// the name of the core configuration file that contains the dedup/match design
+		// NOTE this is relative to the working directory
 		String configFileName = "config.xml";
-		if (line.hasOption("c")) {
-			configFileName = line.getOptionValue("c").trim();
-		}
-		System.setProperty("NMT_DATADIR", dataDir);
-		String dedupDesign = "file:" + new File(new File(dataDir), configFileName).toPath();
+		if (line.hasOption("c")) configFileName = line.getOptionValue("c").trim();
+		String dedupDesign = "file:" + new File(new File(workDir), configFileName).toPath();
 
-
-		// This command picks up the Spring config file from the classpath
-		// (the dedup-design config may have a "file:" prefix meaning it's an absolute file system path)
-		return new ClassPathXmlApplicationContext(new String[] {dedupDesign, generalConfig});
+		runEngineAndCache(new GenericXmlApplicationContext(dedupDesign));
 
 	}
 

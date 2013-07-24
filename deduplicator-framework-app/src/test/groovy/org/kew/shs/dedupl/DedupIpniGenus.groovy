@@ -2,7 +2,7 @@ package org.kew.shs.dedupl
 
 import java.nio.file.Files
 
-import org.kew.shs.dedupl.util.DeduplApp
+import org.kew.shs.dedupl.util.CoreApp
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -36,12 +36,12 @@ Given(~'^Rachel has created an input-file to feed the deduplicator framework con
 }
 
 Given(~'^Alecs has set up a genus-dedup configuration file according to her specs:$') { String configXML ->
-	tempConfigFile.toFile().write(configXML.asType(String))
+	tempConfigFile.toFile().write(configXML.asType(String).replaceAll("REPLACE_WITH_TMPDIR", tempDir.toString()))
 }
 
 When(~'^this genus config is run through the Dedupl App$') { ->
 	String[] args = ["-d", tempDir.toString() + "/"]
-	DeduplApp.main(args)
+	CoreApp.main(args)
 }
 
 Then(~'^a file should have been created in the same folder with the following genus data:$') { DataTable expectedOutput ->

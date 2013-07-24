@@ -1,34 +1,34 @@
 # This is a very high-level test with real domain-specific data.
 # It should maybe not live within the application?
 Feature: Deduplicate Ipni
-	As a DataImprover
-	In order to deduplicate Ipni
-	I want the deduplicator framework to do the work for me, I just have to provide a decent configuration.
+    As a DataImprover
+    In order to deduplicate Ipni
+    I want the deduplicator framework to do the work for me, I just have to provide a decent configuration.
 
-	Scenario: Genus level
-		Given Rachel has created an input-file to feed the deduplicator framework containing tab-separated Genus data
-			| id         | family      | genus           | authors     | basionym_author | publishing_author | full_name_without_family_and_authors | publication              | collation     | publication_year | reference_remarks | remarks | std_score | test_concern                                                                                      |
-			| 30022170-2 | Rapateaceae | Saxo-fridericia | R.H.Schomb. |                 | R.H.Schomb.       | Saxo-fridericia                      | Rapatea                  | 13            | 1845             |                   |         | 9         | Does presence of hyphen in genus name prevent clustering                                          |
-			| 1001-1     | Ericaceae   | Leucothoë       | D.Don       |                 | D.Don             | Leucothoë                            | Edinburgh New Philos. J. | 17: 159       | 1834             |                   |         | 9         | Does presence of diacritic character at end of name prevent clustering                            |
-			| 1001-2     | Ericaceae   | Leucothoë       | D.Don       |                 | D.Don             | Leucothoë                            | Edinburgh New Philos. J. | 17: 159       | 1834             |                   |         | 9         | Does presence of diacritic character at end of name prevent clustering                            |
-			| 2001-1     | Ericaceae   | Lëucothoe       | D.Don       |                 | D.Don             | Lëucothoe                            | Edinburgh New Philos. J. | 17: 158       | 1834             |                   |         | 9         | Does presence of diacritic character in middle of name prevent clustering                         |
-			| 2001-2     | Ericaceae   | Lëucothoe       | D.Don       |                 | D.Don             | Lëucothoe                            | Edinburgh New Philos. J. | 17: 158       | 1834             |                   |         | 9         | Does presence of diacritic character in middle of name prevent clustering                         |
-			| 6001-1     | Ericaceae   | Leucothoe       | D.Dön       |                 | D.Dön             | Leucothoe                            | Edinburgh New Philos. J. | 16: 158       | 1834             |                   |         | 9         | Does presence of diacritic character in middle of author prevent clustering                       |
-			| 6001-2     | Ericaceae   | Leucothoe       | D.Dön       |                 | D.Dön             | Leucothoe                            | Edinburgh New Philos. J. | 16: 158       | 1834             |                   |         | 9         | Does presence of diacritic character in middle of author prevent clustering                       |
-			| 7001-1     | Ericaceae   | Leucothoe       | D.Donë      |                 | D.Donë            | Leucothoe                            | Edinburgh New Philos. J. | 15: 158       | 1834             |                   |         | 9         | Does presence of diacritic character at end of author prevent clustering                          |
-			| 7001-2     | Ericaceae   | Leucothoe       | D.Donë      |                 | D.Donë            | Leucothoe                            | Edinburgh New Philos. J. | 15: 158       | 1834             |                   |         | 9         | Does presence of diacritic character at end of author prevent clustering                          |
-			| 33288-1    | Rapateaceae | Saxo-fridericia | R.H.Schomb. |                 | R.H.Schomb.       | Saxo-fridericia                      | Rapatea                  | 13            | 1845             |                   |         | 8         | Does presence of hyphen in genus name prevent clustering                                          |
-			| 28674-1    | Orchidaceae | Amphorchis      | Thouars     |                 | Thouars           | Amphorchis                           | Hist. Orchid.            | Tabl. Synopt. | 1822             |                   |         | 8         | Does absence of numerical characters in genus name prevent clustering                             |
-			| 3001-1     | Orchidaceae | × Amphorchis    | Thouars     |                 | Thouars           | × Amphorchis                         | Hist. Orchid.            | 211           | 1822             |                   |         | 8         | Does presence of multiplication sign and whitespace at start of genus name prevent clustering     |
-			| 3001-2     | Orchidaceae | × Amphorchis    | Thouars     |                 | Thouars           | × Amphorchis                         | Hist. Orchid.            | 211           | 1822             |                   |         | 8         | Does presence of multiplication sign and whitespace at start of genus name prevent clustering     |
-			| 4001-1     | Orchidaceae | ×Amphorchis     | Thouars     |                 | Thouars           | ×Amphorchis                          | Hist. Orchid.            | 56            | 1822             |                   |         | 8         | Does presence of multiplication sign without whitespace at start of genus name prevent clustering |
-			| 4001-2     | Orchidaceae | ×Amphorchis     | Thouars     |                 | Thouars           | ×Amphorchis                          | Hist. Orchid.            | 56            | 1822             |                   |         | 8         | Does presence of multiplication sign without whitespace at start of genus name prevent clustering |
-			| 5001-1     | Orchidaceae | X Amphorchis    | Thouars     |                 | Thouars           | X Amphorchis                         | Hist. Orchid.            | 11            | 1822             |                   |         | 8         | Does presence of capital letter X at start of name prevent clustering                             |
-			| 5001-2     | Orchidaceae | X Amphorchis    | Thouars     |                 | Thouars           | X Amphorchis                         | Hist. Orchid.            | 11            | 1822             |                   |         | 8         | Does presence of capital letter X at start of name prevent clustering                             |
-			| 9999-1     | Rapateaceae | Saxo-fridericia | R.H.Schomb. |                 | R.H.Schomb.       | Saxo-fridericia                      | Rapatea                  | 13            | 1845             |                   |         | 7         | Does presence of hyphen in genus name prevent clustering                                          |
-			| 28675-1    | Orchidaceae | Amphorchis      | Thouars     |                 | Thouars           | Amphorchis                           | Hist. Orchid.            | Tabl. Synopt. | 1822             |                   |         | 7         | Does absence of numerical characters in genus name prevent clustering                             |
+    Scenario: Genus level
+        Given Rachel has created an input-file to feed the deduplicator framework containing tab-separated Genus data
+            | id         | family      | genus           | authors     | basionym_author | publishing_author | full_name_without_family_and_authors | publication              | collation     | publication_year | reference_remarks | remarks | std_score | test_concern                                                                                      |
+            | 30022170-2 | Rapateaceae | Saxo-fridericia | R.H.Schomb. |                 | R.H.Schomb.       | Saxo-fridericia                      | Rapatea                  | 13            | 1845             |                   |         | 9         | Does presence of hyphen in genus name prevent clustering                                          |
+            | 1001-1     | Ericaceae   | Leucothoë       | D.Don       |                 | D.Don             | Leucothoë                            | Edinburgh New Philos. J. | 17: 159       | 1834             |                   |         | 9         | Does presence of diacritic character at end of name prevent clustering                            |
+            | 1001-2     | Ericaceae   | Leucothoë       | D.Don       |                 | D.Don             | Leucothoë                            | Edinburgh New Philos. J. | 17: 159       | 1834             |                   |         | 9         | Does presence of diacritic character at end of name prevent clustering                            |
+            | 2001-1     | Ericaceae   | Lëucothoe       | D.Don       |                 | D.Don             | Lëucothoe                            | Edinburgh New Philos. J. | 17: 158       | 1834             |                   |         | 9         | Does presence of diacritic character in middle of name prevent clustering                         |
+            | 2001-2     | Ericaceae   | Lëucothoe       | D.Don       |                 | D.Don             | Lëucothoe                            | Edinburgh New Philos. J. | 17: 158       | 1834             |                   |         | 9         | Does presence of diacritic character in middle of name prevent clustering                         |
+            | 6001-1     | Ericaceae   | Leucothoe       | D.Dön       |                 | D.Dön             | Leucothoe                            | Edinburgh New Philos. J. | 16: 158       | 1834             |                   |         | 9         | Does presence of diacritic character in middle of author prevent clustering                       |
+            | 6001-2     | Ericaceae   | Leucothoe       | D.Dön       |                 | D.Dön             | Leucothoe                            | Edinburgh New Philos. J. | 16: 158       | 1834             |                   |         | 9         | Does presence of diacritic character in middle of author prevent clustering                       |
+            | 7001-1     | Ericaceae   | Leucothoe       | D.Donë      |                 | D.Donë            | Leucothoe                            | Edinburgh New Philos. J. | 15: 158       | 1834             |                   |         | 9         | Does presence of diacritic character at end of author prevent clustering                          |
+            | 7001-2     | Ericaceae   | Leucothoe       | D.Donë      |                 | D.Donë            | Leucothoe                            | Edinburgh New Philos. J. | 15: 158       | 1834             |                   |         | 9         | Does presence of diacritic character at end of author prevent clustering                          |
+            | 33288-1    | Rapateaceae | Saxo-fridericia | R.H.Schomb. |                 | R.H.Schomb.       | Saxo-fridericia                      | Rapatea                  | 13            | 1845             |                   |         | 8         | Does presence of hyphen in genus name prevent clustering                                          |
+            | 28674-1    | Orchidaceae | Amphorchis      | Thouars     |                 | Thouars           | Amphorchis                           | Hist. Orchid.            | Tabl. Synopt. | 1822             |                   |         | 8         | Does absence of numerical characters in genus name prevent clustering                             |
+            | 3001-1     | Orchidaceae | × Amphorchis    | Thouars     |                 | Thouars           | × Amphorchis                         | Hist. Orchid.            | 211           | 1822             |                   |         | 8         | Does presence of multiplication sign and whitespace at start of genus name prevent clustering     |
+            | 3001-2     | Orchidaceae | × Amphorchis    | Thouars     |                 | Thouars           | × Amphorchis                         | Hist. Orchid.            | 211           | 1822             |                   |         | 8         | Does presence of multiplication sign and whitespace at start of genus name prevent clustering     |
+            | 4001-1     | Orchidaceae | ×Amphorchis     | Thouars     |                 | Thouars           | ×Amphorchis                          | Hist. Orchid.            | 56            | 1822             |                   |         | 8         | Does presence of multiplication sign without whitespace at start of genus name prevent clustering |
+            | 4001-2     | Orchidaceae | ×Amphorchis     | Thouars     |                 | Thouars           | ×Amphorchis                          | Hist. Orchid.            | 56            | 1822             |                   |         | 8         | Does presence of multiplication sign without whitespace at start of genus name prevent clustering |
+            | 5001-1     | Orchidaceae | X Amphorchis    | Thouars     |                 | Thouars           | X Amphorchis                         | Hist. Orchid.            | 11            | 1822             |                   |         | 8         | Does presence of capital letter X at start of name prevent clustering                             |
+            | 5001-2     | Orchidaceae | X Amphorchis    | Thouars     |                 | Thouars           | X Amphorchis                         | Hist. Orchid.            | 11            | 1822             |                   |         | 8         | Does presence of capital letter X at start of name prevent clustering                             |
+            | 9999-1     | Rapateaceae | Saxo-fridericia | R.H.Schomb. |                 | R.H.Schomb.       | Saxo-fridericia                      | Rapatea                  | 13            | 1845             |                   |         | 7         | Does presence of hyphen in genus name prevent clustering                                          |
+            | 28675-1    | Orchidaceae | Amphorchis      | Thouars     |                 | Thouars           | Amphorchis                           | Hist. Orchid.            | Tabl. Synopt. | 1822             |                   |         | 7         | Does absence of numerical characters in genus name prevent clustering                             |
 
-		And Alecs has set up a genus-dedup configuration file according to her specs:
+        And Alecs has set up a genus-dedup configuration file according to her specs:
             """
             <?xml version="1.0" encoding="UTF-8"?>
             <beans xmlns="http://www.springframework.org/schema/beans"
@@ -49,16 +49,16 @@ Feature: Deduplicate Ipni
                     <constructor-arg value="target/deduplicator"/>
                 </bean>
                 <bean id="inputfile" class="java.io.File">
-                    <constructor-arg value="${NMT_DATADIR}/input.txt" />
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/input.txt" />
                 </bean>
                 <bean id="outputfile" class="java.io.File">
-                    <constructor-arg value="${NMT_DATADIR}/output.txt" />
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/output.txt" />
                 </bean>
                 <bean id="reportfile" class="java.io.File">
-                    <constructor-arg value="${NMT_DATADIR}/REPLACE_REPORTFILE" />
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/REPLACE_REPORTFILE" />
                 </bean>
                 <bean id="topcopyfile" class="java.io.File">
-                    <constructor-arg value="${NMT_DATADIR}/REPLACE_TOPCOPYFILE" />
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/REPLACE_TOPCOPYFILE" />
                 </bean>
                 <bean id="exactMatcher" class="org.kew.shs.dedupl.matchers.ExactMatcher" />
                 <bean id="authorCommonTokensMatcher" class="org.kew.shs.dedupl.matchers.AuthorCommonTokensMatcher"
@@ -197,10 +197,16 @@ Feature: Deduplicate Ipni
                     p:reportFile-ref="reportfile"
                     p:topCopyFile-ref="topcopyfile"
                     p:scoreFieldName="std_score"/>
+
+                <!-- import the generic application-context (equal for dedup/match configurations) -->
+                <import resource="classpath*:application-context.xml"/>
+                <!-- add the deduplication-specific bit -->
+                <import resource="classpath*:application-context-dedup.xml"/>
+
             </beans>
             """
-		When this genus config is run through the Dedupl App
-		Then a file should have been created in the same folder with the following genus data:
+        When this genus config is run through the Dedupl App
+        Then a file should have been created in the same folder with the following genus data:
             | id         | family      | genus_orig      | genus           | genus_length | genus_init | basionym_author | publishing_author_orig | publishing_author | full_name_without_family_and_authors | publication              | collation_orig | collation     | publication_year | reference_remarks | remarks | std_score | test_concern                                                                                      | cluster_size | from_id    | ids_in_cluster                  |
             | 30022170-2 | Rapateaceae | Saxo-fridericia | Saxo fridericia | 15           | S          |                 | R.H.Schomb.            | R H Schomb        | Saxo-fridericia                      | Rapatea                  | 13             | 13            | 1845             |                   |         | 9         | Does presence of hyphen in genus name prevent clustering                                          | 3            | 30022170-2 | 30022170-2 \| 33288-1 \| 9999-1 |
             | 1001-1     | Ericaceae   | Leucothoë       | Leucothoe       | 09           | L          |                 | D.Don                  | D Don             | Leucothoë                            | Edinburgh New Philos J   | 17: 159        | 17 159        | 1834             |                   |         | 9         | Does presence of diacritic character at end of name prevent clustering                            | 2            | 1001-1     | 1001-1 \| 1001-2                |
@@ -213,8 +219,8 @@ Feature: Deduplicate Ipni
             | 5001-1     | Orchidaceae | X Amphorchis    | Amphorchis      | 10           | A          |                 | Thouars                | Thouars           | X Amphorchis                         | Hist Orchid              | 11             | 11            | 1822             |                   |         | 8         | Does presence of capital letter X at start of name prevent clustering                             | 2            | 5001-1     | 5001-1 \| 5001-2                |
 
 
-	Scenario: Species level
-		Given Eszter has created an input-file to feed the deduplicator framework containing tab-separated Species data
+    Scenario: Species level
+        Given Eszter has created an input-file to feed the deduplicator framework containing tab-separated Species data
             |         id |          family |       genus |  rank | basionym_author |                   publishing_author | full_name_without_family_and_authors |                       publication |            collation | publication_year | reference_remarks |             remarks | std_score |      dit_family |                                                                                                                                           test_concern |
             |   307089-2 |        Fabaceae |    Baptisia | spec. |                 | Kosnik, Diggs, Redshaw & Lipscomb   |                Baptisia × variicolor |                              Sida |              17: 498 |             1996 |                   |                     |        13 |     Leguminosae |                                                  Does presence of multiplication sign and whitespace between genus and species name prevent clustering |
             |   300547-2 |     Orchidaceae |    Barkeria | spec. |                 |                         Soto Arenas |         Barkeria fritz-halbingeriana |            Orquidea (Mexico City) | 13: 245 (-246; fig.) |             1993 |                   |                     |        13 |     Orchidaceae |                                                                                          Does presence of hyphen in species epithet prevent clustering |
@@ -243,7 +249,7 @@ Feature: Deduplicate Ipni
             |   331017-1 |       Ericaceae |   Leucothoë | spec. |                 |                             Sleumer |                 Leucothoë columbiana | Notizbl. Bot. Gart. Berlin-Dahlem |              12: 479 |             1935 |                   |                     |         9 |       Ericaceae |                                                                           Does presence of diacritic character at end of genus name prevent clustering |
             | 17542760-1 | Dryopteridaceae | Dryostichum | spec. |                 |                          W.H.Wagner |              × Dryostichum singulare |                    Canad. J. Bot. |    70(2): 248 (1992) |                0 |                   |                     |         8 | Dryopteridaceae |                                                          Does presence of multiplication sign and whitespace at start of genus name prevent clustering |
 
-		And Alecs has set up a species-dedup configuration file in the same folder according to her specs:
+        And Alecs has set up a species-dedup configuration file in the same folder according to her specs:
             """
             <?xml version="1.0" encoding="UTF-8"?>
             <beans xmlns="http://www.springframework.org/schema/beans"
@@ -264,16 +270,16 @@ Feature: Deduplicate Ipni
                     <constructor-arg value="target/deduplicator"/>
                 </bean>
                 <bean id="inputfile" class="java.io.File">
-                    <constructor-arg value="${NMT_DATADIR}/input.txt" />
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/input.txt" />
                 </bean>
                 <bean id="outputfile" class="java.io.File">
-                    <constructor-arg value="${NMT_DATADIR}/output.txt" />
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/output.txt" />
                 </bean>
                 <bean id="reportfile" class="java.io.File">
-                    <constructor-arg value="${NMT_DATADIR}/REPLACE_REPORTFILE" />
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/REPLACE_REPORTFILE" />
                 </bean>
                 <bean id="topcopyfile" class="java.io.File">
-                    <constructor-arg value="${NMT_DATADIR}/REPLACE_TOPCOPYFILE" />
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/REPLACE_TOPCOPYFILE" />
                 </bean>
                 <bean id="exactMatcher" class="org.kew.shs.dedupl.matchers.ExactMatcher" />
                 <bean id="authorCommonTokensMatcher" class="org.kew.shs.dedupl.matchers.AuthorCommonTokensMatcher"
@@ -359,7 +365,7 @@ Feature: Deduplicate Ipni
                         <property name="matcher" ref="capitalLettersMatcher"/>
                         <property name="lookupTransformers">
                             <util:list id="1">
-		                        <ref bean="safeStripNonAlphaNumericsTransformer"/>
+                                <ref bean="safeStripNonAlphaNumericsTransformer"/>
                             </util:list>
                         </property>
                         <property name="blanksMatch" value="true"/>
@@ -368,7 +374,7 @@ Feature: Deduplicate Ipni
                         <property name="name" value="collation"/>
                         <property name="lookupTransformers">
                             <util:list id="1">
-		                        <ref bean="collationCleaner"/>
+                                <ref bean="collationCleaner"/>
                             </util:list>
                         </property>
                         <property name="matcher" ref="numberMatcher"/>
@@ -379,9 +385,9 @@ Feature: Deduplicate Ipni
                         <property name="name" value="publication_year"/>
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
                         <property name="blanksMatch" value="true" />
-						<property name="lookupTransformers">
+                        <property name="lookupTransformers">
                             <util:list id="1">
-		                        <ref bean="collationCleaner"/>
+                                <ref bean="collationCleaner"/>
                             </util:list>
                         </property>
                     </bean>
@@ -418,10 +424,16 @@ Feature: Deduplicate Ipni
                     p:reportFile-ref="reportfile"
                     p:topCopyFile-ref="topcopyfile"
                     p:scoreFieldName="std_score"/>
+
+                <!-- import the generic application-context (equal for dedup/match configurations) -->
+                <import resource="classpath*:application-context.xml"/>
+                <!-- add the deduplication-specific bit -->
+                <import resource="classpath*:application-context-dedup.xml"/>
+
             </beans>
             """
-		When this species config is run through the Dedupl App
-		Then a file should have been created in the same folder with the following species data:
+        When this species config is run through the Dedupl App
+        Then a file should have been created in the same folder with the following species data:
             |       id |          family |  genus_orig |       genus | genus_length | genus_init | basionym_author |                   publishing_author_orig |             publishing_author | full_name_without_family_and_authors_orig | full_name_without_family_and_authors |                    publication |       collation_orig |      collation | publication_year | reference_remarks |             remarks | std_score |      dit_family | cluster_size |  from_id |                           ids_in_cluster |
             | 307089-2 |        Fabaceae |    Baptisia |    Baptisia |           08 |          B |                 |      Kosnik, Diggs, Redshaw & Lipscomb   | Kosnik Diggs Redshaw Lipscomb |                     Baptisia × variicolor |                  Baptisia variicolor |                           Sida |              17: 498 |         17 498 |             1996 |                   |                     |        13 |     Leguminosae |            2 | 307089-2 |                     307089-2 \| 993921-1 |
             | 300547-2 |     Orchidaceae |    Barkeria |    Barkeria |           08 |          B |                 |                              Soto Arenas |                   Soto Arenas |              Barkeria fritz-halbingeriana |         Barkeria fritz halbingeriana |           Orquidea Mexico City | 13: 245 (-246; fig.) | 13 245 246 fig |             1993 |                   |                     |        13 |     Orchidaceae |            2 | 300547-2 |                     300547-2 \| 312304-2 |

@@ -6,13 +6,11 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
-import org.kew.shs.dedupl.util.DeduplApp;
+import org.kew.shs.dedupl.util.CoreApp;
 
 public class ConfigurationEngine {
 	
@@ -88,6 +86,12 @@ public class ConfigurationEngine {
 		outXML.add(String.format("%s%sp:outputFileIdDelimiter=\"%s\"", shift, shift, this.config.getOutputFileIdDelimiter()));
 		outXML.add(String.format("%s%sp:loadReportFrequency=\"%s\"", shift, shift, this.config.getLoadReportFrequency()));
 		outXML.add(String.format("%s%sp:assessReportFrequency=\"%s\"/>", shift, shift, this.config.getAssessReportFrequency()));
+
+		outXML.add(String.format("%s<!-- import the generic application-context (equal for dedup/match configurations) -->", shift));
+		outXML.add(String.format("%s<import resource=\"classpath*:application-context.xml\"/>", shift));
+		outXML.add(String.format("%s<!-- add the deduplication-specific bit -->", shift));
+		outXML.add(String.format("%s<import resource=\"classpath*:application-context-dedup.xml\"/>", shift));
+
 		outXML.add("</beans>");
 		
 		return outXML;
@@ -120,7 +124,7 @@ public class ConfigurationEngine {
 	public void runConfiguration () throws Exception {
 		File workDir = new File(this.config.getWorkDirPath());
 		assert workDir.exists();
-		DeduplApp.main(new String[] {"-d " + workDir.toString(), "-c config_" + this.config.getName() + ".xml"});
+		CoreApp.main(new String[] {"-d " + workDir.toString(), "-c config_" + this.config.getName() + ".xml"});
 	}
 
 }

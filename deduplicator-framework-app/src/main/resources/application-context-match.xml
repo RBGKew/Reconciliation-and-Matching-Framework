@@ -4,13 +4,6 @@
 	xmlns:p="http://www.springframework.org/schema/p"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
 
-	<import resource="application-context.xml"/>
-
-	<!-- This defines a LuceneMatcher, and passes in some Lucene-specific object
-	references (defined above) and the match configuration ("config").
-	Note that the Matcher depends on the dataLoader. This means that
-	the dataLoader class is instantiated and any initialisation is done *before*
-	the instantiation of this class. -->
 	<bean id="engine" class="org.kew.shs.dedupl.lucene.LuceneMatcher"
 		p:dataLoader-ref="dataLoader"
 		p:luceneVersion-ref="LUCENE_VERSION"

@@ -6,10 +6,10 @@ Feature: Create a simple configuration
     Scenario: DedupConf, one column, one matcher, one composite-transformer with two transformers, rest default values
         Given Alecs has a file containing data in two columns, ("id_col", "data_col") in a directory "some_path"
         And he has created a new configuration:
-            | name             | workDirPath |
+            | name          | workDirPath |
             | simple-config | some_path   |
         And he has added the following lookupTransformers
-            | name                  | packageName                        | className               | params |
+            | name               | packageName                     | className                     | params |
             | 02BlankTransformer | org.kew.shs.dedupl.transformers | ZeroToBlankTransformer        |        |
             | anotherTransformer | org.kew.shs.dedupl.transformers | SafeStripNonAlphasTransformer |        |
         And he has added a matcher for the second column:
@@ -81,5 +81,9 @@ Feature: Create a simple configuration
                     p:outputFileIdDelimiter="|"
                     p:loadReportFrequency="50000"
                     p:assessReportFrequency="100"/>
+                <!-- import the generic application-context (equal for dedup/match configurations) -->
+                <import resource="classpath*:application-context.xml"/>
+                <!-- add the deduplication-specific bit -->
+                <import resource="classpath*:application-context-dedup.xml"/>
             </beans>
             """

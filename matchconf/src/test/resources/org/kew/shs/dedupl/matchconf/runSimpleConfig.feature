@@ -64,6 +64,12 @@ Feature: run a simple configuration
                     p:outputFileIdDelimiter="|"
                     p:loadReportFrequency="50000"
                     p:assessReportFrequency="100"/>
+
+                <!-- import the generic application-context (equal for dedup/match configurations) -->
+                <import resource="classpath*:application-context.xml"/>
+                <!-- add the deduplication-specific bit -->
+                <import resource="classpath*:application-context-dedup.xml"/>
+
             </beans>
             """
         And some mysterious data-improver has put a file "source.tsv" in the same directory containing the following data:
