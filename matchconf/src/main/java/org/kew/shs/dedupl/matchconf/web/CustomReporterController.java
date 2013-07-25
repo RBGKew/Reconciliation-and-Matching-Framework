@@ -24,7 +24,7 @@ public class CustomReporterController {
    @RequestMapping(value="/{configType}_configs/{configName}/reporters", params = "form", produces = "text/html")
     public String createForm(@PathVariable("configType") String configType, @PathVariable("configName") String configName, Model uiModel) {
         populateEditForm(uiModel, configName, new Reporter());
-        return String.format("%s_config_reporters/create", configType);
+        return "config_reporters/create";
     }
 
     // Default Post
@@ -37,7 +37,7 @@ public class CustomReporterController {
         this.customValidation(configName, reporter, bindingResult);
         if (bindingResult.hasErrors()) {
             populateEditForm(uiModel, configName, reporter);
-            return String.format("%s_config_reporters/create", configType);
+            return "config_reporters/create";
         }
         uiModel.asMap().clear();
         Configuration config = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
@@ -56,7 +56,7 @@ public class CustomReporterController {
         uiModel.addAttribute("itemId", reporter.getName());
         uiModel.addAttribute("configName", configName);
         uiModel.addAttribute("transformers", reporter.getConfig().getTransformers());
-        return String.format("%s_config_reporters/show", configType);
+        return "config_reporters/show";
     }
 
     @RequestMapping(value="/{configType}_configs/{configName}/reporters", produces = "text/html")
@@ -72,7 +72,7 @@ public class CustomReporterController {
             uiModel.addAttribute("reporters", reporters);
         }
         uiModel.addAttribute("configName", configName);
-        return String.format("%s_config_reporters/list", ConfigSwitch.getTypeForUrl(configName));
+        return "config_reporters/list";
     }
 
     @RequestMapping(value="/{configType}_configs/{configName}/reporters", method = RequestMethod.PUT, produces = "text/html")
@@ -92,7 +92,7 @@ public class CustomReporterController {
     public String updateForm(@PathVariable("configType") String configType, @PathVariable("configName") String configName, @PathVariable("reporterName") String reporterName, Model uiModel) {
         Reporter reporter = Configuration.findConfigurationsByNameEquals(configName).getSingleResult().getReporterForName(reporterName);
         populateEditForm(uiModel, configName, reporter);
-        return String.format("%s_config_reporters/update", configType);
+        return "config_reporters/update";
     }
 
     @RequestMapping(value="/{configType}_configs/{configName}/reporters/{reporterName}", method = RequestMethod.DELETE, produces = "text/html")
@@ -106,11 +106,8 @@ public class CustomReporterController {
     }
 
     void populateEditForm(Model uiModel, String configName, Reporter reporter) {
-        Configuration config = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
         uiModel.addAttribute("reporter", reporter);
         uiModel.addAttribute("configName", configName);
-        uiModel.addAttribute("matchers", config.getMatchers());
-        uiModel.addAttribute("transformers", config.getTransformers());
     }
 
     String encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {

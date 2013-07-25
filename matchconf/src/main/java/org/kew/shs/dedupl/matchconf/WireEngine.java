@@ -26,7 +26,10 @@ public class WireEngine {
         }
         ArrayList<String> outXML = new ArrayList<String>();
         outXML.add(String.format("%s<bean class=\"org.kew.shs.dedupl.configuration.Property\"", indent));
-        outXML.add(String.format("%s%sp:name=\"%s\"", indent, shift, this.wire.getName()));
+        outXML.add(String.format("%s%sp:sourceColumnName=\"%s\"", indent, shift, this.wire.getSourceColumnName()));
+        if (this.wire.getLookupColumnName().length() > 0) {
+	        outXML.add(String.format("%s%sp:lookupColumnName=\"%s\"", indent, shift, this.wire.getLookupColumnName()));
+        }
 
         // all boolean attributes default to false and we only want to write them if they are set to true
         for (String attr:this.defaultFalseList) {

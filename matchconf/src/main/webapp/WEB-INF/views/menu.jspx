@@ -27,5 +27,9 @@
             <menu:item id="i_matcher_new" messageCode="global_menu_new" url="/matchers?form" z="GA9mNp+vNXH6cNwUvU+JVGqovWc="/>
             <menu:item id="i_matcher_list" messageCode="global_menu_list" url="/matchers?page=1&amp;size=${empty param.size ? 10 : param.size}" z="ZWx9y9di4UT7tZRj7dlPztdkPuQ="/>
         </menu:category>
+        <menu:category id="c_reporter" z="Yvv4fHnqTVZ0Id4SZMdspdeI/GI=">
+            <menu:item id="i_reporter_new" messageCode="global_menu_new" url="/reporters?form" z="6OYEURR0cP6RHWTUEoNVMPSkjVA="/>
+            <menu:item id="i_reporter_list" messageCode="global_menu_list" url="/reporters?page=1&amp;size=${empty param.size ? 10 : param.size}" z="fPBycxm31P18D1N8O5+22dnA7og="/>
+        </menu:category>
     </menu:menu>
 </div>

@@ -14,10 +14,6 @@
         <field:display field="lookupFileEncoding" id="s_org_kew_shs_dedupl_matchconf_Configuration_lookupFileEncoding" object="${configuration}" z="KVyZkxujx0RUYwN234g83IooD0g="/>
         <field:display field="lookupFileDelimiter" id="s_org_kew_shs_dedupl_matchconf_Configuration_lookupFileDelimiter" object="${configuration}" z="AbZ4kL1ZnHrnyPx1pV2ooeK5Mok="/>
 
-        <field:display field="outputFileDelimiter" id="s_org_kew_shs_dedupl_matchconf_Configuration_outputFileDelimiter" object="${configuration}" z="+/WbCGBhlhz6hQNh/DLvdrcRLjo="/>
-        <field:display field="outputFileIdDelimiter" id="s_org_kew_shs_dedupl_matchconf_Configuration_outputFileIdDelimiter" object="${configuration}" z="ZcD5HNKAHkPLEtoUJOXezj5OwBA="/>
-        <field:display field="outputFileNameExtension" id="s_org_kew_shs_dedupl_matchconf_Configuration_outputFileNameExtension" object="${configuration}" z="Wf+dUzV7vYEmJm/q6KqDNfzoDTc="/>
-
         <field:display field="loadReportFrequency" id="s_org_kew_shs_dedupl_matchconf_Configuration_loadReportFrequency" object="${configuration}" z="RSH+9fdTXVUzBfZxJV4GzM0UbNQ="/>
         <field:display field="assessReportFrequency" id="s_org_kew_shs_dedupl_matchconf_Configuration_assessReportFrequency" object="${configuration}" z="lIGD5HwFdtwp6WS1d0DS+KEvOE0="/>
 
@@ -26,6 +22,7 @@
         <field:display field="wiring" id="s_org_kew_shs_dedupl_matchconf_Configuration_wiring" object="${configuration}" z="fWSJpXexHLvrLM5Mc2e9lpYagy4="/>
         <field:display field="transformers" id="s_org_kew_shs_dedupl_matchconf_Configuration_transformers" object="${configuration}" z=""/>
         <field:display field="matchers" id="s_org_kew_shs_dedupl_matchconf_Configuration_matchers" object="${configuration}" z=""/>
+        <field:display field="reporters" id="s_org_kew_shs_dedupl_matchconf_Configuration_reporters" object="${configuration}" z=""/>
     </page:show>
 
 </div>

@@ -40,4 +40,23 @@ public class Transformer extends Bot {
         return this.getName();
     }
 
+    public Transformer clone(Configuration config) {
+        Transformer transformer = config.getTransformerForName(this.name);
+        if (transformer != null) return transformer;
+        transformer = new Transformer();
+        // first the string attributes and manytoones
+        transformer.setName(this.name);
+        transformer.setPackageName(this.packageName);
+        transformer.setClassName(this.className);
+        transformer.setParams(this.params);
+        transformer.setConfiguration(config);
+        transformer.persist();
+        // then the relational attributes
+        for (Transformer component:this.composedBy) {
+            component.clone(config);
+            transformer.getComposedBy().add(component);
+        }
+        transformer.merge();
+        return transformer;
+    }
 }

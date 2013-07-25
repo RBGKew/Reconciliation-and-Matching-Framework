@@ -1,6 +1,6 @@
 Feature: run a simple configuration
     Scenario: run the configuration as set up by createSimpleConfig step
-        Given Alecs has set up a simple Configuration resulting in the following config "config_simple-config.xml" written to "REPLACE_WITH_TMPDIR/some_path":
+        Given Alecs has set up a simple Configuration resulting in the following config "config_simple-config-to-run.xml" written to "REPLACE_WITH_TMPDIR/some_path":
             """
             <?xml version="1.0" encoding="UTF-8"?>
             <beans xmlns="http://www.springframework.org/schema/beans"
@@ -51,7 +51,7 @@ Feature: run a simple configuration
                 </util:list>
                 <util:list id="columnProperties">
                     <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="data_col"
+                        p:sourceColumnName="data_col"
                         p:useInSelect="true"
                         p:matcher-ref="matchExactly">
                         <property name="sourceTransformers">

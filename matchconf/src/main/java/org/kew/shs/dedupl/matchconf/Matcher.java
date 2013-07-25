@@ -41,4 +41,24 @@ public class Matcher extends Bot {
         return this.getName();
     }
 
+    public Matcher clone(Configuration config) {
+        Matcher matcher = config.getMatcherForName(this.name);
+        if (matcher != null) return matcher;
+        matcher = new Matcher();
+        // first the string attributes and manytoones
+        matcher.setName(this.name);
+        matcher.setPackageName(this.packageName);
+        matcher.setClassName(this.className);
+        matcher.setParams(this.params);
+        matcher.setConfiguration(config);
+        matcher.persist();
+        // then the relational attributes
+        for (Matcher component:this.composedBy) {
+            component.clone(config);
+            matcher.getComposedBy().add(component);
+        }
+        matcher.merge();
+        return matcher;
+    }
+
 }

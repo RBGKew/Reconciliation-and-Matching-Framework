@@ -63,4 +63,31 @@ public class Wire implements Comparable<Wire> {
         return this.getName();
     }
 
+    public Wire clone(Configuration config) {
+        Wire wire = new Wire();
+        wire.setSourceColumnName(sourceColumnName);
+        wire.setLookupColumnName(lookupColumnName);
+        wire.setUseInSelect(useInSelect);
+        wire.setUseInNegativeSelect(useInNegativeSelect);
+        wire.setIndexLength(indexLength);
+        wire.setBlanksMatch(blanksMatch);
+        wire.setAddOriginalSourceValue(addOriginalSourceValue);
+        wire.setAddOriginalLookupValue(addOriginalLookupValue);
+        wire.setAddTransformedSourceValue(addTransformedSourceValue);
+        wire.setAddTransformedLookupValue(addTransformedLookupValue);
+        wire.setIndexInitial(indexInitial);
+        wire.setUseWildcard(useWildcard);
+        wire.setConfiguration(config);
+        wire.setMatcher(matcher);
+        // then the relational attributes; they have already been created before,
+        // (in Configuration.clone(), here we only add them to the wire
+        for (Transformer trans:this.getSourceTransformers()) {
+            wire.getSourceTransformers().add(config.getTransformerForName(trans.getName()));
+        }
+        for (Transformer trans:this.getLookupTransformers()) {
+            wire.getLookupTransformers().add(config.getTransformerForName(trans.getName()));
+        }
+        wire.persist();
+        return wire;
+    }
 }

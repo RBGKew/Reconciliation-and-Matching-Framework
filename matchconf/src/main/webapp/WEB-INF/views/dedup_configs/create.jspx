@@ -10,10 +10,6 @@
         <field:input field="sourceFileEncoding" id="c_org_kew_shs_dedupl_matchconf_Configuration_sourceFileEncoding" z="oZk6RExiWZ0ZK/O9Z7gyzq45Qs0="/>
         <field:input field="sourceFileDelimiter" id="c_org_kew_shs_dedupl_matchconf_Configuration_sourceFileDelimiter" z="xTUiFAy070C340Xm5+DIXkCFqCI="/>
 
-        <field:input field="outputFileDelimiter" id="c_org_kew_shs_dedupl_matchconf_Configuration_outputFileDelimiter" z="yS/lZj9zzO6CNou3RWW/Tg8v1u4="/>
-        <field:input field="outputFileIdDelimiter" id="c_org_kew_shs_dedupl_matchconf_Configuration_outputFileIdDelimiter" z="fa6tCd4y5AaTbgYxtBTnEzl4kC0="/>
-        <field:input field="outputFileNameExtension" id="c_org_kew_shs_dedupl_matchconf_Configuration_outputFileNameExtension" z="0SqR469mCAtDS9uEZw2tf2SXnVs="/>
-
         <field:input field="loadReportFrequency" id="c_org_kew_shs_dedupl_matchconf_Configuration_loadReportFrequency" z="mBoLFpuK1YzFd1H+conojUVjvPo="/>
         <field:input field="assessReportFrequency" id="c_org_kew_shs_dedupl_matchconf_Configuration_assessReportFrequency" z="kUCN8SWATVpCbwc2GZ1jJZy5FMw="/>
 

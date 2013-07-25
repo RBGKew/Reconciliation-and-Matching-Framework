@@ -35,10 +35,18 @@ public class Configuration implements AutoCloseable {
     public static final String ORIGINAL_SUFFIX="_orig";
     public static final String INITIAL_SUFFIX="_init";
 
-    public String[] getPropertyNames() {
+    public String[] getPropertySourceColumnNames() {
         String[] propertyNames = new String[this.getProperties().size()];
         for (int i=0;i<propertyNames.length;i++) {
-            propertyNames[i] = (this.getProperties().get(i).getName());
+            propertyNames[i] = (this.getProperties().get(i).getSourceColumnName());
+        }
+        return propertyNames;
+    }
+
+    public String[] getPropertyLookupColumnNames() {
+        String[] propertyNames = new String[this.getProperties().size()];
+        for (int i=0;i<propertyNames.length;i++) {
+            propertyNames[i] = (this.getProperties().get(i).getLookupColumnName());
         }
         return propertyNames;
     }

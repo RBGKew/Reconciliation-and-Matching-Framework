@@ -34,7 +34,7 @@ public class ReporterEngine {
         outXML.set(outXML.size()-1, outXML.get(outXML.size()-1) + ">");
         outXML.add(String.format("%s%s<property name=\"file\">", indent, shift, this.reporter.getIdDelimiter()));
         outXML.add(String.format("%s%s%s<bean class=\"java.io.File\">", indent, shift, shift, this.reporter.getIdDelimiter()));
-        outXML.add(String.format("%s%s%s%s<constructor-arg value=\"%s/%s\" />", indent, shift, shift, shift, this.reporter.getConfig().getWorkDirPath(), this.reporter.getFileName()));
+        outXML.add(String.format("%s%s%s%s<constructor-arg value=\"%s/%s_%s\" />", indent, shift, shift, shift, this.reporter.getConfig().getWorkDirPath(), this.reporter.getConfig().getName(), this.reporter.getFileName()));
         outXML.add(String.format("%s%s%s</bean>", indent, shift, shift, this.reporter.getIdDelimiter()));
         outXML.add(String.format("%s%s</property>", indent, shift));
         outXML.add(String.format("%s</bean>", indent));

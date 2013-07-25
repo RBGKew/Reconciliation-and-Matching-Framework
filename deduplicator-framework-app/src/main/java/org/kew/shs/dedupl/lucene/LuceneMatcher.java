@@ -65,7 +65,7 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
             final String[] header = mr.getHeader(true);
             // check whether the header column names fit to the ones specified in the configuration
             List<String> headerList = Arrays.asList(header);
-            for (String name:this.config.getPropertyNames()) {
+            for (String name:this.config.getPropertyLookupColumnNames()) {
                 if (!headerList.contains(name)) throw new Exception(String.format("Header doesn't contain field name < %s > as defined in config.", name));
             }
             // same for the id-field
@@ -124,24 +124,24 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
             String value = "hallo";//elem[p.getColumnIndex()];
             // Save original value if required
             if (p.isIndexOriginal())
-                map.put(p.getName() + Configuration.ORIGINAL_SUFFIX,value);
+                map.put(p.getLookupColumnName() + Configuration.ORIGINAL_SUFFIX,value);
                     // Transform the value if necessary
             for (Transformer t:p.getSourceTransformers()) {
                 value = t.transform(value);
             }
             // Save into map
-            map.put(p.getName(),value);
+            map.put(p.getLookupColumnName(),value);
             // Save length if required
             if (p.isIndexLength()){
                 int length = 0;
                 if (value != null)
                     length = value.length();
-                map.put(p.getName() + Configuration.LENGTH_SUFFIX,String.format("%02d", length));
+                map.put(p.getLookupColumnName() + Configuration.LENGTH_SUFFIX,String.format("%02d", length));
             }
             if (p.isIndexInitial()){
                 String init = "";
                 if (StringUtils.isNotBlank(value)) init = value.substring(0,1);
-                map.put(p.getName() + Configuration.INITIAL_SUFFIX, init);
+                map.put(p.getLookupColumnName() + Configuration.INITIAL_SUFFIX, init);
             }
         }
         return map;

@@ -45,7 +45,7 @@ public class RunSimpleConfigOneMatcher {
 	public void Alecs_has_set_up_a_simple_Configuration_resulting_in_the_following_config_written_to_(String configFileName, String workDirPath, String configXML) throws Throwable {
 		this.workDir = new File(workDirPath.replaceAll("REPLACE_WITH_TMPDIR", tempDir.toString()));
 		Configuration config = new Configuration();
-		config.setName("simple-config");
+		config.setName("simple-config-to-run");
 		config.setWorkDirPath(this.workDir.toString());
 		config.persist();
 		this.configId = config.getId();

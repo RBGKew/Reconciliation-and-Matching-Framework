@@ -2,12 +2,11 @@
 <div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
+
+    <div id="config-link">for ${ configType }-configuration: <a href="/MatchConf/${ configType }_configs/${ configName }">${ configName }</a></div> <br/>
+
     <page:list id="pl_org_kew_shs_dedupl_matchconf_Wire" items="${wires}" z="pHrV9Tymv8NNGMuYBinlVKivNx0=">
-
-        <br/> <div id="config-link">for ${ configType }-configuration: <a href="/MatchConf/${ configType }_configs/${ configName }">${ configName }</a></div> <br/>
-
         <table:table data="${wires}" id="l_org_kew_shs_dedupl_matchconf_Wire" path="/${configType}_configs/${ configName }/wires" z="mh2j7So59pSqUM85yfvMnKf4ikg=">
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Wire_lookupColumnName" property="lookupColumnName" z="xfV5khLKbl5Lrptz+43XBha4lKA="/>
             <table:column id="c_org_kew_shs_dedupl_matchconf_Wire_sourceColumnName" property="sourceColumnName" z="o9aOfxdG6KdwAlKLRTId59kDy1c="/>
             <table:column id="c_org_kew_shs_dedupl_matchconf_Wire_useInSelect" property="useInSelect" z="kKh1sMas76ryBoMW2eh+14ZiorA="/>
             <table:column id="c_org_kew_shs_dedupl_matchconf_Wire_useInNegativeSelect" property="useInNegativeSelect" z="OQfgJg+TKrRVzZ8I7l1UkBC+ObA="/>

@@ -15,5 +15,4 @@ public class TransformerController {
         uiModel.addAttribute("transformer", transformer);
         uiModel.addAttribute("transformers", Transformer.findAllTransformers());
     }
-    
 }

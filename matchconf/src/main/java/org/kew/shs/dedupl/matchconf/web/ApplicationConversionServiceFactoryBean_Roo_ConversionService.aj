@@ -5,6 +5,7 @@ package org.kew.shs.dedupl.matchconf.web;
 
 import org.kew.shs.dedupl.matchconf.Configuration;
 import org.kew.shs.dedupl.matchconf.Matcher;
+import org.kew.shs.dedupl.matchconf.Reporter;
 import org.kew.shs.dedupl.matchconf.Transformer;
 import org.kew.shs.dedupl.matchconf.Wire;
 import org.kew.shs.dedupl.matchconf.web.ApplicationConversionServiceFactoryBean;
@@ -64,6 +65,30 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
         };
     }
     
+    public Converter<Reporter, String> ApplicationConversionServiceFactoryBean.getReporterToStringConverter() {
+        return new org.springframework.core.convert.converter.Converter<org.kew.shs.dedupl.matchconf.Reporter, java.lang.String>() {
+            public String convert(Reporter reporter) {
+                return new StringBuilder().append(reporter.getName()).append(' ').append(reporter.getDelimiter()).append(' ').append(reporter.getIdDelimiter()).append(' ').append(reporter.getFileName()).toString();
+            }
+        };
+    }
+    
+    public Converter<Long, Reporter> ApplicationConversionServiceFactoryBean.getIdToReporterConverter() {
+        return new org.springframework.core.convert.converter.Converter<java.lang.Long, org.kew.shs.dedupl.matchconf.Reporter>() {
+            public org.kew.shs.dedupl.matchconf.Reporter convert(java.lang.Long id) {
+                return Reporter.findReporter(id);
+            }
+        };
+    }
+    
+    public Converter<String, Reporter> ApplicationConversionServiceFactoryBean.getStringToReporterConverter() {
+        return new org.springframework.core.convert.converter.Converter<java.lang.String, org.kew.shs.dedupl.matchconf.Reporter>() {
+            public org.kew.shs.dedupl.matchconf.Reporter convert(String id) {
+                return getObject().convert(getObject().convert(id, Long.class), Reporter.class);
+            }
+        };
+    }
+    
     public Converter<Transformer, String> ApplicationConversionServiceFactoryBean.getTransformerToStringConverter() {
         return new org.springframework.core.convert.converter.Converter<org.kew.shs.dedupl.matchconf.Transformer, java.lang.String>() {
             public String convert(Transformer transformer) {
@@ -119,6 +144,9 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
         registry.addConverter(getMatcherToStringConverter());
         registry.addConverter(getIdToMatcherConverter());
         registry.addConverter(getStringToMatcherConverter());
+        registry.addConverter(getReporterToStringConverter());
+        registry.addConverter(getIdToReporterConverter());
+        registry.addConverter(getStringToReporterConverter());
         registry.addConverter(getTransformerToStringConverter());
         registry.addConverter(getIdToTransformerConverter());
         registry.addConverter(getStringToTransformerConverter());

@@ -55,7 +55,7 @@ Feature: Create a simple configuration
                         p:idDelimiter="|">
                         <property name="file">
                             <bean class="java.io.File">
-                                <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/output.tsv" />
+                                <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/simple-config_output.tsv" />
                             </bean>
                         </property>
                     </bean>
@@ -65,14 +65,14 @@ Feature: Create a simple configuration
                         p:idDelimiter="|">
                         <property name="file">
                             <bean class="java.io.File">
-                                <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/output_multiline.tsv" />
+                                <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/simple-config_output_multiline.tsv" />
                             </bean>
                         </property>
                     </bean>
                 </util:list>
                 <util:list id="columnProperties">
                     <bean class="org.kew.shs.dedupl.configuration.Property"
-                        p:name="data_col_"
+                        p:sourceColumnName="data_col"
                         p:matcher-ref="matchExactly">
                         <property name="sourceTransformers">
                             <util:list id="1">

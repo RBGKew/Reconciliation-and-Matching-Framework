@@ -92,12 +92,12 @@ Feature: Deduplicate Ipni
                 </util:list>
                 <util:list id="columnProperties">
                     <bean class="org.kew.shs.dedupl.configuration.Property">
-                        <property name="name" value="family"/>
+                        <property name="sourceColumnName" value="family"/>
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
                         <property name="useInSelect" value="false"/>
                     </bean>
                     <bean class="org.kew.shs.dedupl.configuration.Property">
-                        <property name="name" value="genus"/>
+                        <property name="sourceColumnName" value="genus"/>
                         <property name="matcher" ref="exactMatcher"/>
                         <property name="sourceTransformers">
                             <util:list id="1">
@@ -111,7 +111,7 @@ Feature: Deduplicate Ipni
                         <property name="addOriginalSourceValue" value="true"/>
                     </bean>
                     <bean class="org.kew.shs.dedupl.configuration.Property">
-                        <property name="name" value="basionym_author"/>
+                        <property name="sourceColumnName" value="basionym_author"/>
                         <property name="matcher" ref="authorCommonTokensMatcher"/>
                         <property name="sourceTransformers">
                             <util:list id="1">
@@ -121,7 +121,7 @@ Feature: Deduplicate Ipni
                         <property name="blanksMatch" value="true"/>
                     </bean>
                     <bean class="org.kew.shs.dedupl.configuration.Property">
-                        <property name="name" value="publishing_author"/>
+                        <property name="sourceColumnName" value="publishing_author"/>
                         <property name="sourceTransformers">
                             <util:list id="1">
                                 <ref bean="safeStripNonAlphasTransformer"/>
@@ -131,12 +131,12 @@ Feature: Deduplicate Ipni
                         <property name="addOriginalSourceValue" value="true"/>
                     </bean>
                     <bean class="org.kew.shs.dedupl.configuration.Property">
-                        <property name="name" value="full_name_without_family_and_authors"/>
+                        <property name="sourceColumnName" value="full_name_without_family_and_authors"/>
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
                         <property name="useInSelect" value="false"/>
                     </bean>
                     <bean class="org.kew.shs.dedupl.configuration.Property">
-                        <property name="name" value="publication"/>
+                        <property name="sourceColumnName" value="publication"/>
                         <property name="matcher" ref="capitalLettersMatcher"/>
                         <property name="sourceTransformers">
                             <util:list id="1">
@@ -146,7 +146,7 @@ Feature: Deduplicate Ipni
                         <property name="blanksMatch" value="true"/>
                     </bean>
                     <bean class="org.kew.shs.dedupl.configuration.Property">
-                        <property name="name" value="collation"/>
+                        <property name="sourceColumnName" value="collation"/>
 
                         <property name="sourceTransformers">
                             <util:list id="1">
@@ -158,7 +158,7 @@ Feature: Deduplicate Ipni
                         <property name="blanksMatch" value="true"/>
                     </bean>
                     <bean class="org.kew.shs.dedupl.configuration.Property">
-                        <property name="name" value="publication_year"/>
+                        <property name="sourceColumnName" value="publication_year"/>
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
                         <property name="blanksMatch" value="true"/>
                         <property name="sourceTransformers">
@@ -168,22 +168,22 @@ Feature: Deduplicate Ipni
                         </property>
                     </bean>
                     <bean class="org.kew.shs.dedupl.configuration.Property">
-                        <property name="name" value="reference_remarks"/>
+                        <property name="sourceColumnName" value="reference_remarks"/>
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
                         <property name="useInSelect" value="false"/>
                     </bean>
                     <bean class="org.kew.shs.dedupl.configuration.Property">
-                        <property name="name" value="remarks"/>
+                        <property name="sourceColumnName" value="remarks"/>
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
                         <property name="useInSelect" value="false"/>
                     </bean>
                     <bean class="org.kew.shs.dedupl.configuration.Property">
-                        <property name="name" value="std_score"/>
+                        <property name="sourceColumnName" value="std_score"/>
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
                         <property name="useInSelect" value="false"/>
                     </bean>
                     <bean class="org.kew.shs.dedupl.configuration.Property">
-                        <property name="name" value="test_concern"/>
+                        <property name="sourceColumnName" value="test_concern"/>
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
                         <property name="useInSelect" value="false"/>
                     </bean>
@@ -310,12 +310,12 @@ Feature: Deduplicate Ipni
                 </util:list>
                 <util:list id="columnProperties">
                     <bean class="org.kew.shs.dedupl.configuration.Property">
-                        <property name="name" value="family" />
+                        <property name="sourceColumnName" value="family" />
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
                         <property name="useInSelect" value="false"/>
                     </bean>
                     <bean class="org.kew.shs.dedupl.configuration.Property">
-                        <property name="name" value="genus"/>
+                        <property name="sourceColumnName" value="genus"/>
                         <property name="matcher" ref="exactMatcher"/>
                         <property name="sourceTransformers">
                             <util:list id="1">
@@ -329,7 +329,7 @@ Feature: Deduplicate Ipni
                         <property name="addOriginalSourceValue" value="true"/>
                     </bean>
                     <bean class="org.kew.shs.dedupl.configuration.Property">
-                        <property name="name" value="basionym_author"/>
+                        <property name="sourceColumnName" value="basionym_author"/>
                         <property name="matcher" ref="authorCommonTokensMatcher"/>
                         <property name="sourceTransformers">
                             <util:list id="1">
@@ -339,7 +339,7 @@ Feature: Deduplicate Ipni
                         <property name="blanksMatch" value="true"/>
                     </bean>
                     <bean class="org.kew.shs.dedupl.configuration.Property">
-                        <property name="name" value="publishing_author"/>
+                        <property name="sourceColumnName" value="publishing_author"/>
                         <property name="sourceTransformers">
                             <util:list id="1">
                                 <ref bean="safeStripNonAlphasTransformer"/>
@@ -349,7 +349,7 @@ Feature: Deduplicate Ipni
                         <property name="addOriginalSourceValue" value="true"/>
                     </bean>
                     <bean class="org.kew.shs.dedupl.configuration.Property">
-                        <property name="name" value="full_name_without_family_and_authors"/>
+                        <property name="sourceColumnName" value="full_name_without_family_and_authors"/>
                         <property name="matcher" ref="exactMatcher"/>
                         <property name="sourceTransformers">
                             <util:list id="1">
@@ -361,7 +361,7 @@ Feature: Deduplicate Ipni
                         <property name="useInSelect" value="true"/>
                     </bean>
                     <bean class="org.kew.shs.dedupl.configuration.Property">
-                        <property name="name" value="publication"/>
+                        <property name="sourceColumnName" value="publication"/>
                         <property name="matcher" ref="capitalLettersMatcher"/>
                         <property name="sourceTransformers">
                             <util:list id="1">
@@ -371,7 +371,7 @@ Feature: Deduplicate Ipni
                         <property name="blanksMatch" value="true"/>
                     </bean>
                     <bean class="org.kew.shs.dedupl.configuration.Property">
-                        <property name="name" value="collation"/>
+                        <property name="sourceColumnName" value="collation"/>
                         <property name="sourceTransformers">
                             <util:list id="1">
                                 <ref bean="collationCleaner"/>
@@ -382,7 +382,7 @@ Feature: Deduplicate Ipni
                         <property name="blanksMatch" value="true"/>
                     </bean>
                     <bean class="org.kew.shs.dedupl.configuration.Property">
-                        <property name="name" value="publication_year"/>
+                        <property name="sourceColumnName" value="publication_year"/>
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
                         <property name="blanksMatch" value="true" />
                         <property name="sourceTransformers">
@@ -392,22 +392,22 @@ Feature: Deduplicate Ipni
                         </property>
                     </bean>
                     <bean class="org.kew.shs.dedupl.configuration.Property">
-                        <property name="name" value="reference_remarks"/>
+                        <property name="sourceColumnName" value="reference_remarks"/>
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
                         <property name="useInSelect" value="false"/>
                     </bean>
                     <bean class="org.kew.shs.dedupl.configuration.Property">
-                        <property name="name" value="remarks"/>
+                        <property name="sourceColumnName" value="remarks"/>
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
                         <property name="useInSelect" value="false"/>
                     </bean>
                     <bean class="org.kew.shs.dedupl.configuration.Property">
-                        <property name="name" value="std_score"/>
+                        <property name="sourceColumnName" value="std_score"/>
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
                         <property name="useInSelect" value="false"/>
                     </bean>
                     <bean class="org.kew.shs.dedupl.configuration.Property">
-                        <property name="name" value="dit_family"/>
+                        <property name="sourceColumnName" value="dit_family"/>
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
                         <property name="useInSelect" value="false"/>
                     </bean>

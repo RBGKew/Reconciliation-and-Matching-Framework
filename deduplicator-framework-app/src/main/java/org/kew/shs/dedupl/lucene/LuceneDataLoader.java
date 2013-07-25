@@ -52,6 +52,7 @@ public class LuceneDataLoader implements DataLoader {
             p.setLookupTransformers(p.getSourceTransformers());
             p.setAddOriginalLookupValue(p.isAddOriginalSourceValue());
             p.setAddTransformedLookupValue(p.isAddTransformedSourceValue());
+            p.setLookupColumnName(p.getSourceColumnName());
         }
         this.load(this.getConfig().getSourceFile());
     }
@@ -64,7 +65,7 @@ public class LuceneDataLoader implements DataLoader {
             final String[] header = mr.getHeader(true);
             // check whether the header column names fit to the ones specified in the configuration
             List<String> headerList = Arrays.asList(header);
-            for (String name:this.config.getPropertyNames()) {
+            for (String name:this.config.getPropertySourceColumnNames()) {
                 if (!headerList.contains(name)) throw new Exception(String.format("Header doesn't contain field name < %s > as defined in config.", name));
             }
             // same for the id-field
@@ -87,13 +88,13 @@ public class LuceneDataLoader implements DataLoader {
         doc.add(new Field(idFieldName, record.get(idFieldName), Field.Store.YES,Field.Index.ANALYZED));
         // The remainder of the columns are added as specified in the properties
         for (Property p : this.config.getProperties()) {
-            String value = record.get(p.getName());
+            String value = record.get(p.getSourceColumnName());
             // super-csv treats blank as null, we don't for now
             value = (value != null) ? value: "";
 
             if (p.isAddOriginalLookupValue()) {
                 // Index the value in its original state, pre transformation..
-                Field f1 = new Field(p.getName() + Configuration.ORIGINAL_SUFFIX, value, Field.Store.YES,Field.Index.ANALYZED);
+                Field f1 = new Field(p.getSourceColumnName() + Configuration.ORIGINAL_SUFFIX, value, Field.Store.YES,Field.Index.ANALYZED);
                 doc.add(f1);
             }
             // ..*then* transform the value if necessary..
@@ -101,7 +102,7 @@ public class LuceneDataLoader implements DataLoader {
                 value = t.transform(value);
             }
             //.. and add this one in any case to the index
-            Field f = new Field(p.getName(), value, Field.Store.YES,Field.Index.ANALYZED);
+            Field f = new Field(p.getSourceColumnName(), value, Field.Store.YES,Field.Index.ANALYZED);
             doc.add(f);
 
             // For some fields (those which will be passed into a fuzzy matcher like Levenshtein), we index the length
@@ -109,11 +110,11 @@ public class LuceneDataLoader implements DataLoader {
                 int length = 0;
                 if (value != null)
                     length = value.length();
-                Field fl = new Field(p.getName() + Configuration.LENGTH_SUFFIX, String.format("%02d", length), Field.Store.YES,Field.Index.ANALYZED);
+                Field fl = new Field(p.getSourceColumnName() + Configuration.LENGTH_SUFFIX, String.format("%02d", length), Field.Store.YES,Field.Index.ANALYZED);
                 doc.add(fl);
             }
             if (p.isIndexInitial() & StringUtils.isNotBlank(value)){
-                Field finit = new Field(p.getName() + Configuration.INITIAL_SUFFIX, value.substring(0, 1), Field.Store.YES,Field.Index.ANALYZED);
+                Field finit = new Field(p.getSourceColumnName() + Configuration.INITIAL_SUFFIX, value.substring(0, 1), Field.Store.YES,Field.Index.ANALYZED);
                 doc.add(finit);
             }
         }

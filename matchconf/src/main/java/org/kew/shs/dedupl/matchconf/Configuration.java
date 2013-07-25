@@ -9,7 +9,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.Table;
 import javax.persistence.TypedQuery;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
@@ -20,31 +22,24 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord(finders = { "findConfigurationsByNameEquals" })
-public class Configuration {
+@Table(uniqueConstraints=@UniqueConstraint(columnNames={"name"}))
+public class Configuration implements Cloneable {
 
     private String name;
-
     private String workDirPath;
-
     private String sourceFileName = "source.tsv";
-
     private String sourceFileEncoding = "UTF8";
-
     private String sourceFileDelimiter = "&#09;";
 
     // lookupFileName being populated decides over being a MatchConfig
     private String lookupFileName = "";
-
     private String lookupFileEncoding = "UTF8";
-
     private String lookupFileDelimiter = "&#09;";
 
     private String packageName = "org.kew.shs.dedupl.configuration";
-
     private String className = "DeduplicationConfiguration";
 
     private String loadReportFrequency = "50000";
-
     private String assessReportFrequency = "100";
 
     private String scoreFieldName = "id";
@@ -60,7 +55,49 @@ public class Configuration {
     private List<Matcher> matchers = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Reporter> reporters = new ArrayList<Reporter>();
+    private List<Reporter> reporters = new ArrayList<>();
+
+    public Configuration clone () {
+        Configuration config = new Configuration();
+        // first the string attributes
+        String newName = "copy-of_" + this.name;
+        while (Configuration.findConfigurationsByNameEquals(newName).getResultList().size() > 0) {
+            newName = "copy-of_" + newName;
+        }
+        config.setName(newName);
+        config.setWorkDirPath(this.workDirPath);
+        config.setSourceFileName(this.sourceFileName);
+        config.setSourceFileDelimiter(this.sourceFileDelimiter);
+        config.setSourceFileEncoding(this.sourceFileEncoding);
+        config.setLookupFileName(this.lookupFileName);
+        config.setLookupFileDelimiter(this.lookupFileDelimiter);
+        config.setLookupFileEncoding(this.lookupFileEncoding);
+        config.setPackageName(this.packageName);
+        config.setClassName(this.className);
+        config.setLoadReportFrequency(this.loadReportFrequency);
+        config.setAssessReportFrequency(this.assessReportFrequency);
+        config.setScoreFieldName(this.scoreFieldName);
+        config.persist();
+        // then the relational attributes
+        for (Transformer transformer:this.transformers) {
+            Transformer transClone = transformer.clone(config);
+            config.getTransformers().add(transClone);
+        }
+        for (Matcher matcher:this.matchers) {
+            Matcher matcherClone = matcher.clone(config);
+            config.getMatchers().add(matcherClone);
+        }
+        for (Reporter reporter:this.reporters) {
+            Reporter reporterClone = reporter.clone(config);
+            config.getReporters().add(reporterClone);
+        }
+        for (Wire wire:this.wiring) {
+            Wire wireClone = wire.clone(config);
+            config.getWiring().add(wireClone);
+        }
+        config.merge();
+        return config;
+    }
 
     @PrePersist
     @PreUpdate

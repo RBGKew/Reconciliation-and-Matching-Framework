@@ -8,7 +8,7 @@
  	<parent>
 		<artifactId>deduplicator-framework</artifactId>
 		<groupId>org.kew.shs.dedupl</groupId>
-		<version>0.1-SNAPSHOT</version>
+		<version>0.2-SNAPSHOT</version>
 	</parent>
 
 	<dependencies>

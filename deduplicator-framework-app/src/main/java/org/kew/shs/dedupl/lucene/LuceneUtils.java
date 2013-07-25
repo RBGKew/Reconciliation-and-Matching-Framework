@@ -71,7 +71,7 @@ public class LuceneUtils {
 	public static String buildComparisonString(List<Property> properties, Map<String,String> map1, Map<String,String> map2, String prefix){
 		StringBuffer sb = new StringBuffer();
 		for (Property p : properties){
-			String key = p.getName();
+			String key = p.getLookupColumnName();
 			if (!key.equals(Configuration.ID_FIELD_NAME)){
 				String v1 = map1.get(key);
 				String v2 = map2.get(key);
@@ -146,34 +146,34 @@ public class LuceneUtils {
 		}
 		for (Property p : properties){
 			if (p.isUseInSelect() || p.isUseInNegativeSelect()) {
-				String value = map.get(p.getName()).toString();
+				String value = map.get(p.getSourceColumnName()).toString();
 				String quotedValue = "\"" + value + "\"";
 				if (p.isUseInSelect()){
 					if (StringUtils.isNotBlank(value)){
 						if(p.getMatcher().isExact()){
 							if (sb.length() > 0) sb.append(" AND ");
-							sb.append(p.getName() + ":" + quotedValue);
+							sb.append(p.getLookupColumnName() + ":" + quotedValue);
 						}
 						if (p.isIndexLength()){
 							int low = Math.max(0, value.length()-2);
 							int high = value.length()+2;
 							if (sb.length() > 0) sb.append(" AND ");
-							sb.append(" ").append(p.getName() + Configuration.LENGTH_SUFFIX + ":[").append(String.format("%02d", low)).append(" TO ").append(String.format("%02d", high)).append("]");
+							sb.append(" ").append(p.getLookupColumnName() + Configuration.LENGTH_SUFFIX + ":[").append(String.format("%02d", low)).append(" TO ").append(String.format("%02d", high)).append("]");
 						}
 						if (p.isIndexInitial()){
 							if (sb.length() > 0) sb.append(" AND ");
-							sb.append(p.getName() + Configuration.INITIAL_SUFFIX).append(":").append(quotedValue.substring(0, 2) + "\"");
+							sb.append(p.getLookupColumnName() + Configuration.INITIAL_SUFFIX).append(":").append(quotedValue.substring(0, 2) + "\"");
 						}
 						if (p.isUseWildcard()){
 							if (sb.length() > 0) sb.append(" AND ");
-							sb.append(p.getName()).append(":").append(quotedValue.subSequence(0, quotedValue.length()-1)).append("~0.5\"");
+							sb.append(p.getLookupColumnName()).append(":").append(quotedValue.subSequence(0, quotedValue.length()-1)).append("~0.5\"");
 						}
 					}
 				}
 				else {
 					if (StringUtils.isNotBlank(value)){
 						if (sb.length() > 0) sb.append(" AND ");
-							sb.append(" NOT " + p.getName() + ":" + quotedValue);
+							sb.append(" NOT " + p.getLookupColumnName() + ":" + quotedValue);
 					}
 				}
 			}
@@ -190,13 +190,13 @@ public class LuceneUtils {
 		boolean recordMatch = false;
 		log.debug("Comparing records: " + from.get(Configuration.ID_FIELD_NAME) + " " + to.get(Configuration.ID_FIELD_NAME));
 		for (Property p : properties){
-			String s1 = from.get(p.getName());
-			String s2 = to.get(p.getName());
+			String s1 = from.get(p.getSourceColumnName());
+			String s2 = to.get(p.getLookupColumnName());
 			boolean fieldMatch = false;
 			if (p.isBlanksMatch()){
 				fieldMatch = (StringUtils.isBlank(s1) || StringUtils.isBlank(s2));
 				if (fieldMatch){
-					log.debug(p.getName() + ": blanks match");
+					log.debug(p.getSourceColumnName() + ": blanks match");
 				}
 			}
 			if (!fieldMatch){
@@ -208,10 +208,7 @@ public class LuceneUtils {
 				log.debug(s[0] + " : " + s[1] + " : " + fieldMatch);
 			}
 			recordMatch = fieldMatch;
-			if (!recordMatch){
-				log.debug("failed on " + p.getName());
-				break;
-			}
+			if (!recordMatch) log.debug("failed on " + p.getSourceColumnName());
 		}
 		return recordMatch;
 	}

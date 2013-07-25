@@ -9,6 +9,7 @@
   <jsp:directive.attribute name="create" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Include 'create' link into table (default true)" />
   <jsp:directive.attribute name="update" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Include 'update' link into table (default true)" />
   <jsp:directive.attribute name="delete" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Include 'delete' link into table (default true)" />
+  <jsp:directive.attribute name="clone" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Include 'clone' link into table (default true)" />
   <jsp:directive.attribute name="render" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Indicate if the contents of this tag and all enclosed tags should be rendered (default 'true')" />
   <jsp:directive.attribute name="z" type="java.lang.String" required="false" description="Used for checking if element has been modified (to recalculate simply provide empty string value)" />
 
@@ -33,6 +34,10 @@
 
     <c:if test="${empty delete}">
       <c:set var="delete" value="true" />
+    </c:if>
+
+    <c:if test="${empty clone}">
+      <c:set var="clone" value="true" />
     </c:if>
 
     <spring:message var="typeName" code="menu_item_${fn:toLowerCase(fn:split(id,'_')[fn:length(fn:split(id,'_')) - 1])}_new_label" htmlEscape="false" />
@@ -134,6 +139,18 @@
               </form:form>
             </td>
           </c:if>
+
+          <c:if test='${item.getClass().toString().split(" ")[1].equals("org.kew.shs.dedupl.matchconf.Configuration")}'>
+            <td class="utilbox">
+              <spring:url value="${path}/${itemId}/clone" var="clone_form_url" />
+              <spring:url value="/resources/images/clone.png" var="clone_image_url" />
+              <spring:message arguments="${typeName}" code="entity_clone" var="clone_label" htmlEscape="false" />
+              <a href="${clone_form_url}" alt="${fn:escapeXml(clone_label)}" title="${fn:escapeXml(clone_label)}">
+                <img alt="${fn:escapeXml(clone_label)}" class="image" src="${clone_image_url}" title="${fn:escapeXml(clone_label)}" />
+              </a>
+            </td>
+          </c:if>
+
         </tr>
       </c:forEach>
       <tr class="footer">

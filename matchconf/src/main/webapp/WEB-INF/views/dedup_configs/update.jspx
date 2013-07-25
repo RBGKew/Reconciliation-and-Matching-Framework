@@ -10,10 +10,6 @@
         <field:input field="sourceFileEncoding" id="c_org_kew_shs_dedupl_matchconf_Configuration_sourceFileEncoding" z="oZk6RExiWZ0ZK/O9Z7gyzq45Qs0="/>
         <field:input field="sourceFileDelimiter" id="c_org_kew_shs_dedupl_matchconf_Configuration_sourceFileDelimiter" z="xTUiFAy070C340Xm5+DIXkCFqCI="/>
 
-        <field:input field="outputFileDelimiter" id="c_org_kew_shs_dedupl_matchconf_Configuration_outputFileDelimiter" z="yS/lZj9zzO6CNou3RWW/Tg8v1u4="/>
-        <field:input field="outputFileNameExtension" id="c_org_kew_shs_dedupl_matchconf_Configuration_outputFileNameExtension" z="0SqR469mCAtDS9uEZw2tf2SXnVs="/>
-        <field:input field="outputFileIdDelimiter" id="c_org_kew_shs_dedupl_matchconf_Configuration_outputFileIdDelimiter" z="fa6tCd4y5AaTbgYxtBTnEzl4kC0="/>
-
         <field:input field="loadReportFrequency" id="c_org_kew_shs_dedupl_matchconf_Configuration_loadReportFrequency" z="mBoLFpuK1YzFd1H+conojUVjvPo="/>
         <field:input field="assessReportFrequency" id="c_org_kew_shs_dedupl_matchconf_Configuration_assessReportFrequency" z="kUCN8SWATVpCbwc2GZ1jJZy5FMw="/>
 
@@ -22,6 +18,7 @@
         <field:select field="wiring" disabled="true" id="c_org_kew_shs_dedupl_matchconf_Configuration_wiring" itemValue="id" items="${wiring}" multiple="true" path="dedup_configs/wires" z="dE3AA0t3Tmh2i7gBbxSbT1XvGOk="/>
         <field:select field="transformers" disabled="true" id="c_org_kew_shs_dedupl_matchconf_Configuration_transformers" itemValue="id" items="${transformers}" multiple="true" path="/dedup_configs/transformers" z="dE3AA0t3Tmh2i7gBbxSbT1XvGOk="/>
         <field:select field="matchers" disabled="true" id="c_org_kew_shs_dedupl_matchconf_Configuration_matchers" itemValue="id" items="${matchers}" multiple="true" path="dedup_configs/matchers" z="dE3AA0t3Tmh2i7gBbxSbT1XvGOk="/>
+        <field:select field="reporters" disabled="true" id="c_org_kew_shs_dedupl_matchconf_Configuration_reporters" itemValue="id" items="${reporters}" multiple="true" path="dedup_configs/reporters" z=""/>
 
     </form:update>
     <script type="text/javascript">
@@ -30,6 +27,7 @@
 		        $(this).find('#_wiring_id').removeAttr('disabled');
 		        $(this).find('#_transformers_id').removeAttr('disabled');
 		        $(this).find('#_matchers_id').removeAttr('disabled');
+		        $(this).find('#_reporters_id').removeAttr('disabled');
 		    });
 		});
     </script>

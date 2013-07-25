@@ -14,7 +14,9 @@ import org.kew.shs.dedupl.transformers.Transformer;
  */
 public class Property {
 
-	private String name;
+	private String sourceColumnName;
+	private String lookupColumnName;
+
 	private Matcher matcher;
 	
 	private boolean useInSelect=false;
@@ -36,7 +38,8 @@ public class Property {
 
 	@Override
 	public String toString() {
-		return "Property [name=" + name + ", matcher=" + matcher + ", useInSelect="
+		return "Property [name=" + sourceColumnName + "_" + lookupColumnName
+				+ ", matcher=" + matcher + ", useInSelect="
 			    + useInSelect + ", useInNegativeSelect=" + useInNegativeSelect
 				+ ", indexLength=" + indexLength + ", blanksMatch="
 				+ blanksMatch + ", indexOriginal=" + indexOriginal
@@ -45,12 +48,6 @@ public class Property {
 	}
 
 	// Getters and Setters
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
 	public Matcher getMatcher() {
 		return matcher;
 	}
@@ -138,5 +135,21 @@ public class Property {
 
 	public void setAddTransformedSourceValue(boolean addTransformedSourceValue) {
 		this.addTransformedSourceValue = addTransformedSourceValue;
+	}
+
+	public String getSourceColumnName() {
+		return sourceColumnName;
+	}
+
+	public void setSourceColumnName(String sourceColumnName) {
+		this.sourceColumnName = sourceColumnName;
+	}
+
+	public String getLookupColumnName() {
+		return lookupColumnName;
+	}
+
+	public void setLookupColumnName(String lookupColumnName) {
+		this.lookupColumnName = lookupColumnName;
 	}
 }

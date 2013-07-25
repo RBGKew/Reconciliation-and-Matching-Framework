@@ -58,6 +58,9 @@
           <c:when test='${ field.equals("matchers") }'>
             <a href='/MatchConf/${ configType }/${ object.getName() }/matchers'>${ object[field] } </a>
           </c:when>
+          <c:when test='${ field.equals("reporters") }'>
+            <a href='/MatchConf/${ configType }/${ object.getName() }/reporters'>${ object[field] } </a>
+          </c:when>
           <c:otherwise>
             <spring:eval expression="object[field]" />
           </c:otherwise>

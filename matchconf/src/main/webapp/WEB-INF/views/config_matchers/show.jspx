@@ -2,10 +2,10 @@
 <div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
+
+    <div id="config-link">for configuration: <a href="/MatchConf/${ configType }_configs/${ configName }">${ configName }</a></div> <br/>
+
     <page:show id="ps_org_kew_shs_dedupl_matchconf_Matcher" object="${matcher}" path="/${ configType }_configs/${ configName }/matchers" z="4/jtaUl9pN3dkkckUgPkrF4vxK0=">
-
-        <br/> <div id="config-link">for configuration: <a href="/MatchConf/${ configType }_configs/${ configName }">${ configName }</a></div> <br/>
-
         <field:display field="composedBy" id="s_org_kew_shs_dedupl_matchconf_Matcher_composedBy" object="${matcher}" z="BK+z5MMKm1IyLKc95wYbFDp3qHA="/>
         <field:display field="name" id="s_org_kew_shs_dedupl_matchconf_Matcher_name" object="${matcher}" z="35d70Ichgmd5vwlnSvA/iRXn5l0="/>
         <field:display field="packageName" id="s_org_kew_shs_dedupl_matchconf_Matcher_packageName" object="${matcher}" z="R+aWzB84o50VH39h3I7A6FyPi/M="/>

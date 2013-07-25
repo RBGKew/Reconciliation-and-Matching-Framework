@@ -3,14 +3,11 @@
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
 
-    <br/> <div id="config-link">for configuration: <a href="/MatchConf/match_configs/${ configName }">${ configName }</a></div> <br/>
+    <div id="config-link">for configuration: <a href="/MatchConf/${ configType }_configs/${ configName }">${ configName }</a></div> <br/>
 
     <page:list id="pl_org_kew_shs_dedupl_matchconf_Matcher" items="${matchers}" z="AK9evHZPTHrtdtqfZ/2bpWEp7c4=">
-
-        <table:table data="${matchers}" id="l_org_kew_shs_dedupl_matchconf_Matcher" path="/match_configs/${ configName }//matchers" z="mnfabbZUyhYRJ0t9H89xG4RzT2Q=">
+        <table:table data="${matchers}" id="l_org_kew_shs_dedupl_matchconf_Matcher" path="/${ configType }_configs/${ configName }//matchers" z="mnfabbZUyhYRJ0t9H89xG4RzT2Q=">
             <table:column id="c_org_kew_shs_dedupl_matchconf_Matcher_name" property="name" z="AR/duKvVShe5KeMA6ZcWCvsh/UY="/>
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Matcher_className" property="className" z="tklQZCc48Avc4OwQMEaCz8a1yDg="/>
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Matcher_packageName" property="packageName" z="9l279oyOR1B2FfAdh/4CiFcksiI="/>
             <table:column id="c_org_kew_shs_dedupl_matchconf_Matcher_params" property="params" z="9mQoRytbnKGxk2hbsh7ZXJq1gh0="/>
             <table:column id="c_org_kew_shs_dedupl_matchconf_Matcher_composedBy" property="composedBy" z="r+i/LiENE8GrSU+SACvhtlRdfcA="/>
         </table:table>

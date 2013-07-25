@@ -1,4 +1,6 @@
 package org.kew.shs.dedupl.matchconf.web;
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -6,7 +8,9 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.apache.commons.io.FileUtils;
 import org.kew.shs.dedupl.matchconf.Configuration;
+import org.kew.shs.dedupl.matchconf.ConfigurationEngine;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -118,6 +122,7 @@ public class CustomConfigController {
         uiModel.addAttribute("wiring", configuration.getWiring());
         uiModel.addAttribute("transformers", configuration.getTransformers());
         uiModel.addAttribute("matchers", configuration.getMatchers());
+        uiModel.addAttribute("reporters", configuration.getReporters());
     }
 
     String encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {
@@ -137,4 +142,33 @@ public class CustomConfigController {
             br.addError(new ObjectError("configuration.lookupFileName", "A Match Configuration needs to specify a Lookup File"));
         }
     }
+    @RequestMapping(value = "/{configType}_configs/{configName}/clone", produces = "text/html")
+    public String cloneConfig(@PathVariable("configType") String configType, @PathVariable("configName") String configName, Model model) throws IOException {
+        Configuration config = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
+        config.clone();
+        return String.format("redirect:/%s_configs", configType);
+    }
+    @RequestMapping(value = "/{configType}_configs/{configName}/run", produces = "text/html")
+    public String runConfig(@PathVariable("configType") String configType, @PathVariable("configName") String configName, Model model) throws IOException {
+        Configuration config = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
+        try {
+            ConfigurationEngine engine = new ConfigurationEngine(config);
+            engine.write_to_filesystem();
+            engine.runConfiguration();
+            model.addAttribute("config", config);
+        } catch (RuntimeException e) {
+            model.addAttribute("exception", e.toString());
+        } catch (Exception e) {
+            model.addAttribute("exception", e.toString());
+        } catch (Error e) {
+            model.addAttribute("exception", e.toString());
+        } finally {
+            File luceneDir = new File("target/deduplicator");
+            if (luceneDir.exists()) {
+                FileUtils.deleteDirectory(new File("target/deduplicator"));
+            }
+            return "configurations/run/index";
+        }
+    }
+
 }
