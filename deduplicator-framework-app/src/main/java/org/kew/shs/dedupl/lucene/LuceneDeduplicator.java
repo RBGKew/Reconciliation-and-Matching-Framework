@@ -65,9 +65,6 @@ public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration
                 log.debug(LuceneUtils.doc2String(fromDoc));
 
                 String fromId = fromDoc.get(Configuration.ID_FIELD_NAME);
-                if (fromId.equals("76645-2")) {
-                    String a = "breakpoint";
-                }
                 // Keep a record of the records already processed, so as not to return
                 // matches like id1:id2 *and* id2:id1
                 if (alreadyProcessed.contains(fromId))
@@ -85,9 +82,6 @@ public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration
                     log.debug(LuceneUtils.doc2String(toDoc));
 
                     String toId = toDoc.get(Configuration.ID_FIELD_NAME);
-                    if (toId.equals("76645-2")) {
-                        String a = "breakpoint";
-                    }
                     // Skip the processing if we have already encountered this record in the main loop
                     if (alreadyProcessed.contains(toId))
                         continue;

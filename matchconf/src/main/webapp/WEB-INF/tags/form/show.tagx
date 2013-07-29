@@ -8,6 +8,7 @@
   <jsp:directive.attribute name="create" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Include 'create' link into table (default true)" />
   <jsp:directive.attribute name="update" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Include 'update' link into table (default true)" />
   <jsp:directive.attribute name="delete" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Include 'delete' link into table (default true)" />
+  <jsp:directive.attribute name="clone" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Include 'clone' link into table (default true)" />
   <jsp:directive.attribute name="label" type="java.lang.String" required="false" rtexprvalue="true" description="The label used for this object, will default to a message bundle if not supplied" />
   <jsp:directive.attribute name="render" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Indicate if the contents of this tag and all enclosed tags should be rendered (default 'true')" />
   <jsp:directive.attribute name="openPane" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Control if the title pane is opened or closed by default (default: true)" />
@@ -32,6 +33,10 @@
 
     <c:if test="${empty delete}">
       <c:set var="delete" value="true" />
+    </c:if>
+
+    <c:if test="${empty clone}">
+      <c:set var="clone" value="true" />
     </c:if>
 
     <spring:message var="typeName" code="menu_item_${fn:toLowerCase(fn:split(id,'_')[fn:length(fn:split(id,'_')) - 1])}_new_label" htmlEscape="false" />
@@ -92,6 +97,20 @@
                 </a>
               </c:if>
             </span>
+            <c:if test='${object.getClass().toString().split(" ")[1].equals("org.kew.shs.dedupl.matchconf.Configuration")}'>
+              <spring:url value="${path}/${itemId}/clone" var="clone_url" />
+              <spring:url value="/resources/images/clone.png" var="clone_image_url" />
+              <spring:message arguments="${typeName}" code="entity_clone" var="clone_label" htmlEscape="false" />
+              <a href="${clone_url}" alt="${fn:escapeXml(clone_label)}" title="${fn:escapeXml(clone_label)}">
+                <img alt="${fn:escapeXml(clone_label)}" class="image" src="${clone_image_url}" title="${fn:escapeXml(clone_label)}" />
+              </a>
+              <spring:url value="${path}/${itemId}/run" var="run_url" />
+              <spring:url value="/resources/images/run.png" var="run_image_url" />
+              <spring:message arguments="${typeName}" code="entity_run" var="run_label" htmlEscape="false" />
+              <a href="${run_url}" alt="${fn:escapeXml(run_label)}" title="${fn:escapeXml(run_label)}">
+                <img alt="${fn:escapeXml(run_label)}" class="image" src="${run_image_url}" title="${fn:escapeXml(run_label)}" />
+              </a>
+            </c:if>
           </div>
         </c:when>
         <c:otherwise>

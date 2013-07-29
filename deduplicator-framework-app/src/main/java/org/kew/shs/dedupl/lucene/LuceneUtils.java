@@ -208,7 +208,10 @@ public class LuceneUtils {
 				log.debug(s[0] + " : " + s[1] + " : " + fieldMatch);
 			}
 			recordMatch = fieldMatch;
-			if (!recordMatch) log.debug("failed on " + p.getSourceColumnName());
+			if (!recordMatch) {
+				log.debug("failed on " + p.getSourceColumnName());
+				break;
+			}
 		}
 		return recordMatch;
 	}
