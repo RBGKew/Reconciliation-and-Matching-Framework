@@ -4,13 +4,11 @@ import java.io.FileReader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.search.ScoreDoc;
@@ -20,7 +18,6 @@ import org.kew.shs.dedupl.configuration.Configuration;
 import org.kew.shs.dedupl.configuration.MatchConfiguration;
 import org.kew.shs.dedupl.configuration.Property;
 import org.kew.shs.dedupl.reporters.LuceneReporter;
-import org.kew.shs.dedupl.transformers.Transformer;
 import org.supercsv.io.CsvMapReader;
 import org.supercsv.prefs.CsvPreference;
 
@@ -90,7 +87,7 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
                 TopDocs td = queryLucene(querystr, this.getIndexSearcher());
                 log.debug("Found " + td.totalHits + " possibles to assess against " + fromId);
 
-                DocList matches = null;
+                DocList matches = new DocList(record, config.getScoreFieldName());
 
                 for (ScoreDoc sd : td.scoreDocs){
                     Document toDoc = getFromLucene(sd.doc);
@@ -100,7 +97,7 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
                         numMatches++;
                         if (matches == null) {
                             // TODO: might have to convert the sourceRecord to a Document instead, not sure..
-                            matches = new DocList(toDoc, config.getScoreField());
+                            matches = new DocList(toDoc, config.getScoreFieldName());
                         } else matches.add(toDoc);
                     }
                 }
@@ -109,42 +106,11 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
                 for (LuceneReporter reporter : config.getReporters()) {
                     // TODO: make idFieldName configurable, but not on reporter level
                     reporter.setIdFieldName(Configuration.ID_FIELD_NAME);
+                    reporter.setDefinedOutputFields(config.outputDefs());
                     reporter.report(matches);
                 }
             }
         }
-    }
-
-    public Map<String,String> line2Map(String line, int numColumns){
-        Map<String,String> map = new HashMap<String,String>();
-        String[] elem = line.split(this.getConfig().getSourceFileDelimiter(), numColumns+1);
-        map.put(Configuration.ID_FIELD_NAME, elem[0]);
-        for (Property p : config.getProperties()){
-            // TODO: fix this using super-csv
-            String value = "hallo";//elem[p.getColumnIndex()];
-            // Save original value if required
-            if (p.isIndexOriginal())
-                map.put(p.getLookupColumnName() + Configuration.ORIGINAL_SUFFIX,value);
-                    // Transform the value if necessary
-            for (Transformer t:p.getSourceTransformers()) {
-                value = t.transform(value);
-            }
-            // Save into map
-            map.put(p.getLookupColumnName(),value);
-            // Save length if required
-            if (p.isIndexLength()){
-                int length = 0;
-                if (value != null)
-                    length = value.length();
-                map.put(p.getLookupColumnName() + Configuration.LENGTH_SUFFIX,String.format("%02d", length));
-            }
-            if (p.isIndexInitial()){
-                String init = "";
-                if (StringUtils.isNotBlank(value)) init = value.substring(0,1);
-                map.put(p.getLookupColumnName() + Configuration.INITIAL_SUFFIX, init);
-            }
-        }
-        return map;
     }
 
 }

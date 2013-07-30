@@ -31,6 +31,8 @@ public class Configuration implements Cloneable {
     private String sourceFileEncoding = "UTF8";
     private String sourceFileDelimiter = "&#09;";
 
+    private String recordFilter = "";
+
     // lookupFileName being populated decides over being a MatchConfig
     private String lookupFileName = "";
     private String lookupFileEncoding = "UTF8";

@@ -20,5 +20,6 @@
         <field:input field="lookupFileEncoding" id="c_org_kew_shs_dedupl_matchconf_Configuration_lookupFileEncoding" z="nIW4RKilaNTPUKc9d5nswIsET3g="/>
         <field:input field="lookupFileDelimiter" id="c_org_kew_shs_dedupl_matchconf_Configuration_lookupFileDelimiter" z="wdmGp4zNTXYZTlVaoShLBtxJL7E="/>
         <field:simple field="reporters" id="c_org_kew_shs_dedupl_matchconf_Configuration_reporters" messageCode="entity_reference_not_managed" messageCodeAttribute="Reporter" z="fcss3mBGR03Ok8XPxKW99yLzIpI="/>
+        <field:input field="recordFilter" id="c_org_kew_shs_dedupl_matchconf_Configuration_recordFilter" z="UblGjqepwYEnIJ2Qukb4uPwQ6Mw="/>
     </form:update>
 </div>

@@ -16,5 +16,6 @@
         <field:display field="sourceFileDelimiter" id="s_org_kew_shs_dedupl_matchconf_Configuration_sourceFileDelimiter" object="${configuration}" z="e4PmInWM3OvfJ0NFdIp89OlJbT0="/>
         <field:display field="lookupFileEncoding" id="s_org_kew_shs_dedupl_matchconf_Configuration_lookupFileEncoding" object="${configuration}" z="KVyZkxujx0RUYwN234g83IooD0g="/>
         <field:display field="lookupFileDelimiter" id="s_org_kew_shs_dedupl_matchconf_Configuration_lookupFileDelimiter" object="${configuration}" z="AbZ4kL1ZnHrnyPx1pV2ooeK5Mok="/>
+        <field:display field="recordFilter" id="s_org_kew_shs_dedupl_matchconf_Configuration_recordFilter" object="${configuration}" z="8H/oxoy6mSzOzye0+N3OXVPzapM="/>
     </page:show>
 </div>

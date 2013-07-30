@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.commons.lang3.StringUtils;
@@ -20,12 +19,13 @@ public class ConfigurationEngine {
 		this.config = config;
 	}
 
-	public ArrayList<String> toXML() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
+	public ArrayList<String> toXML() throws Exception {
 		int shiftWidth = 4;
 		String shift = String.format("%" + shiftWidth + "s", " ");
 		
 		ArrayList<String> outXML = new ArrayList<String>();
         String sourceFilePath = new File(new File(this.config.getWorkDirPath()), this.config.getSourceFileName()).getPath();
+        String lookupFilePath = new File(new File(this.config.getWorkDirPath()), this.config.getLookupFileName()).getPath();
 		
 		outXML.add("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		outXML.add("<beans xmlns=\"http://www.springframework.org/schema/beans\"");
@@ -48,6 +48,11 @@ public class ConfigurationEngine {
 		outXML.add(String.format("%s<bean id=\"sourcefile\" class=\"java.io.File\">", shift, shift));
 		outXML.add(String.format("%s%s<constructor-arg value=\"%s\" />", shift, shift, sourceFilePath));
 		outXML.add(String.format("%s</bean>", shift));
+		if (this.config.getClassName().equals("MatchConfiguration")) {
+			outXML.add(String.format("%s<bean id=\"lookupfile\" class=\"java.io.File\">", shift, shift));
+			outXML.add(String.format("%s%s<constructor-arg value=\"%s\" />", shift, shift, lookupFilePath));
+			outXML.add(String.format("%s</bean>", shift));
+		}
 			
 		for (Bot bot:this.config.getMatchers()) {
 			outXML.addAll(new BotEngine(bot).toXML("matchers", 1));
@@ -75,6 +80,9 @@ public class ConfigurationEngine {
 
 		outXML.add(String.format("%s<bean id=\"config\" class=\"%s.%s\"", shift, this.config.getPackageName(), this.config.getClassName()));
 		outXML.add(String.format("%s%sp:sourceFile-ref=\"sourcefile\"", shift, shift));
+		if (this.config.getClassName().equals("MatchConfiguration")) {
+			outXML.add(String.format("%s%sp:lookupFile-ref=\"lookupfile\"", shift, shift));
+		}
 		outXML.add(String.format("%s%sp:properties-ref=\"columnProperties\"", shift, shift));
 		outXML.add(String.format("%s%sp:scoreFieldName=\"%s\"", shift, shift, this.config.getScoreFieldName()));
 		outXML.add(String.format("%s%sp:sourceFileEncoding=\"%s\"", shift, shift, this.config.getSourceFileEncoding()));
@@ -86,14 +94,18 @@ public class ConfigurationEngine {
 		outXML.add(String.format("%s<!-- import the generic application-context (equal for dedup/match configurations) -->", shift));
 		outXML.add(String.format("%s<import resource=\"classpath*:application-context.xml\"/>", shift));
 		outXML.add(String.format("%s<!-- add the deduplication-specific bit -->", shift));
-		outXML.add(String.format("%s<import resource=\"classpath*:application-context-dedup.xml\"/>", shift));
+		if (this.config.getClassName().equals("DeduplicationConfiguration")) {
+			outXML.add(String.format("%s<import resource=\"classpath*:application-context-dedup.xml\"/>", shift));
+		} else if (this.config.getClassName().equals("DeduplicationConfiguration")) {
+			outXML.add(String.format("%s<import resource=\"classpath*:application-context-match.xml\"/>", shift));
+		} else throw new Exception("No or wrong Configuration Class Name; this should not happen, contact the developer.");
 
 		outXML.add("</beans>");
 		
 		return outXML;
 	}
 
-	public void write_to_filesystem () throws IOException, IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
+	public void write_to_filesystem () throws Exception {
 		// Perform a few checks:
 		// 1. does the working directory exist?
 		File workDir = new File(this.config.getWorkDirPath());

@@ -1,7 +1,5 @@
 package org.kew.shs.dedupl.lucene;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,20 +31,19 @@ public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration
 
         Set<String> alreadyProcessed = new HashSet<>();
 
-        // TODO: implement autoclose on reporters and use then this nice try (with reporters = ..) way.
-        //     that would make explicit closing obsolete and would perform better in case sth goes wrong.
         try (DeduplicationConfiguration config = this.getConfig();
              IndexWriter indexWriter = this.indexWriter) {
 
             log.debug(new java.util.Date(System.currentTimeMillis()));
 
+            // DEFUNCTED! messed up the order of columns. TODO: possibly implement again differently
             // Sort properties in order of cost:
-            Collections.sort(config.getProperties(),  new Comparator<Property>() {
-                public int compare(final Property p1,final Property p2) {
-                    return Integer.valueOf(p1.getMatcher().getCost()).compareTo(Integer.valueOf(
-                            p2.getMatcher().getCost()));
-                }
-            });
+//            Collections.sort(config.getProperties(),  new Comparator<Property>() {
+//                public int compare(final Property p1,final Property p2) {
+//                    return Integer.valueOf(p1.getMatcher().getCost()).compareTo(Integer.valueOf(
+//                            p2.getMatcher().getCost()));
+//                }
+//            });
             // Loop over all documents in index
             int numClusters = 0;
             DocList dupls;
@@ -102,6 +99,7 @@ public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration
                 for (LuceneReporter reporter : config.getReporters()) {
                     // TODO: make idFieldName configurable, but not on reporter level
                     reporter.setIdFieldName(Configuration.ID_FIELD_NAME);
+                    reporter.setDefinedOutputFields(config.outputDefs());
                     reporter.report(dupls);
                 }
             }

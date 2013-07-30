@@ -23,7 +23,6 @@ public class Property {
 	private boolean useInNegativeSelect=false;
 	private boolean indexLength=false;
 	private boolean blanksMatch=false;
-	private boolean indexOriginal=false;
 	private boolean indexInitial=false;
 	private boolean useWildcard=false;
 
@@ -42,8 +41,7 @@ public class Property {
 				+ ", matcher=" + matcher + ", useInSelect="
 			    + useInSelect + ", useInNegativeSelect=" + useInNegativeSelect
 				+ ", indexLength=" + indexLength + ", blanksMatch="
-				+ blanksMatch + ", indexOriginal=" + indexOriginal
-				+ ", indexInitial=" + indexInitial + ", useWildcard="
+				+ blanksMatch + ", indexInitial=" + indexInitial + ", useWildcard="
 				+ useWildcard + ", transformers=" + sourceTransformers + "_" + lookupTransformers + "]";
 	}
 
@@ -71,12 +69,6 @@ public class Property {
 	}
 	public void setBlanksMatch(boolean blanksMatch) {
 		this.blanksMatch = blanksMatch;
-	}
-	public boolean isIndexOriginal() {
-		return indexOriginal;
-	}
-	public void setIndexOriginal(boolean indexOriginal) {
-		this.indexOriginal = indexOriginal;
 	}
 	public boolean isIndexInitial() {
 		return indexInitial;

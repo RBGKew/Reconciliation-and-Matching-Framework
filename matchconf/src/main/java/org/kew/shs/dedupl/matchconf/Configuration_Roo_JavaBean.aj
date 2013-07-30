@@ -52,6 +52,14 @@ privileged aspect Configuration_Roo_JavaBean {
         this.sourceFileDelimiter = sourceFileDelimiter;
     }
     
+    public String Configuration.getRecordFilter() {
+        return this.recordFilter;
+    }
+    
+    public void Configuration.setRecordFilter(String recordFilter) {
+        this.recordFilter = recordFilter;
+    }
+    
     public String Configuration.getLookupFileName() {
         return this.lookupFileName;
     }

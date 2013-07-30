@@ -17,9 +17,9 @@ Feature: Create a simple configuration
             | matchExactly | org.kew.shs.dedupl.matchers | ExactMatcher | blanksMatch=false |
         And he has wired them together at the second column
         And he has added the following reporters:
-            | name              | fileName             | packageName                  | className                     | params |
-            | standardReporter  | output.tsv           |org.kew.shs.dedupl.reporters  | LuceneOutputReporter          |        |
-            | multilineReporter | output_multiline.tsv | org.kew.shs.dedupl.reporters | LuceneOutputReporterMultiline |        |
+            | name              | fileName             | packageName                  | className              | params |
+            | standardReporter  | output.tsv           |org.kew.shs.dedupl.reporters  | DedupReporter          |        |
+            | multilineReporter | output_multiline.tsv | org.kew.shs.dedupl.reporters | DedupReporterMultiline |        |
         When he asks to write the configuration out to the filesystem
         Then the following content will be written to "some_path/config_simple-config.xml":
             """
@@ -49,7 +49,7 @@ Feature: Create a simple configuration
                 <bean id="02BlankTransformer" class="org.kew.shs.dedupl.transformers.ZeroToBlankTransformer" />
                 <bean id="anotherTransformer" class="org.kew.shs.dedupl.transformers.SafeStripNonAlphasTransformer" />
                 <util:list id="reporters">
-                    <bean class="org.kew.shs.dedupl.reporters.LuceneOutputReporter"
+                    <bean class="org.kew.shs.dedupl.reporters.DedupReporter"
                         p:name="standardReporter"
                         p:delimiter="&#09;"
                         p:idDelimiter="|">
@@ -59,7 +59,7 @@ Feature: Create a simple configuration
                             </bean>
                         </property>
                     </bean>
-                    <bean class="org.kew.shs.dedupl.reporters.LuceneOutputReporterMultiline"
+                    <bean class="org.kew.shs.dedupl.reporters.DedupReporterMultiline"
                         p:name="multilineReporter"
                         p:delimiter="&#09;"
                         p:idDelimiter="|">

@@ -28,7 +28,7 @@ Feature: run a simple configuration
                 <bean id="02BlankTransformer" class="org.kew.shs.dedupl.transformers.ZeroToBlankTransformer" />
                 <bean id="anotherTransformer" class="org.kew.shs.dedupl.transformers.SafeStripNonAlphasTransformer" />
                 <util:list id="reporters">
-                    <bean class="org.kew.shs.dedupl.reporters.LuceneOutputReporter"
+                    <bean class="org.kew.shs.dedupl.reporters.DedupReporter"
                         p:name="outputReporter"
                         p:delimiter="&#09;"
                         p:idDelimiter="|">
@@ -38,7 +38,7 @@ Feature: run a simple configuration
                             </bean>
                         </property>
                     </bean>
-                    <bean class="org.kew.shs.dedupl.reporters.LuceneOutputReporterMultiline"
+                    <bean class="org.kew.shs.dedupl.reporters.DedupReporterMultiline"
                         p:name="outputReporter"
                         p:delimiter="&#09;"
                         p:idDelimiter="|">
@@ -53,6 +53,7 @@ Feature: run a simple configuration
                     <bean class="org.kew.shs.dedupl.configuration.Property"
                         p:sourceColumnName="data_col"
                         p:useInSelect="true"
+                        p:addTransformedSourceValue="true"
                         p:matcher-ref="matchExactly">
                         <property name="sourceTransformers">
                             <util:list id="1">

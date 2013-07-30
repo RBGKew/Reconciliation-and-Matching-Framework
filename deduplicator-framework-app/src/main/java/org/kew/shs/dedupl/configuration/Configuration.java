@@ -6,7 +6,7 @@ import java.util.List;
 import org.kew.shs.dedupl.reporters.LuceneReporter;
 
 
-public class Configuration implements AutoCloseable {
+public abstract class Configuration implements AutoCloseable {
 
     private List<Property> properties;
 
@@ -34,6 +34,8 @@ public class Configuration implements AutoCloseable {
     public static final String LENGTH_SUFFIX="_length";
     public static final String ORIGINAL_SUFFIX="_orig";
     public static final String INITIAL_SUFFIX="_init";
+
+    public abstract String[] outputDefs();
 
     public String[] getPropertySourceColumnNames() {
         String[] propertyNames = new String[this.getProperties().size()];

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Fieldable;
@@ -29,6 +30,26 @@ public class DocList  {
 		this.fromDoc = fromDoc;
 		this.store.add(fromDoc); // fromDoc itself is always in the cluster
 		this.sortOn = sortOn;
+	}
+
+	public DocList(Map<String, String> fromMap, String sortOn) {
+		// this is for matching; here we don't add the fromDoc
+		super ();
+		Document docified = LuceneUtils.map2Doc(fromMap);
+		this.fromDoc = docified;
+		this.sortOn = sortOn;
+	}
+	
+	public Map<String, String> getFromDocAsMap() {
+		return LuceneUtils.doc2Map(this.fromDoc);
+	}
+	
+	public List<Map<String, String>> storeToMapList() {
+		List<Map<String, String>> maps = new ArrayList<>();
+		for (Document doc:this.store) {
+			maps.add(LuceneUtils.doc2Map(doc));
+		}
+		return maps;
 	}
 
 	public boolean isSorted() {
