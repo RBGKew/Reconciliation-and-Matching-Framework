@@ -96,7 +96,7 @@ public class ConfigurationEngine {
 		outXML.add(String.format("%s<!-- add the deduplication-specific bit -->", shift));
 		if (this.config.getClassName().equals("DeduplicationConfiguration")) {
 			outXML.add(String.format("%s<import resource=\"classpath*:application-context-dedup.xml\"/>", shift));
-		} else if (this.config.getClassName().equals("DeduplicationConfiguration")) {
+		} else if (this.config.getClassName().equals("MatchConfiguration")) {
 			outXML.add(String.format("%s<import resource=\"classpath*:application-context-match.xml\"/>", shift));
 		} else throw new Exception("No or wrong Configuration Class Name; this should not happen, contact the developer.");
 
