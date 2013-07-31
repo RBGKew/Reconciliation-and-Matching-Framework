@@ -6,6 +6,7 @@ import java.util.Map;
 
 public class NormaliseDiacritsTransformer implements Transformer {
 
+	@SuppressWarnings(value = { "serial" })
 	static Map<String,String> ADDITIONAL_REPLACEMENTS = new HashMap<String,String>() {{
 		put("Ø", "O");
 		put("ø", "o");

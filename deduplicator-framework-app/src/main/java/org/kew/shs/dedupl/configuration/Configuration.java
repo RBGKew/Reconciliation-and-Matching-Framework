@@ -14,6 +14,8 @@ public abstract class Configuration implements AutoCloseable {
     private String sourceFileEncoding = "UTF8";
     private String sourceFileDelimiter;
 
+    private String recordFilter = "";
+
     // TODO: make use of or delete or rename or move to reporters
     private File reportFile;
     private File delimitedFile;
@@ -57,7 +59,6 @@ public abstract class Configuration implements AutoCloseable {
     public void close() throws Exception {
         for (LuceneReporter reporter:this.reporters) reporter.close();
     }
-
     // Getters and Setters
     public List<Property> getProperties() {
         return properties;
@@ -138,4 +139,11 @@ public abstract class Configuration implements AutoCloseable {
         this.reporters = reporters;
     }
 
+    public String getRecordFilter() {
+        return recordFilter;
+    }
+
+    public void setRecordFilter(String recordFilter) {
+        this.recordFilter = recordFilter;
+    }
 }

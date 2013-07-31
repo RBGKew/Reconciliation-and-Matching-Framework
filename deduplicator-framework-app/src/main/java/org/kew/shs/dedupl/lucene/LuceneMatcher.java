@@ -2,12 +2,8 @@ package org.kew.shs.dedupl.lucene;
 
 import java.io.FileReader;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
@@ -18,6 +14,7 @@ import org.kew.shs.dedupl.configuration.Configuration;
 import org.kew.shs.dedupl.configuration.MatchConfiguration;
 import org.kew.shs.dedupl.configuration.Property;
 import org.kew.shs.dedupl.reporters.LuceneReporter;
+import org.kew.shs.dedupl.transformers.Transformer;
 import org.supercsv.io.CsvMapReader;
 import org.supercsv.prefs.CsvPreference;
 
@@ -39,8 +36,6 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
 
         this.loadData(); // writes the index according to the configuration
 
-        Set<String> alreadyProcessed = new HashSet<String>();
-
         // TODO: either make quote characters and line break characters configurable or simplify even more?
         CsvPreference customCsvPref = new CsvPreference.Builder('"', this.getConfig().getSourceFileDelimiter().charAt(0), "\n").build();
         int i = 0;
@@ -50,13 +45,15 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
 
             log.debug(new java.util.Date(System.currentTimeMillis()));
 
+            // DEFUNCTED! messed up the order of columns. TODO: possibly implement again differently
             // Sort properties in order of cost:
-            Collections.sort(config.getProperties(),  new Comparator<Property>() {
-                public int compare(final Property p1,final Property p2) {
-                    return Integer.valueOf(p1.getMatcher().getCost()).compareTo(Integer.valueOf(
-                            p2.getMatcher().getCost()));
-                }
-            });
+//            Collections.sort(config.getProperties(),  new Comparator<Property>() {
+//                public int compare(final Property p1,final Property p2) {
+//                    return Integer.valueOf(p1.getMatcher().getCost()).compareTo(Integer.valueOf(
+//                            p2.getMatcher().getCost()));
+//                }
+//            });
+
             // loop over the sourceFile
             int numMatches = 0;
             final String[] header = mr.getHeader(true);
@@ -71,15 +68,20 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
             Map<String, String> record;
             while((record = mr.read(header)) != null) {
 
-                if (i++ % config.getAssessReportFrequency() == 0)
-                    log.info("Assessed " + i + " records, found " + numMatches + " matches");
+                // transform fields where required
+                for (Property prop:config.getProperties()) {
+                    if (prop.isAddTransformedSourceValue()) {
+                        String fName = prop.getSourceColumnName();
+                        String fValue = record.get(fName);
+                        fValue = fValue == null ? "" : fValue; // super-csv treats blank as null, we don't for now
+                        if (prop.isAddOriginalSourceValue()) record.put(fName + "_orig", fValue);
+                        for (Transformer t:prop.getSourceTransformers()) {
+                            record.put(fName, t.transform(fValue));
+                        }
+                    }
+                }
 
-                // We now have this record as a hashmap, transformed etc as the data stored in Lucene has been
                 String fromId = record.get(Configuration.ID_FIELD_NAME);
-
-                // Keep a record of the records already processed, so as not to return
-                // matches like id1:id2 *and* id2:id1
-                alreadyProcessed.add(fromId);
 
                 // Use the properties to select a set of documents which may contain matches
                 String querystr = LuceneUtils.buildQuery(config.getProperties(), record, false);
@@ -109,6 +111,10 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
                     reporter.setDefinedOutputFields(config.outputDefs());
                     reporter.report(matches);
                 }
+
+                if (i++ % config.getAssessReportFrequency() == 0)
+                    log.info("Assessed " + i + " records, found " + numMatches + " matches");
+
             }
         }
     }
