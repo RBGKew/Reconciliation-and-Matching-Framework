@@ -3,7 +3,9 @@ package org.kew.shs.dedupl.configuration;
 import java.io.File;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.kew.shs.dedupl.reporters.LuceneReporter;
+import org.kew.shs.dedupl.reporters.Piper;
 
 
 public abstract class Configuration implements AutoCloseable {
@@ -28,6 +30,8 @@ public abstract class Configuration implements AutoCloseable {
     private int assessReportFrequency=100;
 
     private List<? extends LuceneReporter> reporters;
+    // a 'piper' is created for each reporter in case recordFilter is not empty
+    private List<Piper> pipers;
 
     private boolean reuseIndex;
 
@@ -38,6 +42,16 @@ public abstract class Configuration implements AutoCloseable {
     public static final String INITIAL_SUFFIX="_init";
 
     public abstract String[] outputDefs();
+
+    public void setupReporting() {
+        for (LuceneReporter rep:this.getReporters()) {
+            rep.setIdFieldName(Configuration.ID_FIELD_NAME);
+            rep.setDefinedOutputFields(this.outputDefs());
+            if (!StringUtils.isBlank(this.getRecordFilter())) {
+                this.getPipers().add(new Piper(rep));
+            }
+        }
+    }
 
     public String[] getPropertySourceColumnNames() {
         String[] propertyNames = new String[this.getProperties().size()];
@@ -145,5 +159,13 @@ public abstract class Configuration implements AutoCloseable {
 
     public void setRecordFilter(String recordFilter) {
         this.recordFilter = recordFilter;
+    }
+
+    public List<Piper> getPipers() {
+        return pipers;
+    }
+
+    public void setPipers(List<Piper> pipers) {
+        this.pipers = pipers;
     }
 }

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.search.ScoreDoc;
@@ -14,6 +15,8 @@ import org.kew.shs.dedupl.configuration.Configuration;
 import org.kew.shs.dedupl.configuration.MatchConfiguration;
 import org.kew.shs.dedupl.configuration.Property;
 import org.kew.shs.dedupl.reporters.LuceneReporter;
+import org.kew.shs.dedupl.reporters.Piper;
+import org.kew.shs.dedupl.script.JavaScriptEnv;
 import org.kew.shs.dedupl.transformers.Transformer;
 import org.supercsv.io.CsvMapReader;
 import org.supercsv.prefs.CsvPreference;
@@ -37,12 +40,21 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
         this.loadData(); // writes the index according to the configuration
 
         // TODO: either make quote characters and line break characters configurable or simplify even more?
-        CsvPreference customCsvPref = new CsvPreference.Builder('"', this.getConfig().getSourceFileDelimiter().charAt(0), "\n").build();
+        CsvPreference csvPref = new CsvPreference.Builder(
+                '"', this.getConfig().getSourceFileDelimiter().charAt(0), "\n").build();
         int i = 0;
         try (MatchConfiguration config = this.getConfig();
              IndexWriter indexWriter = this.indexWriter;
-             CsvMapReader mr = new CsvMapReader(new FileReader(this.getConfig().getSourceFile()), customCsvPref)) {
+             CsvMapReader mr = new CsvMapReader(new FileReader(this.getConfig().getSourceFile()), csvPref)) {
 
+            // copy some necessary values to reporters and possibly create pipers if recordFilter is set
+            config.setupReporting();
+            // the recordFilter (excludes records from processing if condition fulfilled) needs a JavaScript environment set up
+            JavaScriptEnv jsEnv = null;
+            if (!StringUtils.isBlank(config.getRecordFilter())) {
+                jsEnv = new JavaScriptEnv();
+                log.debug("Record filter activated, javascript rock'n roll!");
+            }
             log.debug(new java.util.Date(System.currentTimeMillis()));
 
             // DEFUNCTED! messed up the order of columns. TODO: possibly implement again differently
@@ -67,6 +79,9 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
             if (!headerList.contains(idFieldName)) throw new Exception(String.format("Id field name not found in header, should be %s!", idFieldName));
             Map<String, String> record;
             while((record = mr.read(header)) != null) {
+                if (!StringUtils.isBlank(config.getRecordFilter()) && jsEnv.evalFilter(config.getRecordFilter(), record)) {
+                    for (Piper piper:config.getPipers()) piper.pipe(record);
+                }
 
                 // transform fields where required
                 for (Property prop:config.getProperties()) {
@@ -107,8 +122,6 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
                 // call each reporter that has a say; all they get is a complete list of duplicates for this record.
                 for (LuceneReporter reporter : config.getReporters()) {
                     // TODO: make idFieldName configurable, but not on reporter level
-                    reporter.setIdFieldName(Configuration.ID_FIELD_NAME);
-                    reporter.setDefinedOutputFields(config.outputDefs());
                     reporter.report(matches);
                 }
 

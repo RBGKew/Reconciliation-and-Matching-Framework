@@ -12,6 +12,11 @@
 	</parent>
 
 	<dependencies>
+	    <!-- json serialisation -->
+	    <dependency>
+	        <groupId>com.google.code.gson</groupId>
+	        <artifactId>gson</artifactId>
+        </dependency>
 		<!-- for testing -->
 		<dependency>
 			<groupId>org.hamcrest</groupId>
