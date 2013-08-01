@@ -32,7 +32,7 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
             this.dataLoader.load(this.getConfig().getStoreFile());
         }
         else
-            logger.info("Reusing existing index");
+            this.logger.info("Reusing existing index");
     }
 
     public void run() throws Exception {
@@ -53,7 +53,7 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
             JavaScriptEnv jsEnv = null;
             if (!StringUtils.isBlank(config.getRecordFilter())) {
                 jsEnv = new JavaScriptEnv();
-                logger.debug("Record filter activated, javascript rock'n roll!");
+                this.logger.debug("Record filter activated, javascript rock'n roll!");
             }
             // DEFUNCTED! messed up the order of columns. TODO: possibly implement again differently
             // Sort properties in order of cost:
@@ -100,7 +100,7 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
                 String querystr = LuceneUtils.buildQuery(config.getProperties(), record, false);
 
                 TopDocs td = queryLucene(querystr, this.getIndexSearcher());
-                logger.debug("Found " + td.totalHits + " possibles to assess against " + fromId);
+                this.logger.debug("Found " + td.totalHits + " possibles to assess against " + fromId);
 
                 DocList matches = new DocList(record, config.getScoreFieldName());
 
@@ -116,7 +116,7 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
                 }
                 matches.sort();
 
-                if (i++ % config.getAssessReportFrequency() == 0) logger.info("Assessed " + i + " records, found " + numMatches + " matches");
+                if (i++ % config.getAssessReportFrequency() == 0) this.logger.info("Assessed " + i + " records, found " + numMatches + " matches");
                 // call each reporter that has a say; all they get is a complete list of duplicates for this record.
                 for (LuceneReporter reporter : config.getReporters()) {
                     // TODO: make idFieldName configurable, but not on reporter level
@@ -124,7 +124,7 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
                 }
 
             }
-            logger.info("Assessed " + i + " records, found " + numMatches + " matches");
+            this.logger.info("Assessed " + i + " records, found " + numMatches + " matches");
         }
     }
 

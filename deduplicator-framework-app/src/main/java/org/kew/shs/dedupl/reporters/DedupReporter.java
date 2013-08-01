@@ -10,7 +10,7 @@ public class DedupReporter extends LuceneReporter {
 	protected static String[] AVAILABLE_FIELDS = new String[] {"cluster_size", "from_id", "ids_in_cluster"};
 	
 	public DedupReporter() {
-		log.info("I will be creating an enhanced output file for you with additional fields: " +
+		logger.info("I will be creating an enhanced output file for you with additional fields: " +
 				this.getAvailableFields());
 	}
 

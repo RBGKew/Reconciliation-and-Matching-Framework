@@ -11,7 +11,7 @@ public class MatchReporter extends LuceneReporter {
     protected static String[] AVAILABLE_FIELDS = new String[] {"no_matches", "matching_ids"};
 
     public MatchReporter() {
-        log.info("I will be creating an enhanced output file for you with additional fields: " +
+        logger.info("I will be creating an enhanced output file for you with additional fields: " +
                 this.getAvailableFields());
     }
 

@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * This matcher splits the input strings into tokens, and calculates 
@@ -18,7 +20,7 @@ public class CommonTokensMatcher implements Matcher {
 	public static int COST = 5;
 	protected double minRatio=0.5;
 	
-	private static Logger log = Logger.getLogger(CommonTokensMatcher.class);
+    private static Logger logger = LoggerFactory.getLogger(CommonTokensMatcher.class);
 	
 	public int getCost() {
 		return COST;
@@ -26,18 +28,18 @@ public class CommonTokensMatcher implements Matcher {
 	
 	/*@Cacheable(cacheName="ctMatchCache")*/
 	public boolean matches(String s1, String s2) {
-		log.debug("s1: " + s1);
-		log.debug("s2: " + s2);
+		logger.debug("s1: " + s1);
+		logger.debug("s2: " + s2);
 		boolean matches = false;
 		if (s1 == null && s2 == null)
 			matches = true;
 		else{
 			try{
 			    String[] a1 = convToArray(s1);
-			    log.debug(Arrays.toString(a1));
+			    logger.debug(Arrays.toString(a1));
 			    
 			    String[] a2 = convToArray(s2);
-			    log.debug(Arrays.toString(a2));
+			    logger.debug(Arrays.toString(a2));
 			    
 			    matches = calculateTokensInCommon(a1,a2);
 			}
@@ -58,10 +60,10 @@ public class CommonTokensMatcher implements Matcher {
 		Collection<String> common = new ArrayList<String>(Arrays.asList(s1));
 	    common.retainAll(Arrays.asList(s2));
 	    int numCommon = common.size();
-	    log.debug("Number of tokens in common: " + numCommon);
+	    logger.debug("Number of tokens in common: " + numCommon);
 	    
 	    double ratio = (Double.valueOf(numCommon) / Double.valueOf((numCommon + (s1.length - numCommon) + (s2.length - numCommon))));
-	    log.debug("ratio = " + ratio);
+	    logger.debug("ratio = " + ratio);
 	    
 	    matches = ratio >= minRatio;
 		

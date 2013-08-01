@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.supercsv.io.CsvMapWriter;
 import org.supercsv.prefs.CsvPreference;
 
@@ -35,7 +36,7 @@ public abstract class Reporter implements AutoCloseable {
 
     protected String scoreFieldName;
     protected String idFieldName;
-    protected Logger log;
+    protected Logger logger;
     protected boolean wantHeader = true; // TODO: make configurable
 
     protected boolean isStart = true;
@@ -43,7 +44,7 @@ public abstract class Reporter implements AutoCloseable {
     protected String[] header;
 
     protected Reporter () {
-        this.log = Logger.getLogger(this.getClass());
+        this.logger = LoggerFactory.getLogger(this.getClass());
     }
 
     protected String getAvailableFieldsAsString() {

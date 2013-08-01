@@ -3,7 +3,8 @@ package org.kew.shs.dedupl.matchers;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.googlecode.ehcache.annotations.Cacheable;
 
@@ -23,7 +24,7 @@ public class LevenshteinMatcher implements Matcher {
 	private int numCalls = 0;
 	private int numExecutions = 0;
 
-	private static Logger log = Logger.getLogger(LevenshteinMatcher.class);
+    private static Logger logger = LoggerFactory.getLogger(LevenshteinMatcher.class);
 	
 	private Map<String,String> falsePositives;
 	
@@ -46,7 +47,7 @@ public class LevenshteinMatcher implements Matcher {
 		if (StringUtils.isNotEmpty(s1) && StringUtils.isNotEmpty(s2)){
 			matches = s1.equals(s2); 
 			if (!matches){
-				log.debug("Testing ld(" + s1 + ", " + s2 + ")");
+				logger.debug("Testing ld(" + s1 + ", " + s2 + ")");
 				int shorter = Math.min(s1.length(), s2.length());
 				int longer = Math.max(s1.length(), s2.length());
 				if ((longer - shorter) > maxDistance)
@@ -72,7 +73,7 @@ public class LevenshteinMatcher implements Matcher {
 				if (falsePositives.containsKey(s2) && falsePositives.get(s2).equals(s1))
 					passed = false;
 			if (passed == false){
-				log.info("Rejected match (" + s1 + ", " + s2 + ") as false positive");
+				logger.info("Rejected match (" + s1 + ", " + s2 + ") as false positive");
 			}
 		}
 		return passed;

@@ -11,7 +11,7 @@ public class DedupReporterMultiline extends LuceneReporter {
 	protected static String[] AVAILABLE_FIELDS = new String[] {"cluster_size", "best_record_id", "rank"};
 
 	public DedupReporterMultiline() {
-		log.info("I will be creating a file containing a row for each record in a cluster; additional fields: " +
+		logger.info("I will be creating a file containing a row for each record in a cluster; additional fields: " +
 				this.getAvailableFieldsAsString());
 	}
 

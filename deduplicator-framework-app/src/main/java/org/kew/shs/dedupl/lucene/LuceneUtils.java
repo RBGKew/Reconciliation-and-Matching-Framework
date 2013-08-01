@@ -6,16 +6,17 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Fieldable;
 import org.kew.shs.dedupl.configuration.Configuration;
 import org.kew.shs.dedupl.configuration.Property;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LuceneUtils {
 
-    private static final Logger log = Logger.getLogger(LuceneUtils.class);
+    private static Logger logger = LoggerFactory.getLogger(LuceneUtils.class);
 
     public static String doc2String(Document doc){
         return doc2String(doc, "");
@@ -201,7 +202,7 @@ public class LuceneUtils {
 
     public static boolean recordsMatch(Map<String,String> from, Document to, List<Property> properties){
         boolean recordMatch = false;
-        log.debug("Comparing records: " + from.get(Configuration.ID_FIELD_NAME) + " " + to.get(Configuration.ID_FIELD_NAME));
+        logger.debug("Comparing records: " + from.get(Configuration.ID_FIELD_NAME) + " " + to.get(Configuration.ID_FIELD_NAME));
         for (Property p : properties){
             String s1 = from.get(p.getSourceColumnName());
             s1 = (s1 != null) ? s1: "";
@@ -211,7 +212,7 @@ public class LuceneUtils {
             if (p.isBlanksMatch()){
                 fieldMatch = (StringUtils.isBlank(s1) || StringUtils.isBlank(s2));
                 if (fieldMatch){
-                    log.debug(p.getSourceColumnName() + ": blanks match");
+                    logger.debug(p.getSourceColumnName() + ": blanks match");
                 }
             }
             if (!fieldMatch){
@@ -220,11 +221,11 @@ public class LuceneUtils {
                 s[1] = s2;
                 Arrays.sort(s);
                 fieldMatch = p.getMatcher().matches(s[0], s[1]);
-                log.debug(s[0] + " : " + s[1] + " : " + fieldMatch);
+                logger.debug(s[0] + " : " + s[1] + " : " + fieldMatch);
             }
             recordMatch = fieldMatch;
             if (!recordMatch) {
-                log.debug("failed on " + p.getSourceColumnName());
+                logger.debug("failed on " + p.getSourceColumnName());
                 break;
             }
         }

@@ -2,8 +2,6 @@ package org.kew.shs.dedupl.lucene;
 
 import java.io.IOException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
@@ -19,6 +17,8 @@ import org.kew.shs.dedupl.DataLoader;
 import org.kew.shs.dedupl.configuration.Configuration;
 import org.kew.shs.dedupl.reporters.LuceneReporter;
 import org.kew.shs.dedupl.reporters.Reporter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class LuceneHandler<Config extends Configuration> {
@@ -33,13 +33,14 @@ public class LuceneHandler<Config extends Configuration> {
 	private QueryParser queryParser;
 	protected DataLoader dataLoader;
 	protected Config config;
-    Logger logger = LoggerFactory.getLogger(Configuration.class);
+	protected Logger logger;
+	
+	public LuceneHandler() {
+		this.logger = LoggerFactory.getLogger(LuceneHandler.class);
+		
+	}
 
 	protected LuceneReporter[] reporters;
-
-	public LuceneHandler() {
-		super();
-	}
 
 	public IndexReader getIndexReader() throws CorruptIndexException, IOException {
 		if (this.indexReader == null) this.indexReader = IndexReader.open(this.directory);

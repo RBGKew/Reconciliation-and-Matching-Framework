@@ -23,7 +23,7 @@ import cucumber.api.java.en.When;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class RunSimpleConfigOneMatcher {
+public class RunSimpleDedupConfig {
 
     File tempDir;
     File workDir;

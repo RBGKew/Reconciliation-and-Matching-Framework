@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -19,6 +18,8 @@ import org.kew.shs.dedupl.DataLoader;
 import org.kew.shs.dedupl.configuration.Configuration;
 import org.kew.shs.dedupl.configuration.Property;
 import org.kew.shs.dedupl.transformers.Transformer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.supercsv.io.CsvMapReader;
 import org.supercsv.prefs.CsvPreference;
 
@@ -38,7 +39,7 @@ public class LuceneDataLoader implements DataLoader {
 
     private Configuration config;
 
-    private static Logger log = Logger.getLogger(LuceneDataLoader.class);
+    private static Logger logger = LoggerFactory.getLogger(LuceneDataLoader.class);
 
     /**
      * In case no file is specified we (assuming a de-duplication task) use the
@@ -77,17 +78,17 @@ public class LuceneDataLoader implements DataLoader {
             Map<String, String> record;
             while((record = mr.read(header)) != null) {
                 this.indexRecord(record);
-                if (i++ % this.config.getLoadReportFrequency() == 0) log.info("Indexed " + i + " documents");
+                if (i++ % this.config.getLoadReportFrequency() == 0) logger.info("Indexed " + i + " documents");
             }
             indexWriter.commit();
         }
-        log.info("Indexed " + i + " documents");
+        logger.info("Indexed " + i + " documents");
     }
 
     public void indexRecord(Map<String, String> record) throws CorruptIndexException, IOException {
         Document doc = new Document();
         String idFieldName = Configuration.ID_FIELD_NAME;
-        log.debug(record.toString());
+        logger.debug(record.toString());
         doc.add(new Field(idFieldName, record.get(idFieldName), Field.Store.YES,Field.Index.ANALYZED));
         // The remainder of the columns are added as specified in the properties
         for (Property p : this.config.getProperties()) {

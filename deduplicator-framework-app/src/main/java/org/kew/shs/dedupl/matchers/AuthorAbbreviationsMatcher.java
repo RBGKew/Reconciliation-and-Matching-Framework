@@ -7,17 +7,15 @@ import java.io.FileOutputStream;
 //import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-//import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.List;
 //import java.util.Iterator;
 //import java.util.Set;
 import java.text.Normalizer;
 //import java.text.Normalizer.Form;
+//import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.kew.shs.dedupl.transformers.Transformer;
-import org.omg.CosNaming.NamingContextExtPackage.AddressHelper;
 
 import com.googlecode.ehcache.annotations.Cacheable;
 
@@ -54,8 +52,6 @@ public class AuthorAbbreviationsMatcher extends AuthorCommonTokensMatcher{
 	
 	private static HashMap<String, String> authorAbbreviations;
 	private static HashMap<String, String> authorSpecialCases;
-	
-	private static Logger log = Logger.getLogger(AuthorAbbreviationsMatcher.class);
 	
 	
 	AuthorAbbreviationsMatcher() {}

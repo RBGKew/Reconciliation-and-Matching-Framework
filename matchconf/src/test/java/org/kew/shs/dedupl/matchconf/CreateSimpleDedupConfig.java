@@ -22,9 +22,9 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
 
-public class CreateSimpleConfigOneMatcher {
+public class CreateSimpleDedupConfig {
 
-    Logger logger = LoggerFactory.getLogger(CreateSimpleConfigOneMatcher.class);
+    Logger logger = LoggerFactory.getLogger(CreateSimpleDedupConfig.class);
     File tempDir;
 
     String configName;
