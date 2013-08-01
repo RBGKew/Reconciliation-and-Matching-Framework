@@ -2,7 +2,8 @@ package org.kew.shs.dedupl.lucene;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
@@ -32,7 +33,7 @@ public class LuceneHandler<Config extends Configuration> {
 	private QueryParser queryParser;
 	protected DataLoader dataLoader;
 	protected Config config;
-	protected Logger log = Logger.getLogger(this.getClass());
+    Logger logger = LoggerFactory.getLogger(Configuration.class);
 
 	protected LuceneReporter[] reporters;
 
@@ -56,7 +57,7 @@ public class LuceneHandler<Config extends Configuration> {
 	public TopDocs queryLucene(String query, IndexSearcher indexSearcher) throws IOException,
 			ParseException {
 				Query q = queryParser.parse(query);
-				log.debug(String.format("Querying Lucene with query --> %s", q));
+				logger.debug("Querying Lucene with query --> {}", q);
 				return indexSearcher.search(q, 1000);
 			}
 

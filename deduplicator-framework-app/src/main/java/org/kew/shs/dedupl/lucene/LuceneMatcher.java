@@ -32,7 +32,7 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
             this.dataLoader.load(this.getConfig().getStoreFile());
         }
         else
-            log.info("Reusing existing index");
+            logger.info("Reusing existing index");
     }
 
     public void run() throws Exception {
@@ -53,7 +53,7 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
             JavaScriptEnv jsEnv = null;
             if (!StringUtils.isBlank(config.getRecordFilter())) {
                 jsEnv = new JavaScriptEnv();
-                log.debug("Record filter activated, javascript rock'n roll!");
+                logger.debug("Record filter activated, javascript rock'n roll!");
             }
             // DEFUNCTED! messed up the order of columns. TODO: possibly implement again differently
             // Sort properties in order of cost:
@@ -88,11 +88,9 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
                     // first copy the field values to a new '*_orig' field if required
                     if (prop.isAddOriginalSourceValue()) record.put(fName + "_orig", fValue);
                     // then transform the field-values in place
-                    if (prop.isAddTransformedSourceValue()) {
-                        fValue = fValue == null ? "" : fValue; // super-csv treats blank as null, we don't for now
-                        for (Transformer t:prop.getSourceTransformers()) {
-                            record.put(fName, t.transform(fValue));
-                        }
+                    fValue = fValue == null ? "" : fValue; // super-csv treats blank as null, we don't for now
+                    for (Transformer t:prop.getSourceTransformers()) {
+                        record.put(fName, t.transform(fValue));
                     }
                 }
 
@@ -102,7 +100,7 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
                 String querystr = LuceneUtils.buildQuery(config.getProperties(), record, false);
 
                 TopDocs td = queryLucene(querystr, this.getIndexSearcher());
-                log.debug("Found " + td.totalHits + " possibles to assess against " + fromId);
+                logger.debug("Found " + td.totalHits + " possibles to assess against " + fromId);
 
                 DocList matches = new DocList(record, config.getScoreFieldName());
 
@@ -118,7 +116,7 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
                 }
                 matches.sort();
 
-                if (i++ % config.getAssessReportFrequency() == 0) log.info("Assessed " + i + " records, found " + numMatches + " matches");
+                if (i++ % config.getAssessReportFrequency() == 0) logger.info("Assessed " + i + " records, found " + numMatches + " matches");
                 // call each reporter that has a say; all they get is a complete list of duplicates for this record.
                 for (LuceneReporter reporter : config.getReporters()) {
                     // TODO: make idFieldName configurable, but not on reporter level
@@ -126,7 +124,7 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
                 }
 
             }
-            log.info("Assessed " + i + " records, found " + numMatches + " matches");
+            logger.info("Assessed " + i + " records, found " + numMatches + " matches");
         }
     }
 

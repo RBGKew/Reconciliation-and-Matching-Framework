@@ -28,6 +28,8 @@ public class MatchReporter extends LuceneReporter {
     public void reportResults (Map<String, String> fromRecord, List<Map<String, String>> matches) throws IOException {
         fromRecord.put("no_matches", this.getClusterSize(fromRecord, matches));
         fromRecord.put("matching_ids", this.getIDsInCluster(fromRecord, matches, this.getIdDelimiter()));
+        // add the lookup values of the best match
+        if (matches.size() > 0) fromRecord.putAll(Reporter.getNamespacedCopy(matches.get(0), "lookup_"));
         this.writer.write(fromRecord, this.header);
     }
 

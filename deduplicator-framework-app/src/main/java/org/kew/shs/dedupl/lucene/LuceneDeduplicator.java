@@ -33,9 +33,6 @@ public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration
 
         try (DeduplicationConfiguration config = this.getConfig();
              IndexWriter indexWriter = this.indexWriter) {
-
-            log.debug(new java.util.Date(System.currentTimeMillis()));
-
             // DEFUNCTED! messed up the order of columns. TODO: possibly implement again differently
             // Sort properties in order of cost:
 //            Collections.sort(config.getProperties(),  new Comparator<Property>() {
@@ -44,22 +41,23 @@ public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration
 //                            p2.getMatcher().getCost()));
 //                }
 //            });
+
             // Loop over all documents in index
             int numClusters = 0;
             DocList dupls;
             for (int i=0; i<this.getIndexReader().maxDoc(); i++) {
                 if (this.getIndexReader().isDeleted(i)) {
-                    log.error("this record id appears to be deleted in the index. why??");
+                    logger.error("this record id appears to be deleted in the index. why??");
                     continue;
                 }
                 if (i % config.getAssessReportFrequency() == 0 || i == this.getIndexReader().maxDoc() - 1){
-                    log.info("Assessed " + i + " records, merged to " + (numClusters) + " duplicate clusters");
+                    logger.info("Assessed {} records, merged to {} duplicate clusters", i, numClusters);
                 }
 
                 Document fromDoc = getFromLucene(i);
                 dupls = new DocList(fromDoc, config.getScoreFieldName()); // each fromDoc has a duplicates cluster
 
-                log.debug(LuceneUtils.doc2String(fromDoc));
+                logger.debug(LuceneUtils.doc2String(fromDoc));
 
                 String fromId = fromDoc.get(Configuration.ID_FIELD_NAME);
                 // Keep a record of the records already processed, so as not to return
@@ -72,11 +70,11 @@ public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration
                 String querystr = LuceneUtils.buildQuery(config.getProperties(), fromDoc, true);
 
                 TopDocs td = queryLucene(querystr, this.getIndexSearcher());
-                log.debug("Found " + td.totalHits + " possibles to assess against " + fromId);
+                logger.debug("Found {} possibles to assess against {}", td.totalHits, fromId);
 
                 for (ScoreDoc sd : td.scoreDocs){
                     Document toDoc = getFromLucene(sd.doc);
-                    log.debug(LuceneUtils.doc2String(toDoc));
+                    logger.debug(LuceneUtils.doc2String(toDoc));
 
                     String toId = toDoc.get(Configuration.ID_FIELD_NAME);
                     // Skip the processing if we have already encountered this record in the main loop
@@ -108,7 +106,7 @@ public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration
             for (Property p : config.getProperties()){
                 String executionReport = p.getMatcher().getExecutionReport();
                 if (executionReport != null)
-                    log.debug(p.getMatcher().getExecutionReport());
+                    logger.debug(p.getMatcher().getExecutionReport());
             }
         }
 
