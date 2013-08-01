@@ -71,7 +71,7 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
             final String[] header = mr.getHeader(true);
             // check whether the header column names fit to the ones specified in the configuration
             List<String> headerList = Arrays.asList(header);
-            for (String name:this.config.getPropertyLookupColumnNames()) {
+            for (String name:this.config.getPropertySourceColumnNames()) {
                 if (!headerList.contains(name)) throw new Exception(String.format("Header doesn't contain field name < %s > as defined in config.", name));
             }
             // same for the id-field
@@ -119,16 +119,16 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
                     }
                 }
                 matches.sort();
+
+                if (i++ % config.getAssessReportFrequency() == 0) log.info("Assessed " + i + " records, found " + numMatches + " matches");
                 // call each reporter that has a say; all they get is a complete list of duplicates for this record.
                 for (LuceneReporter reporter : config.getReporters()) {
                     // TODO: make idFieldName configurable, but not on reporter level
                     reporter.report(matches);
                 }
 
-                if (i++ % config.getAssessReportFrequency() == 0)
-                    log.info("Assessed " + i + " records, found " + numMatches + " matches");
-
             }
+            log.info("Assessed " + i + " records, found " + numMatches + " matches");
         }
     }
 

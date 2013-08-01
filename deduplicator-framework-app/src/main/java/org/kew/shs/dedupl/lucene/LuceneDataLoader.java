@@ -65,7 +65,7 @@ public class LuceneDataLoader implements DataLoader {
             final String[] header = mr.getHeader(true);
             // check whether the header column names fit to the ones specified in the configuration
             List<String> headerList = Arrays.asList(header);
-            for (String name:this.config.getPropertySourceColumnNames()) {
+            for (String name:this.config.getPropertyLookupColumnNames()) {
                 if (!headerList.contains(name)) throw new Exception(String.format("Header doesn't contain field name < %s > as defined in config.", name));
             }
             // same for the id-field
