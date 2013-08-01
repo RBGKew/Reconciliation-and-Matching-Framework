@@ -83,11 +83,13 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
 
                 // transform fields where required
                 for (Property prop:config.getProperties()) {
+                    String fName = prop.getSourceColumnName();
+                    String fValue = record.get(fName);
+                    // first copy the field values to a new '*_orig' field if required
+                    if (prop.isAddOriginalSourceValue()) record.put(fName + "_orig", fValue);
+                    // then transform the field-values in place
                     if (prop.isAddTransformedSourceValue()) {
-                        String fName = prop.getSourceColumnName();
-                        String fValue = record.get(fName);
                         fValue = fValue == null ? "" : fValue; // super-csv treats blank as null, we don't for now
-                        if (prop.isAddOriginalSourceValue()) record.put(fName + "_orig", fValue);
                         for (Transformer t:prop.getSourceTransformers()) {
                             record.put(fName, t.transform(fValue));
                         }
