@@ -80,13 +80,15 @@ public class ConfigurationEngine {
 
 		outXML.add(String.format("%s<bean id=\"config\" class=\"%s.%s\"", shift, this.config.getPackageName(), this.config.getClassName()));
 		outXML.add(String.format("%s%sp:sourceFile-ref=\"sourcefile\"", shift, shift));
+		outXML.add(String.format("%s%sp:sourceFileEncoding=\"%s\"", shift, shift, this.config.getSourceFileEncoding()));
+		outXML.add(String.format("%s%sp:sourceFileDelimiter=\"%s\"", shift, shift, this.config.getSourceFileDelimiter()));
 		if (this.config.getClassName().equals("MatchConfiguration")) {
 			outXML.add(String.format("%s%sp:lookupFile-ref=\"lookupfile\"", shift, shift));
+			outXML.add(String.format("%s%sp:lookupFileEncoding=\"%s\"", shift, shift, this.config.getLookupFileEncoding()));
+			outXML.add(String.format("%s%sp:lookupFileDelimiter=\"%s\"", shift, shift, this.config.getLookupFileDelimiter()));
 		}
 		outXML.add(String.format("%s%sp:properties-ref=\"columnProperties\"", shift, shift));
 		outXML.add(String.format("%s%sp:scoreFieldName=\"%s\"", shift, shift, this.config.getScoreFieldName()));
-		outXML.add(String.format("%s%sp:sourceFileEncoding=\"%s\"", shift, shift, this.config.getSourceFileEncoding()));
-		outXML.add(String.format("%s%sp:sourceFileDelimiter=\"%s\"", shift, shift, this.config.getSourceFileDelimiter()));
 		outXML.add(String.format("%s%sp:loadReportFrequency=\"%s\"", shift, shift, this.config.getLoadReportFrequency()));
 		outXML.add(String.format("%s%sp:assessReportFrequency=\"%s\"", shift, shift, this.config.getAssessReportFrequency()));
 		if (this.config.getReporters().size() > 0) outXML.add(String.format("%s%sp:reporters-ref=\"reporters\"/>", shift, shift));

@@ -84,10 +84,10 @@ Feature: Create a simple configuration
                 </util:list>
                 <bean id="config" class="org.kew.shs.dedupl.configuration.DeduplicationConfiguration"
                     p:sourceFile-ref="sourcefile"
-                    p:properties-ref="columnProperties"
-                    p:scoreFieldName="id"
                     p:sourceFileEncoding="UTF8"
                     p:sourceFileDelimiter="&#09;"
+                    p:properties-ref="columnProperties"
+                    p:scoreFieldName="id"
                     p:loadReportFrequency="50000"
                     p:assessReportFrequency="100"
                     p:reporters-ref="reporters"/>

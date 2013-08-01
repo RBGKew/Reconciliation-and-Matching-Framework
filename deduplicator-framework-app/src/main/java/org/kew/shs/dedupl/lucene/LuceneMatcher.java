@@ -55,8 +55,6 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
                 jsEnv = new JavaScriptEnv();
                 log.debug("Record filter activated, javascript rock'n roll!");
             }
-            log.debug(new java.util.Date(System.currentTimeMillis()));
-
             // DEFUNCTED! messed up the order of columns. TODO: possibly implement again differently
             // Sort properties in order of cost:
 //            Collections.sort(config.getProperties(),  new Comparator<Property>() {
@@ -108,8 +106,6 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
 
                 for (ScoreDoc sd : td.scoreDocs){
                     Document toDoc = getFromLucene(sd.doc);
-                    log.debug(LuceneUtils.doc2String(toDoc));
-
                     if (LuceneUtils.recordsMatch(record, toDoc, config.getProperties())){
                         numMatches++;
                         if (matches == null) {

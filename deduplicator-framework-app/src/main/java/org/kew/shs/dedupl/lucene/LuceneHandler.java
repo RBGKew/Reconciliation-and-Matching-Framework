@@ -55,9 +55,8 @@ public class LuceneHandler<Config extends Configuration> {
 
 	public TopDocs queryLucene(String query, IndexSearcher indexSearcher) throws IOException,
 			ParseException {
-				log.debug(query);
 				Query q = queryParser.parse(query);
-				log.debug(q);
+				log.debug(String.format("Querying Lucene with query --> %s", q));
 				return indexSearcher.search(q, 1000);
 			}
 

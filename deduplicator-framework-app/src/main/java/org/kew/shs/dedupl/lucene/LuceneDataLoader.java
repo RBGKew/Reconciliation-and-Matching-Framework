@@ -48,19 +48,22 @@ public class LuceneDataLoader implements DataLoader {
      * lookup-related ones
      */
     public void load() throws Exception {
-        for (Property p : this.getConfig().getProperties()) {
+        Configuration config = this.getConfig();
+        for (Property p : config.getProperties()) {
             p.setLookupTransformers(p.getSourceTransformers());
             p.setAddOriginalLookupValue(p.isAddOriginalSourceValue());
             p.setAddTransformedLookupValue(p.isAddTransformedSourceValue());
             p.setLookupColumnName(p.getSourceColumnName());
         }
-        this.load(this.getConfig().getSourceFile());
+        config.setLookupFileEncoding(config.getSourceFileEncoding());
+        config.setLookupFileDelimiter(config.getSourceFileDelimiter());
+        this.load(config.getSourceFile());
     }
 
     public void load(File file) throws Exception {
         int i = 0;
         // TODO: either make quote characters and line break characters configurable or simplify even more?
-        CsvPreference customCsvPref = new CsvPreference.Builder('"', this.config.getSourceFileDelimiter().charAt(0), "\n").build();
+        CsvPreference customCsvPref = new CsvPreference.Builder('"', this.config.getLookupFileDelimiter().charAt(0), "\n").build();
         try (CsvMapReader mr = new CsvMapReader(new FileReader(file), customCsvPref)) {
             final String[] header = mr.getHeader(true);
             // check whether the header column names fit to the ones specified in the configuration
@@ -88,13 +91,13 @@ public class LuceneDataLoader implements DataLoader {
         doc.add(new Field(idFieldName, record.get(idFieldName), Field.Store.YES,Field.Index.ANALYZED));
         // The remainder of the columns are added as specified in the properties
         for (Property p : this.config.getProperties()) {
-            String value = record.get(p.getSourceColumnName());
+            String value = record.get(p.getLookupColumnName());
             // super-csv treats blank as null, we don't for now
             value = (value != null) ? value: "";
 
             if (p.isAddOriginalLookupValue()) {
                 // Index the value in its original state, pre transformation..
-                Field f1 = new Field(p.getSourceColumnName() + Configuration.ORIGINAL_SUFFIX, value, Field.Store.YES,Field.Index.ANALYZED);
+                Field f1 = new Field(p.getLookupColumnName() + Configuration.ORIGINAL_SUFFIX, value, Field.Store.YES,Field.Index.ANALYZED);
                 doc.add(f1);
             }
             // ..*then* transform the value if necessary..
@@ -102,7 +105,7 @@ public class LuceneDataLoader implements DataLoader {
                 value = t.transform(value);
             }
             //.. and add this one in any case to the index
-            Field f = new Field(p.getSourceColumnName(), value, Field.Store.YES,Field.Index.ANALYZED);
+            Field f = new Field(p.getLookupColumnName(), value, Field.Store.YES,Field.Index.ANALYZED);
             doc.add(f);
 
             // For some fields (those which will be passed into a fuzzy matcher like Levenshtein), we index the length
@@ -110,11 +113,11 @@ public class LuceneDataLoader implements DataLoader {
                 int length = 0;
                 if (value != null)
                     length = value.length();
-                Field fl = new Field(p.getSourceColumnName() + Configuration.LENGTH_SUFFIX, String.format("%02d", length), Field.Store.YES,Field.Index.ANALYZED);
+                Field fl = new Field(p.getLookupColumnName() + Configuration.LENGTH_SUFFIX, String.format("%02d", length), Field.Store.YES,Field.Index.ANALYZED);
                 doc.add(fl);
             }
             if (p.isIndexInitial() & StringUtils.isNotBlank(value)){
-                Field finit = new Field(p.getSourceColumnName() + Configuration.INITIAL_SUFFIX, value.substring(0, 1), Field.Store.YES,Field.Index.ANALYZED);
+                Field finit = new Field(p.getLookupColumnName() + Configuration.INITIAL_SUFFIX, value.substring(0, 1), Field.Store.YES,Field.Index.ANALYZED);
                 doc.add(finit);
             }
         }

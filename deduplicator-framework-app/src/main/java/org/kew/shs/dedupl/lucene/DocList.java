@@ -26,7 +26,6 @@ public class DocList  {
 	protected Document fromDoc;
 
 	public DocList(Document fromDoc, String sortOn) {
-		super ();
 		this.fromDoc = fromDoc;
 		this.store.add(fromDoc); // fromDoc itself is always in the cluster
 		this.sortOn = sortOn;
@@ -34,7 +33,6 @@ public class DocList  {
 
 	public DocList(Map<String, String> fromMap, String sortOn) {
 		// this is for matching; here we don't add the fromDoc
-		super ();
 		Document docified = LuceneUtils.map2Doc(fromMap);
 		this.fromDoc = docified;
 		this.sortOn = sortOn;
@@ -61,13 +59,24 @@ public class DocList  {
 	}
 
 	public void sort() {
-		if (!this.isSorted()) {
-			Collections.sort(this.store, Collections.reverseOrder(new Comparator<Document>() {
-				public int compare(final Document d1,final Document d2) {
-					return Integer.valueOf(d1.get(sortOn)).compareTo(Integer.valueOf(d2.get(sortOn)));
-				}
-			}));
-			this.setSorted(true);
+		if (!this.isSorted() && this.store.size() > 0) {
+			try {
+				Collections.sort(this.store, Collections.reverseOrder(new Comparator<Document>() {
+					public int compare(final Document d1,final Document d2) {
+						return Integer.valueOf(d1.get(sortOn)).compareTo(Integer.valueOf(d2.get(sortOn)));
+					}
+				}));
+			} catch (NumberFormatException e) {
+				// if the String can't be converted to an integer we do String comparison
+				Collections.sort(this.store, Collections.reverseOrder(new Comparator<Document>() {
+					public int compare(final Document d1,final Document d2) {
+						return d1.get(sortOn).compareTo(d2.get(sortOn));
+					}
+				}));
+			}
+			finally {
+				this.setSorted(true);
+			}
 		}
 	}
 
