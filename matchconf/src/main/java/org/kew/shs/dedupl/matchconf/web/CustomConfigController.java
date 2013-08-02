@@ -148,7 +148,8 @@ public class CustomConfigController {
         config.clone();
         return String.format("redirect:/%s_configs", configType);
     }
-    @RequestMapping(value = "/{configType}_configs/{configName}/run", produces = "text/html")
+    @SuppressWarnings("finally")
+	@RequestMapping(value = "/{configType}_configs/{configName}/run", produces = "text/html")
     public String runConfig(@PathVariable("configType") String configType, @PathVariable("configName") String configName, Model model) throws IOException {
         Configuration config = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
         try {

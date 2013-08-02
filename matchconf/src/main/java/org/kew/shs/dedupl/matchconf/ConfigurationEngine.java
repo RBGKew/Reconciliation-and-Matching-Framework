@@ -95,10 +95,11 @@ public class ConfigurationEngine {
 
 		outXML.add(String.format("%s<!-- import the generic application-context (equal for dedup/match configurations) -->", shift));
 		outXML.add(String.format("%s<import resource=\"classpath*:application-context.xml\"/>", shift));
-		outXML.add(String.format("%s<!-- add the deduplication-specific bit -->", shift));
 		if (this.config.getClassName().equals("DeduplicationConfiguration")) {
+			outXML.add(String.format("%s<!-- add the deduplication-specific bit -->", shift));
 			outXML.add(String.format("%s<import resource=\"classpath*:application-context-dedup.xml\"/>", shift));
 		} else if (this.config.getClassName().equals("MatchConfiguration")) {
+			outXML.add(String.format("%s<!-- add the matching-specific bit -->", shift));
 			outXML.add(String.format("%s<import resource=\"classpath*:application-context-match.xml\"/>", shift));
 		} else throw new Exception("No or wrong Configuration Class Name; this should not happen, contact the developer.");
 
@@ -114,10 +115,17 @@ public class ConfigurationEngine {
 		if (!workDir.exists()) {
 			throw new FileNotFoundException("The specified working directory ${config.workDirPath} does not exist! You need to create it and put the source file in it.");
 		}
-		// 2. does the source file exist?
+		// 2a. does the source file exist?
 		File sourceFile = new File(workDir, config.getSourceFileName());
 		if (!sourceFile.exists()) {
 			throw new FileNotFoundException(String.format("There is no file found at the specified location of the source-file %s. Move the source file there with the specified sourceFileName.", sourceFile.toPath()));
+		}
+		// 2b. if the config is for matching: does the lookup file exist?
+		if (this.config.getClassName().equals("MatchConfiguration")) {
+			File lookupFile = new File(workDir, config.getLookupFileName());
+			if (!lookupFile.exists()) {
+				throw new FileNotFoundException(String.format("There is no file found at the specified location of the lookup-file %s. Move the lookup file there with the specified lookupFileName.", lookupFile.toPath()));
+			}
 		}
 		// 3. write out the xml-configuration file
 		File configFile = new File(workDir, "config_" + config.getName() + ".xml");

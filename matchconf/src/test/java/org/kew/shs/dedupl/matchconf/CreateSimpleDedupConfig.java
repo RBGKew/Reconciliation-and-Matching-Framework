@@ -31,7 +31,6 @@ public class CreateSimpleDedupConfig {
     String secondColName;
     Matcher matcher;
     List<Transformer> transformers;
-    List<Reporter> reporters;
     Configuration config;
 
     @Before
@@ -128,7 +127,6 @@ public class CreateSimpleDedupConfig {
             reps.add(rep);
         }
         config.setReporters(reps);
-        this.reporters = new ArrayList<>(reps);
     }
 
     @When("^he asks to write the configuration out to the filesystem$")
@@ -141,7 +139,8 @@ public class CreateSimpleDedupConfig {
     public void the_following_content_will_be_written_to_(String configFilePath, String configXML) throws Throwable {
         File configFile = new File(this.tempDir, configFilePath);
         assert configFile.exists();
-        List<String> configFileLines = FileUtils.readLines(configFile);
+        @SuppressWarnings("unchecked")
+		List<String> configFileLines = FileUtils.readLines(configFile);
         String[] configXMLLines =configXML.split("\n");
         for (int i=0;i<configXMLLines.length;i++) {
             String correctedLine = configXMLLines[i].replaceAll("REPLACE_WITH_TMPDIR", this.tempDir.toString());

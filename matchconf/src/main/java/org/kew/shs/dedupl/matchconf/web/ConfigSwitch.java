@@ -9,12 +9,14 @@ import org.kew.shs.dedupl.matchconf.Configuration;
 
 public class ConfigSwitch {
 
-    static final Map<String,String> TYPE_CLASS_MAP = new HashMap<String,String>() {{
+    @SuppressWarnings("serial")
+	static final Map<String,String> TYPE_CLASS_MAP = new HashMap<String,String>() {{
         put("match", "MatchConfiguration");
         put("dedup", "DeduplicationConfiguration");
     }};
 
-    static final Map<String,String> CLASS_TYPE_MAP = new HashMap<String,String>() {{
+    @SuppressWarnings("serial")
+	static final Map<String,String> CLASS_TYPE_MAP = new HashMap<String,String>() {{
         put("MatchConfiguration", "match");
         put("DeduplicationConfiguration", "dedup");
     }};
@@ -24,7 +26,8 @@ public class ConfigSwitch {
         return CLASS_TYPE_MAP.get(config.getClassName());
     }
 
-    public static List<Configuration> findConfigEntries (int firstResult, int size, String configType) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+    @SuppressWarnings("unchecked")
+	public static List<Configuration> findConfigEntries (int firstResult, int size, String configType) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
         String method = "findConfigurationEntries";
         if (configType.equals("match")) method = "findMatchConfigEntries";
         else if (configType.equals("dedup")) method = "findDedupConfigEntries";

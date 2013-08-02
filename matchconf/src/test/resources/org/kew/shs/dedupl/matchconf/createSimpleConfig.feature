@@ -3,7 +3,7 @@ Feature: Create a simple configuration
     In order to assure my program works roughly
     I want to have a very high-level test in place for a simple standard configuration
 
-    Scenario: DedupConf, one column, one matcher, one composite-transformer with two transformers, rest default values
+    Scenario: DedupConf, one column, one matcher, two transformers, rest default values
         Given Alecs has a file containing data in two columns, ("id_col", "data_col") in a directory "some_path"
         And he has created a new configuration:
             | name          | workDirPath |
@@ -18,7 +18,7 @@ Feature: Create a simple configuration
         And he has wired them together at the second column
         And he has added the following reporters:
             | name              | fileName             | packageName                  | className              | params |
-            | standardReporter  | output.tsv           |org.kew.shs.dedupl.reporters  | DedupReporter          |        |
+            | standardReporter  | output.tsv           | org.kew.shs.dedupl.reporters | DedupReporter          |        |
             | multilineReporter | output_multiline.tsv | org.kew.shs.dedupl.reporters | DedupReporterMultiline |        |
         When he asks to write the configuration out to the filesystem
         Then the following content will be written to "some_path/config_simple-config.xml":
@@ -95,5 +95,135 @@ Feature: Create a simple configuration
                 <import resource="classpath*:application-context.xml"/>
                 <!-- add the deduplication-specific bit -->
                 <import resource="classpath*:application-context-dedup.xml"/>
+            </beans>
+            """
+
+    Scenario: MatchConf, one column, one matcher, two transformers, rest default values
+        Given Alecs has a source-file containing data in three columns, ("id", "data_col1", "otherCol") in a directory "some_path"
+        And Alecs has a lookup-file containing data in three columns ("id", "data_col1", "other_col") in the same directory
+        And he has created a new match configuration:
+            | name                | workDirPath |
+            | simple-match-config | some_path   |
+        And he has added the following source- and lookupTransformers
+            | name               | packageName                     | className                     | params |
+            | 02BlankTransformer | org.kew.shs.dedupl.transformers | ZeroToBlankTransformer        |        |
+            | anotherTransformer | org.kew.shs.dedupl.transformers | SafeStripNonAlphasTransformer |        |
+        And he has added two matchers:
+            | name           | packageName                 | className        | params            |
+            | matchExactly   | org.kew.shs.dedupl.matchers | ExactMatcher     | blanksMatch=false |
+            | matchIntegers  | org.kew.shs.dedupl.matchers | IntegerMatcher   | blanksMatch=true  |
+        And he has wired them together in the following way:
+            | sourceColumnName | lookupColumnName | sourceTransformers                     | lookupTransformers | matcher        | useInSelect |
+            | data_col1        | data_col1        | 02BlankTransformer, anotherTransformer | anotherTransformer | matchExactly   | true        |
+            | otherCol         | other_col        | 02BlankTransformer                     | anotherTransformer | matchIntegers  | false       |
+        And he has added the following match-reporters:
+            | name              | fileName             | packageName                  | className              | params |
+            | standardReporter  | output.tsv           | org.kew.shs.dedupl.reporters | MatchReporter          |        |
+            | multilineReporter | output_multiline.tsv | org.kew.shs.dedupl.reporters | MatchReporterMultiline |        |
+        When he asks to write the match-configuration out to the filesystem
+        Then the following match-config will be written to "some_path/config_simple-match-config.xml":
+            """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <beans xmlns="http://www.springframework.org/schema/beans"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns:util="http://www.springframework.org/schema/util"
+                xmlns:p="http://www.springframework.org/schema/p"
+                xmlns:c="http://www.springframework.org/schema/c"
+                xsi:schemaLocation="
+                    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+                <bean id="preferencePlaceHolder" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
+                    <property name="locations">
+                        <list>
+                        </list>
+                    </property>
+                </bean>
+                <bean id="lucene_directory" class="java.lang.String">
+                    <constructor-arg value="target/deduplicator"/>
+                </bean>
+                <bean id="sourcefile" class="java.io.File">
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/source.tsv" />
+                </bean>
+                <bean id="lookupfile" class="java.io.File">
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/lookup.tsv" />
+                </bean>
+                <bean id="matchExactly" class="org.kew.shs.dedupl.matchers.ExactMatcher"
+                    p:blanksMatch="false"/>
+                <bean id="matchIntegers" class="org.kew.shs.dedupl.matchers.IntegerMatcher"
+                    p:blanksMatch="true"/>
+                <bean id="02BlankTransformer" class="org.kew.shs.dedupl.transformers.ZeroToBlankTransformer" />
+                <bean id="anotherTransformer" class="org.kew.shs.dedupl.transformers.SafeStripNonAlphasTransformer" />
+                <util:list id="reporters">
+                    <bean class="org.kew.shs.dedupl.reporters.MatchReporter"
+                        p:name="standardReporter"
+                        p:delimiter="&#09;"
+                        p:idDelimiter="|">
+                        <property name="file">
+                            <bean class="java.io.File">
+                                <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/simple-match-config_output.tsv" />
+                            </bean>
+                        </property>
+                    </bean>
+                    <bean class="org.kew.shs.dedupl.reporters.MatchReporterMultiline"
+                        p:name="multilineReporter"
+                        p:delimiter="&#09;"
+                        p:idDelimiter="|">
+                        <property name="file">
+                            <bean class="java.io.File">
+                                <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/simple-match-config_output_multiline.tsv" />
+                            </bean>
+                        </property>
+                    </bean>
+                </util:list>
+                <util:list id="columnProperties">
+                    <bean class="org.kew.shs.dedupl.configuration.Property"
+                        p:sourceColumnName="data_col1"
+                        p:lookupColumnName="data_col1"
+                        p:useInSelect="true"
+                        p:matcher-ref="matchExactly">
+                        <property name="sourceTransformers">
+                            <util:list id="1">
+                                <ref bean="02BlankTransformer"/>
+                                <ref bean="anotherTransformer"/>
+                            </util:list>
+                        </property>
+                        <property name="lookupTransformers">
+                            <util:list id="1">
+                                <ref bean="anotherTransformer"/>
+                            </util:list>
+                        </property>
+                    </bean>
+                    <bean class="org.kew.shs.dedupl.configuration.Property"
+                        p:sourceColumnName="otherCol"
+                        p:lookupColumnName="other_col"
+                        p:matcher-ref="matchIntegers">
+                        <property name="sourceTransformers">
+                            <util:list id="1">
+                                <ref bean="02BlankTransformer"/>
+                            </util:list>
+                        </property>
+                        <property name="lookupTransformers">
+                            <util:list id="1">
+                                <ref bean="anotherTransformer"/>
+                            </util:list>
+                        </property>
+                    </bean>
+                </util:list>
+                <bean id="config" class="org.kew.shs.dedupl.configuration.MatchConfiguration"
+                    p:sourceFile-ref="sourcefile"
+                    p:sourceFileEncoding="UTF8"
+                    p:sourceFileDelimiter="&#09;"
+                    p:lookupFile-ref="lookupfile"
+                    p:lookupFileEncoding="UTF8"
+                    p:lookupFileDelimiter="&#09;"
+                    p:properties-ref="columnProperties"
+                    p:scoreFieldName="id"
+                    p:loadReportFrequency="50000"
+                    p:assessReportFrequency="100"
+                    p:reporters-ref="reporters"/>
+                <!-- import the generic application-context (equal for dedup/match configurations) -->
+                <import resource="classpath*:application-context.xml"/>
+                <!-- add the matching-specific bit -->
+                <import resource="classpath*:application-context-match.xml"/>
             </beans>
             """
