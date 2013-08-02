@@ -56,6 +56,7 @@ public class LuceneDataLoader implements DataLoader {
             p.setAddTransformedLookupValue(p.isAddTransformedSourceValue());
             p.setLookupColumnName(p.getSourceColumnName());
         }
+        config.setLookupFile(config.getSourceFile());
         config.setLookupFileEncoding(config.getSourceFileEncoding());
         config.setLookupFileDelimiter(config.getSourceFileDelimiter());
         this.load(config.getSourceFile());
@@ -70,11 +71,11 @@ public class LuceneDataLoader implements DataLoader {
             // check whether the header column names fit to the ones specified in the configuration
             List<String> headerList = Arrays.asList(header);
             for (String name:this.config.getPropertyLookupColumnNames()) {
-                if (!headerList.contains(name)) throw new Exception(String.format("Header doesn't contain field name < %s > as defined in config.", name));
+                if (!headerList.contains(name)) throw new Exception(String.format("%s: Header doesn't contain field name < %s > as defined in config.", this.config.getLookupFile().getPath(), name));
             }
             // same for the id-field
             String idFieldName = Configuration.ID_FIELD_NAME;
-            if (!headerList.contains(idFieldName)) throw new Exception(String.format("Id field name not found in header, should be %s!", idFieldName));
+            if (!headerList.contains(idFieldName)) throw new Exception(String.format("%s: Id field name not found in header, should be %s!", this.config.getSourceFile().getPath(), idFieldName));
             Map<String, String> record;
             while((record = mr.read(header)) != null) {
                 this.indexRecord(record);
