@@ -11,10 +11,10 @@ import org.kew.shs.dedupl.transformers.Transformer;
 public class StripBasionymAuthorTransformer implements Transformer{
 
 	public String transform(String s) {
-		String transformed = s;
 		if (StringUtils.isNotBlank(s))
-			transformed = s.substring(s.indexOf(")") + 1).trim();
-		return transformed;
+			// replace ALL bits in brackets, then remove double whitespaces and surrounding whitespaces
+			s = s.replaceAll("\\([^)]*\\)", "").replaceAll("\\s+", " ").trim();
+		return s;
 	}
 	
 	public static void main(String[] args) {

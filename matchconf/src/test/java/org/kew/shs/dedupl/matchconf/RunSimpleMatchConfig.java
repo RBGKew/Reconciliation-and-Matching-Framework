@@ -35,7 +35,7 @@ public class RunSimpleMatchConfig {
     }
 
 
-	@Given("^Alecs has set up a simple Configuration resulting in the following config \"([^\"]*)\" written to \"([^\"]*)\":$")
+	@Given("^Alecs has set up a simple Configuration resulting in the following match config \"([^\"]*)\" written to \"([^\"]*)\":$")
 	public void Alecs_has_set_up_a_simple_Configuration_resulting_in_the_following_config_written_to_(String configFileName, String workDirPath, String configXML) throws Throwable {
 		this.workDir = new File(workDirPath.replaceAll("REPLACE_WITH_TMPDIR", tempDir.toString()));
 		Configuration config = new Configuration();
