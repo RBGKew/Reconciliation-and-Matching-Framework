@@ -87,11 +87,13 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
                     String fValue = record.get(fName);
                     // first copy the field values to a new '*_orig' field if required
                     if (prop.isAddOriginalSourceValue()) record.put(fName + "_orig", fValue);
-                    // then transform the field-values in place
+                    // then transform the field-value..
                     fValue = fValue == null ? "" : fValue; // super-csv treats blank as null, we don't for now
                     for (Transformer t:prop.getSourceTransformers()) {
-                        record.put(fName, t.transform(fValue));
+                        fValue = t.transform(fValue);
                     }
+                    // ..and put it back into the record
+                    record.put(fName, fValue);
                 }
 
                 String fromId = record.get(Configuration.ID_FIELD_NAME);
@@ -122,7 +124,6 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
                     // TODO: make idFieldName configurable, but not on reporter level
                     reporter.report(matches);
                 }
-
             }
             this.logger.info("Assessed " + i + " records, found " + numMatches + " matches");
         }
