@@ -11,7 +11,7 @@ public class DedupReporter extends LuceneReporter {
 	
 	public DedupReporter() {
 		logger.info("I will be creating an enhanced output file for you with additional fields: " +
-				this.getAvailableFields());
+				this.getAvailableFieldsAsString());
 	}
 
 	protected String[] getAvailableFields () {

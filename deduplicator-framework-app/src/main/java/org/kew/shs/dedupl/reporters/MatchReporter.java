@@ -12,7 +12,7 @@ public class MatchReporter extends LuceneReporter {
 
     public MatchReporter() {
         logger.info("I will be creating an enhanced output file for you with additional fields: " +
-                this.getAvailableFields());
+                this.getAvailableFieldsAsString());
     }
 
     protected String[] getAvailableFields () {

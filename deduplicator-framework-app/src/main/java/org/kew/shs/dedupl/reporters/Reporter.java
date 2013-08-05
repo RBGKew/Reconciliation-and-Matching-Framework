@@ -3,11 +3,14 @@ package org.kew.shs.dedupl.reporters;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.supercsv.io.CsvMapWriter;
@@ -47,15 +50,12 @@ public abstract class Reporter implements AutoCloseable {
         this.logger = LoggerFactory.getLogger(this.getClass());
     }
 
-    protected String getAvailableFieldsAsString() {
-        String fieldNames = "";
-        for (String fieldname : this.getAvailableFields()) {
-            fieldNames += (this.delimiter + fieldname);
-        }
-        return fieldNames;
-    }
     protected String[] getAvailableFields () {
         return Reporter.AVAILABLE_FIELDS;
+    }
+
+    protected String getAvailableFieldsAsString() {
+        return StringUtils.join(this.getAvailableFields(), ", ");
     }
 
     protected void writeHeader() throws IOException {
