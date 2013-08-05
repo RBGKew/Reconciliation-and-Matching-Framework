@@ -79,6 +79,7 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
             while((record = mr.read(header)) != null) {
                 if (!StringUtils.isBlank(config.getRecordFilter()) && jsEnv.evalFilter(config.getRecordFilter(), record)) {
                     for (Piper piper:config.getPipers()) piper.pipe(record);
+                    continue;
                 }
 
                 // transform fields where required
@@ -100,8 +101,11 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
 
                 // Use the properties to select a set of documents which may contain matches
                 String querystr = LuceneUtils.buildQuery(config.getProperties(), record, false);
+                // If the query for some reasons results being empty we pipe the record directly through to the output
+                // TODO: create a log-file that stores critical log messages?
                 if (querystr.equals("")) {
                     logger.warn("Empty query for record {}", record);
+                    for (Piper piper:config.getPipers()) piper.pipe(record);
                     continue;
                 }
 

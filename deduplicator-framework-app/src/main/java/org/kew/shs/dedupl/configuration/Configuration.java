@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.kew.shs.dedupl.reporters.LuceneReporter;
 import org.kew.shs.dedupl.reporters.Piper;
 
@@ -32,7 +31,7 @@ public abstract class Configuration implements AutoCloseable {
 
     private List<? extends LuceneReporter> reporters;
     // a 'piper' is created for each reporter in case recordFilter is not empty
-    private List<Piper> pipers;
+    private List<Piper> pipers = new ArrayList<>();
 
     private boolean reuseIndex;
 
@@ -66,9 +65,8 @@ public abstract class Configuration implements AutoCloseable {
         for (LuceneReporter rep:this.getReporters()) {
             rep.setIdFieldName(Configuration.ID_FIELD_NAME);
             rep.setDefinedOutputFields(this.outputDefs());
-            if (!StringUtils.isBlank(this.getRecordFilter())) {
-                this.getPipers().add(new Piper(rep));
-            }
+            // set up a 'piper' for each reporter as a shortcut to output a record immediately (-->'continue'-ish)
+            this.getPipers().add(new Piper(rep));
         }
     }
 

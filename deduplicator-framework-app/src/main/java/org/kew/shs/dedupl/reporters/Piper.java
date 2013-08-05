@@ -3,6 +3,12 @@ package org.kew.shs.dedupl.reporters;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * A piper is a reporter used for immediately writing out a record without
+ * calling all the special bits and bobs methods; it basically represents the
+ * 'continue' statement in the reporting logic, without swallowing the record
+ * itself away
+ */
 public class Piper {
 
     private Reporter reporter;
