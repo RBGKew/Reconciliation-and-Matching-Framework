@@ -75,7 +75,7 @@ public class LuceneDataLoader implements DataLoader {
             }
             // same for the id-field
             String idFieldName = Configuration.ID_FIELD_NAME;
-            if (!headerList.contains(idFieldName)) throw new Exception(String.format("%s: Id field name not found in header, should be %s!", this.config.getSourceFile().getPath(), idFieldName));
+            if (!headerList.contains(idFieldName)) throw new Exception(String.format("%s: Id field name not found in header, should be %s!", this.config.getLookupFile().getPath(), idFieldName));
             Map<String, String> record;
             while((record = mr.read(header)) != null) {
                 this.indexRecord(record);
