@@ -100,6 +100,10 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
 
                 // Use the properties to select a set of documents which may contain matches
                 String querystr = LuceneUtils.buildQuery(config.getProperties(), record, false);
+                if (querystr.equals("")) {
+                    logger.warn("Empty query for record {}", record);
+                    continue;
+                }
 
                 TopDocs td = queryLucene(querystr, this.getIndexSearcher());
                 this.logger.debug("Found " + td.totalHits + " possibles to assess against " + fromId);
