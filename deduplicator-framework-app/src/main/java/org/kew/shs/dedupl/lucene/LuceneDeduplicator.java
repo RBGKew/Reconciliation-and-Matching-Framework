@@ -69,7 +69,10 @@ public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration
                 // Use the properties to select a set of documents which may contain matches
                 String querystr = LuceneUtils.buildQuery(config.getProperties(), fromDoc, true);
 
-                TopDocs td = queryLucene(querystr, this.getIndexSearcher());
+                TopDocs td = queryLucene(querystr, this.getIndexSearcher(), config.getMaxSearchResults());
+                if (td.totalHits == config.getMaxSearchResults()) {
+                    throw new Exception(String.format("Number of max search results exceeded for record %s! You should either tweak your config to bring back less possible results making better use of the \"useInSelect\" switch (recommended) or raise the \"maxSearchResults\" number.", fromDoc));
+                }
                 logger.debug("Found {} possibles to assess against {}", td.totalHits, fromId);
 
                 for (ScoreDoc sd : td.scoreDocs){

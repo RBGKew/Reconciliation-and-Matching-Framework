@@ -18,6 +18,8 @@ public abstract class Configuration implements AutoCloseable {
 
     private String recordFilter = "";
 
+    private int maxSearchResults = 10000;
+
     // TODO: make use of or delete or rename or move to reporters
     private File reportFile;
     private File delimitedFile;
@@ -41,7 +43,7 @@ public abstract class Configuration implements AutoCloseable {
     public static final String ORIGINAL_SUFFIX="_orig";
     public static final String INITIAL_SUFFIX="_init";
 
-	private File lookupFile;
+    private File lookupFile;
     private String lookupFileEncoding = "UTF8";
     private String lookupFileDelimiter;
 
@@ -221,5 +223,11 @@ public abstract class Configuration implements AutoCloseable {
 
     public void setPipers(List<Piper> pipers) {
         this.pipers = pipers;
+    }
+    public int getMaxSearchResults() {
+        return maxSearchResults;
+    }
+    public void setMaxSearchResults(int maxSearchResults) {
+        this.maxSearchResults = maxSearchResults;
     }
 }

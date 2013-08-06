@@ -6,7 +6,7 @@
     <div id="config-link">for configuration: <a href="/MatchConf/${ configType }_configs/${ configName }">${ configName }</a></div> <br/>
 
     <page:list id="pl_org_kew_shs_dedupl_matchconf_Matcher" items="${matchers}" z="AK9evHZPTHrtdtqfZ/2bpWEp7c4=">
-        <table:table data="${matchers}" id="l_org_kew_shs_dedupl_matchconf_Matcher" path="/${ configType }_configs/${ configName }//matchers" z="mnfabbZUyhYRJ0t9H89xG4RzT2Q=">
+        <table:table data="${matchers}" id="l_org_kew_shs_dedupl_matchconf_Matcher" path="/${ configType }_configs/${ configName }/matchers" z="mnfabbZUyhYRJ0t9H89xG4RzT2Q=">
             <table:column id="c_org_kew_shs_dedupl_matchconf_Matcher_name" property="name" z="AR/duKvVShe5KeMA6ZcWCvsh/UY="/>
             <table:column id="c_org_kew_shs_dedupl_matchconf_Matcher_params" property="params" z="9mQoRytbnKGxk2hbsh7ZXJq1gh0="/>
             <table:column id="c_org_kew_shs_dedupl_matchconf_Matcher_composedBy" property="composedBy" z="r+i/LiENE8GrSU+SACvhtlRdfcA="/>
