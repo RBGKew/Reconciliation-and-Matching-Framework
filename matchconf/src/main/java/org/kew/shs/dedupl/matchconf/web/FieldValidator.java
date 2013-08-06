@@ -1,5 +1,7 @@
 package org.kew.shs.dedupl.matchconf.web;
 
+import org.apache.commons.lang.StringUtils;
+
 
 public class FieldValidator {
 
@@ -10,7 +12,7 @@ public class FieldValidator {
      * @return
      */
     public static boolean validSlug(String s) {
-        return s.matches("[\\w-_]*");
+        return !StringUtils.isBlank(s) && s.matches("[\\w-_]*");
     }
 
 }

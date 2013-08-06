@@ -31,7 +31,7 @@ public class CustomMatcherController {
     // POST to create an object and add it to this configuration
     @RequestMapping(value="/{configType}_configs/{configName}/matchers", method = RequestMethod.POST, produces = "text/html")
     public String create(@PathVariable("configType") String configType, @PathVariable("configName") String configName, @Valid Matcher matcher, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
-	    Configuration config = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
+        Configuration config = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
         // assert unique_together:config&name
         if (config.getMatcherForName(matcher.getName()) != null) {
             bindingResult.addError(new ObjectError("matcher.name", "There is already a Matcher set up for this configuration with this name."));
@@ -105,6 +105,16 @@ public class CustomMatcherController {
         uiModel.asMap().clear();
         uiModel.addAttribute("page", (page == null) ? "1" : page.toString());
         uiModel.addAttribute("size", (size == null) ? "10" : size.toString());
+        return "redirect:/{configType}_configs/" + configName.toString() + "/matchers/";
+    }
+
+    // DELETE by id
+    @RequestMapping(value="/{configType}_configs/{configName}/matchers/delete-by-id/{id}", method = RequestMethod.GET, produces = "text/html")
+    public String deleteById(@PathVariable("configType") String configType, @PathVariable("configName") String configName, @PathVariable("id") long id, Model uiModel) {
+        Matcher toDelete = Matcher.findMatcher(id);
+        Configuration config = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
+        config.getMatchers().remove(toDelete);
+        config.merge();
         return "redirect:/{configType}_configs/" + configName.toString() + "/matchers/";
     }
 

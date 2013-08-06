@@ -109,6 +109,16 @@ public class CustomTransformerController {
         return "redirect:/{configType}_configs/" + configName.toString() + "/transformers/";
     }
 
+    // DELETE by id
+    @RequestMapping(value="/{configType}_configs/{configName}/transformers/delete-by-id/{id}", method = RequestMethod.GET, produces = "text/html")
+    public String deleteById(@PathVariable("configType") String configType, @PathVariable("configName") String configName, @PathVariable("id") long id, Model uiModel) {
+        Transformer toDelete = Transformer.findTransformer(id);
+        Configuration config = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
+        config.getTransformers().remove(toDelete);
+        config.merge();
+        return "redirect:/{configType}_configs/" + configName.toString() + "/transformers/";
+    }
+
     void populateEditForm(Model uiModel,String configType, String configName, Transformer transformer) {
         uiModel.addAttribute("transformer", transformer);
         uiModel.addAttribute("configName", configName);

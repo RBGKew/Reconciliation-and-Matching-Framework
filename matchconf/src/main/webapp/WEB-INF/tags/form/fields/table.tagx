@@ -122,7 +122,7 @@
             <td class="utilbox">
               <spring:url value="${path}/${itemId}" var="delete_form_url" />
               <spring:url value="/resources/images/delete.png" var="delete_image_url" />
-              <form:form action="${delete_form_url}" method="DELETE">
+              <form:form class="deletion" id="/MatchConf${ path }/delete-by-id/${ item.getId() }" action="${delete_form_url}" method="DELETE">
                 <spring:message arguments="${typeName}" code="entity_delete" var="delete_label" htmlEscape="false" />
                 <c:set var="delete_confirm_msg">
                   <spring:escapeBody javaScriptEscape="true">
@@ -176,5 +176,23 @@
     </table>
 
   </c:if>
+  <script type="text/javascript">
+    //<![CDATA[
+    // the magic delete-by-id trick
+    $("form.deletion").each(function(i) {
+      $(this).bind("mouseover", function(e) {
+        // archive the name-based action in any case
+        if (this.archived_action == undefined) this.archived_action = this.action;
+        // if shift is pressed, change the action to the value store in the form's id field
+        if (e.shiftKey) {
+            this.action = this.id;
+            // TODO: find out why the method arrives as GET!
+        }
+        // otherwise swap back to normal
+        else this.action = this.archived_action;
+      });
+    });
+    //]]>
+  </script>
 
 </jsp:root>

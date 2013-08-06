@@ -117,6 +117,14 @@ public class CustomConfigController {
         return String.format("redirect:/%s_configs", configType);
     }
 
+    // DELETE by id
+    @RequestMapping(value="/{configType}_configs/delete-by-id/{id}", method = RequestMethod.GET, produces = "text/html")
+    public String deleteById(@PathVariable("configType") String configType, @PathVariable("id") long id, Model uiModel) {
+        Configuration toDelete = Configuration.findConfiguration(id);
+        toDelete.remove();
+        return "redirect:/{configType}_configs/";
+    }
+
     void populateEditForm(Model uiModel, Configuration configuration) {
         uiModel.addAttribute("configuration", configuration);
         uiModel.addAttribute("wiring", configuration.getWiring());
@@ -149,7 +157,7 @@ public class CustomConfigController {
         return String.format("redirect:/%s_configs", configType);
     }
     @SuppressWarnings("finally")
-	@RequestMapping(value = "/{configType}_configs/{configName}/run", produces = "text/html")
+    @RequestMapping(value = "/{configType}_configs/{configName}/run", produces = "text/html")
     public String runConfig(@PathVariable("configType") String configType, @PathVariable("configName") String configName, Model model) throws IOException {
         Configuration config = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
         try {

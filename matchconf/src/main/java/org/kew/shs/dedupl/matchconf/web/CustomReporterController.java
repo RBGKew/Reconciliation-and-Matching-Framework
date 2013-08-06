@@ -105,6 +105,16 @@ public class CustomReporterController {
         return String.format("redirect:/%s_configs/%s/reporters/", configType, configName.toString());
     }
 
+    // DELETE by id
+    @RequestMapping(value="/{configType}_configs/{configName}/reporters/delete-by-id/{id}", method = RequestMethod.GET, produces = "text/html")
+    public String deleteById(@PathVariable("configType") String configType, @PathVariable("configName") String configName, @PathVariable("id") long id, Model uiModel) {
+        Reporter toDelete = Reporter.findReporter(id);
+        Configuration config = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
+        config.getReporters().remove(toDelete);
+        config.merge();
+        return "redirect:/{configType}_configs/" + configName.toString() + "/reporters/";
+    }
+
     void populateEditForm(Model uiModel, String configName, Reporter reporter) {
         uiModel.addAttribute("reporter", reporter);
         uiModel.addAttribute("configName", configName);

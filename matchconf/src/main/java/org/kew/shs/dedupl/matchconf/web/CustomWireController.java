@@ -105,6 +105,16 @@ public class CustomWireController {
         return String.format("redirect:/%s_configs/%s/wires/", configType, configName.toString());
     }
 
+    // DELETE by id
+    @RequestMapping(value="/{configType}_configs/{configName}/wires/delete-by-id/{id}", method = RequestMethod.GET, produces = "text/html")
+    public String deleteById(@PathVariable("configType") String configType, @PathVariable("configName") String configName, @PathVariable("id") long id, Model uiModel) {
+        Wire toDelete = Wire.findWire(id);
+        Configuration config = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
+        config.getWiring().remove(toDelete);
+        config.merge();
+        return "redirect:/{configType}_configs/" + configName.toString() + "/wires/";
+    }
+
     void populateEditForm(Model uiModel, String configName, Wire wire) {
         Configuration config = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
         uiModel.addAttribute("wire", wire);
