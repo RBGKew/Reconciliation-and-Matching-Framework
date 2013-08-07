@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.kew.shs.dedupl.util.LibraryRegister;
 
+@LibraryRegister(category="reporters")
 public class DedupReporterMultiline extends LuceneReporter {
 
 	protected static String[] AVAILABLE_FIELDS = new String[] {"cluster_size", "best_record_id", "rank"};

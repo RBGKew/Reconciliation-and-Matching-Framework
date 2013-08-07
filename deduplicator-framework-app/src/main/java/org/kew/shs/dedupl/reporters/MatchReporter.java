@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.kew.shs.dedupl.util.LibraryRegister;
 
+@LibraryRegister(category="reporters")
 public class MatchReporter extends LuceneReporter {
 
     protected static String[] AVAILABLE_FIELDS = new String[] {"no_matches", "matching_ids"};

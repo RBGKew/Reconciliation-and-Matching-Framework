@@ -4,6 +4,9 @@ import java.text.Normalizer;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.kew.shs.dedupl.util.LibraryRegister;
+
+@LibraryRegister(category="transformers")
 public class NormaliseDiacritsTransformer implements Transformer {
 
 	@SuppressWarnings(value = { "serial" })

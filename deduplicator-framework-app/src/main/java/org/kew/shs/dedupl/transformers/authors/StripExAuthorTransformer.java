@@ -1,12 +1,14 @@
 package org.kew.shs.dedupl.transformers.authors;
 
 import org.kew.shs.dedupl.transformers.Transformer;
+import org.kew.shs.dedupl.util.LibraryRegister;
 
 /**
  * This transformer translates author strings in the form "Author1 ex Author2" to "Author2"
  * @author nn00kg
  *
  */
+@LibraryRegister(category="transformers")
 public class StripExAuthorTransformer implements Transformer{
 
 	private static String EX_MARKER = " ex ";

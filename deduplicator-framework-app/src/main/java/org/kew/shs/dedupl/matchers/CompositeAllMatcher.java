@@ -1,5 +1,7 @@
 package org.kew.shs.dedupl.matchers;
 
+import org.kew.shs.dedupl.util.LibraryRegister;
+
 
 /**
  * This matcher is  wrapper for multiple matchers, 
@@ -7,6 +9,7 @@ package org.kew.shs.dedupl.matchers;
  * @author nn00kg
  *
  */
+@LibraryRegister(category="matchers")
 public class CompositeAllMatcher extends CompositeMatcher{
 
 	public boolean matches(String s1, String s2) {

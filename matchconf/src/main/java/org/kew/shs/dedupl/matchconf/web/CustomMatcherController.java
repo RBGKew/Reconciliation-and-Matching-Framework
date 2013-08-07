@@ -23,8 +23,13 @@ public class CustomMatcherController {
 
     // GET: matcher creation form for this configuration
     @RequestMapping(value="/{configType}_configs/{configName}/matchers", params = "form", produces = "text/html")
-    public String createForm(@PathVariable("configType") String configType, @PathVariable("configName") String configName, Model uiModel) {
-        populateEditForm(uiModel, configType, configName, new Matcher());
+    public String createForm(@PathVariable("configType") String configType, @PathVariable("configName") String configName, Model uiModel,
+                              @RequestParam(value = "className", required = false) String className,
+                              @RequestParam(value = "packageName", required = false) String packageName) {
+        Matcher instance = new Matcher();
+        instance.setPackageName(packageName);
+        instance.setClassName(className);
+        populateEditForm(uiModel, configType, configName, instance);
         return "config_matchers/create";
     }
 
@@ -52,6 +57,7 @@ public class CustomMatcherController {
     // GET indiviual matcher level
     @RequestMapping(value="/{configType}_configs/{configName}/matchers/{matcherName}", produces = "text/html")
     public String show(@PathVariable("configType") String configType, @PathVariable("configName") String configName, @PathVariable("matcherName") String matcherName, Model uiModel) {
+        uiModel.addAttribute("availableItems", LibraryScanner.availableItems());
         Matcher matcher = Configuration.findConfigurationsByNameEquals(configName).getSingleResult().getMatcherForName(matcherName);
         uiModel.addAttribute("matcher", matcher);
         uiModel.addAttribute("itemId", matcher.getName());
@@ -62,6 +68,7 @@ public class CustomMatcherController {
     // GET list of matchers for this config
     @RequestMapping(value="/{configType}_configs/{configName}/matchers", produces = "text/html")
     public String list(@PathVariable("configType") String configType, @PathVariable("configName") String configName, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
+        uiModel.addAttribute("availableItems", LibraryScanner.availableItems());
         List<Matcher> matchers = Configuration.findConfigurationsByNameEquals(configName).getSingleResult().getMatchers();
         if (page != null || size != null) {
             int sizeNo = Math.min(size == null ? 10 : size.intValue(), matchers.size());
@@ -119,6 +126,7 @@ public class CustomMatcherController {
     }
 
     void populateEditForm(Model uiModel, String configType, String configName, Matcher matcher) {
+        uiModel.addAttribute("availableItems", LibraryScanner.availableItems());
         Configuration config = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
         List<Matcher> matchers = config.getMatchers();
         matchers.remove(matcher);

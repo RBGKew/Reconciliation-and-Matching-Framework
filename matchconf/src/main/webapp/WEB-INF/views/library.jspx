@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:library="urn:jsptagdir:/WEB-INF/tags/library" id="library" version="2.0">
+<jsp:directive.page import="java.util.Map"/>
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <library:library items="${ availableItems }" />
+</div>

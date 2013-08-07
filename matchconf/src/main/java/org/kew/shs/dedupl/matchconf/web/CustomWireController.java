@@ -51,6 +51,7 @@ public class CustomWireController {
     // default GET indiviual wire level
     @RequestMapping(value="/{configType}_configs/{configName}/wires/{wireName}", produces = "text/html")
     public String show(@PathVariable("configType") String configType, @PathVariable("configName") String configName, @PathVariable("wireName") String wireName, Model uiModel) {
+        uiModel.addAttribute("availableItems", LibraryScanner.availableItems());
         Wire wire = Configuration.findConfigurationsByNameEquals(configName).getSingleResult().getWireForName(wireName);
         uiModel.addAttribute("wire", wire);
         uiModel.addAttribute("itemId", wire.getName());
@@ -61,6 +62,7 @@ public class CustomWireController {
 
     @RequestMapping(value="/{configType}_configs/{configName}/wires", produces = "text/html")
     public String list(@PathVariable("configType") String configType, @PathVariable("configName") String configName, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
+        uiModel.addAttribute("availableItems", LibraryScanner.availableItems());
         List<Wire> wires = Configuration.findConfigurationsByNameEquals(configName).getSingleResult().getWiring();
         if (page != null || size != null) {
             int sizeNo = Math.min(size == null ? 10 : size.intValue(), wires.size());
@@ -116,6 +118,7 @@ public class CustomWireController {
     }
 
     void populateEditForm(Model uiModel, String configName, Wire wire) {
+        uiModel.addAttribute("availableItems", LibraryScanner.availableItems());
         Configuration config = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
         uiModel.addAttribute("wire", wire);
         uiModel.addAttribute("configName", configName);

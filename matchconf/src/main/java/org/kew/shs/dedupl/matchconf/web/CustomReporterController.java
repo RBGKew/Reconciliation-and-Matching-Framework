@@ -22,8 +22,13 @@ import org.springframework.web.util.WebUtils;
 public class CustomReporterController {
 
    @RequestMapping(value="/{configType}_configs/{configName}/reporters", params = "form", produces = "text/html")
-    public String createForm(@PathVariable("configType") String configType, @PathVariable("configName") String configName, Model uiModel) {
-        populateEditForm(uiModel, configName, new Reporter());
+    public String createForm(@PathVariable("configType") String configType, @PathVariable("configName") String configName, Model uiModel,
+                              @RequestParam(value = "className", required = false) String className,
+                              @RequestParam(value = "packageName", required = false) String packageName) {
+        Reporter instance = new Reporter();
+        instance.setPackageName(packageName);
+        instance.setClassName(className);
+        populateEditForm(uiModel, configType, configName, instance);
         return "config_reporters/create";
     }
 
@@ -36,7 +41,7 @@ public class CustomReporterController {
         }
         this.customValidation(configName, reporter, bindingResult);
         if (bindingResult.hasErrors()) {
-            populateEditForm(uiModel, configName, reporter);
+            populateEditForm(uiModel, configType, configName, reporter);
             return "config_reporters/create";
         }
         uiModel.asMap().clear();
@@ -51,6 +56,7 @@ public class CustomReporterController {
     // default GET indiviual reporter level
     @RequestMapping(value="/{configType}_configs/{configName}/reporters/{reporterName}", produces = "text/html")
     public String show(@PathVariable("configType") String configType, @PathVariable("configName") String configName, @PathVariable("reporterName") String reporterName, Model uiModel) {
+        uiModel.addAttribute("availableItems", LibraryScanner.availableItems());
         Reporter reporter = Configuration.findConfigurationsByNameEquals(configName).getSingleResult().getReporterForName(reporterName);
         uiModel.addAttribute("reporter", reporter);
         uiModel.addAttribute("itemId", reporter.getName());
@@ -61,6 +67,7 @@ public class CustomReporterController {
 
     @RequestMapping(value="/{configType}_configs/{configName}/reporters", produces = "text/html")
     public String list(@PathVariable("configType") String configType, @PathVariable("configName") String configName, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
+        uiModel.addAttribute("availableItems", LibraryScanner.availableItems());
         List<Reporter> reporters = Configuration.findConfigurationsByNameEquals(configName).getSingleResult().getReporters();
         if (page != null || size != null) {
             int sizeNo = Math.min(size == null ? 10 : size.intValue(), reporters.size());
@@ -79,7 +86,7 @@ public class CustomReporterController {
     public String update(@PathVariable("configType") String configType, @PathVariable("configName") String configName, @Valid Reporter reporter, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
         this.customValidation(configName, reporter, bindingResult);
         if (bindingResult.hasErrors()) {
-            populateEditForm(uiModel, configName, reporter);
+            populateEditForm(uiModel, configType, configName, reporter);
             return String.format("%s_config_reporters/update", configType);
         }
         uiModel.asMap().clear();
@@ -91,7 +98,7 @@ public class CustomReporterController {
     @RequestMapping(value="/{configType}_configs/{configName}/reporters/{reporterName}", params = "form", produces = "text/html")
     public String updateForm(@PathVariable("configType") String configType, @PathVariable("configName") String configName, @PathVariable("reporterName") String reporterName, Model uiModel) {
         Reporter reporter = Configuration.findConfigurationsByNameEquals(configName).getSingleResult().getReporterForName(reporterName);
-        populateEditForm(uiModel, configName, reporter);
+        populateEditForm(uiModel, configType, configName, reporter);
         return "config_reporters/update";
     }
 
@@ -115,9 +122,11 @@ public class CustomReporterController {
         return "redirect:/{configType}_configs/" + configName.toString() + "/reporters/";
     }
 
-    void populateEditForm(Model uiModel, String configName, Reporter reporter) {
+    void populateEditForm(Model uiModel, String configType, String configName, Reporter reporter) {
+        uiModel.addAttribute("availableItems", LibraryScanner.availableItems());
         uiModel.addAttribute("reporter", reporter);
         uiModel.addAttribute("configName", configName);
+        uiModel.addAttribute("configType", configType);
     }
 
     String encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {

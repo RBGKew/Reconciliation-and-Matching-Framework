@@ -81,6 +81,7 @@ public class CustomConfigController {
     // Default GET indiviual config level
     @RequestMapping(value = "/{configType}_configs/{configName}", produces = "text/html")
     public String show(@PathVariable("configType") String configType, @PathVariable("configName") String configName, Model uiModel) {
+        uiModel.addAttribute("availableItems", LibraryScanner.availableItems());
         Configuration config = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
         uiModel.addAttribute("configuration", config);
         uiModel.addAttribute("itemId", config.getName());
@@ -89,6 +90,7 @@ public class CustomConfigController {
 
     @RequestMapping(value = "/{configType}_configs", method = RequestMethod.PUT, produces = "text/html")
     public String update(@PathVariable String configType, @Valid Configuration configuration, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
+        uiModel.addAttribute("availableItems", LibraryScanner.availableItems());
         configuration.setClassName(ConfigSwitch.TYPE_CLASS_MAP.get(configType));
         this.customValidation(configuration, bindingResult);
         if (bindingResult.hasErrors()) {
@@ -127,6 +129,7 @@ public class CustomConfigController {
 
     void populateEditForm(Model uiModel, Configuration configuration) {
         uiModel.addAttribute("configuration", configuration);
+        uiModel.addAttribute("configName", configuration.getName());
         uiModel.addAttribute("wiring", configuration.getWiring());
         uiModel.addAttribute("transformers", configuration.getTransformers());
         uiModel.addAttribute("matchers", configuration.getMatchers());

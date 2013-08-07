@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.kew.shs.dedupl.util.LibraryRegister;
 
 import com.googlecode.ehcache.annotations.Cacheable;
 
@@ -13,6 +14,7 @@ import com.googlecode.ehcache.annotations.Cacheable;
  * @author nn00kg
  *
  */
+@LibraryRegister(category="matchers")
 public class NGramMatcher extends CommonTokensMatcher{
 
 	private int nGramLength;

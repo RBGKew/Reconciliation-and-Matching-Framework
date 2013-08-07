@@ -23,8 +23,13 @@ public class CustomTransformerController {
 
     // GET: transformer creation form for this configuration
     @RequestMapping(value="/{configType}_configs/{configName}/transformers", params = "form", produces = "text/html")
-    public String createForm(@PathVariable("configType") String configType, @PathVariable("configName") String configName, Model uiModel) {
-        populateEditForm(uiModel, configType, configName, new Transformer());
+    public String createForm(@PathVariable("configType") String configType, @PathVariable("configName") String configName, Model uiModel,
+                              @RequestParam(value = "className", required = false) String className,
+                              @RequestParam(value = "packageName", required = false) String packageName) {
+        Transformer instance = new Transformer();
+        instance.setPackageName(packageName);
+        instance.setClassName(className);
+        populateEditForm(uiModel, configType, configName, instance);
         return "config_transformers/create";
     }
 
@@ -52,6 +57,7 @@ public class CustomTransformerController {
     // GET indiviual transformer level
     @RequestMapping(value="/{configType}_configs/{configName}/transformers/{transformerName}", produces = "text/html")
     public String show(@PathVariable("configType") String configType, @PathVariable("configName") String configName, @PathVariable("transformerName") String transformerName, Model uiModel) {
+        uiModel.addAttribute("availableItems", LibraryScanner.availableItems());
         Transformer transformer = Configuration.findConfigurationsByNameEquals(configName).getSingleResult().getTransformerForName(transformerName);
         uiModel.addAttribute("transformer", transformer);
         uiModel.addAttribute("itemId", transformer.getName());
@@ -62,6 +68,7 @@ public class CustomTransformerController {
     // GET list of transformers for this config
     @RequestMapping(value="/{configType}_configs/{configName}/transformers", produces = "text/html")
     public String list(@PathVariable("configType") String configType, @PathVariable("configName") String configName, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
+        uiModel.addAttribute("availableItems", LibraryScanner.availableItems());
         List<Transformer> transformers = Configuration.findConfigurationsByNameEquals(configName).getSingleResult().getTransformers();
         if (page != null || size != null) {
             int sizeNo = Math.min(size == null ? 10 : size.intValue(), transformers.size());
@@ -120,6 +127,7 @@ public class CustomTransformerController {
     }
 
     void populateEditForm(Model uiModel,String configType, String configName, Transformer transformer) {
+        uiModel.addAttribute("availableItems", LibraryScanner.availableItems());
         uiModel.addAttribute("transformer", transformer);
         uiModel.addAttribute("configName", configName);
         uiModel.addAttribute("configType", configType);

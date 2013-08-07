@@ -1,10 +1,13 @@
 package org.kew.shs.dedupl.transformers;
 
+import org.kew.shs.dedupl.util.LibraryRegister;
+
 /**
  * This transformer canonicalises epithets
  * @author nn00kg
  *
  */
+@LibraryRegister(category="transformers")
 public class EpithetTransformer implements Transformer {
 
 	public String transform(String s) {

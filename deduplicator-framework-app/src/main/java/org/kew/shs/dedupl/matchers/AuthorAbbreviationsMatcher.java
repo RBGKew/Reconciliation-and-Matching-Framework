@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.kew.shs.dedupl.transformers.Transformer;
+import org.kew.shs.dedupl.util.LibraryRegister;
 
 import com.googlecode.ehcache.annotations.Cacheable;
 
@@ -26,6 +27,7 @@ import com.googlecode.ehcache.annotations.Cacheable;
  * @author nb00kg
  *
  */
+@LibraryRegister(category="matchers")
 public class AuthorAbbreviationsMatcher extends AuthorCommonTokensMatcher{
 
 	public static int COST = 1;

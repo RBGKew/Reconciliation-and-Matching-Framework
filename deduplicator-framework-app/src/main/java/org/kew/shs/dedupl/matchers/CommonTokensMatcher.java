@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.kew.shs.dedupl.util.LibraryRegister;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
  * @author nn00kg
  *
  */
+@LibraryRegister(category="matchers")
 public class CommonTokensMatcher implements Matcher {
 
 	public static int COST = 5;

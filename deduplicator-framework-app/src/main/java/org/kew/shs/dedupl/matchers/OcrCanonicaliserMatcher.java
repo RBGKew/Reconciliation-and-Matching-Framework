@@ -1,11 +1,14 @@
 package org.kew.shs.dedupl.matchers;
 
+import org.kew.shs.dedupl.util.LibraryRegister;
+
 
 /**
  * This matcher tests for equality between the two inputs (exact matches).
  * @author nn00kg
  *
  */
+@LibraryRegister(category="matchers")
 public class OcrCanonicaliserMatcher implements Matcher {
 
 	public static int COST = 0;

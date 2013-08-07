@@ -36,49 +36,61 @@ body {
 	display:box;
 }
 
-#menu {
-	background: #eee;
-	position:relative;
-	float:left;  	
-	left:0px;
-	width:220px;
-	margin-right:15px;
+#sidebar {
+    float: left;
 }
 
-#menu ul{
+#menu, #library {
+	background: #eee;
+	position:relative;
+	left:0px;
+	width:230px;
+    overflow: hidden;
+	margin-right:15px;
+    margin-bottom:10px;
+}
+
+#menu ul, #library ul {
 	list-style: none;
 	margin: 0;
 	padding: 0;
 }
 
-#menu ul li{
+#menu ul li, #library ul li {
 	padding: 0px;
 }
 
 
-#menu a, #menu h2 {
+#menu a, #menu h2 , #library a, #library h2 {
 	display: block;
 	margin: 0;
 	padding: 2px 6px;
 	color:#FFFFFF;
 }
 
-#menu h2 {
+#menu h2, #library h2 {
 	color: #fff;
-	background: #c36041;
 	text-transform: uppercase;
 	font-weight:bold;
 	font-size: 12px;
 }
 
-#menu a {
+#menu h2 {
+	background: #c36041;
+}
+
+#library h2 {
+    background: #6f4f4f;
+}
+
+#menu a, #library li.pakkage, #library li.clazz a {
 	color: #666666;
 	background: #efefef;
 	text-decoration: none;
 	padding: 2px 12px;
 }
 
-#menu a:hover {
+#menu a:hover, #library li.clazz a:hover {
 	color: #648C1D;
 	background: #fff;
 }

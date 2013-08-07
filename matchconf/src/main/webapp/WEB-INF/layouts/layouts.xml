@@ -8,6 +8,7 @@
   <definition name="default" template="/WEB-INF/layouts/default.jspx">
     <put-attribute name="header" value="/WEB-INF/views/header.jspx" />
     <put-attribute name="custom_menu" value="/WEB-INF/views/custom_menu.jspx" />
+    <put-attribute name="library" value="/WEB-INF/views/library.jspx" />
     <put-attribute name="footer" value="/WEB-INF/views/footer.jspx" />
   </definition>
 

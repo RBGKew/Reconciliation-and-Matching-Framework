@@ -1,5 +1,8 @@
 package org.kew.shs.dedupl.matchers;
 
+import org.kew.shs.dedupl.util.LibraryRegister;
+
+@LibraryRegister(category="matchers")
 public class IntegerMatcher implements Matcher {
 
 	public static int COST = 1;

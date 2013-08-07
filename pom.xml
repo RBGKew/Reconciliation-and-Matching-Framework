@@ -33,6 +33,7 @@
         <liquibase.version>3.0.1</liquibase.version>		
         <logback.version>1.0.13</logback.version>
 		<maven-compiler-plugin.version>2.4</maven-compiler-plugin.version>
+		<reflections.version>0.9.9-RC1</reflections.version>
         <roo.version>1.2.3.RELEASE</roo.version>
         <servlet-api.version>2.5</servlet-api.version>
         <slf4j.version>1.7.5</slf4j.version>
@@ -42,6 +43,11 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>org.reflections</groupId>
+				<artifactId>reflections</artifactId>
+				<version>${reflections.version}</version>
+			</dependency>
 		    <!-- json serialisation -->
 		    <dependency>
 		        <groupId>com.google.code.gson</groupId>

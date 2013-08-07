@@ -1,10 +1,13 @@
 package org.kew.shs.dedupl.matchers;
 
+import org.kew.shs.dedupl.util.LibraryRegister;
+
 /**
  * This matcher returns true in all cases.
  * @author nn00kg
  *
  */
+@LibraryRegister(category="matchers")
 public class AlwaysMatchingMatcher implements Matcher {
 
 	public static int COST = 0;

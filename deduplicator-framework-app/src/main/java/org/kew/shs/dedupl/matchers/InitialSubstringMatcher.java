@@ -1,12 +1,14 @@
 package org.kew.shs.dedupl.matchers;
 
 import org.kew.shs.dedupl.transformers.ZeroToBlankTransformer;
+import org.kew.shs.dedupl.util.LibraryRegister;
 
 /**
  * This matcher tests for initial substring equality between the two inputs.
  * @author nn00kg
  *
  */
+@LibraryRegister(category="matchers")
 public class InitialSubstringMatcher implements Matcher {
 
 	public static int COST = 0;

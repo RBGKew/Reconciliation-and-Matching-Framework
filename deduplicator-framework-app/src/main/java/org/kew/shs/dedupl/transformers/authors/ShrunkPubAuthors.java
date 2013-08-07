@@ -2,8 +2,10 @@ package org.kew.shs.dedupl.transformers.authors;
 
 import org.kew.shs.dedupl.transformers.NormaliseDiacritsTransformer;
 import org.kew.shs.dedupl.transformers.Transformer;
+import org.kew.shs.dedupl.util.LibraryRegister;
 
 
+@LibraryRegister(category="transformers")
 public class ShrunkPubAuthors implements Transformer {
 
     private Integer shrinkTo = null;

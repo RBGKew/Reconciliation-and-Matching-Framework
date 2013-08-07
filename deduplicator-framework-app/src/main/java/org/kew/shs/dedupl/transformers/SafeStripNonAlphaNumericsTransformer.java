@@ -1,8 +1,8 @@
 package org.kew.shs.dedupl.transformers;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.kew.shs.dedupl.util.LibraryRegister;
 
+@LibraryRegister(category="transformers")
 public class SafeStripNonAlphaNumericsTransformer implements Transformer {
 
 	/*

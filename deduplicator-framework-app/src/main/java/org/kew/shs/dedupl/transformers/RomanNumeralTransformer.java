@@ -3,6 +3,8 @@ package org.kew.shs.dedupl.transformers;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.kew.shs.dedupl.util.LibraryRegister;
+
 /**
  * This transformer splits a string into a series of words. The word delimiter is any 
  * sequence of non-alphanumeric characters. It then iterates over the "words" and 
@@ -11,6 +13,7 @@ import java.util.Map;
  * @author nn00kg
  *
  */
+@LibraryRegister(category="transformers")
 public class RomanNumeralTransformer implements Transformer{
 
 	private static Map<String,String> map = new HashMap<String,String>();

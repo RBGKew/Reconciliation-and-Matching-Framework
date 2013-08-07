@@ -1,5 +1,7 @@
 package org.kew.shs.dedupl.matchers;
 
+import org.kew.shs.dedupl.util.LibraryRegister;
+
 import com.googlecode.ehcache.annotations.Cacheable;
 
 
@@ -10,6 +12,7 @@ import com.googlecode.ehcache.annotations.Cacheable;
  * @author nn00kg
  *
  */
+@LibraryRegister(category="matchers")
 public class CapitalLettersMatcher extends CommonTokensMatcher{
 
 	public static int COST = 5;

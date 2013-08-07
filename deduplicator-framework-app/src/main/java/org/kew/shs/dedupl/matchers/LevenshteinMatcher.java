@@ -3,6 +3,7 @@ package org.kew.shs.dedupl.matchers;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.kew.shs.dedupl.util.LibraryRegister;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +17,7 @@ import com.googlecode.ehcache.annotations.Cacheable;
  * @author nn00kg
  *
  */
+@LibraryRegister(category="matchers")
 public class LevenshteinMatcher implements Matcher {
 
 	public static int COST = 10;
