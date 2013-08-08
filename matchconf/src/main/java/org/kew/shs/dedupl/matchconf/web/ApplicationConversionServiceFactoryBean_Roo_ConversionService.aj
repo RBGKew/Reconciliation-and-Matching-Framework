@@ -3,7 +3,6 @@
 
 package org.kew.shs.dedupl.matchconf.web;
 
-import org.kew.shs.dedupl.matchconf.Configuration;
 import org.kew.shs.dedupl.matchconf.Matcher;
 import org.kew.shs.dedupl.matchconf.Reporter;
 import org.kew.shs.dedupl.matchconf.Transformer;
@@ -16,30 +15,6 @@ import org.springframework.format.FormatterRegistry;
 privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService {
     
     declare @type: ApplicationConversionServiceFactoryBean: @Configurable;
-    
-    public Converter<Configuration, String> ApplicationConversionServiceFactoryBean.getConfigurationToStringConverter() {
-        return new org.springframework.core.convert.converter.Converter<org.kew.shs.dedupl.matchconf.Configuration, java.lang.String>() {
-            public String convert(Configuration configuration) {
-                return new StringBuilder().append(configuration.getName()).append(' ').append(configuration.getWorkDirPath()).append(' ').append(configuration.getSourceFileName()).append(' ').append(configuration.getSourceFileEncoding()).toString();
-            }
-        };
-    }
-    
-    public Converter<Long, Configuration> ApplicationConversionServiceFactoryBean.getIdToConfigurationConverter() {
-        return new org.springframework.core.convert.converter.Converter<java.lang.Long, org.kew.shs.dedupl.matchconf.Configuration>() {
-            public org.kew.shs.dedupl.matchconf.Configuration convert(java.lang.Long id) {
-                return Configuration.findConfiguration(id);
-            }
-        };
-    }
-    
-    public Converter<String, Configuration> ApplicationConversionServiceFactoryBean.getStringToConfigurationConverter() {
-        return new org.springframework.core.convert.converter.Converter<java.lang.String, org.kew.shs.dedupl.matchconf.Configuration>() {
-            public org.kew.shs.dedupl.matchconf.Configuration convert(String id) {
-                return getObject().convert(getObject().convert(id, Long.class), Configuration.class);
-            }
-        };
-    }
     
     public Converter<Matcher, String> ApplicationConversionServiceFactoryBean.getMatcherToStringConverter() {
         return new org.springframework.core.convert.converter.Converter<org.kew.shs.dedupl.matchconf.Matcher, java.lang.String>() {
@@ -138,9 +113,6 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
     }
     
     public void ApplicationConversionServiceFactoryBean.installLabelConverters(FormatterRegistry registry) {
-        registry.addConverter(getConfigurationToStringConverter());
-        registry.addConverter(getIdToConfigurationConverter());
-        registry.addConverter(getStringToConfigurationConverter());
         registry.addConverter(getMatcherToStringConverter());
         registry.addConverter(getIdToMatcherConverter());
         registry.addConverter(getStringToMatcherConverter());

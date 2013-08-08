@@ -6,8 +6,8 @@ Feature: Create a simple configuration
     Scenario: DedupConf, one column, one matcher, two transformers, rest default values
         Given Alecs has a file containing data in two columns, ("id_col", "data_col") in a directory "some_path"
         And he has created a new configuration:
-            | name          | workDirPath |
-            | simple-config | some_path   |
+            | name          | workDirPath | maxSearchResults | recordFilter                          | nextConfig |
+            | simple-config | some_path   | 100              | funny(recordCheck == javaScriptMagic) | someName   |
         And he has added the following sourceTransformers
             | name               | packageName                     | className                     | params |
             | 02BlankTransformer | org.kew.shs.dedupl.transformers | ZeroToBlankTransformer        |        |
@@ -90,6 +90,9 @@ Feature: Create a simple configuration
                     p:scoreFieldName="id"
                     p:loadReportFrequency="50000"
                     p:assessReportFrequency="100"
+                    p:maxSearchResults="100"
+                    p:recordFilter="funny(recordCheck == javaScriptMagic)"
+                    p:nextConfig="someName"
                     p:reporters-ref="reporters"/>
                 <!-- import the generic application-context (equal for dedup/match configurations) -->
                 <import resource="classpath*:application-context.xml"/>
@@ -220,6 +223,9 @@ Feature: Create a simple configuration
                     p:scoreFieldName="id"
                     p:loadReportFrequency="50000"
                     p:assessReportFrequency="100"
+                    p:maxSearchResults="10000"
+                    p:recordFilter=""
+                    p:nextConfig=""
                     p:reporters-ref="reporters"/>
                 <!-- import the generic application-context (equal for dedup/match configurations) -->
                 <import resource="classpath*:application-context.xml"/>

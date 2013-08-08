@@ -31,6 +31,8 @@ public class Configuration implements Cloneable {
 
     private String recordFilter = "";
 
+    private String nextConfig = "";
+
     // lookupFileName being populated decides over being a MatchConfig
     private String lookupFileName = "";
     private String lookupFileEncoding = "UTF8";
@@ -43,6 +45,8 @@ public class Configuration implements Cloneable {
     private String assessReportFrequency = "100";
 
     private String scoreFieldName = "id";
+
+    private String maxSearchResults = "10000";
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @Sort(type = SortType.NATURAL)

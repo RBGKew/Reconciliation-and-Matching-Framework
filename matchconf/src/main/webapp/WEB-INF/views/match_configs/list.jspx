@@ -6,6 +6,7 @@
         <table:table data="${configurations}" create="true" id="l_org_kew_shs_dedupl_matchconf_Configuration" path="/match_configs" z="aus204+Lk8UgdI/ClERnW6QndJg=">
             <table:column id="c_org_kew_shs_dedupl_matchconf_Configuration_className" property="className" z="Rlrz9Bi9TpOpeCZWynlhDCT03Ec="/>
             <table:column id="c_org_kew_shs_dedupl_matchconf_Configuration_name" property="name" z="kqBZWMv85DrJ69bsGnntbCqXBso="/>
+            <table:column id="c_org_kew_shs_dedupl_matchconf_Configuration_nextConfig" property="nextConfig" z=""/>
         </table:table>
     </page:list>
 </div>

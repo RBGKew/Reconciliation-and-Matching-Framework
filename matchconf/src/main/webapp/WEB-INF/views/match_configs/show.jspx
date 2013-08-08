@@ -17,12 +17,17 @@
         <field:display field="loadReportFrequency" id="s_org_kew_shs_dedupl_matchconf_Configuration_loadReportFrequency" object="${configuration}" z="RSH+9fdTXVUzBfZxJV4GzM0UbNQ="/>
         <field:display field="assessReportFrequency" id="s_org_kew_shs_dedupl_matchconf_Configuration_assessReportFrequency" object="${configuration}" z="lIGD5HwFdtwp6WS1d0DS+KEvOE0="/>
 
+        <field:display field="maxSearchResults" id="s_org_kew_shs_dedupl_matchconf_Configuration_maxSearchResults" object="${configuration}" z=""/>
+
         <field:display field="scoreFieldName" id="s_org_kew_shs_dedupl_matchconf_Configuration_scoreFieldName" object="${configuration}" z="42QdxGWTMYJUmlOc+BV4aIyC5LQ="/>
 
         <field:display field="wiring" id="s_org_kew_shs_dedupl_matchconf_Configuration_wiring" object="${configuration}" z="fWSJpXexHLvrLM5Mc2e9lpYagy4="/>
         <field:display field="transformers" id="s_org_kew_shs_dedupl_matchconf_Configuration_transformers" object="${configuration}" z=""/>
         <field:display field="matchers" id="s_org_kew_shs_dedupl_matchconf_Configuration_matchers" object="${configuration}" z=""/>
         <field:display field="reporters" id="s_org_kew_shs_dedupl_matchconf_Configuration_reporters" object="${configuration}" z=""/>
+
+        <field:display field="recordFilter" id="s_org_kew_shs_dedupl_matchconf_Configuration_recordFilter" object="${configuration}" z=""/>
+        <field:display field="nextConfig" id="s_org_kew_shs_dedupl_matchconf_Configuration_nextConfig" object="${configuration}" z=""/>
     </page:show>
 
 </div>

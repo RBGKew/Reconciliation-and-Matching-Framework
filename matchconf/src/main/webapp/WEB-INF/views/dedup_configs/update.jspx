@@ -13,12 +13,17 @@
         <field:input field="loadReportFrequency" id="c_org_kew_shs_dedupl_matchconf_Configuration_loadReportFrequency" z="mBoLFpuK1YzFd1H+conojUVjvPo="/>
         <field:input field="assessReportFrequency" id="c_org_kew_shs_dedupl_matchconf_Configuration_assessReportFrequency" z="kUCN8SWATVpCbwc2GZ1jJZy5FMw="/>
 
+        <field:input field="maxSearchResults" id="c_org_kew_shs_dedupl_matchconf_Configuration_maxSearchResults" z=""/>
+
         <field:input field="scoreFieldName" id="c_org_kew_shs_dedupl_matchconf_Configuration_scoreFieldName" z="eD+yX69x57/KyHPGWkrevkPRNWw="/>
 
         <field:select field="wiring" disabled="true" id="c_org_kew_shs_dedupl_matchconf_Configuration_wiring" itemValue="id" items="${wiring}" multiple="true" path="dedup_configs/wires" z="dE3AA0t3Tmh2i7gBbxSbT1XvGOk="/>
         <field:select field="transformers" disabled="true" id="c_org_kew_shs_dedupl_matchconf_Configuration_transformers" itemValue="id" items="${transformers}" multiple="true" path="/dedup_configs/transformers" z="dE3AA0t3Tmh2i7gBbxSbT1XvGOk="/>
         <field:select field="matchers" disabled="true" id="c_org_kew_shs_dedupl_matchconf_Configuration_matchers" itemValue="id" items="${matchers}" multiple="true" path="dedup_configs/matchers" z="dE3AA0t3Tmh2i7gBbxSbT1XvGOk="/>
         <field:select field="reporters" disabled="true" id="c_org_kew_shs_dedupl_matchconf_Configuration_reporters" itemValue="id" items="${reporters}" multiple="true" path="dedup_configs/reporters" z=""/>
+
+        <field:input field="recordFilter" id="c_org_kew_shs_dedupl_matchconf_Configuration_recordFilter" z="UblGjqepwYEnIJ2Qukb4uPwQ6Mw="/>
+        <field:input field="nextConfig" id="c_org_kew_shs_dedupl_matchconf_Configuration_nextConfig" z=""/>
 
     </form:update>
     <script type="text/javascript">

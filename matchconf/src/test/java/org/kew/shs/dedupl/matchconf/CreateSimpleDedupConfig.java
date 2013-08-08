@@ -59,6 +59,9 @@ public class CreateSimpleDedupConfig {
         this.configName = colDef.get(0).get("name");
         config = new Configuration();
         config.setName(this.configName);
+        config.setMaxSearchResults(colDef.get(0).get("maxSearchResults"));
+        config.setRecordFilter(colDef.get(0).get("recordFilter"));
+        config.setNextConfig(colDef.get(0).get("nextConfig"));
         config.setWorkDirPath(new File(this.tempDir, colDef.get(0).get("workDirPath")).getPath());
         config.persist();
         assert (Configuration.findConfiguration(config.getId()) != null);
