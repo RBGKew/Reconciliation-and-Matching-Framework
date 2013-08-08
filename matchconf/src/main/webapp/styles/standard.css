@@ -138,6 +138,7 @@ label {
 
 input {
 	height:20px;
+	margin-left: 205px;
 }
 
 input, textarea, select {

@@ -16,6 +16,7 @@ public class NormaliseDiacritsTransformer implements Transformer {
 		put("č|ĉ", "c");
 		put("Ł", "L");
 		put("ł", "l");
+		put("Ă", "A");
 		put("—", "-");
 	}};
 
