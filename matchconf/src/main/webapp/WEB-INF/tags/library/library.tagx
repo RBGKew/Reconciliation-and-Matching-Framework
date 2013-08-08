@@ -7,9 +7,9 @@
 
       <c:set var="path" value="/MatchConf/${ configType }_configs/${ configName }/${ category.key }?form" />
 
-      <h2>Available ${ category.key }</h2>
+      <h2 id="${ category.key }">Available ${ category.key }<span class="toggle">+</span></h2>
 
-      <ul>
+      <ul id="${ category.key }" class="toggleable">
         <c:forEach items="${ category.value }" var="pakkage">
           <li class="pakkage"><c:out value="${ pakkage.key }"/></li>
           <ul>
@@ -26,4 +26,13 @@
             <jsp:doBody />
         </ul>
     </c:if>
+
+    <script type="text/javascript">
+      var toggle_map = { '-': '+', '+': '-' };
+      $('#library h2').click(function() {
+         $('#library ul#' + this.id).toggle(200);
+         $($(this.children)).text(toggle_map[$($(this.children)).text()]);
+      });
+    </script>
+
 </jsp:root>

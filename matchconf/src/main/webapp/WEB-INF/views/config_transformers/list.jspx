@@ -11,6 +11,4 @@
             <table:column id="c_org_kew_shs_dedupl_matchconf_Transformer_params" property="params" z="8MbPOMPCX0ZgbhStIgtWRlmfA/0="/>
         </table:table>
     </page:list>
-
-    <div><a href="/MatchConf/${ configType }_configs/${configName}/transformers?form">Add a new Transformer</a></div>
 </div>

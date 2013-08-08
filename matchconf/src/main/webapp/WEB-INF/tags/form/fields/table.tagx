@@ -6,7 +6,7 @@
   <jsp:directive.attribute name="data" type="java.util.Collection" required="true" rtexprvalue="true" description="The collection to be displayed in the table" />
   <jsp:directive.attribute name="path" type="java.lang.String" required="true" rtexprvalue="true" description="Specify the URL path" />
   <jsp:directive.attribute name="typeIdFieldName" type="java.lang.String" required="false" rtexprvalue="true" description="The identifier field name for the type (defaults to 'id')" />
-  <jsp:directive.attribute name="create" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Include 'create' link into table (default true)" />
+  <jsp:directive.attribute name="create" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Include 'create' link into table (default false)" />
   <jsp:directive.attribute name="update" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Include 'update' link into table (default true)" />
   <jsp:directive.attribute name="delete" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Include 'delete' link into table (default true)" />
   <jsp:directive.attribute name="clone" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Include 'clone' link into table (default true)" />
@@ -26,6 +26,10 @@
 
     <c:if test="${empty typeIdFieldName}">
         <c:set var="typeIdFieldName" value="name" />
+    </c:if>
+
+    <c:if test="${empty create}">
+      <c:set var="create" value="false" />
     </c:if>
 
     <c:if test="${empty update}">
@@ -155,7 +159,7 @@
       </c:forEach>
       <tr class="footer">
         <td colspan="${colCounter}">
-          <c:if test="${empty create or create}">
+          <c:if test="${create}">
             <span class="new">
               <spring:url value="${path}" var="create_url">
                 <spring:param name="form" />

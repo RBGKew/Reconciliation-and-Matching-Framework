@@ -12,6 +12,4 @@
             <table:column id="c_org_kew_shs_dedupl_matchconf_Matcher_composedBy" property="composedBy" z="r+i/LiENE8GrSU+SACvhtlRdfcA="/>
         </table:table>
     </page:list>
-
-    <div><a href="/MatchConf/match_configs/${configName}/matchers?form">Add a new Matcher</a></div>
 </div>

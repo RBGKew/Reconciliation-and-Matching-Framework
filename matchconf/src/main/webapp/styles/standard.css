@@ -73,6 +73,15 @@ body {
 	text-transform: uppercase;
 	font-weight:bold;
 	font-size: 12px;
+	margin-bottom: 3px;
+}
+
+#library h2 span.toggle {
+	padding: 0 5px;
+	font-weight: 900;
+}
+#library ul.toggleable {
+	display: none;
 }
 
 #menu h2 {
@@ -90,9 +99,10 @@ body {
 	padding: 2px 12px;
 }
 
-#menu a:hover, #library li.clazz a:hover {
+#menu a:hover, #library li.clazz a:hover, #library h2:hover {
 	color: #648C1D;
 	background: #fff;
+	cursor: pointer;
 }
 
 #footer {

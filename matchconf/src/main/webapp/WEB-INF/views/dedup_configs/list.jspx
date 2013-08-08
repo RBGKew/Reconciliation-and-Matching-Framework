@@ -3,7 +3,7 @@
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
     <page:list id="pl_org_kew_shs_dedupl_matchconf_Configuration" items="${configurations}" z="a1d5BtDYh8Mz2Ep3BwX49DXT4Oc=">
-        <table:table data="${configurations}" id="l_org_kew_shs_dedupl_matchconf_Configuration" path="/dedup_configs" z="aus204+Lk8UgdI/ClERnW6QndJg=">
+        <table:table data="${configurations}" create="true" id="l_org_kew_shs_dedupl_matchconf_Configuration" path="/dedup_configs" z="aus204+Lk8UgdI/ClERnW6QndJg=">
             <table:column id="c_org_kew_shs_dedupl_matchconf_Configuration_className" property="className" z="Rlrz9Bi9TpOpeCZWynlhDCT03Ec="/>
             <table:column id="c_org_kew_shs_dedupl_matchconf_Configuration_name" property="name" z="kqBZWMv85DrJ69bsGnntbCqXBso="/>
         </table:table>

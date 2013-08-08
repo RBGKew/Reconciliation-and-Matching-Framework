@@ -24,7 +24,7 @@
     </c:if>
 
     <c:if test="${empty create}">
-      <c:set var="create" value="true" />
+      <c:set var="create" value="false" />
     </c:if>
 
     <c:if test="${empty update}">

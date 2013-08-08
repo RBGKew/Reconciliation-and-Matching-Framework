@@ -190,7 +190,9 @@
           </c:choose>
         </c:when>
         <c:otherwise>
-          <field:reference field="${label}" id="${id}" path="${path}" required="${required}" />
+          <!-- Disabling the option to add in place for several reasons; there's a menu for that.
+	      <field:reference field="${label}" id="${id}" path="${path}" required="${required}" />
+	      -->
         </c:otherwise>
       </c:choose>
     </div>
