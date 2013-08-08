@@ -138,7 +138,6 @@ label {
 
 input {
 	height:20px;
-	margin-left: 205px;
 }
 
 input, textarea, select {
@@ -160,6 +159,7 @@ div {
 }
 
 div .box {
+	margin-left: 205px;
 	display:block;
 }
 
