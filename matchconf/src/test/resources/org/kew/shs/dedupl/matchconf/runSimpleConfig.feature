@@ -31,6 +31,7 @@ Feature: run a simple configuration
                     <bean class="org.kew.shs.dedupl.reporters.DedupReporter"
                         p:name="outputReporter"
                         p:delimiter="&#09;"
+                        p:nameSpacePrefix="simple-config-to-run_"
                         p:idDelimiter="|">
                         <property name="file">
                             <bean class="java.io.File">
@@ -39,7 +40,8 @@ Feature: run a simple configuration
                         </property>
                     </bean>
                     <bean class="org.kew.shs.dedupl.reporters.DedupReporterMultiline"
-                        p:name="outputReporter"
+                        p:name="outputReporterMultiline"
+                        p:nameSpacePrefix="simple-config-to-run_"
                         p:delimiter="&#09;"
                         p:idDelimiter="|">
                         <property name="file">
@@ -90,8 +92,8 @@ Feature: run a simple configuration
             | 6       | sóme namê | diacrits should be replaced with ascii equivalents | 3 cluster items  |
         When asking MatchConf to run this configuration
         Then the deduplication program should run smoothly and produce the following file "output.tsv" in the same directory:
-            | id      | data_col  | cluster_size | from_id | ids_in_cluster |
-            | 1       |           | 1            | 1       | 1              |
-            | 6       | some name | 3            | 2       | 6 \| 4 \| 2    |
-            | 3       |           | 1            | 3       | 3              |
-            | 5       |           | 1            | 5       | 5              |
+            | id      | data_col  | simple-config-to-run_cluster_size | simple-config-to-run_from_id | simple-config-to-run_ids_in_cluster |
+            | 1       |           | 1                                 | 1                            | 1                                   |
+            | 6       | some name | 3                                 | 2                            | 6 \| 4 \| 2                         |
+            | 3       |           | 1                                 | 3                            | 3                                   |
+            | 5       |           | 1                                 | 5                            | 5                                   |

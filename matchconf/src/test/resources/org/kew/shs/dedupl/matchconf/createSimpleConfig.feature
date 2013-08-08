@@ -51,6 +51,7 @@ Feature: Create a simple configuration
                 <util:list id="reporters">
                     <bean class="org.kew.shs.dedupl.reporters.DedupReporter"
                         p:name="standardReporter"
+                        p:nameSpacePrefix="simple-config_"
                         p:delimiter="&#09;"
                         p:idDelimiter="|">
                         <property name="file">
@@ -61,6 +62,7 @@ Feature: Create a simple configuration
                     </bean>
                     <bean class="org.kew.shs.dedupl.reporters.DedupReporterMultiline"
                         p:name="multilineReporter"
+                        p:nameSpacePrefix="simple-config_"
                         p:delimiter="&#09;"
                         p:idDelimiter="|">
                         <property name="file">
@@ -159,6 +161,7 @@ Feature: Create a simple configuration
                 <util:list id="reporters">
                     <bean class="org.kew.shs.dedupl.reporters.MatchReporter"
                         p:name="standardReporter"
+                        p:nameSpacePrefix="simple-match-config_"
                         p:delimiter="&#09;"
                         p:idDelimiter="|">
                         <property name="file">
@@ -169,6 +172,7 @@ Feature: Create a simple configuration
                     </bean>
                     <bean class="org.kew.shs.dedupl.reporters.MatchReporterMultiline"
                         p:name="multilineReporter"
+                        p:nameSpacePrefix="simple-match-config_"
                         p:delimiter="&#09;"
                         p:idDelimiter="|">
                         <property name="file">

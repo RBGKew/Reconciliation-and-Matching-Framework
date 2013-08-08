@@ -20,10 +20,6 @@ public abstract class Configuration implements AutoCloseable {
 
     private int maxSearchResults = 10000;
 
-    // TODO: make use of or delete or rename or move to reporters
-    private File reportFile;
-    private File delimitedFile;
-
     private boolean writeComparisonReport=false;
     private boolean writeDelimitedReport=false;
     private boolean includeNonMatchesInDelimitedReport=false;
@@ -166,12 +162,6 @@ public abstract class Configuration implements AutoCloseable {
     public void setWriteComparisonReport(boolean writeComparisonReport) {
         this.writeComparisonReport = writeComparisonReport;
     }
-    public File getReportFile() {
-        return reportFile;
-    }
-    public void setReportFile(File reportFile) {
-        this.reportFile = reportFile;
-    }
     public String getSourceFileDelimiter() {
         return sourceFileDelimiter;
     }
@@ -183,12 +173,6 @@ public abstract class Configuration implements AutoCloseable {
     }
     public void setWriteDelimitedReport(boolean writeDelimitedReport) {
         this.writeDelimitedReport = writeDelimitedReport;
-    }
-    public File getDelimitedFile() {
-        return delimitedFile;
-    }
-    public void setDelimitedFile(File delimitedFile) {
-        this.delimitedFile = delimitedFile;
     }
     public boolean isIncludeNonMatchesInDelimitedReport() {
         return includeNonMatchesInDelimitedReport;
@@ -208,19 +192,15 @@ public abstract class Configuration implements AutoCloseable {
     public void setReporters(List<? extends LuceneReporter> reporters) {
         this.reporters = reporters;
     }
-
     public String getRecordFilter() {
         return recordFilter;
     }
-
     public void setRecordFilter(String recordFilter) {
         this.recordFilter = recordFilter;
     }
-
     public List<Piper> getPipers() {
         return pipers;
     }
-
     public void setPipers(List<Piper> pipers) {
         this.pipers = pipers;
     }

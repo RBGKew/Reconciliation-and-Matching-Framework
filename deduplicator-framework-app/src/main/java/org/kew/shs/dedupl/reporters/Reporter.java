@@ -3,8 +3,6 @@ package org.kew.shs.dedupl.reporters;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +28,7 @@ public abstract class Reporter implements AutoCloseable {
     protected static String[] AVAILABLE_FIELDS = new String[] {};
 
     protected String name;
+    protected String nameSpacePrefix = "";
 
     protected String delimiter;
     protected String idDelimiter;
@@ -59,7 +58,12 @@ public abstract class Reporter implements AutoCloseable {
     }
 
     protected void writeHeader() throws IOException {
-        this.header = (String[]) ArrayUtils.addAll(new String[] {"id"}, ArrayUtils.addAll(this.definedOutputFields, this.getAvailableFields()));
+        String[] fields = this.getAvailableFields();
+        // name-space the field names
+        for (int i=0;i<fields.length;i++) {
+            fields[i] = this.getNameSpacePrefix() + fields[i];
+        }
+        this.header = (String[]) ArrayUtils.addAll(new String[] {"id"}, ArrayUtils.addAll(this.definedOutputFields, fields));
         this.writer.writeHeader(header);
     }
 
@@ -175,6 +179,14 @@ public abstract class Reporter implements AutoCloseable {
 
     public void setDefinedOutputFields(String[] definedOutputFields) {
         this.definedOutputFields = definedOutputFields;
+    }
+
+    public String getNameSpacePrefix() {
+        return nameSpacePrefix;
+    }
+
+    public void setNameSpacePrefix(String nameSpacePrefix) {
+        this.nameSpacePrefix = nameSpacePrefix;
     }
 
 }

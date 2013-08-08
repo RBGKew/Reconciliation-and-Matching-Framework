@@ -20,6 +20,7 @@ public class ReporterEngine {
         ArrayList<String> outXML = new ArrayList<String>();
         outXML.add(String.format("%s<bean class=\"%s.%s\"", indent, this.reporter.getPackageName(), this.reporter.getClassName()));
         outXML.add(String.format("%s%sp:name=\"%s\"", indent, shift, this.reporter.getName()));
+        outXML.add(String.format("%s%sp:nameSpacePrefix=\"%s_\"", indent, shift, this.reporter.getConfig().getName()));
         outXML.add(String.format("%s%sp:delimiter=\"%s\"", indent, shift, this.reporter.getDelimiter()));
         outXML.add(String.format("%s%sp:idDelimiter=\"%s\"", indent, shift, this.reporter.getIdDelimiter()));
         if (this.reporter.getParams().length() > 0) {

@@ -27,10 +27,11 @@ public class DedupReporter extends LuceneReporter {
 	 */
 	@Override
 	public void reportResults(Map<String, String> fromRecord, List<Map<String, String>> cluster) throws Exception {
+        String namespace = this.getNameSpacePrefix();
 		Map<String, String> topCopy = cluster.get(0);
-		topCopy.put("cluster_size", this.getClusterSize(fromRecord, cluster));
-		topCopy.put("from_id", this.getFromId(fromRecord, cluster));
-		topCopy.put("ids_in_cluster", this.getIDsInCluster(fromRecord, cluster, this.getIdDelimiter()));
+		topCopy.put(namespace + "cluster_size", this.getClusterSize(fromRecord, cluster));
+		topCopy.put(namespace + "from_id", this.getFromId(fromRecord, cluster));
+		topCopy.put(namespace + "ids_in_cluster", this.getIDsInCluster(fromRecord, cluster, this.getIdDelimiter()));
 		this.writer.write(topCopy, this.header);
 	}
 
