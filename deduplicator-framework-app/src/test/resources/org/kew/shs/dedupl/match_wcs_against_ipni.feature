@@ -235,10 +235,10 @@ Feature: Match WCS against Ipni
             """
         When this match config is run through the Match App
         Then a file should have been created in the same folder with the following data:
-            | id     | family       | genus_orig  |genus       | species_epithet_orig | species_epithet | lookup_species_epithet_orig | lookup_species_epithet | no_matches | matching_ids |
-            | 251171 | Restionaceae | Kulinia     |Kulinia     |                      |                 |                             |                        | 0          |              |
-            | 243223 | Restionaceae | Empodisma   |Empodisma   | gracillimum          | gracillimum     |                             |                        | 0          |              |
-            | 463816 | Restionaceae | Platycaulos |Platycaulos | mahonii              | mahonii         |                             |                        | 0          |              |
-            | 224033 | Restionaceae | Cannomois   |Cannomois   | scirpoides           | scirpoides      |                             |                        | 0          |              |
-            | 247398 | Restionaceae | Guringalia  |Guringalia  |                      |                 |                             |                        | 0          |              |
-            | 464139 | Restionaceae | Restio      |Restio      | saxatilis            | saxatilis       |                             |                        | 0          |              |
+            | id     | family_transf | genus       | genus_transf | species_epithet | species_epithet_transf | lookup_species_epithet | lookup_species_epithet_transf | no_matches | matching_ids |
+            | 251171 | Restionaceae  | Kulinia     | Kulinia      |                 |                        |                        |                               | 0          |              |
+            | 243223 | Restionaceae  | Empodisma   | Empodisma    | gracillimum     | gracillimum            |                        |                               | 0          |              |
+            | 463816 | Restionaceae  | Platycaulos | Platycaulos  | mahonii         | mahonii                |                        |                               | 0          |              |
+            | 224033 | Restionaceae  | Cannomois   | Cannomois    | scirpoides      | scirpoides             |                        |                               | 0          |              |
+            | 247398 | Restionaceae  | Guringalia  | Guringalia   |                 |                        |                        |                               | 0          |              |
+            | 464139 | Restionaceae  | Restio      | Restio       | saxatilis       | saxatilis              |                        |                               | 0          |              |

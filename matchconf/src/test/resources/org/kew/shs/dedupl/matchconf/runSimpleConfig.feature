@@ -55,7 +55,7 @@ Feature: run a simple configuration
                     <bean class="org.kew.shs.dedupl.configuration.Property"
                         p:sourceColumnName="data_col"
                         p:useInSelect="true"
-                        p:addTransformedSourceValue="true"
+                        p:addOriginalSourceValue="true"
                         p:matcher-ref="matchExactly">
                         <property name="sourceTransformers">
                             <util:list id="1">
@@ -93,7 +93,7 @@ Feature: run a simple configuration
         When asking MatchConf to run this configuration
         Then the deduplication program should run smoothly and produce the following file "output.tsv" in the same directory:
             | id      | data_col  | simple-config-to-run_cluster_size | simple-config-to-run_from_id | simple-config-to-run_ids_in_cluster |
-            | 1       |           | 1                                 | 1                            | 1                                   |
-            | 6       | some name | 3                                 | 2                            | 6 \| 4 \| 2                         |
+            | 1       | 0         | 1                                 | 1                            | 1                                   |
+            | 6       | sóme namê | 3                                 | 2                            | 6 \| 4 \| 2                         |
             | 3       |           | 1                                 | 3                            | 3                                   |
             | 5       |           | 1                                 | 5                            | 5                                   |

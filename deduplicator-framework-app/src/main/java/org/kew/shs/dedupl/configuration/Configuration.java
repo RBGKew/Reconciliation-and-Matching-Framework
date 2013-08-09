@@ -36,7 +36,7 @@ public abstract class Configuration implements AutoCloseable {
     public static String ID_FIELD_NAME ="id";
 
     public static final String LENGTH_SUFFIX="_length";
-    public static final String ORIGINAL_SUFFIX="_orig";
+    public static final String TRANSFORMED_SUFFIX="_transf";
     public static final String INITIAL_SUFFIX="_init";
 
     private File lookupFile;
@@ -51,10 +51,10 @@ public abstract class Configuration implements AutoCloseable {
         List<String> sourceOutputDefs = new ArrayList<>();
         List<String> lookupOutputDefs = new ArrayList<>();
         for (Property prop:this.getProperties()) {
-            if (prop.isAddOriginalSourceValue()) sourceOutputDefs.add(prop.getSourceColumnName() + "_orig");
-            if (prop.isAddTransformedSourceValue()) sourceOutputDefs.add(prop.getSourceColumnName());
-            if (prop.isAddOriginalLookupValue()) lookupOutputDefs.add("lookup_" + prop.getLookupColumnName() + "_orig");
-            if (prop.isAddTransformedLookupValue()) lookupOutputDefs.add("lookup_" + prop.getLookupColumnName());
+            if (prop.isAddOriginalSourceValue()) sourceOutputDefs.add(prop.getSourceColumnName());
+            if (prop.isAddTransformedSourceValue()) sourceOutputDefs.add(prop.getSourceColumnName() + "_transf");
+            if (prop.isAddOriginalLookupValue()) lookupOutputDefs.add("lookup_" + prop.getLookupColumnName());
+            if (prop.isAddTransformedLookupValue()) lookupOutputDefs.add("lookup_" + prop.getLookupColumnName() + "_transf");
         }
         sourceOutputDefs.addAll(lookupOutputDefs);
         return sourceOutputDefs.toArray(new String[sourceOutputDefs.size()]);

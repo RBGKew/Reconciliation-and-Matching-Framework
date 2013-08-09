@@ -158,7 +158,8 @@ public class LuceneUtils {
         }
         for (Property p : properties){
             if (p.isUseInSelect() || p.isUseInNegativeSelect()) {
-                String value = map.get(p.getSourceColumnName());
+                String lookupName = p.getLookupColumnName() + Configuration.TRANSFORMED_SUFFIX;
+                String value = map.get(p.getSourceColumnName() + Configuration.TRANSFORMED_SUFFIX);
                 // super-csv treats blank as null, we don't for now
                 value = (value != null) ? value: "";
                 String quotedValue = "\"" + value + "\"";
@@ -166,28 +167,28 @@ public class LuceneUtils {
                     if (StringUtils.isNotBlank(value)){
                         if(p.getMatcher().isExact()){
                             if (sb.length() > 0) sb.append(" AND ");
-                            sb.append(p.getLookupColumnName() + ":" + quotedValue);
+                            sb.append(lookupName + ":" + quotedValue);
                         }
                         if (p.isIndexLength()){
                             int low = Math.max(0, value.length()-2);
                             int high = value.length()+2;
                             if (sb.length() > 0) sb.append(" AND ");
-                            sb.append(" ").append(p.getLookupColumnName() + Configuration.LENGTH_SUFFIX + ":[").append(String.format("%02d", low)).append(" TO ").append(String.format("%02d", high)).append("]");
+                            sb.append(" ").append(lookupName + Configuration.LENGTH_SUFFIX + ":[").append(String.format("%02d", low)).append(" TO ").append(String.format("%02d", high)).append("]");
                         }
                         if (p.isIndexInitial()){
                             if (sb.length() > 0) sb.append(" AND ");
-                            sb.append(p.getLookupColumnName() + Configuration.INITIAL_SUFFIX).append(":").append(quotedValue.substring(0, 2) + "\"");
+                            sb.append(lookupName + Configuration.INITIAL_SUFFIX).append(":").append(quotedValue.substring(0, 2) + "\"");
                         }
                         if (p.isUseWildcard()){
                             if (sb.length() > 0) sb.append(" AND ");
-                            sb.append(p.getLookupColumnName()).append(":").append(quotedValue.subSequence(0, quotedValue.length()-1)).append("~0.5\"");
+                            sb.append(lookupName).append(":").append(quotedValue.subSequence(0, quotedValue.length()-1)).append("~0.5\"");
                         }
                     }
                 }
                 else {
                     if (StringUtils.isNotBlank(value)){
                         if (sb.length() > 0) sb.append(" AND ");
-                            sb.append(" NOT " + p.getLookupColumnName() + ":" + quotedValue);
+                            sb.append(" NOT " + lookupName + ":" + quotedValue);
                     }
                 }
             }
@@ -204,15 +205,17 @@ public class LuceneUtils {
         boolean recordMatch = false;
         logger.debug("Comparing records: " + from.get(Configuration.ID_FIELD_NAME) + " " + to.get(Configuration.ID_FIELD_NAME));
         for (Property p : properties){
-            String s1 = from.get(p.getSourceColumnName());
+            String sourceName = p.getSourceColumnName() + Configuration.TRANSFORMED_SUFFIX;
+            String lookupName = p.getLookupColumnName() + Configuration.TRANSFORMED_SUFFIX;
+            String s1 = from.get(sourceName);
             s1 = (s1 != null) ? s1: "";
-            String s2 = to.get(p.getLookupColumnName());
+            String s2 = to.get(lookupName);
             s2= (s2 != null) ? s2: "";
             boolean fieldMatch = false;
             if (p.isBlanksMatch()){
                 fieldMatch = (StringUtils.isBlank(s1) || StringUtils.isBlank(s2));
                 if (fieldMatch){
-                    logger.debug(p.getSourceColumnName() + ": blanks match");
+                    logger.debug(sourceName);
                 }
             }
             if (!fieldMatch){
@@ -225,7 +228,7 @@ public class LuceneUtils {
             }
             recordMatch = fieldMatch;
             if (!recordMatch) {
-                logger.debug("failed on " + p.getSourceColumnName());
+                logger.debug("failed on " + sourceName);
                 break;
             }
         }

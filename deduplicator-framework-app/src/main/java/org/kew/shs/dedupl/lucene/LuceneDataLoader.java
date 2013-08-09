@@ -93,33 +93,33 @@ public class LuceneDataLoader implements DataLoader {
         doc.add(new Field(idFieldName, record.get(idFieldName), Field.Store.YES,Field.Index.ANALYZED));
         // The remainder of the columns are added as specified in the properties
         for (Property p : this.config.getProperties()) {
+            String lookupName = p.getLookupColumnName() + Configuration.TRANSFORMED_SUFFIX;
             String value = record.get(p.getLookupColumnName());
             // super-csv treats blank as null, we don't for now
             value = (value != null) ? value: "";
 
-            if (p.isAddOriginalLookupValue()) {
-                // Index the value in its original state, pre transformation..
-                Field f1 = new Field(p.getLookupColumnName() + Configuration.ORIGINAL_SUFFIX, value, Field.Store.YES,Field.Index.ANALYZED);
-                doc.add(f1);
-            }
+            // Index the value in its original state, pre transformation..
+            Field f = new Field(p.getLookupColumnName(), value, Field.Store.YES,Field.Index.ANALYZED);
+            doc.add(f);
+
             // ..*then* transform the value if necessary..
             for (Transformer t:p.getLookupTransformers()) {
                 value = t.transform(value);
             }
-            //.. and add this one in any case to the index
-            Field f = new Field(p.getLookupColumnName(), value, Field.Store.YES,Field.Index.ANALYZED);
-            doc.add(f);
+            //.. and add this one to the index
+            Field f1 = new Field(lookupName, value, Field.Store.YES,Field.Index.ANALYZED);
+            doc.add(f1);
 
             // For some fields (those which will be passed into a fuzzy matcher like Levenshtein), we index the length
             if (p.isIndexLength()){
                 int length = 0;
                 if (value != null)
                     length = value.length();
-                Field fl = new Field(p.getLookupColumnName() + Configuration.LENGTH_SUFFIX, String.format("%02d", length), Field.Store.YES,Field.Index.ANALYZED);
+                Field fl = new Field(lookupName + Configuration.LENGTH_SUFFIX, String.format("%02d", length), Field.Store.YES,Field.Index.ANALYZED);
                 doc.add(fl);
             }
             if (p.isIndexInitial() & StringUtils.isNotBlank(value)){
-                Field finit = new Field(p.getLookupColumnName() + Configuration.INITIAL_SUFFIX, value.substring(0, 1), Field.Store.YES,Field.Index.ANALYZED);
+                Field finit = new Field(lookupName + Configuration.INITIAL_SUFFIX, value.substring(0, 1), Field.Store.YES,Field.Index.ANALYZED);
                 doc.add(finit);
             }
         }

@@ -15,8 +15,8 @@ public class DeduplicationConfiguration extends Configuration {
     public String[] outputDefs() {
         List<String> sourceOutputDefs = new ArrayList<>();
         for (Property prop:this.getProperties()) {
-            if (prop.isAddOriginalSourceValue()) sourceOutputDefs.add(prop.getSourceColumnName() + "_orig");
-            if (prop.isAddTransformedSourceValue()) sourceOutputDefs.add(prop.getSourceColumnName());
+            if (prop.isAddOriginalSourceValue()) sourceOutputDefs.add(prop.getSourceColumnName());
+            if (prop.isAddTransformedSourceValue()) sourceOutputDefs.add(prop.getSourceColumnName() + "_transf");
         }
         return sourceOutputDefs.toArray(new String[sourceOutputDefs.size()]);
     }

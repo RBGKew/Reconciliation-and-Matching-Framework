@@ -1,6 +1,8 @@
 package org.kew.shs.dedupl.matchers;
 
 
+
+
 /**
  * This interface defines the behaviour expected of Matchers.
  * Some matches are expensive to calculate, so matchers have a cost:
@@ -11,7 +13,7 @@ package org.kew.shs.dedupl.matchers;
  * @author nn00kg
  *
  */
-public interface Matcher{
+public interface Matcher {
 
 	public boolean matches(String s1, String s2);
 	public boolean isExact();
