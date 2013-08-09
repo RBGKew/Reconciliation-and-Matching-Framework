@@ -94,7 +94,6 @@ Feature: Create a simple configuration
                     p:assessReportFrequency="100"
                     p:maxSearchResults="100"
                     p:recordFilter="funny(recordCheck == javaScriptMagic)"
-                    p:nextConfig="someName"
                     p:reporters-ref="reporters"/>
                 <!-- import the generic application-context (equal for dedup/match configurations) -->
                 <import resource="classpath*:application-context.xml"/>
@@ -229,7 +228,6 @@ Feature: Create a simple configuration
                     p:assessReportFrequency="100"
                     p:maxSearchResults="10000"
                     p:recordFilter=""
-                    p:nextConfig=""
                     p:reporters-ref="reporters"/>
                 <!-- import the generic application-context (equal for dedup/match configurations) -->
                 <import resource="classpath*:application-context.xml"/>

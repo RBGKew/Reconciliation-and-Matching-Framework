@@ -93,7 +93,6 @@ public class ConfigurationEngine {
         outXML.add(String.format("%s%sp:assessReportFrequency=\"%s\"", shift, shift, this.config.getAssessReportFrequency()));
         outXML.add(String.format("%s%sp:maxSearchResults=\"%s\"", shift, shift, this.config.getMaxSearchResults()));
         outXML.add(String.format("%s%sp:recordFilter=\"%s\"", shift, shift, this.config.getRecordFilter()));
-        outXML.add(String.format("%s%sp:nextConfig=\"%s\"", shift, shift, this.config.getNextConfig()));
         if (this.config.getReporters().size() > 0) outXML.add(String.format("%s%sp:reporters-ref=\"reporters\"/>", shift, shift));
 
         outXML.add(String.format("%s<!-- import the generic application-context (equal for dedup/match configurations) -->", shift));
