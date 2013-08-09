@@ -3,6 +3,7 @@
 
 package org.kew.shs.dedupl.matchconf.web;
 
+import org.kew.shs.dedupl.matchconf.Configuration;
 import org.kew.shs.dedupl.matchconf.Matcher;
 import org.kew.shs.dedupl.matchconf.Reporter;
 import org.kew.shs.dedupl.matchconf.Transformer;
@@ -13,9 +14,33 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistry;
 
 privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService {
-    
+
     declare @type: ApplicationConversionServiceFactoryBean: @Configurable;
-    
+
+    public Converter<Configuration, String> ApplicationConversionServiceFactoryBean.getConfigurationToStringConverter() {
+        return new org.springframework.core.convert.converter.Converter<org.kew.shs.dedupl.matchconf.Configuration, java.lang.String>() {
+            public String convert(Configuration configuration) {
+                return new StringBuilder().append(configuration.getName()).append(' ').append(configuration.getWorkDirPath()).append(' ').append(configuration.getSourceFileName()).append(' ').append(configuration.getSourceFileEncoding()).toString();
+            }
+        };
+    }
+
+    public Converter<Long, Configuration> ApplicationConversionServiceFactoryBean.getIdToConfigurationConverter() {
+        return new org.springframework.core.convert.converter.Converter<java.lang.Long, org.kew.shs.dedupl.matchconf.Configuration>() {
+            public org.kew.shs.dedupl.matchconf.Configuration convert(java.lang.Long id) {
+                return Configuration.findConfiguration(id);
+            }
+        };
+    }
+
+    public Converter<String, Configuration> ApplicationConversionServiceFactoryBean.getStringToConfigurationConverter() {
+        return new org.springframework.core.convert.converter.Converter<java.lang.String, org.kew.shs.dedupl.matchconf.Configuration>() {
+            public org.kew.shs.dedupl.matchconf.Configuration convert(String id) {
+                return getObject().convert(getObject().convert(id, Long.class), Configuration.class);
+            }
+        };
+    }
+
     public Converter<Matcher, String> ApplicationConversionServiceFactoryBean.getMatcherToStringConverter() {
         return new org.springframework.core.convert.converter.Converter<org.kew.shs.dedupl.matchconf.Matcher, java.lang.String>() {
             public String convert(Matcher matcher) {
@@ -23,7 +48,7 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
             }
         };
     }
-    
+
     public Converter<Long, Matcher> ApplicationConversionServiceFactoryBean.getIdToMatcherConverter() {
         return new org.springframework.core.convert.converter.Converter<java.lang.Long, org.kew.shs.dedupl.matchconf.Matcher>() {
             public org.kew.shs.dedupl.matchconf.Matcher convert(java.lang.Long id) {
@@ -31,7 +56,7 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
             }
         };
     }
-    
+
     public Converter<String, Matcher> ApplicationConversionServiceFactoryBean.getStringToMatcherConverter() {
         return new org.springframework.core.convert.converter.Converter<java.lang.String, org.kew.shs.dedupl.matchconf.Matcher>() {
             public org.kew.shs.dedupl.matchconf.Matcher convert(String id) {
@@ -39,7 +64,7 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
             }
         };
     }
-    
+
     public Converter<Reporter, String> ApplicationConversionServiceFactoryBean.getReporterToStringConverter() {
         return new org.springframework.core.convert.converter.Converter<org.kew.shs.dedupl.matchconf.Reporter, java.lang.String>() {
             public String convert(Reporter reporter) {
@@ -47,7 +72,7 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
             }
         };
     }
-    
+
     public Converter<Long, Reporter> ApplicationConversionServiceFactoryBean.getIdToReporterConverter() {
         return new org.springframework.core.convert.converter.Converter<java.lang.Long, org.kew.shs.dedupl.matchconf.Reporter>() {
             public org.kew.shs.dedupl.matchconf.Reporter convert(java.lang.Long id) {
@@ -55,7 +80,7 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
             }
         };
     }
-    
+
     public Converter<String, Reporter> ApplicationConversionServiceFactoryBean.getStringToReporterConverter() {
         return new org.springframework.core.convert.converter.Converter<java.lang.String, org.kew.shs.dedupl.matchconf.Reporter>() {
             public org.kew.shs.dedupl.matchconf.Reporter convert(String id) {
@@ -63,7 +88,7 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
             }
         };
     }
-    
+
     public Converter<Transformer, String> ApplicationConversionServiceFactoryBean.getTransformerToStringConverter() {
         return new org.springframework.core.convert.converter.Converter<org.kew.shs.dedupl.matchconf.Transformer, java.lang.String>() {
             public String convert(Transformer transformer) {
@@ -71,7 +96,7 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
             }
         };
     }
-    
+
     public Converter<Long, Transformer> ApplicationConversionServiceFactoryBean.getIdToTransformerConverter() {
         return new org.springframework.core.convert.converter.Converter<java.lang.Long, org.kew.shs.dedupl.matchconf.Transformer>() {
             public org.kew.shs.dedupl.matchconf.Transformer convert(java.lang.Long id) {
@@ -79,7 +104,7 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
             }
         };
     }
-    
+
     public Converter<String, Transformer> ApplicationConversionServiceFactoryBean.getStringToTransformerConverter() {
         return new org.springframework.core.convert.converter.Converter<java.lang.String, org.kew.shs.dedupl.matchconf.Transformer>() {
             public org.kew.shs.dedupl.matchconf.Transformer convert(String id) {
@@ -87,7 +112,7 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
             }
         };
     }
-    
+
     public Converter<Wire, String> ApplicationConversionServiceFactoryBean.getWireToStringConverter() {
         return new org.springframework.core.convert.converter.Converter<org.kew.shs.dedupl.matchconf.Wire, java.lang.String>() {
             public String convert(Wire wire) {
@@ -95,7 +120,7 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
             }
         };
     }
-    
+
     public Converter<Long, Wire> ApplicationConversionServiceFactoryBean.getIdToWireConverter() {
         return new org.springframework.core.convert.converter.Converter<java.lang.Long, org.kew.shs.dedupl.matchconf.Wire>() {
             public org.kew.shs.dedupl.matchconf.Wire convert(java.lang.Long id) {
@@ -103,7 +128,7 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
             }
         };
     }
-    
+
     public Converter<String, Wire> ApplicationConversionServiceFactoryBean.getStringToWireConverter() {
         return new org.springframework.core.convert.converter.Converter<java.lang.String, org.kew.shs.dedupl.matchconf.Wire>() {
             public org.kew.shs.dedupl.matchconf.Wire convert(String id) {
@@ -111,8 +136,11 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
             }
         };
     }
-    
+
     public void ApplicationConversionServiceFactoryBean.installLabelConverters(FormatterRegistry registry) {
+        registry.addConverter(getConfigurationToStringConverter());
+        registry.addConverter(getIdToConfigurationConverter());
+        registry.addConverter(getStringToConfigurationConverter());
         registry.addConverter(getMatcherToStringConverter());
         registry.addConverter(getIdToMatcherConverter());
         registry.addConverter(getStringToMatcherConverter());
@@ -126,10 +154,10 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
         registry.addConverter(getIdToWireConverter());
         registry.addConverter(getStringToWireConverter());
     }
-    
+
     public void ApplicationConversionServiceFactoryBean.afterPropertiesSet() {
         super.afterPropertiesSet();
         installLabelConverters(getObject());
     }
-    
+
 }

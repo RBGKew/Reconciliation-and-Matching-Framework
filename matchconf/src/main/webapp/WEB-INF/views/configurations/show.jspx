@@ -17,5 +17,7 @@
         <field:display field="lookupFileEncoding" id="s_org_kew_shs_dedupl_matchconf_Configuration_lookupFileEncoding" object="${configuration}" z="KVyZkxujx0RUYwN234g83IooD0g="/>
         <field:display field="lookupFileDelimiter" id="s_org_kew_shs_dedupl_matchconf_Configuration_lookupFileDelimiter" object="${configuration}" z="AbZ4kL1ZnHrnyPx1pV2ooeK5Mok="/>
         <field:display field="recordFilter" id="s_org_kew_shs_dedupl_matchconf_Configuration_recordFilter" object="${configuration}" z="8H/oxoy6mSzOzye0+N3OXVPzapM="/>
+        <field:display field="nextConfig" id="s_org_kew_shs_dedupl_matchconf_Configuration_nextConfig" object="${configuration}" z="Y+yZLJgNW5Be6PR+hOZP8vmkUjQ="/>
+        <field:display field="maxSearchResults" id="s_org_kew_shs_dedupl_matchconf_Configuration_maxSearchResults" object="${configuration}" z="L+8fzACYgEORhgaf+9z8Q7ljr0I="/>
     </page:show>
 </div>

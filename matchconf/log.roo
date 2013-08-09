@@ -204,4 +204,9 @@ field string --fieldName className
 web mvc all --package org.kew.shs.dedupl.matchconf.web
 // Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-07-26 09:58:20
 // Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-08-02 10:15:57
-// Spring Roo 1.2.5.BUILD-SNAPSHOT [rev 61090d2] log opened at 2013-08-08 13:07:01
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-08-06 14:08:32
+web mvc all --package org.kew.shs.dedupl.matchconf.web
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-08-07 17:35:54
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-08-08 17:08:32
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-08-08 17:13:44
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-08-08 17:20:14

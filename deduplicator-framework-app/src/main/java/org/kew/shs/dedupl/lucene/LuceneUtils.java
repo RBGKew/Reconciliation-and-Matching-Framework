@@ -8,7 +8,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.Fieldable;
+import org.apache.lucene.index.IndexableField;
 import org.kew.shs.dedupl.configuration.Configuration;
 import org.kew.shs.dedupl.configuration.Property;
 import org.slf4j.Logger;
@@ -24,7 +24,7 @@ public class LuceneUtils {
 
     public static Map<String,String> doc2Map(Document doc){
         Map<String,String> map = new HashMap<String, String>();
-        for (Fieldable f : doc.getFields()){
+        for (IndexableField f : doc.getFields()){
             map.put(f.name(), f.stringValue());
         }
         return map;
@@ -42,9 +42,9 @@ public class LuceneUtils {
 
     public static String doc2String(Document doc, String prefix){
         StringBuffer sb = new StringBuffer();
-        for (Fieldable f : doc.getFields()){
+        for (IndexableField f : doc.getFields()){
             sb.append(prefix)
-                .append(f.name()).append(" : " ).append(doc.getFieldable(f.name()).stringValue())
+                .append(f.name()).append(" : " ).append(doc.getField(f.name()).stringValue())
                 .append("\n");
         }
         return sb.toString();
@@ -52,10 +52,10 @@ public class LuceneUtils {
 
     public static String doc2Line(Document doc, String fieldSeparator){
         StringBuffer sb = new StringBuffer();
-        for (Fieldable f : doc.getFields()){
+        for (IndexableField f : doc.getFields()){
             if (sb.length() > 0)
                 sb.append(fieldSeparator);
-            sb.append(doc.getFieldable(f.name()).stringValue());
+            sb.append(doc.getField(f.name()).stringValue());
         }
         return sb.toString();
     }

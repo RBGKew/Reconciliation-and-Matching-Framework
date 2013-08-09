@@ -46,10 +46,6 @@ public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration
             int numClusters = 0;
             DocList dupls;
             for (int i=0; i<this.getIndexReader().maxDoc(); i++) {
-                if (this.getIndexReader().isDeleted(i)) {
-                    logger.error("this record id appears to be deleted in the index. why??");
-                    continue;
-                }
                 if (i % config.getAssessReportFrequency() == 0 || i == this.getIndexReader().maxDoc() - 1){
                     logger.info("Assessed {} records, merged to {} duplicate clusters", i, numClusters);
                 }

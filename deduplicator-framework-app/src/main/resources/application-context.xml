@@ -27,7 +27,7 @@
 
 	<!-- Set the analyzer, to be used by the IndexWriter -->
 	<!--bean id="luceneAnalyzer" class="org.apache.lucene.analysis.standard.StandardAnalyzer"-->
-	<bean id="luceneAnalyzer" class="org.apache.lucene.analysis.WhitespaceAnalyzer">
+	<bean id="luceneAnalyzer" class="org.apache.lucene.analysis.core.WhitespaceAnalyzer">
 		<constructor-arg ref="LUCENE_VERSION" />
 	</bean>
 
@@ -65,7 +65,7 @@
 		p:directory-ref="luceneFileSystemStore"
 		p:config-ref="config"/>
 
-	<bean id="queryParser" class="org.apache.lucene.queryParser.QueryParser">
+	<bean id="queryParser" class="org.apache.lucene.queryparser.classic.QueryParser">
 		<constructor-arg ref="LUCENE_VERSION" />
 		<constructor-arg value="id" />
 		<constructor-arg ref="luceneAnalyzer" />

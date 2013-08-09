@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Fieldable;
+import org.apache.lucene.index.IndexableField;
 
 /*
  * A very simple wrapper around an ArrayList specific to lucene Documents, that knows whether it's sorted or not.
@@ -101,7 +101,7 @@ public class DocList  {
 	}
 
 	public String[] getFieldNames() {
-		List<Fieldable> fields = fromDoc.getFields();
+		List<IndexableField> fields = fromDoc.getFields();
 		String[] fieldNames = new String[fields.size()];
 		for (int i=0; i< fields.size(); i++) {
 			fieldNames[i] = fields.get(i).name();

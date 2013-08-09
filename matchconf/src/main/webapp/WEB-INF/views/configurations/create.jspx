@@ -21,6 +21,8 @@
         <field:input field="lookupFileDelimiter" id="c_org_kew_shs_dedupl_matchconf_Configuration_lookupFileDelimiter" z="wdmGp4zNTXYZTlVaoShLBtxJL7E="/>
         <field:simple field="reporters" id="c_org_kew_shs_dedupl_matchconf_Configuration_reporters" messageCode="entity_reference_not_managed" messageCodeAttribute="Reporter" z="fcss3mBGR03Ok8XPxKW99yLzIpI="/>
         <field:input field="recordFilter" id="c_org_kew_shs_dedupl_matchconf_Configuration_recordFilter" z="UblGjqepwYEnIJ2Qukb4uPwQ6Mw="/>
+        <field:input field="nextConfig" id="c_org_kew_shs_dedupl_matchconf_Configuration_nextConfig" z="8/XB3k0CWyzuW6E8SlDmdPFV0Jk="/>
+        <field:input field="maxSearchResults" id="c_org_kew_shs_dedupl_matchconf_Configuration_maxSearchResults" z="b/g0ZTLl9l72rqTsKqu2gq1MkRE="/>
     </form:create>
     <form:dependency dependencies="${dependencies}" id="d_org_kew_shs_dedupl_matchconf_Configuration" render="${not empty dependencies}" z="0C0vyFYOe+A8T8VgmDKsxBtFphQ="/>
 </div>
