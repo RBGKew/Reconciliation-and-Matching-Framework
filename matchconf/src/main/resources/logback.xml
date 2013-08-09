@@ -8,6 +8,17 @@
     </encoder>
   </appender>
 
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>./logs/matchconf-${byMinute}.log</file>
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="org.kew.shs.dedupl.lucene.LuceneMatcher" level="debug"/>
+  <logger name="org.kew.shs.dedupl.lucene.LuceneHandler" level="debug"/>
+  <logger name="org.kew.shs.dedupl.lucene.LuceneUtils" level="debug"/>
+
   <root level="info">
     <appender-ref ref="STDOUT" />
   </root>
