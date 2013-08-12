@@ -1,8 +1,10 @@
 package org.kew.shs.dedupl.lucene;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.search.ScoreDoc;
@@ -12,6 +14,7 @@ import org.kew.shs.dedupl.configuration.Configuration;
 import org.kew.shs.dedupl.configuration.DeduplicationConfiguration;
 import org.kew.shs.dedupl.configuration.Property;
 import org.kew.shs.dedupl.reporters.LuceneReporter;
+import org.kew.shs.dedupl.reporters.Piper;
 
 
 public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration> implements DataHandler<DeduplicationConfiguration> {
@@ -33,14 +36,8 @@ public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration
 
         try (DeduplicationConfiguration config = this.getConfig();
              IndexWriter indexWriter = this.indexWriter) {
-            // DEFUNCTED! messed up the order of columns. TODO: possibly implement again differently
-            // Sort properties in order of cost:
-//            Collections.sort(config.getProperties(),  new Comparator<Property>() {
-//                public int compare(final Property p1,final Property p2) {
-//                    return Integer.valueOf(p1.getMatcher().getCost()).compareTo(Integer.valueOf(
-//                            p2.getMatcher().getCost()));
-//                }
-//            });
+
+            this.prepareEnvs();
 
             // Loop over all documents in index
             int numClusters = 0;
@@ -51,6 +48,13 @@ public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration
                 }
 
                 Document fromDoc = getFromLucene(i);
+
+                Map<String, String> docAsMap = LuceneUtils.doc2Map(fromDoc);
+                if (!StringUtils.isBlank(config.getRecordFilter()) && jsEnv.evalFilter(config.getRecordFilter(), docAsMap)) {
+                    for (Piper piper:config.getPipers()) piper.pipe(docAsMap);
+                    continue;
+                }
+
                 dupls = new DocList(fromDoc, config.getScoreFieldName()); // each fromDoc has a duplicates cluster
 
                 logger.debug(LuceneUtils.doc2String(fromDoc));
@@ -64,6 +68,13 @@ public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration
 
                 // Use the properties to select a set of documents which may contain matches
                 String querystr = LuceneUtils.buildQuery(config.getProperties(), fromDoc, true);
+                // If the query for some reasons results being empty we pipe the record directly through to the output
+                // TODO: create a log-file that stores critical log messages?
+                if (querystr.equals("")) {
+                    logger.warn("Empty query for record {}", fromDoc);
+                    for (Piper piper:config.getPipers()) piper.pipe(docAsMap);
+                    continue;
+                }
 
                 TopDocs td = queryLucene(querystr, this.getIndexSearcher(), config.getMaxSearchResults());
                 if (td.totalHits == config.getMaxSearchResults()) {

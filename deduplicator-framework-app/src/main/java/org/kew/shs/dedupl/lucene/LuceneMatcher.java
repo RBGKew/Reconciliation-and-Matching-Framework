@@ -16,7 +16,6 @@ import org.kew.shs.dedupl.configuration.MatchConfiguration;
 import org.kew.shs.dedupl.configuration.Property;
 import org.kew.shs.dedupl.reporters.LuceneReporter;
 import org.kew.shs.dedupl.reporters.Piper;
-import org.kew.shs.dedupl.script.JavaScriptEnv;
 import org.kew.shs.dedupl.transformers.Transformer;
 import org.supercsv.io.CsvMapReader;
 import org.supercsv.prefs.CsvPreference;
@@ -47,22 +46,7 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
              IndexWriter indexWriter = this.indexWriter;
              CsvMapReader mr = new CsvMapReader(new FileReader(this.getConfig().getSourceFile()), csvPref)) {
 
-            // copy some necessary values to reporters and possibly create pipers if recordFilter is set
-            config.setupReporting();
-            // the recordFilter (excludes records from processing if condition fulfilled) needs a JavaScript environment set up
-            JavaScriptEnv jsEnv = null;
-            if (!StringUtils.isBlank(config.getRecordFilter())) {
-                jsEnv = new JavaScriptEnv();
-                this.logger.debug("Record filter activated, javascript rock'n roll!");
-            }
-            // DEFUNCTED! messed up the order of columns. TODO: possibly implement again differently
-            // Sort properties in order of cost:
-//            Collections.sort(config.getProperties(),  new Comparator<Property>() {
-//                public int compare(final Property p1,final Property p2) {
-//                    return Integer.valueOf(p1.getMatcher().getCost()).compareTo(Integer.valueOf(
-//                            p2.getMatcher().getCost()));
-//                }
-//            });
+            this.prepareEnvs();
 
             // loop over the sourceFile
             int numMatches = 0;
