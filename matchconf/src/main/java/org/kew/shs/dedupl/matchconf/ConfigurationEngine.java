@@ -151,13 +151,14 @@ public class ConfigurationEngine {
         return this.runConfiguration(true);
     }
 
-    public Map<String, List<String>> runConfiguration (boolean writeBefore) throws Exception {
+    @SuppressWarnings("finally")
+	public Map<String, List<String>> runConfiguration (boolean writeBefore) throws Exception {
         // TODO: is there an internal messaging system in spring mvc?
         @SuppressWarnings("serial")
         Map<String, List<String>> infoMap = new HashMap<String, List<String>>() {{
             put("messages", new ArrayList<String>());
             put("exception", new ArrayList<String>());
-            put("stack-trace", new ArrayList<String>());
+            put("stackTrace", new ArrayList<String>());
         }};
         try {
             if (writeBefore) this.write_to_filesystem();
@@ -183,9 +184,7 @@ public class ConfigurationEngine {
             for (StackTraceElement ste:e.getStackTrace()) infoMap.get("stackTrace").add(ste.toString());
         } finally {
             File luceneDir = new File("target/deduplicator");
-            if (luceneDir.exists()) {
-                FileUtils.deleteDirectory(new File("target/deduplicator"));
-            }
+            if (luceneDir.exists()) FileUtils.deleteDirectory(luceneDir);
             return infoMap;
         }
     }
