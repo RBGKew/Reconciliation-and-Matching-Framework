@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -161,33 +162,15 @@ public class CustomConfigController {
         config.clone();
         return String.format("redirect:/%s_configs", configType);
     }
-    @SuppressWarnings("finally")
     @RequestMapping(value = "/{configType}_configs/{configName}/run", produces = "text/html")
-    public String runConfig(@PathVariable("configType") String configType, @PathVariable("configName") String configName, Model model) throws IOException {
+    public String runConfig(@PathVariable("configType") String configType, @PathVariable("configName") String configName, Model model) throws Exception {
         Configuration config = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
-        try {
-            ConfigurationEngine engine = new ConfigurationEngine(config);
-            engine.write_to_filesystem();
-            engine.runConfiguration();
-            model.addAttribute("config", config);
-            model.addAttribute("exception", "");
-            model.addAttribute("stackTrace", "");
-        } catch (RuntimeException e) {
-            model.addAttribute("exception", e.toString());
-            model.addAttribute("stackTrace", new ArrayList<StackTraceElement>(Arrays.asList(e.getStackTrace())));
-        } catch (Exception e) {
-            model.addAttribute("exception", e.toString());
-            model.addAttribute("stackTrace", new ArrayList<StackTraceElement>(Arrays.asList(e.getStackTrace())));
-        } catch (Error e) {
-            model.addAttribute("exception", e.toString());
-            model.addAttribute("stackTrace", new ArrayList<StackTraceElement>(Arrays.asList(e.getStackTrace())));
-        } finally {
-            File luceneDir = new File("target/deduplicator");
-            if (luceneDir.exists()) {
-                FileUtils.deleteDirectory(new File("target/deduplicator"));
-            }
-            return "configurations/run/index";
-        }
+        Map<String, List<String>> infoMap = new ConfigurationEngine(config).runConfiguration();
+        model.addAttribute("engineMessages", infoMap.get("messages"));
+        model.addAttribute("config", config);
+        model.addAttribute("exception", infoMap.get("exception"));
+        model.addAttribute("stackTrace", infoMap.get("stackTrace"));
+        return "configurations/run/index";
     }
 
 }

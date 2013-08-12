@@ -4,3 +4,4 @@ data/
 .classpath
 .settings
 .project
+database.properties

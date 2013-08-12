@@ -5,7 +5,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -92,8 +96,10 @@ public class ConfigurationEngine {
         outXML.add(String.format("%s%sp:loadReportFrequency=\"%s\"", shift, shift, this.config.getLoadReportFrequency()));
         outXML.add(String.format("%s%sp:assessReportFrequency=\"%s\"", shift, shift, this.config.getAssessReportFrequency()));
         outXML.add(String.format("%s%sp:maxSearchResults=\"%s\"", shift, shift, this.config.getMaxSearchResults()));
-        outXML.add(String.format("%s%sp:recordFilter=\"%s\"", shift, shift, this.config.getRecordFilter()));
-        if (this.config.getReporters().size() > 0) outXML.add(String.format("%s%sp:reporters-ref=\"reporters\"/>", shift, shift));
+        if (this.config.getReporters().size() > 0) {
+            outXML.add(String.format("%s%sp:recordFilter=\"%s\"", shift, shift, this.config.getRecordFilter()));
+            outXML.add(String.format("%s%sp:reporters-ref=\"reporters\"/>", shift, shift));
+        } else outXML.add(String.format("%s%sp:recordFilter=\"%s\"/>", shift, shift, this.config.getRecordFilter()));
 
         outXML.add(String.format("%s<!-- import the generic application-context (equal for dedup/match configurations) -->", shift));
         outXML.add(String.format("%s<import resource=\"classpath*:application-context.xml\"/>", shift));
@@ -141,13 +147,47 @@ public class ConfigurationEngine {
         }
     }
 
-    public void runConfiguration () throws Exception {
-        File workDir = new File(this.config.getWorkDirPath());
-        assert workDir.exists();
-        CoreApp.main(new String[] {"-d " + workDir.toString(), "-c config_" + this.config.getName() + ".xml"});
-        // Our super-sophisticated ETL functionality:
-        String next = this.config.getNextConfig();
-        if (!StringUtils.isBlank(next)) new ConfigurationEngine(Configuration.findConfigurationsByNameEquals(next).getSingleResult()).runConfiguration();
+    public Map<String, List<String>> runConfiguration () throws Exception {
+        return this.runConfiguration(true);
+    }
+
+    public Map<String, List<String>> runConfiguration (boolean writeBefore) throws Exception {
+        // TODO: is there an internal messaging system in spring mvc?
+        @SuppressWarnings("serial")
+        Map<String, List<String>> infoMap = new HashMap<String, List<String>>() {{
+            put("messages", new ArrayList<String>());
+            put("exception", new ArrayList<String>());
+            put("stack-trace", new ArrayList<String>());
+        }};
+        try {
+            if (writeBefore) this.write_to_filesystem();
+            infoMap.get("messages").add(String.format("%s: Written config file to %s..", this.config.getName(), this.config.getWorkDirPath()));
+            File workDir = new File(this.config.getWorkDirPath());
+            assert workDir.exists();
+            CoreApp.main(new String[] {"-d " + workDir.toString(), "-c config_" + this.config.getName() + ".xml"});
+            infoMap.get("messages").add(String.format("%s: Ran without complains.", this.config.getName()));
+            // Our super-sophisticated ETL functionality:
+            String next = this.config.getNextConfig();
+            if (!StringUtils.isBlank(this.config.getNextConfig())) {
+                ConfigurationEngine nextEngine = new ConfigurationEngine(Configuration.findConfigurationsByNameEquals(next).getSingleResult());
+                Map<String, List<String>> nextInfoMap = nextEngine.runConfiguration();
+                infoMap.get("exception").addAll(nextInfoMap.get("exception"));
+                infoMap.get("stackTrace").addAll(nextInfoMap.get("stackTrace"));
+                infoMap.get("messages").addAll(nextInfoMap.get("messages"));
+            }
+        } catch (Exception e) {
+            infoMap.get("exception").add(e.toString());
+            for (StackTraceElement ste:e.getStackTrace()) infoMap.get("stackTrace").add(ste.toString());
+        } catch (Error e) {
+            infoMap.get("exception").add(e.toString());
+            for (StackTraceElement ste:e.getStackTrace()) infoMap.get("stackTrace").add(ste.toString());
+        } finally {
+            File luceneDir = new File("target/deduplicator");
+            if (luceneDir.exists()) {
+                FileUtils.deleteDirectory(new File("target/deduplicator"));
+            }
+            return infoMap;
+        }
     }
 
 }

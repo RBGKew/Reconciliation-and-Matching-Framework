@@ -70,7 +70,7 @@ public class RunSimpleDedupConfig {
 
 	@When("^asking MatchConf to run this configuration$")
 	public void asking_MatchConf_to_run_this_configuration() throws Throwable {
-		new ConfigurationEngine(Configuration.findConfiguration(this.configId)).runConfiguration();
+		new ConfigurationEngine(Configuration.findConfiguration(this.configId)).runConfiguration(false);
 	}
 
 	@Then("^the deduplication program should run smoothly and produce the following file \"([^\"]*)\" in the same directory:$")

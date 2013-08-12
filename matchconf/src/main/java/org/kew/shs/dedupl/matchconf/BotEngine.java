@@ -10,7 +10,7 @@ public class BotEngine {
 		this.bot = bot;
 	}
 	
-	public ArrayList<String> toXML(String treatAs, int indentLevel) {
+	public ArrayList<String> toXML(String treatAs, int indentLevel) throws Exception {
 		int shiftWidth = 4;
 		String shift = String.format("%" + shiftWidth + "s", " ");
 		String indent = "";
@@ -34,6 +34,9 @@ public class BotEngine {
 				for (String param:this.bot.getParams().split(",")) {
 					String key, value;
 					String[] paramTuple = param.split("=");
+					if (paramTuple.length != 2) {
+						throw new Exception(String.format("Wrong params configuration for %s -- params format has to be like < param1=value1, param2=value2, ..>, but was: < %s >)", this.bot.getName(), this.bot.getParams()));
+					}
 					key = paramTuple[0];
 					value = paramTuple[1];
 					outXML.add(String.format("%s%sp:%s=\"%s\"", indent, shift, key, value));
@@ -47,7 +50,7 @@ public class BotEngine {
 		return outXML;
 	}	
 	
-	public ArrayList<String> toXML(String treatAs) {
+	public ArrayList<String> toXML(String treatAs) throws Exception {
 		return toXML(treatAs, 0);
 	}
 }
