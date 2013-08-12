@@ -329,6 +329,18 @@
             <name>Spring Roo Repository</name>
             <url>http://spring-roo-repository.springsource.org/release</url>
         </pluginRepository>
+            <pluginRepository>
+      <id>oss.sonatype.org</id>
+      <name>Jetty Snapshot Plugin Repository</name>
+      <layout>default</layout>
+      <url>http://oss.sonatype.org/content/repositories/jetty-snapshots/</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+   </pluginRepository>
     </pluginRepositories>
 
 </project>

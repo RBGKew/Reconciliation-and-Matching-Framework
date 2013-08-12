@@ -9,6 +9,11 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=8" />
 
+        <!-- try to assure no proxy caching (needs to be done by server to be sure) -->
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+
         <util:load-scripts />
 
         <spring:message code="application_name" var="app_name" htmlEscape="false"/>
@@ -19,8 +24,8 @@
            <div id="wrapper">
             <tiles:insertAttribute name="header" ignore="true" />
             <div id="sidebar">
-	            <tiles:insertAttribute name="custom_menu" ignore="true" />
-	            <tiles:insertAttribute name="library" ignore="true" />
+                <tiles:insertAttribute name="custom_menu" ignore="true" />
+                <tiles:insertAttribute name="library" ignore="true" />
             </div>
             <div id="main">
                 <tiles:insertAttribute name="body"/>

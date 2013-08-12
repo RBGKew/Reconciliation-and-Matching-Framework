@@ -14,6 +14,7 @@
     </parent>
 
     <properties>
+        <jetty.version>9.0.4.v20130625</jetty.version>
         <spring.version>3.2.0.RELEASE</spring.version>
     </properties>
     <repositories>
@@ -449,12 +450,13 @@
                 <version>1.1</version>
             </plugin>
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
+                <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>8.1.4.v20120524</version>
+                <version>${jetty.version}</version>
                 <configuration>
                     <webAppConfig>
                         <contextPath>/${project.name}</contextPath>
+                        <overrideDescriptor>${basedir}/src/main/webapp/jetty-proxy-settings.xml</overrideDescriptor>
                     </webAppConfig>
                 </configuration>
             </plugin>
