@@ -50,7 +50,8 @@ public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration
                 Document fromDoc = getFromLucene(i);
 
                 Map<String, String> docAsMap = LuceneUtils.doc2Map(fromDoc);
-                if (!StringUtils.isBlank(config.getRecordFilter()) && jsEnv.evalFilter(config.getRecordFilter(), docAsMap)) {
+                // pipe everything through to the output where an existing filter evals to false;
+                if (!StringUtils.isBlank(config.getRecordFilter()) && !jsEnv.evalFilter(config.getRecordFilter(), docAsMap)) {
                     for (Piper piper:config.getPipers()) piper.pipe(docAsMap);
                     continue;
                 }

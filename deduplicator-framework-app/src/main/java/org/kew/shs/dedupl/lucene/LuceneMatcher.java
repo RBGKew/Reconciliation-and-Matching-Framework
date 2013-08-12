@@ -61,7 +61,8 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
             if (!headerList.contains(idFieldName)) throw new Exception(String.format("%s: Id field name not found in header, should be %s!", this.config.getSourceFile().getPath(), idFieldName));
             Map<String, String> record;
             while((record = mr.read(header)) != null) {
-                if (!StringUtils.isBlank(config.getRecordFilter()) && jsEnv.evalFilter(config.getRecordFilter(), record)) {
+                // pipe everything through to the output where an existing filter evals to false;
+                if (!StringUtils.isBlank(config.getRecordFilter()) && !jsEnv.evalFilter(config.getRecordFilter(), record)) {
                     for (Piper piper:config.getPipers()) piper.pipe(record);
                     continue;
                 }
