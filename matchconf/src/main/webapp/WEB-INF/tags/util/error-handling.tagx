@@ -1,0 +1,20 @@
+<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:spring="http://www.springframework.org/tags" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+  <jsp:output omit-xml-declaration="yes" />
+
+  <jsp:directive.attribute name="exception" type="java.lang.String" required="true" rtexprvalue="true" description="Has an exception occurred?" />
+  <jsp:directive.attribute name="stackTrace" type="java.util.List" required="true" rtexprvalue="true" description="If an exception has occurred, there will be a stack-trace" />
+
+  <c:choose>
+	<c:when test='${ exception.equals("") }'>
+	  <h3> The configuration seems to have run without bigger complains.. </h3>
+	  <p> The results should have been written to ${config.workDirPath}.. </p>
+	</c:when>
+	<c:otherwise>
+	  <h3>OH NO! something went wrong! have a look at the error msg. if it doesn't make sense to you, please email the whole error msg and stack trace to the poor responsible developer</h3>
+	  <h2>${ exception }</h2>
+	  <c:forEach items="${ stackTrace }" var="stackTraceElement">
+		  <p>${ stackTraceElement.toString() }</p>
+	  </c:forEach>
+    </c:otherwise>
+  </c:choose>
+</jsp:root>

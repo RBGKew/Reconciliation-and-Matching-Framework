@@ -3,6 +3,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -168,12 +170,17 @@ public class CustomConfigController {
             engine.write_to_filesystem();
             engine.runConfiguration();
             model.addAttribute("config", config);
+            model.addAttribute("exception", "");
+            model.addAttribute("stackTrace", "");
         } catch (RuntimeException e) {
             model.addAttribute("exception", e.toString());
+            model.addAttribute("stackTrace", new ArrayList<StackTraceElement>(Arrays.asList(e.getStackTrace())));
         } catch (Exception e) {
             model.addAttribute("exception", e.toString());
+            model.addAttribute("stackTrace", new ArrayList<StackTraceElement>(Arrays.asList(e.getStackTrace())));
         } catch (Error e) {
             model.addAttribute("exception", e.toString());
+            model.addAttribute("stackTrace", new ArrayList<StackTraceElement>(Arrays.asList(e.getStackTrace())));
         } finally {
             File luceneDir = new File("target/deduplicator");
             if (luceneDir.exists()) {

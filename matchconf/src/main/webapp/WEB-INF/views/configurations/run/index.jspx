@@ -3,14 +3,7 @@
   <jsp:output omit-xml-declaration="yes" />
   <spring:message var="app_name" code="application_name" htmlEscape="false" />
   <spring:message var="title" code="welcome_titlepane" arguments="${app_name}" htmlEscape="false" />
-  <util:panel id="title" title="${title}">
-    <h3>
-      Either it has worked now or not :-)
-    </h3>
-    <h2>${exception}</h2>
-	  
-    <p>
-      Tried to run configuration ${config.name}; if all has worked well the results should have been written to ${config.workDirPath}..
-    </p>
+  <util:panel id="title" title="${ title }">
+    <util:error-handling exception="${ exception }" stackTrace="${ stackTrace }" />
   </util:panel>
 </div>

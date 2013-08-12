@@ -37,6 +37,8 @@ public class ShrunkPubAuthorsTest {
         assertEquals("lov lov", transformer.transform(author));
         author = "Benth.) Verdc.";
         assertEquals("ben ver", transformer.transform(author));
+        author = "F.jr. ex Hook.f.";
+        assertEquals("hoo", transformer.transform(author));
     }
 
     @Test
