@@ -20,7 +20,14 @@ public class ReporterEngine {
         ArrayList<String> outXML = new ArrayList<String>();
         outXML.add(String.format("%s<bean class=\"%s.%s\"", indent, this.reporter.getPackageName(), this.reporter.getClassName()));
         outXML.add(String.format("%s%sp:name=\"%s\"", indent, shift, this.reporter.getName()));
-        outXML.add(String.format("%s%sp:nameSpacePrefix=\"%s_\"", indent, shift, this.reporter.getConfig().getName()));
+        // nameSpacePrefix: if not overwritten on reporter-level...
+        if (!this.reporter.getParams().contains("nameSpacePrefix")) {
+            // ..check if it's a dedup config..
+            if (this.reporter.getConfig().getClassName() == "DeduplicationConfiguration") {
+                // and tell it to name-space with the dedup-config's name
+                outXML.add(String.format("%s%sp:nameSpacePrefix=\"%s_\"", indent, shift, this.reporter.getConfig().getName()));
+            }
+        }
         outXML.add(String.format("%s%sp:delimiter=\"%s\"", indent, shift, this.reporter.getDelimiter()));
         outXML.add(String.format("%s%sp:idDelimiter=\"%s\"", indent, shift, this.reporter.getIdDelimiter()));
         if (this.reporter.getParams().length() > 0) {
@@ -33,10 +40,10 @@ public class ReporterEngine {
             }
         }
         outXML.set(outXML.size()-1, outXML.get(outXML.size()-1) + ">");
-        outXML.add(String.format("%s%s<property name=\"file\">", indent, shift, this.reporter.getIdDelimiter()));
-        outXML.add(String.format("%s%s%s<bean class=\"java.io.File\">", indent, shift, shift, this.reporter.getIdDelimiter()));
+        outXML.add(String.format("%s%s<property name=\"file\">", indent, shift));
+        outXML.add(String.format("%s%s%s<bean class=\"java.io.File\">", indent, shift, shift));
         outXML.add(String.format("%s%s%s%s<constructor-arg value=\"%s/%s_%s\" />", indent, shift, shift, shift, this.reporter.getConfig().getWorkDirPath(), this.reporter.getConfig().getName(), this.reporter.getFileName()));
-        outXML.add(String.format("%s%s%s</bean>", indent, shift, shift, this.reporter.getIdDelimiter()));
+        outXML.add(String.format("%s%s%s</bean>", indent, shift, shift));
         outXML.add(String.format("%s%s</property>", indent, shift));
         outXML.add(String.format("%s</bean>", indent));
 
