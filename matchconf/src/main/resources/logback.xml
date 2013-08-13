@@ -15,11 +15,12 @@
     </encoder>
   </appender>
 
-  <logger name="org.kew.shs.dedupl.lucene.LuceneMatcher" level="debug"/>
-  <logger name="org.kew.shs.dedupl.lucene.LuceneHandler" level="debug"/>
-  <logger name="org.kew.shs.dedupl.lucene.LuceneUtils" level="debug"/>
+  <logger name="org.kew.shs.dedupl.lucene.LuceneMatcher" level="info"/>
+  <logger name="org.kew.shs.dedupl.lucene.LuceneHandler" level="info"/>
+  <logger name="org.kew.shs.dedupl.lucene.LuceneUtils" level="info"/>
 
   <root level="info">
     <appender-ref ref="STDOUT" />
+    <appender-ref ref="FILE" />
   </root>
 </configuration>
