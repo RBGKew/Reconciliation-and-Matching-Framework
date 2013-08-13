@@ -76,7 +76,7 @@ public class Wire implements Comparable<Wire> {
         wire.setIndexInitial(indexInitial);
         wire.setUseWildcard(useWildcard);
         wire.setConfiguration(config);
-        wire.setMatcher(matcher);
+        wire.setMatcher(this.matcher.clone(config));
         // then the relational attributes; they have already been created before,
         // (in Configuration.clone(), here we only add them to the wire
         for (Transformer trans:this.getSourceTransformers()) {
