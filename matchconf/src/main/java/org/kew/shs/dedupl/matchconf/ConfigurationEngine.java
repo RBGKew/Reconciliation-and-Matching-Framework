@@ -121,7 +121,7 @@ public class ConfigurationEngine {
         // 1. does the working directory exist?
         File workDir = new File(this.config.getWorkDirPath());
         if (!workDir.exists()) {
-            throw new FileNotFoundException("The specified working directory ${config.workDirPath} does not exist! You need to create it and put the source file in it.");
+            throw new FileNotFoundException(String.format("The specified working directory %s does not exist! You need to create it and put the source file in it.", config.getWorkDirPath()));
         }
         // 2a. does the source file exist?
         File sourceFile = new File(workDir, config.getSourceFileName());
