@@ -66,7 +66,8 @@ public class LuceneDataLoader implements DataLoader {
         int i = 0;
         // TODO: either make quote characters and line break characters configurable or simplify even more?
         CsvPreference customCsvPref = new CsvPreference.Builder('"', this.config.getLookupFileDelimiter().charAt(0), "\n").build();
-        try (CsvMapReader mr = new CsvMapReader(new FileReader(file), customCsvPref)) {
+        try (CsvMapReader mr = new CsvMapReader(new FileReader(file), customCsvPref);
+             IndexWriter indexWriter = this.getIndexWriter()) {
             final String[] header = mr.getHeader(true);
             // check whether the header column names fit to the ones specified in the configuration
             List<String> headerList = Arrays.asList(header);
@@ -89,7 +90,7 @@ public class LuceneDataLoader implements DataLoader {
     public void indexRecord(Map<String, String> record) throws CorruptIndexException, IOException {
         Document doc = new Document();
         String idFieldName = Configuration.ID_FIELD_NAME;
-        logger.debug(record.toString());
+        logger.debug("rawRecord: {}", record.toString());
         doc.add(new Field(idFieldName, record.get(idFieldName), Field.Store.YES,Field.Index.ANALYZED));
         // The remainder of the columns are added as specified in the properties
         for (Property p : this.config.getProperties()) {
@@ -123,6 +124,7 @@ public class LuceneDataLoader implements DataLoader {
                 doc.add(finit);
             }
         }
+        logger.debug("Document to be indexed: {}", doc.toString());
         this.indexWriter.addDocument(doc);
     }
 

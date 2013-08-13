@@ -39,7 +39,7 @@ Feature: Create a simple configuration
                     </property>
                 </bean>
                 <bean id="lucene_directory" class="java.lang.String">
-                    <constructor-arg value="target/deduplicator"/>
+                    <constructor-arg value="/tmp/matchconf/lucene_directory/"/>
                 </bean>
                 <bean id="sourcefile" class="java.io.File">
                     <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/source.tsv" />
@@ -143,7 +143,7 @@ Feature: Create a simple configuration
                     </property>
                 </bean>
                 <bean id="lucene_directory" class="java.lang.String">
-                    <constructor-arg value="target/deduplicator"/>
+                    <constructor-arg value="/tmp/matchconf/lucene_directory/"/>
                 </bean>
                 <bean id="sourcefile" class="java.io.File">
                     <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/source.tsv" />

@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.kew.shs.dedupl.DataHandler;
@@ -35,21 +35,26 @@ public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration
         Set<String> alreadyProcessed = new HashSet<>();
 
         try (DeduplicationConfiguration config = this.getConfig();
-             IndexWriter indexWriter = this.indexWriter) {
+             IndexReader indexReader = this.getIndexReader()) {
 
             this.prepareEnvs();
 
             // Loop over all documents in index
             int numClusters = 0;
             DocList dupls;
-            for (int i=0; i<this.getIndexReader().maxDoc(); i++) {
-                if (i % config.getAssessReportFrequency() == 0 || i == this.getIndexReader().maxDoc() - 1){
+            for (int i=0; i<indexReader.maxDoc(); i++) {
+                if (i % config.getAssessReportFrequency() == 0 || i == indexReader.maxDoc() - 1){
                     logger.info("Assessed {} records, merged to {} duplicate clusters", i, numClusters);
                 }
 
                 Document fromDoc = getFromLucene(i);
 
                 Map<String, String> docAsMap = LuceneUtils.doc2Map(fromDoc);
+                String myVal = docAsMap.get("MR_test_config_cluster_size");
+                if (myVal != null) {
+                    String start = "debugger";
+                }
+                logger.debug("'Source'-Document from index: {}", docAsMap);
                 // pipe everything through to the output where an existing filter evals to false;
                 if (!StringUtils.isBlank(config.getRecordFilter()) && !jsEnv.evalFilter(config.getRecordFilter(), docAsMap)) {
                     for (Piper piper:config.getPipers()) piper.pipe(docAsMap);

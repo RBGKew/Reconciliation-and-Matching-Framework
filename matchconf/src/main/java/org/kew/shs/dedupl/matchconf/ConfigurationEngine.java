@@ -18,6 +18,8 @@ import org.kew.shs.dedupl.util.CoreApp;
 public class ConfigurationEngine {
 
     Configuration config;
+    String luceneDirectory = "/tmp/matchconf/lucene_directory/";
+
 
     public ConfigurationEngine(Configuration config) {
         this.config = config;
@@ -47,7 +49,7 @@ public class ConfigurationEngine {
         outXML.add(String.format("%s%s</property>", shift, shift));
         outXML.add(String.format("%s</bean>", shift));
         outXML.add(String.format("%s<bean id=\"lucene_directory\" class=\"java.lang.String\">", shift, shift));
-        outXML.add(String.format("%s%s<constructor-arg value=\"target/deduplicator\"/>", shift, shift));
+        outXML.add(String.format("%s%s<constructor-arg value=\"%s\"/>", shift, shift, this.luceneDirectory));
         outXML.add(String.format("%s</bean>", shift));
         outXML.add(String.format("%s<bean id=\"sourcefile\" class=\"java.io.File\">", shift, shift));
         outXML.add(String.format("%s%s<constructor-arg value=\"%s\" />", shift, shift, sourceFilePath));
@@ -152,7 +154,7 @@ public class ConfigurationEngine {
     }
 
     @SuppressWarnings("finally")
-	public Map<String, List<String>> runConfiguration (boolean writeBefore) throws Exception {
+    public Map<String, List<String>> runConfiguration (boolean writeBefore) throws Exception {
         // TODO: is there an internal messaging system in spring mvc?
         @SuppressWarnings("serial")
         Map<String, List<String>> infoMap = new HashMap<String, List<String>>() {{
@@ -165,6 +167,9 @@ public class ConfigurationEngine {
             infoMap.get("messages").add(String.format("%s: Written config file to %s..", this.config.getName(), this.config.getWorkDirPath()));
             File workDir = new File(this.config.getWorkDirPath());
             assert workDir.exists();
+            // assert the luceneDirectory does NOT exist (we want to overwrite the index for now!)
+            File luceneDir = new File(this.luceneDirectory);
+            if (luceneDir.exists()) FileUtils.deleteDirectory(luceneDir);
             CoreApp.main(new String[] {"-d " + workDir.toString(), "-c config_" + this.config.getName() + ".xml"});
             infoMap.get("messages").add(String.format("%s: Ran without complains.", this.config.getName()));
             // Our super-sophisticated ETL functionality:
@@ -183,7 +188,7 @@ public class ConfigurationEngine {
             infoMap.get("exception").add(e.toString());
             for (StackTraceElement ste:e.getStackTrace()) infoMap.get("stackTrace").add(ste.toString());
         } finally {
-            File luceneDir = new File("target/deduplicator");
+            File luceneDir = new File(this.luceneDirectory);
             if (luceneDir.exists()) FileUtils.deleteDirectory(luceneDir);
             return infoMap;
         }
