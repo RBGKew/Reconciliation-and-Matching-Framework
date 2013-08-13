@@ -23,7 +23,7 @@ public class ReporterEngine {
         // nameSpacePrefix: if not overwritten on reporter-level...
         if (!this.reporter.getParams().contains("nameSpacePrefix")) {
             // ..check if it's a dedup config..
-            if (this.reporter.getConfig().getClassName() == "DeduplicationConfiguration") {
+            if (this.reporter.getConfig().getClassName().equals("DeduplicationConfiguration")) {
                 // and tell it to name-space with the dedup-config's name
                 outXML.add(String.format("%s%sp:nameSpacePrefix=\"%s_\"", indent, shift, this.reporter.getConfig().getName()));
             }
