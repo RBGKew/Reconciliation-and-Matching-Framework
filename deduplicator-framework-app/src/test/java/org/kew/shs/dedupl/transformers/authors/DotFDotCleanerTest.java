@@ -18,4 +18,11 @@ public class DotFDotCleanerTest {
         assertEquals("Kauffman", transformer.transform(author));
     }
 
+    @Test
+    public void alsoCleanSpaceFDot() {
+        Transformer transformer = new DotFDotCleaner();
+        String author = "Hans f. bla";
+        assertEquals("Hans bla", transformer.transform(author));
+    }
+
 }

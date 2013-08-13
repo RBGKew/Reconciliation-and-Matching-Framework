@@ -9,7 +9,7 @@ import org.kew.shs.dedupl.util.LibraryRegister;
 public class DotFDotCleaner extends RegexDefCollection implements Transformer {
 
     public String transform(String s) {
-        String c = String.format("(?<=%s)\\.f\\.", ALPHANUMDIAC);
+        String c = String.format("(?<=%s)[\\.\\s]f\\.", ALPHANUMDIAC);
         return s.replaceAll(c, "");
     }
 
