@@ -10,6 +10,7 @@
             <menu:item id="i_controller__custommatcherindex_id" messageCode="global_generic" url="/custommatcher/index" z="xGD+lTPqd9rumBdLygx6QLydkZY="/>
             <menu:item id="i_controller__configurationindex_id" messageCode="global_generic" url="/configuration/index" z="If/PNKqpxW/sLYv2Hq8Ufp51N5M="/>
             <menu:item id="i_controller__customlucenereporterindex_id" messageCode="global_generic" url="/customlucenereporter/index" z="0MYK2WuMz74ghkMn5eF3NjQpqOU="/>
+            <menu:item id="i_controller__customdictindex_id" messageCode="global_generic" url="/customdict/index" z="5cuYpQYpXwAY31UG3YIjIjh93YI="/>
         </menu:category>
         <menu:category id="c_configuration" z="ex6zSpCyqSksY2xxo+2yaACAxic=">
             <menu:item id="i_configuration_new" messageCode="global_menu_new" url="/configurations?form" z="PpKhRYSLF3fMvOlr5J8dEALoaF8="/>
@@ -30,6 +31,10 @@
         <menu:category id="c_reporter" z="Yvv4fHnqTVZ0Id4SZMdspdeI/GI=">
             <menu:item id="i_reporter_new" messageCode="global_menu_new" url="/reporters?form" z="6OYEURR0cP6RHWTUEoNVMPSkjVA="/>
             <menu:item id="i_reporter_list" messageCode="global_menu_list" url="/reporters?page=1&amp;size=${empty param.size ? 10 : param.size}" z="fPBycxm31P18D1N8O5+22dnA7og="/>
+        </menu:category>
+        <menu:category id="c_dictionary" z="KqII9cxRJkNPdVIQkYKTwzWisMc=">
+            <menu:item id="i_dictionary_new" messageCode="global_menu_new" url="/dictionarys?form" z="miogwnFVY3sIfwGoe8JIfAxR+dw="/>
+            <menu:item id="i_dictionary_list" messageCode="global_menu_list" url="/dictionarys?page=1&amp;size=${empty param.size ? 10 : param.size}" z="iVyy7U9IbIklVJU2zGHFyslflnw="/>
         </menu:category>
     </menu:menu>
 </div>

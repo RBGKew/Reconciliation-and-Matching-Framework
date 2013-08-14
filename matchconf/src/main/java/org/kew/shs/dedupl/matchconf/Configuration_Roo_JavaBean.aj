@@ -5,6 +5,7 @@ package org.kew.shs.dedupl.matchconf;
 
 import java.util.List;
 import org.kew.shs.dedupl.matchconf.Configuration;
+import org.kew.shs.dedupl.matchconf.Dictionary;
 import org.kew.shs.dedupl.matchconf.Matcher;
 import org.kew.shs.dedupl.matchconf.Reporter;
 import org.kew.shs.dedupl.matchconf.Transformer;
@@ -170,6 +171,14 @@ privileged aspect Configuration_Roo_JavaBean {
     
     public void Configuration.setReporters(List<Reporter> reporters) {
         this.reporters = reporters;
+    }
+    
+    public List<Dictionary> Configuration.getDictionaries() {
+        return this.dictionaries;
+    }
+    
+    public void Configuration.setDictionaries(List<Dictionary> dictionaries) {
+        this.dictionaries = dictionaries;
     }
     
 }

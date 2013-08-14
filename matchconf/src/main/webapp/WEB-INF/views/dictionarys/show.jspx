@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_org_kew_shs_dedupl_matchconf_Dictionary" object="${dictionary}" path="/dictionarys" z="jqYPHxOYfoiSvmV3EybBXhcxOW4=">
+        <field:display field="fileDelimiter" id="s_org_kew_shs_dedupl_matchconf_Dictionary_fileDelimiter" object="${dictionary}" z="zRX1Ewj13HL+lzhR3nzbRCnP8bs="/>
+        <field:display field="name" id="s_org_kew_shs_dedupl_matchconf_Dictionary_name" object="${dictionary}" z="Fe/7xc1bv4WNdHu7tJBD7TDxuk4="/>
+        <field:display field="config" id="s_org_kew_shs_dedupl_matchconf_Dictionary_config" object="${dictionary}" z="vEMPshmQIoDinKafGuVoQaV6YhY="/>
+        <field:display field="fileName" id="s_org_kew_shs_dedupl_matchconf_Dictionary_fileName" object="${dictionary}" z="L+9IHWMN20wN6zebVlc76jdf5D8="/>
+    </page:show>
+</div>
