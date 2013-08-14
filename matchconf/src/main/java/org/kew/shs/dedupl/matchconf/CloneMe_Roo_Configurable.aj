@@ -7,7 +7,7 @@ import org.kew.shs.dedupl.matchconf.CloneMe;
 import org.springframework.beans.factory.annotation.Configurable;
 
 privileged aspect CloneMe_Roo_Configurable {
-
+    
     declare @type: CloneMe: @Configurable;
-
+    
 }

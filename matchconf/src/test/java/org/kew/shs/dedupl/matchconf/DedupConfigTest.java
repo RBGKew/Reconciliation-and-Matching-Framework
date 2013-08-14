@@ -3,7 +3,6 @@ package org.kew.shs.dedupl.matchconf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertEquals;
 
 import java.lang.reflect.InvocationTargetException;
 

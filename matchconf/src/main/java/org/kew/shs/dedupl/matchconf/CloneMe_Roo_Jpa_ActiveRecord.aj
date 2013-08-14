@@ -9,32 +9,32 @@ import org.kew.shs.dedupl.matchconf.CloneMe;
 import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect CloneMe_Roo_Jpa_ActiveRecord {
-
+    
     @PersistenceContext
     transient EntityManager CloneMe.entityManager;
-
+    
     public static final EntityManager CloneMe.entityManager() {
         EntityManager em = new CloneMe() {
         }.entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
         return em;
     }
-
+    
     public static long CloneMe.countCloneMes() {
         return entityManager().createQuery("SELECT COUNT(o) FROM CloneMe o", Long.class).getSingleResult();
     }
-
+    
     public static CloneMe<Object> CloneMe.findCloneMe(Long id) {
         if (id == null) return null;
         return entityManager().find(CloneMe.class, id);
     }
-
+    
     @Transactional
     public void CloneMe.persist() {
         if (this.entityManager == null) this.entityManager = entityManager();
         this.entityManager.persist(this);
     }
-
+    
     @Transactional
     public void CloneMe.remove() {
         if (this.entityManager == null) this.entityManager = entityManager();
@@ -45,19 +45,19 @@ privileged aspect CloneMe_Roo_Jpa_ActiveRecord {
             this.entityManager.remove(attached);
         }
     }
-
+    
     @Transactional
     public void CloneMe.flush() {
         if (this.entityManager == null) this.entityManager = entityManager();
         this.entityManager.flush();
     }
-
+    
     @Transactional
     public void CloneMe.clear() {
         if (this.entityManager == null) this.entityManager = entityManager();
         this.entityManager.clear();
     }
-
+    
     @Transactional
     public CloneMe CloneMe.merge() {
         if (this.entityManager == null) this.entityManager = entityManager();
@@ -65,5 +65,5 @@ privileged aspect CloneMe_Roo_Jpa_ActiveRecord {
         this.entityManager.flush();
         return merged;
     }
-
+    
 }

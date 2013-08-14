@@ -11,30 +11,30 @@ import javax.persistence.Version;
 import org.kew.shs.dedupl.matchconf.CloneMe;
 
 privileged aspect CloneMe_Roo_Jpa_Entity {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long CloneMe.id;
-
+    
     @Version
     @Column(name = "version")
     private Integer CloneMe.version;
-
+    
     public Long CloneMe.getId() {
         return this.id;
     }
-
+    
     public void CloneMe.setId(Long id) {
         this.id = id;
     }
-
+    
     public Integer CloneMe.getVersion() {
         return this.version;
     }
-
+    
     public void CloneMe.setVersion(Integer version) {
         this.version = version;
     }
-
+    
 }

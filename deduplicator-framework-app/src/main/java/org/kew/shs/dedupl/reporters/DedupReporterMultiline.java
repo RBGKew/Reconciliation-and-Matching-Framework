@@ -24,11 +24,13 @@ public class DedupReporterMultiline extends LuceneReporter {
 	@Override
 	public void reportResults(Map<String, String> fromRecord, List<Map<String, String>> cluster) throws IOException {
         String namespace = this.getNameSpacePrefix();
-		Map<String, String> topCopy = cluster.get(0);
-		topCopy.put(namespace + "cluster_size", this.getClusterSize(fromRecord, cluster));
-		topCopy.put(namespace + "best_record_id", this.getBestRecordId(cluster));
-		topCopy.put(namespace + "rank", this.getRank(fromRecord, cluster));
-		this.writer.write(topCopy, this.header);
+		// TODO: make sure the fromRecord is in the cluster (should be!)
+        for (Map<String, String> record:cluster) {
+			record.put(namespace + "cluster_size", this.getClusterSize(fromRecord, cluster));
+			record.put(namespace + "best_record_id", this.getBestRecordId(cluster));
+			record.put(namespace + "rank", this.getRank(fromRecord, cluster));
+			this.writer.write(record, this.header);
+        }
 	}
 
 }

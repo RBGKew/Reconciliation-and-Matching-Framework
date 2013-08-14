@@ -8,9 +8,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.kew.shs.dedupl.matchconf.CloneMe;
 
 privileged aspect CloneMe_Roo_ToString {
-
+    
     public String CloneMe.toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
-
+    
 }
