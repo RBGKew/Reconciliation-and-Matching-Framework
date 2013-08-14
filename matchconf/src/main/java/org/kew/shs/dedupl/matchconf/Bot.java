@@ -11,7 +11,14 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooToString
 @MappedSuperclass
 @RooJpaActiveRecord(mappedSuperclass=true)
-public abstract class Bot implements Comparable<Bot>, Cloneable {
+public abstract class Bot extends CloneMe<Bot> implements Comparable<Bot> {
+
+	static String[] CLONE_STRING_FIELDS = new String[] {
+        "name",
+        "packageName",
+        "className",
+		"params",
+	};
 
     public int compareTo(Bot o) {
         return this.getName().compareTo(o.getName());

@@ -4,21 +4,10 @@
 package org.kew.shs.dedupl.matchconf;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import org.kew.shs.dedupl.matchconf.Reporter;
 import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect Reporter_Roo_Jpa_ActiveRecord {
-    
-    @PersistenceContext
-    transient EntityManager Reporter.entityManager;
-    
-    public static final EntityManager Reporter.entityManager() {
-        EntityManager em = new Reporter().entityManager;
-        if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
-        return em;
-    }
     
     public static long Reporter.countReporters() {
         return entityManager().createQuery("SELECT COUNT(o) FROM Reporter o", Long.class).getSingleResult();
@@ -35,35 +24,6 @@ privileged aspect Reporter_Roo_Jpa_ActiveRecord {
     
     public static List<Reporter> Reporter.findReporterEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM Reporter o", Reporter.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
-    }
-    
-    @Transactional
-    public void Reporter.persist() {
-        if (this.entityManager == null) this.entityManager = entityManager();
-        this.entityManager.persist(this);
-    }
-    
-    @Transactional
-    public void Reporter.remove() {
-        if (this.entityManager == null) this.entityManager = entityManager();
-        if (this.entityManager.contains(this)) {
-            this.entityManager.remove(this);
-        } else {
-            Reporter attached = Reporter.findReporter(this.id);
-            this.entityManager.remove(attached);
-        }
-    }
-    
-    @Transactional
-    public void Reporter.flush() {
-        if (this.entityManager == null) this.entityManager = entityManager();
-        this.entityManager.flush();
-    }
-    
-    @Transactional
-    public void Reporter.clear() {
-        if (this.entityManager == null) this.entityManager = entityManager();
-        this.entityManager.clear();
     }
     
     @Transactional

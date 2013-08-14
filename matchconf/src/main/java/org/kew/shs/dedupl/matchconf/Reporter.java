@@ -11,7 +11,17 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooToString
 @RooJpaActiveRecord
 @Table(uniqueConstraints=@UniqueConstraint(columnNames={"config", "name"}))
-public class Reporter {
+public class Reporter extends CloneMe<Reporter> {
+
+    static String[] CLONE_STRING_FIELDS = new String[] {
+        "className",
+        "delimiter",
+        "fileName",
+        "idDelimiter",
+        "name",
+        "packageName",
+        "params",
+    };
 
     private String name;
 
@@ -31,17 +41,17 @@ public class Reporter {
         return this.name;
     }
 
-    public Reporter clone(Configuration config) {
-        Reporter reporter = new Reporter();
+    public Reporter cloneMe(Configuration configClone) throws Exception {
+        Reporter clone = new Reporter();
         // first the string attributes and manytoones
-        reporter.setName(this.name);
-        reporter.setPackageName(this.packageName);
-        reporter.setClassName(this.className);
-        reporter.setParams(this.params);
-        reporter.setConfig(config);
-        reporter.persist();
-        reporter.merge();
-        return reporter;
+        // first the string attributes
+        for (String method:Reporter.CLONE_STRING_FIELDS) {
+            clone.setattr(method, this.getattr(method, ""));
+        }
+        // then the relational attributes
+        clone.setConfig(configClone);
+        clone.persist();
+        return clone;
     }
 
 }

@@ -3,41 +3,11 @@
 
 package org.kew.shs.dedupl.matchconf;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Version;
 import org.kew.shs.dedupl.matchconf.Configuration;
 
 privileged aspect Configuration_Roo_Jpa_Entity {
     
     declare @type: Configuration: @Entity;
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private Long Configuration.id;
-    
-    @Version
-    @Column(name = "version")
-    private Integer Configuration.version;
-    
-    public Long Configuration.getId() {
-        return this.id;
-    }
-    
-    public void Configuration.setId(Long id) {
-        this.id = id;
-    }
-    
-    public Integer Configuration.getVersion() {
-        return this.version;
-    }
-    
-    public void Configuration.setVersion(Integer version) {
-        this.version = version;
-    }
     
 }

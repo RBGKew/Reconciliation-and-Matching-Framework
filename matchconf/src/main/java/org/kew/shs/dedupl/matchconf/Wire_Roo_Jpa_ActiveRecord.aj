@@ -4,21 +4,10 @@
 package org.kew.shs.dedupl.matchconf;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import org.kew.shs.dedupl.matchconf.Wire;
 import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect Wire_Roo_Jpa_ActiveRecord {
-    
-    @PersistenceContext
-    transient EntityManager Wire.entityManager;
-    
-    public static final EntityManager Wire.entityManager() {
-        EntityManager em = new Wire().entityManager;
-        if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
-        return em;
-    }
     
     public static long Wire.countWires() {
         return entityManager().createQuery("SELECT COUNT(o) FROM Wire o", Long.class).getSingleResult();
@@ -35,35 +24,6 @@ privileged aspect Wire_Roo_Jpa_ActiveRecord {
     
     public static List<Wire> Wire.findWireEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM Wire o", Wire.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
-    }
-    
-    @Transactional
-    public void Wire.persist() {
-        if (this.entityManager == null) this.entityManager = entityManager();
-        this.entityManager.persist(this);
-    }
-    
-    @Transactional
-    public void Wire.remove() {
-        if (this.entityManager == null) this.entityManager = entityManager();
-        if (this.entityManager.contains(this)) {
-            this.entityManager.remove(this);
-        } else {
-            Wire attached = Wire.findWire(this.id);
-            this.entityManager.remove(attached);
-        }
-    }
-    
-    @Transactional
-    public void Wire.flush() {
-        if (this.entityManager == null) this.entityManager = entityManager();
-        this.entityManager.flush();
-    }
-    
-    @Transactional
-    public void Wire.clear() {
-        if (this.entityManager == null) this.entityManager = entityManager();
-        this.entityManager.clear();
     }
     
     @Transactional

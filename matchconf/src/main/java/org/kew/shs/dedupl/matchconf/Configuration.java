@@ -21,7 +21,25 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooToString
 @RooJpaActiveRecord(finders = { "findConfigurationsByNameEquals" })
 @Table(uniqueConstraints=@UniqueConstraint(columnNames={"name"}))
-public class Configuration implements Cloneable {
+public class Configuration extends CloneMe<Configuration> {
+
+    static String[] CLONE_STRING_FIELDS = new String[] {
+        "assessReportFrequency",
+        "className",
+        "loadReportFrequency",
+        "lookupFileDelimiter",
+        "lookupFileEncoding",
+        "lookupFileName",
+        "maxSearchResults",
+        "nextConfig",
+        "packageName",
+        "recordFilter",
+        "scoreFieldName",
+        "sourceFileDelimiter",
+        "sourceFileEncoding",
+        "sourceFileName",
+        "workDirPath",
+    };
 
     private String name;
     private String workDirPath;
@@ -61,46 +79,34 @@ public class Configuration implements Cloneable {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reporter> reporters = new ArrayList<>();
 
-    public Configuration clone () {
-        Configuration config = new Configuration();
+    public Configuration cloneMe () throws Exception {
+        Configuration clone = new Configuration();
         // first the string attributes
         String newName = "copy-of_" + this.name;
         while (Configuration.findConfigurationsByNameEquals(newName).getResultList().size() > 0) {
             newName = "copy-of_" + newName;
         }
-        config.setName(newName);
-        config.setWorkDirPath(this.workDirPath);
-        config.setSourceFileName(this.sourceFileName);
-        config.setSourceFileDelimiter(this.sourceFileDelimiter);
-        config.setSourceFileEncoding(this.sourceFileEncoding);
-        config.setLookupFileName(this.lookupFileName);
-        config.setLookupFileDelimiter(this.lookupFileDelimiter);
-        config.setLookupFileEncoding(this.lookupFileEncoding);
-        config.setPackageName(this.packageName);
-        config.setClassName(this.className);
-        config.setLoadReportFrequency(this.loadReportFrequency);
-        config.setAssessReportFrequency(this.assessReportFrequency);
-        config.setScoreFieldName(this.scoreFieldName);
-        config.persist();
+        clone.setName(newName);
+        for (String method:Configuration.CLONE_STRING_FIELDS) {
+            clone.setattr(method, this.getattr(method, ""));
+        }
+        clone.persist();
         // then the relational attributes
         for (Transformer transformer:this.transformers) {
-            Transformer transClone = transformer.clone(config);
-            config.getTransformers().add(transClone);
+            clone.getTransformers().add(transformer.cloneMe(clone));
         }
         for (Matcher matcher:this.matchers) {
-            Matcher matcherClone = matcher.clone(config);
-            config.getMatchers().add(matcherClone);
+            clone.getMatchers().add(matcher.cloneMe(clone));
         }
         for (Reporter reporter:this.reporters) {
-            Reporter reporterClone = reporter.clone(config);
-            config.getReporters().add(reporterClone);
+            Reporter reporterClone = reporter.cloneMe(clone);
+            clone.getReporters().add(reporterClone);
         }
         for (Wire wire:this.wiring) {
-            Wire wireClone = wire.clone(config);
-            config.getWiring().add(wireClone);
+            clone.getWiring().add(wire.cloneMe(clone));
         }
-        config.merge();
-        return config;
+        clone.merge();
+        return clone;
     }
 
     @PrePersist

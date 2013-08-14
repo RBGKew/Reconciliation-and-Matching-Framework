@@ -38,23 +38,21 @@ public class Transformer extends Bot {
         return this.getName();
     }
 
-    public Transformer clone(Configuration config) {
-        Transformer transformer = config.getTransformerForName(this.name);
-        if (transformer != null) return transformer;
-        transformer = new Transformer();
-        // first the string attributes and manytoones
-        transformer.setName(this.name);
-        transformer.setPackageName(this.packageName);
-        transformer.setClassName(this.className);
-        transformer.setParams(this.params);
-        transformer.setConfiguration(config);
-        transformer.persist();
-        // then the relational attributes
-        for (Transformer component:this.composedBy) {
-            component.clone(config);
-            transformer.getComposedBy().add(component);
+    public Transformer cloneMe(Configuration configClone) throws Exception {
+        Transformer alreadyCloned = configClone.getTransformerForName(this.name);
+        if (alreadyCloned != null) return alreadyCloned;
+        Transformer clone = new Transformer();
+        // first the string attributes
+        for (String method:Bot.CLONE_STRING_FIELDS) {
+            clone.setattr(method, this.getattr(method, ""));
         }
-        transformer.merge();
-        return transformer;
+        // then the relational attributes
+        clone.setConfiguration(configClone);
+        for (Transformer component:this.composedBy) {
+            Transformer compoClone = component.cloneMe(configClone);
+            clone.getComposedBy().add(compoClone);
+        }
+        clone.persist();
+        return clone;
     }
 }

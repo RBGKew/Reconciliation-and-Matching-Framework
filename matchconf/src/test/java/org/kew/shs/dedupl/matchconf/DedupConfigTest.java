@@ -5,6 +5,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
@@ -15,17 +17,14 @@ import cucumber.api.java.After;
 @ContextConfiguration(locations = { "/META-INF/spring/applicationContext.xml" })
 public class DedupConfigTest extends AbstractJUnit4SpringContextTests {
 
+    // the entities in our test-config-environment
     Configuration config;
-
     Transformer trans1;
     Transformer trans2;
-
     Matcher matcher1;
     Matcher matcher2;
-
     Wire wire1;
     Wire wire2;
-
     Reporter rep1;
     Reporter rep2;
 
@@ -124,15 +123,48 @@ public class DedupConfigTest extends AbstractJUnit4SpringContextTests {
         } catch (NullPointerException e) {};
     }
 
+    public static String getattr(String method, Configuration aConfig) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+        return (String) aConfig.getClass().getMethod(method, null).invoke(aConfig, null);
+    }
 
     @Test
-    public void testClone() {
-        Configuration clone = this.config.clone();
-        assertThat(clone.getName(), equalTo("copy-of_" + config.getName()));
-        assertThat(clone.getId(), not(equalTo(config.getId())));
-        assertThat(clone.getTransformers().get(0).getName(), equalTo(this.trans1.getName()));
+    public void testCloneMe() throws Exception {
+        Configuration clone = this.config.cloneMe();
+        // config
+        assertThat(clone.getId(), not(equalTo(this.config.getId())));
+        assertThat(clone.getName(), equalTo("copy-of_" + this.config.getName()));
+        for (String fieldName:Configuration.CLONE_STRING_FIELDS) {
+            assertThat(clone.getattr(fieldName, ""), equalTo(this.config.getattr(fieldName, "")));
+        }
+        // bots (transformers and matchers)
         assertThat(clone.getTransformers().get(0).getId(), not(equalTo(this.trans1.getId())));
-        assertThat(clone.getTransformers().get(1).getName(), equalTo(this.trans2.getName()));
+        assertThat(clone.getTransformers().get(1).getId(), not(equalTo(this.trans2.getId())));
+        assertThat(clone.getMatchers().get(0).getId(), not(equalTo(this.matcher1.getId())));
+        assertThat(clone.getMatchers().get(0).getId(), not(equalTo(this.matcher2.getId())));
+        for (String fieldName:Bot.CLONE_STRING_FIELDS) {
+            assertThat(clone.getTransformers().get(0).getattr(fieldName, ""), equalTo(this.trans1.getattr(fieldName, "")));
+            assertThat(clone.getTransformers().get(1).getattr(fieldName, ""), equalTo(this.trans2.getattr(fieldName, "")));
+            assertThat(clone.getMatchers().get(0).getattr(fieldName, ""), equalTo(this.matcher1.getattr(fieldName, "")));
+            assertThat(clone.getMatchers().get(1).getattr(fieldName, ""), equalTo(this.matcher2.getattr(fieldName, "")));
+        }
+        // reporters
+        assertThat(clone.getReporters().get(0).getId(), not(equalTo(this.rep1.getId())));
+        assertThat(clone.getReporters().get(0).getId(), not(equalTo(this.rep2.getId())));
+        for (String fieldName:Reporter.CLONE_STRING_FIELDS) {
+            assertThat(clone.getReporters().get(0).getattr(fieldName, ""), equalTo(this.rep1.getattr(fieldName, "")));
+            assertThat(clone.getReporters().get(1).getattr(fieldName, ""), equalTo(this.rep2.getattr(fieldName, "")));
+        }
+        // wiring
+        assertThat(clone.getWiring().get(0).getId(), not(equalTo(this.wire1.getId())));
+        assertThat(clone.getWiring().get(0).getId(), not(equalTo(this.wire2.getId())));
+        for (String fieldName:Wire.CLONE_STRING_FIELDS) {
+            assertThat(clone.getWiring().get(0).getattr(fieldName, ""), equalTo(this.wire1.getattr(fieldName, "")));
+            assertThat(clone.getWiring().get(1).getattr(fieldName, ""), equalTo(this.wire2.getattr(fieldName, "")));
+        }
+        for (String fieldName:Wire.CLONE_BOOL_FIELDS) {
+            assertThat(clone.getWiring().get(0).getattr(fieldName, true), equalTo(this.wire1.getattr(fieldName, true)));
+            assertThat(clone.getWiring().get(1).getattr(fieldName, true), equalTo(this.wire2.getattr(fieldName, true)));
+        }
     }
 
 }

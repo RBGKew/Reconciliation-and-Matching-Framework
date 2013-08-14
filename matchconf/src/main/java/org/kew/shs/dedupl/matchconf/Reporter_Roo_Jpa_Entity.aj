@@ -3,41 +3,11 @@
 
 package org.kew.shs.dedupl.matchconf;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Version;
 import org.kew.shs.dedupl.matchconf.Reporter;
 
 privileged aspect Reporter_Roo_Jpa_Entity {
     
     declare @type: Reporter: @Entity;
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private Long Reporter.id;
-    
-    @Version
-    @Column(name = "version")
-    private Integer Reporter.version;
-    
-    public Long Reporter.getId() {
-        return this.id;
-    }
-    
-    public void Reporter.setId(Long id) {
-        this.id = id;
-    }
-    
-    public Integer Reporter.getVersion() {
-        return this.version;
-    }
-    
-    public void Reporter.setVersion(Integer version) {
-        this.version = version;
-    }
     
 }

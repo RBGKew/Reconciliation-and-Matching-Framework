@@ -18,7 +18,24 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooToString
 @RooJpaActiveRecord
 @Table(uniqueConstraints=@UniqueConstraint(columnNames={"configuration", "sourceColumnName", "lookupColumnName"}))
-public class Wire implements Comparable<Wire> {
+public class Wire extends CloneMe<Wire> implements Comparable<Wire> {
+
+    static String[] CLONE_STRING_FIELDS = new String[] {
+        "lookupColumnName",
+        "sourceColumnName",
+    };
+    static String[] CLONE_BOOL_FIELDS = new String[] {
+        "addOriginalSourceValue",
+        "addOriginalLookupValue",
+        "addTransformedLookupValue",
+        "addTransformedSourceValue",
+        "blanksMatch",
+        "indexInitial",
+        "indexLength",
+        "useInNegativeSelect",
+        "useInSelect",
+        "useWildcard",
+    };
 
     private String sourceColumnName;
     private String lookupColumnName = "";
@@ -61,31 +78,25 @@ public class Wire implements Comparable<Wire> {
         return this.getName();
     }
 
-    public Wire clone(Configuration config) {
-        Wire wire = new Wire();
-        wire.setSourceColumnName(sourceColumnName);
-        wire.setLookupColumnName(lookupColumnName);
-        wire.setUseInSelect(useInSelect);
-        wire.setUseInNegativeSelect(useInNegativeSelect);
-        wire.setIndexLength(indexLength);
-        wire.setBlanksMatch(blanksMatch);
-        wire.setAddOriginalSourceValue(addOriginalSourceValue);
-        wire.setAddOriginalLookupValue(addOriginalLookupValue);
-        wire.setAddTransformedSourceValue(addTransformedSourceValue);
-        wire.setAddTransformedLookupValue(addTransformedLookupValue);
-        wire.setIndexInitial(indexInitial);
-        wire.setUseWildcard(useWildcard);
-        wire.setConfiguration(config);
-        wire.setMatcher(this.matcher.clone(config));
-        // then the relational attributes; they have already been created before,
-        // (in Configuration.clone(), here we only add them to the wire
+    public Wire cloneMe(Configuration configClone) throws Exception {
+        Wire clone = new Wire();
+        // first the string attributes
+        for (String method:Wire.CLONE_STRING_FIELDS) {
+            clone.setattr(method, this.getattr(method, ""));
+        }
+        for (String method:Wire.CLONE_BOOL_FIELDS) {
+            clone.setattr(method, this.getattr(method, true));
+        }
+        // then the relational attributes
+        clone.setConfiguration(configClone);
+        clone.setMatcher(this.matcher.cloneMe(configClone));
         for (Transformer trans:this.getSourceTransformers()) {
-            wire.getSourceTransformers().add(config.getTransformerForName(trans.getName()));
+            clone.getSourceTransformers().add(trans.cloneMe(configClone));
         }
         for (Transformer trans:this.getLookupTransformers()) {
-            wire.getLookupTransformers().add(config.getTransformerForName(trans.getName()));
+            clone.getLookupTransformers().add(trans.cloneMe(configClone));
         }
-        wire.persist();
-        return wire;
+        clone.persist();
+        return clone;
     }
 }

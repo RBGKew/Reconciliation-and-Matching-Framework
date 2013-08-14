@@ -157,9 +157,9 @@ public class CustomConfigController {
         }
     }
     @RequestMapping(value = "/{configType}_configs/{configName}/clone", produces = "text/html")
-    public String cloneConfig(@PathVariable("configType") String configType, @PathVariable("configName") String configName, Model model) throws IOException {
+    public String cloneConfig(@PathVariable("configType") String configType, @PathVariable("configName") String configName, Model model) throws Exception {
         Configuration config = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
-        config.clone();
+        config.cloneMe();
         return String.format("redirect:/%s_configs", configType);
     }
     @RequestMapping(value = "/{configType}_configs/{configName}/run", produces = "text/html")

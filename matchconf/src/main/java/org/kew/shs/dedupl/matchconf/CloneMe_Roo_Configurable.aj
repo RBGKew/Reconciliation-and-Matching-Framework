@@ -3,11 +3,11 @@
 
 package org.kew.shs.dedupl.matchconf;
 
-import javax.persistence.Entity;
-import org.kew.shs.dedupl.matchconf.Wire;
+import org.kew.shs.dedupl.matchconf.CloneMe;
+import org.springframework.beans.factory.annotation.Configurable;
 
-privileged aspect Wire_Roo_Jpa_Entity {
-    
-    declare @type: Wire: @Entity;
-    
+privileged aspect CloneMe_Roo_Configurable {
+
+    declare @type: CloneMe: @Configurable;
+
 }
