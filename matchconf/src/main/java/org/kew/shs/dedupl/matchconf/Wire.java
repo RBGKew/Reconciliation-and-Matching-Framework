@@ -58,12 +58,10 @@ public class Wire extends CloneMe<Wire> implements Comparable<Wire> {
     private Configuration configuration;
 
     @ManyToMany
-    @Size(min=0)
     @Sort(type=SortType.NATURAL)
     private List<WiredTransformer> sourceTransformers = new ArrayList<WiredTransformer>();
 
     @ManyToMany
-    @Size(min=0)
     private List<WiredTransformer> lookupTransformers = new ArrayList<WiredTransformer>();
 
     public String getName() {
@@ -98,5 +96,19 @@ public class Wire extends CloneMe<Wire> implements Comparable<Wire> {
         }
         clone.persist();
         return clone;
+    }
+
+    public WiredTransformer getSourceTransformerForName(String wiredTransformerName) {
+        for (WiredTransformer wiredTransformer: this.getSourceTransformers()) {
+            if (wiredTransformer.getName().equals(wiredTransformerName)) return wiredTransformer;
+        }
+        return null;
+    }
+
+    public WiredTransformer getLookupTransformerForName(String wiredTransformerName) {
+        for (WiredTransformer wiredTransformer: this.getLookupTransformers()) {
+            if (wiredTransformer.getName().equals(wiredTransformerName)) return wiredTransformer;
+        }
+        return null;
     }
 }

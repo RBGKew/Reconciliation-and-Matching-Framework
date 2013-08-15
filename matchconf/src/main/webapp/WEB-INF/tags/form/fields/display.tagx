@@ -61,6 +61,14 @@
           <c:when test='${ field.equals("reporters") }'>
             <a href='/MatchConf/${ configType }/${ object.getName() }/reporters'>${ object[field] } </a>
           </c:when>
+          <c:when test='${ field.equals("sourceTransformers") }'>
+            <ul>
+              <c:forEach items="${ object[field] }" var="wiredTransformer">
+	            <li> <a href='/MatchConf/${ configType }_configs/${ configName }/wires/${ object.getName() }/wired_transformers/${ wiredTransformer.getRank() }_${ wiredTransformer.getTransformer().getName() }?form'>${ wiredTransformer }</a></li>
+              </c:forEach>
+              <a href='/MatchConf/${ configType }_configs/${ configName }/wires/${ object.getName() }/wired_transformers?form'>add a wired transformer</a>
+            </ul>
+          </c:when>
           <c:otherwise>
             <spring:eval expression="object[field]" />
           </c:otherwise>

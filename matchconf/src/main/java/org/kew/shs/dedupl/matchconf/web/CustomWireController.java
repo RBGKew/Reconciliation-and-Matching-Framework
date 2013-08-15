@@ -123,7 +123,8 @@ public class CustomWireController {
         uiModel.addAttribute("wire", wire);
         uiModel.addAttribute("configName", configName);
         uiModel.addAttribute("matchers", config.getMatchers());
-        uiModel.addAttribute("transformers", config.getTransformers());
+        uiModel.addAttribute("sourceTransformers", wire.getSourceTransformers());
+        uiModel.addAttribute("lookupTransformers", wire.getLookupTransformers());
     }
 
     String encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {

@@ -36,5 +36,9 @@
             <menu:item id="i_dictionary_new" messageCode="global_menu_new" url="/dictionarys?form" z="miogwnFVY3sIfwGoe8JIfAxR+dw="/>
             <menu:item id="i_dictionary_list" messageCode="global_menu_list" url="/dictionarys?page=1&amp;size=${empty param.size ? 10 : param.size}" z="iVyy7U9IbIklVJU2zGHFyslflnw="/>
         </menu:category>
+        <menu:category id="c_wiredtransformer" z="/MFVeTxSiQpDhcKr6+0BtJ1OMMw=">
+            <menu:item id="i_wiredtransformer_new" messageCode="global_menu_new" url="/wiredtransformers?form" z="LqeslkIp7DNNjkCSyNFzpOa3qVo="/>
+            <menu:item id="i_wiredtransformer_list" messageCode="global_menu_list" url="/wiredtransformers?page=1&amp;size=${empty param.size ? 10 : param.size}" z="e6lCzTgmfGZS6G8ISV1ATnSQnYY="/>
+        </menu:category>
     </menu:menu>
 </div>

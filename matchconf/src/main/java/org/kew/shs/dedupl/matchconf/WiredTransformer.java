@@ -28,4 +28,12 @@ public class WiredTransformer implements Comparable<WiredTransformer> {
         return clone;
     }
 
+    public String getName() {
+        return this.getRank() + "_" + this.getTransformer().getName();
+    }
+    
+    public String toString() {
+    	return String.format("%s: %s", this.getRank(), this.getTransformer().getName());
+    }
+
 }

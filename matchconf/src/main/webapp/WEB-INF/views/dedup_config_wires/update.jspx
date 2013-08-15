@@ -18,8 +18,15 @@
         <field:checkbox field="addOriginalSourceValue" id="c_org_kew_shs_dedupl_matchconf_Wire_addOriginalSourceValue" z="FBobAPBovYc4gqRvKOcr0T+nySg="/>
         <field:checkbox field="addTransformedSourceValue" id="c_org_kew_shs_dedupl_matchconf_Wire_addTransformedSourceValue" z="gz9SC9WXQU9Q8G7eX3YXT9eMaK8="/>
 
-        <field:select field="sourceTransformers" id="c_org_kew_shs_dedupl_matchconf_Wire_sourceTransformers" itemValue="id" items="${transformers}" multiple="true" path="/dedup_configs/${ configName }/transformers" z="voeNY9FXQVoLlheVCxJHfcQTScQ="/>
+        <field:select field="sourceTransformers" disabled="true" id="c_org_kew_shs_dedupl_matchconf_Wire_sourceTransformers" itemLabel="transformer" itemValue="id" items="${ sourceTransformers }" multiple="true" path="${ configType }_configs/${ configName }/wires/${ wireName }/wired_transformers" z=""/>
 
-        <field:select field="matcher" id="c_org_kew_shs_dedupl_matchconf_Wire_matcher" itemValue="id" items="${matchers}" path="/dedup_configs/${ configName }/matchers" z="lXk5z0p02X2K5OrJ2d71mUvWp+E="/>
+        <field:select field="matcher" id="c_org_kew_shs_dedupl_matchconf_Wire_matcher" itemValue="id" items="${matchers}" path="/${ configType }_configs/${ configName }/matchers" z="lXk5z0p02X2K5OrJ2d71mUvWp+E="/>
     </form:update>
+    <script type="text/javascript">
+	    jQuery(function($) {
+		    $('form').bind('submit', function() {
+		        $(this).find('#_sourceTransformers_id').removeAttr('disabled');
+		    });
+		});
+    </script>
 </div>
