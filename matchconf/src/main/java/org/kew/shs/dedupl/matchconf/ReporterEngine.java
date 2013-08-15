@@ -20,6 +20,7 @@ public class ReporterEngine {
         ArrayList<String> outXML = new ArrayList<String>();
         outXML.add(String.format("%s<bean class=\"%s.%s\"", indent, this.reporter.getPackageName(), this.reporter.getClassName()));
         outXML.add(String.format("%s%sp:name=\"%s\"", indent, shift, this.reporter.getName()));
+        outXML.add(String.format("%s%sp:configName=\"%s\"", indent, shift, this.reporter.getConfig().getName()));
         // nameSpacePrefix: if not overwritten on reporter-level...
         if (!this.reporter.getParams().contains("nameSpacePrefix")) {
             // ..check if it's a dedup config..

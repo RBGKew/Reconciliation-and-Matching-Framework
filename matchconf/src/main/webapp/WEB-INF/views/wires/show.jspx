@@ -13,11 +13,11 @@
         <field:display field="sourceColumnName" id="s_org_kew_shs_dedupl_matchconf_Wire_sourceColumnName" object="${wire}" z="HKBdq/G/SKatOc8AkWPUUk0KTkA="/>
         <field:display field="lookupColumnName" id="s_org_kew_shs_dedupl_matchconf_Wire_lookupColumnName" object="${wire}" z="8rfE46rT84te7h1tZQHzBRGUAS0="/>
         <field:display field="configuration" id="s_org_kew_shs_dedupl_matchconf_Wire_configuration" object="${wire}" z="ScGGBqJA/JoKW04mwojIHQpmSNk="/>
-        <field:display field="sourceTransformers" id="s_org_kew_shs_dedupl_matchconf_Wire_sourceTransformers" object="${wire}" z="SpBa5kQrilbTcclnoEJjiSoDHEc="/>
-        <field:display field="lookupTransformers" id="s_org_kew_shs_dedupl_matchconf_Wire_lookupTransformers" object="${wire}" z="Q+vEbVzr50jeTW9RFAeNikx7VV4="/>
         <field:display field="addOriginalSourceValue" id="s_org_kew_shs_dedupl_matchconf_Wire_addOriginalSourceValue" object="${wire}" z="wk9RiIiz0r+xmpuedmuWZ4nDqoY="/>
         <field:display field="addOriginalLookupValue" id="s_org_kew_shs_dedupl_matchconf_Wire_addOriginalLookupValue" object="${wire}" z="co0V7nhlZnQs0YF4LUujrezuXJo="/>
         <field:display field="addTransformedSourceValue" id="s_org_kew_shs_dedupl_matchconf_Wire_addTransformedSourceValue" object="${wire}" z="41JsGovhZx9ZqTzVlt1bvwJAmtw="/>
         <field:display field="addTransformedLookupValue" id="s_org_kew_shs_dedupl_matchconf_Wire_addTransformedLookupValue" object="${wire}" z="NpC1ySXgNQycufwMBFWVdSAZoKM="/>
+        <field:display field="sourceTransformers" id="s_org_kew_shs_dedupl_matchconf_Wire_sourceTransformers" object="${wire}" z="SpBa5kQrilbTcclnoEJjiSoDHEc="/>
+        <field:display field="lookupTransformers" id="s_org_kew_shs_dedupl_matchconf_Wire_lookupTransformers" object="${wire}" z="Q+vEbVzr50jeTW9RFAeNikx7VV4="/>
     </page:show>
 </div>

@@ -29,6 +29,7 @@ public abstract class Reporter implements AutoCloseable {
 
     protected String name;
     protected String nameSpacePrefix = "";
+    protected String configName;
 
     protected String delimiter;
     protected String idDelimiter;
@@ -188,5 +189,13 @@ public abstract class Reporter implements AutoCloseable {
     public void setNameSpacePrefix(String nameSpacePrefix) {
         this.nameSpacePrefix = nameSpacePrefix;
     }
+
+	public String getConfigName() {
+		return configName;
+	}
+
+	public void setConfigName(String configName) {
+		this.configName = configName;
+	}
 
 }

@@ -24,7 +24,7 @@ import cucumber.api.java.en.When;
 
 
 public class CreateSimpleMatchConfig {
-    
+
     Logger logger = LoggerFactory.getLogger(CreateSimpleDedupConfig.class);
     File tempDir;
 
@@ -36,8 +36,8 @@ public class CreateSimpleMatchConfig {
     List<Reporter> reporters;
     Configuration config;
     File workDir;
-    
-    
+
+
     @Before
     public void before (Scenario scenario) throws Throwable {
         this.tempDir = Files.createTempDirectory("dedupTestDir").toFile();
@@ -115,14 +115,26 @@ public class CreateSimpleMatchConfig {
             wire.setUseInSelect(Boolean.parseBoolean(wireDef.get("useInSelect")));
             wire.setMatcher(this.matchers.get(wireDef.get("matcher")));
             wire.setConfiguration(config);
-            List<Transformer> sourceTransis = new ArrayList<>();
+            List<WiredTransformer> sourceTransis = new ArrayList<>();
+            int i = 0;
             for (String t:wireDef.get("sourceTransformers").split(",")) {
-                sourceTransis.add(this.transformers.get(t.trim()));
+                i ++;
+                WiredTransformer wTrans = new WiredTransformer();
+                wTrans.setRank(i);
+                wTrans.setTransformer(this.transformers.get(t.trim()));
+                wTrans.persist();
+                sourceTransis.add(wTrans);
             }
             wire.setSourceTransformers(sourceTransis);
-            List<Transformer> lookupTransis = new ArrayList<>();
+            List<WiredTransformer> lookupTransis = new ArrayList<>();
+            i = 0;
             for (String t:wireDef.get("lookupTransformers").split(",")) {
-                lookupTransis.add(this.transformers.get(t.trim()));
+                i ++;
+                WiredTransformer wTrans = new WiredTransformer();
+                wTrans.setRank(i);
+                wTrans.setTransformer(this.transformers.get(t.trim()));
+                wTrans.persist();
+                lookupTransis.add(wTrans);
             }
             wire.setLookupTransformers(lookupTransis);
             wire.persist();

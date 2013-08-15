@@ -17,6 +17,10 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooJpaActiveRecord(mappedSuperclass=true)
 public abstract class CloneMe<T> {
 
+    public int getattr(String fieldName, int n) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+        String method = "get" + StringUtils.capitalise(fieldName);
+        return (int) this.getClass().getMethod(method, null).invoke(this, null);
+    }
     public Boolean getattr(String fieldName, Boolean b) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
         String method = "get" + StringUtils.capitalise(fieldName);
         return (Boolean) this.getClass().getMethod(method, null).invoke(this, null);
@@ -24,6 +28,11 @@ public abstract class CloneMe<T> {
     public String getattr(String fieldName, String s) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
         String method = "get" + StringUtils.capitalise(fieldName);
         return (String) this.getClass().getMethod(method, null).invoke(this, null);
+    }
+
+    public void setattr(String fieldName, int n) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+        String method = "set" + StringUtils.capitalise(fieldName);
+        this.getClass().getMethod(method, int.class).invoke(this, n);
     }
     public void setattr(String fieldName, Boolean b) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
         String method = "set" + StringUtils.capitalise(fieldName);

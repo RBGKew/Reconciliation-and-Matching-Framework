@@ -221,3 +221,5 @@ web mvc controller --class web.CustomDictController
 // Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-08-15 09:27:13
 finder list --class ~.Dictionary
 finder add --class ~.Dictionary --finderName findDictionarysByNameEquals
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-08-15 12:25:10
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-08-15 13:15:02

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,11 +61,15 @@ public class ConfigurationEngine {
             outXML.add(String.format("%s</bean>", shift));
         }
 
-        for (Bot bot:this.config.getMatchers()) {
+        List<Matcher> matchers = this.config.getMatchers();
+        Collections.sort(matchers);
+        for (Bot bot:matchers) {
             outXML.addAll(new BotEngine(bot).toXML("matchers", 1));
         }
 
-        for (Bot bot:this.config.getTransformers()) {
+        List<Transformer> transformers = this.config.getTransformers();
+        Collections.sort(transformers);
+        for (Bot bot:transformers) {
             outXML.addAll(new BotEngine(bot).toXML("transformers", 1));
         }
 

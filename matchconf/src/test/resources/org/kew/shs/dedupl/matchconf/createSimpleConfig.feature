@@ -10,8 +10,8 @@ Feature: Create a simple configuration
             | simple-config | some_path   | 100              | funny(recordCheck == javaScriptMagic) | someName   |
         And he has added the following sourceTransformers
             | name               | packageName                     | className                     | params |
-            | 02BlankTransformer | org.kew.shs.dedupl.transformers | ZeroToBlankTransformer        |        |
             | anotherTransformer | org.kew.shs.dedupl.transformers | SafeStripNonAlphasTransformer |        |
+            | 02BlankTransformer | org.kew.shs.dedupl.transformers | ZeroToBlankTransformer        |        |
         And he has added a matcher for the second column:
             | name         | packageName                 | className    | params            |
             | matchExactly | org.kew.shs.dedupl.matchers | ExactMatcher | blanksMatch=false |
@@ -51,6 +51,7 @@ Feature: Create a simple configuration
                 <util:list id="reporters">
                     <bean class="org.kew.shs.dedupl.reporters.DedupReporter"
                         p:name="standardReporter"
+                        p:configName="simple-config"
                         p:nameSpacePrefix="simple-config_"
                         p:delimiter="&#09;"
                         p:idDelimiter="|">
@@ -62,6 +63,7 @@ Feature: Create a simple configuration
                     </bean>
                     <bean class="org.kew.shs.dedupl.reporters.DedupReporterMultiline"
                         p:name="multilineReporter"
+                        p:configName="simple-config"
                         p:nameSpacePrefix="simple-config_"
                         p:delimiter="&#09;"
                         p:idDelimiter="|">
@@ -78,8 +80,8 @@ Feature: Create a simple configuration
                         p:matcher-ref="matchExactly">
                         <property name="sourceTransformers">
                             <util:list id="1">
-                                <ref bean="02BlankTransformer"/>
                                 <ref bean="anotherTransformer"/>
+                                <ref bean="02BlankTransformer"/>
                             </util:list>
                         </property>
                     </bean>
@@ -160,6 +162,7 @@ Feature: Create a simple configuration
                 <util:list id="reporters">
                     <bean class="org.kew.shs.dedupl.reporters.MatchReporter"
                         p:name="standardReporter"
+                        p:configName="simple-match-config"
                         p:delimiter="&#09;"
                         p:idDelimiter="|">
                         <property name="file">
@@ -170,6 +173,7 @@ Feature: Create a simple configuration
                     </bean>
                     <bean class="org.kew.shs.dedupl.reporters.MatchReporterMultiline"
                         p:name="multilineReporter"
+                        p:configName="simple-match-config"
                         p:delimiter="&#09;"
                         p:idDelimiter="|">
                         <property name="file">

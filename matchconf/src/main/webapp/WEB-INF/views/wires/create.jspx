@@ -13,12 +13,12 @@
         <field:input field="sourceColumnName" id="c_org_kew_shs_dedupl_matchconf_Wire_sourceColumnName" z="Iyj1E63QgPFC+EHUH9g08zRtbLU="/>
         <field:input field="lookupColumnName" id="c_org_kew_shs_dedupl_matchconf_Wire_lookupColumnName" z="acpNUyZ2hyPEw0qgiaFL7zaONbU="/>
         <field:select field="configuration" id="c_org_kew_shs_dedupl_matchconf_Wire_configuration" itemValue="id" items="${configurations}" path="/configurations" z="mt11rs6InvFf1CJZOy+5B2dnniw="/>
-        <field:select field="sourceTransformers" id="c_org_kew_shs_dedupl_matchconf_Wire_sourceTransformers" itemValue="id" items="${transformers}" multiple="true" path="/transformers" z="voeNY9FXQVoLlheVCxJHfcQTScQ="/>
-        <field:select field="lookupTransformers" id="c_org_kew_shs_dedupl_matchconf_Wire_lookupTransformers" itemValue="id" items="${transformers}" multiple="true" path="/transformers" z="o7MbdgLFHHykZhwugO+cbL5XwPw="/>
         <field:checkbox field="addOriginalSourceValue" id="c_org_kew_shs_dedupl_matchconf_Wire_addOriginalSourceValue" z="FBobAPBovYc4gqRvKOcr0T+nySg="/>
         <field:checkbox field="addOriginalLookupValue" id="c_org_kew_shs_dedupl_matchconf_Wire_addOriginalLookupValue" z="OTGOwNh7sNQWPa9RQlE91VCN5n8="/>
         <field:checkbox field="addTransformedSourceValue" id="c_org_kew_shs_dedupl_matchconf_Wire_addTransformedSourceValue" z="gz9SC9WXQU9Q8G7eX3YXT9eMaK8="/>
         <field:checkbox field="addTransformedLookupValue" id="c_org_kew_shs_dedupl_matchconf_Wire_addTransformedLookupValue" z="hgjah26dH9JrPRn+D6KcMTzQTrg="/>
+        <field:select field="sourceTransformers" id="c_org_kew_shs_dedupl_matchconf_Wire_sourceTransformers" itemValue="id" items="${wiredtransformers}" multiple="true" path="/wiredtransformers" z="uD6orgH4Of8to58vjfWQWqniHZs="/>
+        <field:select field="lookupTransformers" id="c_org_kew_shs_dedupl_matchconf_Wire_lookupTransformers" itemValue="id" items="${wiredtransformers}" multiple="true" path="/wiredtransformers" z="hsrZUBCk2wjpPTn46AXcwzsQgkA="/>
     </form:create>
     <form:dependency dependencies="${dependencies}" id="d_org_kew_shs_dedupl_matchconf_Wire" render="${not empty dependencies}" z="fkPS5x/iTzfV7WY7RGqu+n52bSc="/>
 </div>

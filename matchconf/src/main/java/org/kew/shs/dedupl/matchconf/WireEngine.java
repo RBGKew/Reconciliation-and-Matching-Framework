@@ -42,8 +42,8 @@ public class WireEngine {
         if (this.wire.getSourceTransformers().size() > 0) {
             outXML.add(String.format("%s%s<property name=\"sourceTransformers\">", indent, shift));
             outXML.add(String.format("%s%s%s<util:list id=\"1\">", indent, shift, shift));
-            for (Bot transformer:this.wire.getSourceTransformers()) {
-                outXML.add(String.format("%s%s%s%s<ref bean=\"%s\"/>", indent, shift,shift,  shift, transformer.getName()));
+            for (WiredTransformer wTrans:this.wire.getSourceTransformers()) {
+                outXML.add(String.format("%s%s%s%s<ref bean=\"%s\"/>", indent, shift,shift,  shift, wTrans.getTransformer().getName()));
             }
             outXML.add(String.format("%s%s%s</util:list>", indent, shift, shift));
             outXML.add(String.format("%s%s</property>", indent, shift));
@@ -51,8 +51,8 @@ public class WireEngine {
         if (this.wire.getLookupTransformers().size() > 0) {
             outXML.add(String.format("%s%s<property name=\"lookupTransformers\">", indent, shift));
             outXML.add(String.format("%s%s%s<util:list id=\"1\">", indent, shift, shift));
-            for (Bot transformer:this.wire.getLookupTransformers()) {
-                outXML.add(String.format("%s%s%s%s<ref bean=\"%s\"/>", indent, shift,shift,  shift, transformer.getName()));
+            for (WiredTransformer wTrans:this.wire.getLookupTransformers()) {
+                outXML.add(String.format("%s%s%s%s<ref bean=\"%s\"/>", indent, shift,shift,  shift, wTrans.getTransformer().getName()));
             }
             outXML.add(String.format("%s%s%s</util:list>", indent, shift, shift));
             outXML.add(String.format("%s%s</property>", indent, shift));

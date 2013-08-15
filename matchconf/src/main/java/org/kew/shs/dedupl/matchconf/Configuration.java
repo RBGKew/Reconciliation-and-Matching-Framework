@@ -70,9 +70,11 @@ public class Configuration extends CloneMe<Configuration> {
     @Sort(type = SortType.NATURAL)
     private List<Wire> wiring = new ArrayList<Wire>();
 
+    @Sort(type = SortType.NATURAL)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transformer> transformers = new ArrayList<>();
 
+    @Sort(type = SortType.NATURAL)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Matcher> matchers = new ArrayList<>();
 

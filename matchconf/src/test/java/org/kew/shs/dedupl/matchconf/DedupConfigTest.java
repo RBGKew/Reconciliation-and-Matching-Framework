@@ -5,13 +5,13 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
+import java.util.List;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
-import cucumber.api.java.After;
 
 @ContextConfiguration(locations = { "/META-INF/spring/applicationContext.xml" })
 public class DedupConfigTest extends AbstractJUnit4SpringContextTests {
@@ -20,6 +20,9 @@ public class DedupConfigTest extends AbstractJUnit4SpringContextTests {
     Configuration config;
     Transformer trans1;
     Transformer trans2;
+    WiredTransformer wTrans1;
+    WiredTransformer wTrans2;
+    WiredTransformer wTrans3;
     Matcher matcher1;
     Matcher matcher2;
     Wire wire1;
@@ -27,28 +30,27 @@ public class DedupConfigTest extends AbstractJUnit4SpringContextTests {
     Reporter rep1;
     Reporter rep2;
 
-    @Before
-    public void createTestMatchConfig() {
+    public void createTestConfig(String name) {
         this.config = new Configuration();
-        this.config.setName("Clara");
+        this.config.setName(name);
         this.config.setWorkDirPath("/some/file/path");
         this.config.setRecordFilter("some_funny_javascript");
         this.config.setNextConfig("optional_name_of_the_config_to_run_afterwards");
         this.config.persist();
 
-        // trans1 has no parameter set
+        // trans1 has a parameter
         this.trans1 = new Transformer();
-        this.trans1.setName("HipsterTransformer");
+        this.trans1.setName("poshGuy");
         this.trans1.setPackageName("lon.don.people");
-        this.trans1.setClassName("lowerMiddleClass");
+        this.trans1.setClassName("veryUpperClass");
+        this.trans1.setParams("hairStyle=uebercrazy");
         this.trans1.setConfiguration(this.config);
         this.trans1.persist();
-        // trans2 has a parameter
+        // trans2 has no parameter set
         this.trans2 = new Transformer();
-        this.trans2.setName("poshGuy");
+        this.trans2.setName("hipsterTransformer");
         this.trans2.setPackageName("lon.don.people");
-        this.trans2.setClassName("veryUpperClass");
-        this.trans2.setParams("hairStyle=uebercrazy");
+        this.trans2.setClassName("lowerMiddleClass");
         this.trans2.setConfiguration(this.config);
         this.trans2.persist();
 
@@ -73,20 +75,31 @@ public class DedupConfigTest extends AbstractJUnit4SpringContextTests {
         this.wire1.setConfiguration(this.config);
         // wire1 has blanksMatch set to true
         this.wire1.setBlanksMatch(true);
-        // wire1 has only one transformer
-        this.wire1.getSourceTransformers().add(this.trans1);
         this.wire1.setMatcher(this.matcher1);
+        this.wTrans1 = new WiredTransformer();
+        this.wTrans1.setRank(1);
+        this.wTrans1.setTransformer(this.trans1);
+        this.wTrans1.persist();
+        // wire1 has only one transformer
+        this.wire1.getSourceTransformers().add(this.wTrans1);
         this.wire1.persist();
 
-        // wire1 has only one transformer
         this.wire2 = new Wire();
         this.wire2.setSourceColumnName("saladColumn");
         this.wire2.setConfiguration(this.config);
         // wire2 has *not* blanksMatch set to true
         // wire2 has two transformers
-        this.wire2.getSourceTransformers().add(this.trans1);
-        this.wire2.getSourceTransformers().add(this.trans2);
         this.wire2.setMatcher(this.matcher2);
+        this.wTrans2 = new WiredTransformer();
+        this.wTrans2.setRank(2);
+        this.wTrans2.setTransformer(this.trans1);
+        this.wTrans2.persist();
+        this.wTrans3 = new WiredTransformer();
+        this.wTrans3.setRank(1);
+        this.wTrans3.setTransformer(this.trans2);
+        this.wTrans3.persist();
+        this.wire2.getSourceTransformers().add(this.wTrans1);
+        this.wire2.getSourceTransformers().add(this.wTrans2);
         this.wire2.persist();
 
         this.rep1 = new Reporter();
@@ -115,11 +128,13 @@ public class DedupConfigTest extends AbstractJUnit4SpringContextTests {
         this.config.merge();
     }
 
-    @After
-    public void deleteTestConfig() {
-        try {
-            this.config.remove();
-        } catch (NullPointerException e) {};
+    @Test
+    public void testSortBots() {
+        createTestConfig("Zetkin");
+        List<Transformer> transformers = this.config.getTransformers();
+        Collections.sort(transformers);
+        // h comes before p
+        assertThat(transformers.get(0).getName(), equalTo("hipsterTransformer"));
     }
 
     public static String getattr(String method, Configuration aConfig) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
@@ -128,6 +143,7 @@ public class DedupConfigTest extends AbstractJUnit4SpringContextTests {
 
     @Test
     public void testCloneMe() throws Exception {
+        createTestConfig("Clara");
         Configuration clone = this.config.cloneMe();
         // config
         assertThat(clone.getId(), not(equalTo(this.config.getId())));

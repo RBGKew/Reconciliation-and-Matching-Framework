@@ -60,11 +60,11 @@ public class Wire extends CloneMe<Wire> implements Comparable<Wire> {
     @ManyToMany
     @Size(min=0)
     @Sort(type=SortType.NATURAL)
-    private List<Transformer> sourceTransformers = new ArrayList<Transformer>();
+    private List<WiredTransformer> sourceTransformers = new ArrayList<WiredTransformer>();
 
     @ManyToMany
     @Size(min=0)
-    private List<Transformer> lookupTransformers = new ArrayList<Transformer>();
+    private List<WiredTransformer> lookupTransformers = new ArrayList<WiredTransformer>();
 
     public String getName() {
         return this.getSourceColumnName() + "_" + this.getLookupColumnName();
@@ -90,10 +90,10 @@ public class Wire extends CloneMe<Wire> implements Comparable<Wire> {
         // then the relational attributes
         clone.setConfiguration(configClone);
         clone.setMatcher(this.matcher.cloneMe(configClone));
-        for (Transformer trans:this.getSourceTransformers()) {
+        for (WiredTransformer trans:this.getSourceTransformers()) {
             clone.getSourceTransformers().add(trans.cloneMe(configClone));
         }
-        for (Transformer trans:this.getLookupTransformers()) {
+        for (WiredTransformer trans:this.getLookupTransformers()) {
             clone.getLookupTransformers().add(trans.cloneMe(configClone));
         }
         clone.persist();

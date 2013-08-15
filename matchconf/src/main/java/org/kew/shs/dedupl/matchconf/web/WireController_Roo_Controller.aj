@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.kew.shs.dedupl.matchconf.Configuration;
 import org.kew.shs.dedupl.matchconf.Matcher;
-import org.kew.shs.dedupl.matchconf.Transformer;
 import org.kew.shs.dedupl.matchconf.Wire;
+import org.kew.shs.dedupl.matchconf.WiredTransformer;
 import org.kew.shs.dedupl.matchconf.web.WireController;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -91,7 +91,7 @@ privileged aspect WireController_Roo_Controller {
         uiModel.addAttribute("wire", wire);
         uiModel.addAttribute("configurations", Configuration.findAllConfigurations());
         uiModel.addAttribute("matchers", Matcher.findAllMatchers());
-        uiModel.addAttribute("transformers", Transformer.findAllTransformers());
+        uiModel.addAttribute("wiredtransformers", WiredTransformer.findAllWiredTransformers());
     }
     
     String WireController.encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {

@@ -106,7 +106,17 @@ public class CreateSimpleDedupConfig {
         wire.setSourceColumnName(this.secondColName);
         wire.setMatcher(this.matcher);
         wire.setConfiguration(config);
-        wire.setSourceTransformers(this.transformers);
+        int i = 0;
+        List<WiredTransformer> wTransis = new ArrayList<>();
+        for (Transformer t:this.transformers) {
+            i ++;
+            WiredTransformer wTrans = new WiredTransformer();
+            wTrans.setRank(i);
+            wTrans.setTransformer(t);
+            wTrans.persist();
+            wTransis.add(wTrans);
+        }
+        wire.setSourceTransformers(wTransis);
         wire.persist();
         assert (Wire.findWire(wire.getId()) != null);
         config.getWiring().add(wire);
@@ -143,7 +153,7 @@ public class CreateSimpleDedupConfig {
         File configFile = new File(this.tempDir, configFilePath);
         assert configFile.exists();
         @SuppressWarnings("unchecked")
-		List<String> configFileLines = FileUtils.readLines(configFile);
+        List<String> configFileLines = FileUtils.readLines(configFile);
         String[] configXMLLines =configXML.split("\n");
         for (int i=0;i<configXMLLines.length;i++) {
             String correctedLine = configXMLLines[i].replaceAll("REPLACE_WITH_TMPDIR", this.tempDir.toString());
