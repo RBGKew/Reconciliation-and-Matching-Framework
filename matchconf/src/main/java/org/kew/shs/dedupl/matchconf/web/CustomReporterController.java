@@ -142,7 +142,7 @@ public class CustomReporterController {
 
     public void customValidation (String configName, Reporter reporter, BindingResult br) {
         if (!FieldValidator.validSlug(reporter.getName())) {
-            br.addError(new ObjectError("reporter.name", "The name can only contain ASCII letters and/or '-' and/or '_'"));
+            br.addError(new ObjectError("reporter.name", "The name has to be set and can only contain ASCII letters and/or '-' and/or '_'"));
         }
     }
 

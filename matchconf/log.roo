@@ -218,3 +218,6 @@ web mvc all --package org.kew.shs.dedupl.matchconf.web
 // Spring Roo 1.2.5.BUILD-SNAPSHOT [rev 61090d2] log opened at 2013-08-14 20:56:25
 web mvc scaffold --class ~.web.DictionaryController --backingType ~.Dictionary
 web mvc controller --class web.CustomDictController
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-08-15 09:27:13
+finder list --class ~.Dictionary
+finder add --class ~.Dictionary --finderName findDictionarysByNameEquals

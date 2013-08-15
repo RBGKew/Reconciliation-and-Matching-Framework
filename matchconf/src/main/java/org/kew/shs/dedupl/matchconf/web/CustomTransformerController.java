@@ -146,7 +146,7 @@ public class CustomTransformerController {
 
     public void customValidation (String configName, Transformer transformer, BindingResult br) {
         if (!FieldValidator.validSlug(transformer.getName())) {
-            br.addError(new ObjectError("transformer.name", "The name can only contain ASCII letters and/or '-' and/or '_'"));
+            br.addError(new ObjectError("transformer.name", "The name has to be set and can only contain ASCII letters and/or '-' and/or '_'"));
         }
     }
 

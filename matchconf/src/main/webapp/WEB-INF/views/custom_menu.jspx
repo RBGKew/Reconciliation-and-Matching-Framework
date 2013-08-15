@@ -9,5 +9,10 @@
             <menu:item id="i_configuration_new" messageCode="match_config_new" url="/match_configs?form" z="PpKhRYSLF3fMvOlr5J8dEALoaF8="/>
             <menu:item id="i_configuration_list" messageCode="match_config_list" url="/match_configs?page=1&amp;size=${empty param.size ? 10 : param.size}" z="eTnA6q7aRKdliIXm9IDu8P8bUhU="/>
         </menu:category>
+        <menu:category id="c_dictionary" z="">
+            <menu:item id="i_dictionary_new" messageCode="dictionary_new" url="/dictionaries?form" z=""/>
+            <menu:item id="i_dictionary_list" messageCode="dictionary_list" url="/dictionaries?page=1&amp;size=${empty param.size ? 10 : param.size}" z=""/>
+        </menu:category>
+
     </menu:menu>
 </div>

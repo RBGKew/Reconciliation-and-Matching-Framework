@@ -79,9 +79,6 @@ public class Configuration extends CloneMe<Configuration> {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reporter> reporters = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Dictionary> dictionaries = new ArrayList<>();
-
     public Configuration cloneMe () throws Exception {
         Configuration clone = new Configuration();
         // first the string attributes
@@ -206,13 +203,6 @@ public class Configuration extends CloneMe<Configuration> {
         return null;
     }
 
-    public Dictionary getDictionaryForName(String dictName) {
-        for (Dictionary dict: this.getDictionaries()) {
-            if (dict.getName().equals(dictName)) return dict;
-        }
-        return null;
-    }
-
     public void removeWire(String wireName) {
         this.getWiring().remove(this.getWireForName(wireName));
         this.merge();
@@ -233,8 +223,4 @@ public class Configuration extends CloneMe<Configuration> {
         this.merge();
     }
 
-      public void removeDictionary(String dictName) {
-        this.getDictionaries().remove(this.getDictionaryForName(dictName));
-        this.merge();
-    }
 }

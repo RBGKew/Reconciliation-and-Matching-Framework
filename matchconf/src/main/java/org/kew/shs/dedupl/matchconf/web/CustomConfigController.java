@@ -1,17 +1,12 @@
 package org.kew.shs.dedupl.matchconf.web;
-import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.apache.commons.io.FileUtils;
 import org.kew.shs.dedupl.matchconf.Configuration;
 import org.kew.shs.dedupl.matchconf.ConfigurationEngine;
 import org.springframework.stereotype.Controller;
@@ -61,10 +56,6 @@ public class CustomConfigController {
                                      @Valid Configuration configuration, BindingResult bindingResult,
                                      Model uiModel, HttpServletRequest httpServletRequest) {
         configuration.setClassName(ConfigSwitch.TYPE_CLASS_MAP.get(configType));
-        // validation for all classes that have their name as part of a REST-ish url
-        if (!FieldValidator.validSlug(configuration.getName())) {
-            bindingResult.addError(new ObjectError("configuration.name", "The name can only contain ASCII letters and/or '-' and/or '_'"));
-        }
         this.customValidation(configuration, bindingResult);
         if (bindingResult.hasErrors()) {
             populateEditForm(uiModel, configuration);
@@ -151,6 +142,10 @@ public class CustomConfigController {
     }
 
     public void customValidation (Configuration config, BindingResult br) {
+        // validation for all classes that have their name as part of a REST-ish url
+        if (!FieldValidator.validSlug(config.getName())) {
+            br.addError(new ObjectError("config.name", "The name has to be set and can only contain ASCII letters and/or '-' and/or '_'"));
+        }
         // MatchConfig specific: has to specify a lookupFileName
         if (config.getClassName().equals("MatchConfiguration") && config.getLookupFileName().equals("")) {
             br.addError(new ObjectError("configuration.lookupFileName", "A Match Configuration needs to specify a Lookup File"));

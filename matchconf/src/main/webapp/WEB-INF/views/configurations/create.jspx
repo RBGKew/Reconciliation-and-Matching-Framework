@@ -12,17 +12,17 @@
         <field:input field="name" id="c_org_kew_shs_dedupl_matchconf_Configuration_name" z="3vEmBizJ9lnbwGZHjPc2LrnXZUU="/>
         <field:simple field="wiring" id="c_org_kew_shs_dedupl_matchconf_Configuration_wiring" messageCode="entity_reference_not_managed" messageCodeAttribute="Wire" z="EEeRR4GWKvEBiYSS+u/qDNpPwBM="/>
         <field:simple field="transformers" id="c_org_kew_shs_dedupl_matchconf_Configuration_transformers" messageCode="entity_reference_not_managed" messageCodeAttribute="Transformer" z="+KP027XP575EYoMNyeKY4xL1VUA="/>
-        <field:simple field="matchers" id="c_org_kew_shs_dedupl_matchconf_Configuration_matchers" messageCode="entity_reference_not_managed" messageCodeAttribute="Matcher" z="VHY4i8/EwxndzKMk/xfw6XM0O5o="/>
         <field:input field="sourceFileName" id="c_org_kew_shs_dedupl_matchconf_Configuration_sourceFileName" z="Xe0KyReTb9is0ixh1BzXLN4pV80="/>
         <field:input field="lookupFileName" id="c_org_kew_shs_dedupl_matchconf_Configuration_lookupFileName" z="d1C88UX0kdcXobRnxlBR+YCiUN4="/>
         <field:input field="sourceFileEncoding" id="c_org_kew_shs_dedupl_matchconf_Configuration_sourceFileEncoding" z="oZk6RExiWZ0ZK/O9Z7gyzq45Qs0="/>
         <field:input field="sourceFileDelimiter" id="c_org_kew_shs_dedupl_matchconf_Configuration_sourceFileDelimiter" z="xTUiFAy070C340Xm5+DIXkCFqCI="/>
         <field:input field="lookupFileEncoding" id="c_org_kew_shs_dedupl_matchconf_Configuration_lookupFileEncoding" z="nIW4RKilaNTPUKc9d5nswIsET3g="/>
         <field:input field="lookupFileDelimiter" id="c_org_kew_shs_dedupl_matchconf_Configuration_lookupFileDelimiter" z="wdmGp4zNTXYZTlVaoShLBtxJL7E="/>
-        <field:simple field="reporters" id="c_org_kew_shs_dedupl_matchconf_Configuration_reporters" messageCode="entity_reference_not_managed" messageCodeAttribute="Reporter" z="fcss3mBGR03Ok8XPxKW99yLzIpI="/>
         <field:input field="recordFilter" id="c_org_kew_shs_dedupl_matchconf_Configuration_recordFilter" z="UblGjqepwYEnIJ2Qukb4uPwQ6Mw="/>
         <field:input field="nextConfig" id="c_org_kew_shs_dedupl_matchconf_Configuration_nextConfig" z="8/XB3k0CWyzuW6E8SlDmdPFV0Jk="/>
         <field:input field="maxSearchResults" id="c_org_kew_shs_dedupl_matchconf_Configuration_maxSearchResults" z="b/g0ZTLl9l72rqTsKqu2gq1MkRE="/>
+        <field:simple field="matchers" id="c_org_kew_shs_dedupl_matchconf_Configuration_matchers" messageCode="entity_reference_not_managed" messageCodeAttribute="Matcher" z="VHY4i8/EwxndzKMk/xfw6XM0O5o="/>
+        <field:simple field="reporters" id="c_org_kew_shs_dedupl_matchconf_Configuration_reporters" messageCode="entity_reference_not_managed" messageCodeAttribute="Reporter" z="fcss3mBGR03Ok8XPxKW99yLzIpI="/>
     </form:create>
     <form:dependency dependencies="${dependencies}" id="d_org_kew_shs_dedupl_matchconf_Configuration" render="${not empty dependencies}" z="0C0vyFYOe+A8T8VgmDKsxBtFphQ="/>
 </div>

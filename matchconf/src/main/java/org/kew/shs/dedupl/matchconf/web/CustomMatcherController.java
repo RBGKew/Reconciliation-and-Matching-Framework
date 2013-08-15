@@ -149,7 +149,7 @@ public class CustomMatcherController {
 
     public void customValidation (String configName, Matcher matcher, BindingResult br) {
         if (!FieldValidator.validSlug(matcher.getName())) {
-            br.addError(new ObjectError("matcher.name", "The name can only contain ASCII letters and/or '-' and/or '_'"));
+            br.addError(new ObjectError("matcher.name", "The name has to be set and can only contain ASCII letters and/or '-' and/or '_'"));
         }
     }
 
