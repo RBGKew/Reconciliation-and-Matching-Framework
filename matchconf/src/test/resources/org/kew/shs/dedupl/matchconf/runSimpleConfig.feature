@@ -91,8 +91,8 @@ Feature: run a simple configuration
             | 6       | sóme namê | diacrits should be replaced with ascii equivalents | 3 cluster items  |
         When asking MatchConf to run this configuration
         Then the deduplication program should run smoothly and produce the following file "output.tsv" in the same directory:
-            | id      | data_col  | configLog            | cluster_size                      | from_id                      | ids_in_cluster |
-            | 1       | 0         | simple-config-to-run | 1                                 | 1                            | 1              |
-            | 6       | sóme namê | simple-config-to-run | 3                                 | 2                            | 6 \| 4 \| 2    |
-            | 3       |           | simple-config-to-run | 1                                 | 3                            | 3              |
-            | 5       |           | simple-config-to-run | 1                                 | 5                            | 5              |
+            | id      | data_col  | cluster_size  | from_id                      | ids_in_cluster |
+            | 1       | 0         | 1             | 1                            | 1              |
+            | 6       | sóme namê | 3             | 2                            | 6 \| 4 \| 2    |
+            | 3       |           | 1             | 3                            | 3              |
+            | 5       |           | 1             | 5                            | 5              |

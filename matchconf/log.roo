@@ -226,3 +226,6 @@ finder add --class ~.Dictionary --finderName findDictionarysByNameEquals
 // Spring Roo 1.2.5.BUILD-SNAPSHOT [rev 61090d2] log opened at 2013-08-15 22:25:25
 // Spring Roo 1.2.5.BUILD-SNAPSHOT [rev 61090d2] log opened at 2013-08-15 23:08:25
 web mvc scaffold --class ~.web.WiredTransformerController --backingType ~.WiredTransformer
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-08-16 12:26:41
+finder list --class ~.Bot
+finder list --class ~.Configuration

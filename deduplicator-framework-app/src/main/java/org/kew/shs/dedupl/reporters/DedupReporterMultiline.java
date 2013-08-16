@@ -28,7 +28,7 @@ public class DedupReporterMultiline extends LuceneReporter {
         for (Map<String, String> record:cluster) {
 			record.put(namespace + "cluster_size", this.getClusterSize(fromRecord, cluster));
 			record.put(namespace + "best_record_id", this.getBestRecordId(cluster));
-			record.put(namespace + "rank", this.getRank(fromRecord, cluster));
+			record.put(namespace + "rank", this.getRank(record, cluster));
 			this.writer.write(record, this.header);
         }
 	}
