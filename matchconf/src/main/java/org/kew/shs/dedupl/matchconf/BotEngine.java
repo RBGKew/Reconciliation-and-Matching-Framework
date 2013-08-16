@@ -40,9 +40,8 @@ public class BotEngine {
 					key = paramTuple[0];
 					value = paramTuple[1];
 					if (this.bot.getClassName().contains("Dict") && key.equals("dict")) {
-			            outXML.addAll(new DictionaryEngine(Dictionary.findDictionariesByNameEquals(value).getSingleResult()).toXML(indentLevel + 1));
-					}
-					outXML.add(String.format("%s%sp:%s=\"%s\"", indent, shift, key, value));
+						outXML.add(String.format("%s%sp:dict-ref=\"%s\"", indent, shift, value));
+					} else outXML.add(String.format("%s%sp:%s=\"%s\"", indent, shift, key, value));
 				}
 				outXML.set(outXML.size()-1, outXML.get(outXML.size()-1) + "/>");
 			} else {

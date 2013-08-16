@@ -8,7 +8,7 @@ import org.kew.shs.dedupl.transformers.Transformer;
 public class ShrunkPubAuthorsTest {
 
     @Test
-    public void shrinkEm() {
+    public void shrinkEm() throws Exception {
         Transformer transformer = new ShrunkPubAuthors();
         String author = "(A.B.Cyclus ex D.E. Fincus) G.H. Ictus.f.";
         assertEquals("ictus", transformer.transform(author));

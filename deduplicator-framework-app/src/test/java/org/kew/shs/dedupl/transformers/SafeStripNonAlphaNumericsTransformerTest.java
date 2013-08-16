@@ -7,37 +7,37 @@ import org.junit.Test;
 public class SafeStripNonAlphaNumericsTransformerTest {
 
 	@Test
-	public void blank2blank () {
+	public void blank2blank () throws Exception {
 		Transformer transformer = new SafeStripNonAlphaNumericsTransformer();
 		assertEquals("", transformer.transform(""));
 	}
 
 	@Test
-	public void wordWithHybridSignToAscii () {
+	public void wordWithHybridSignToAscii () throws Exception {
 		Transformer transformer = new SafeStripNonAlphaNumericsTransformer();
 		assertEquals("hybrid species", transformer.transform("× hybrid-species"));
 	}
 
 	@Test
-	public void numericsAresafe () {
+	public void numericsAresafe () throws Exception {
 		Transformer transformer = new SafeStripNonAlphaNumericsTransformer();
 		assertEquals("text 123 text 4 5", transformer.transform("text 123 text 4.5"));
 	}
 
 	@Test
-	public void withHyphenAndNumbersAndPunctuation () {
+	public void withHyphenAndNumbersAndPunctuation () throws Exception {
 		Transformer transformer = new SafeStripNonAlphaNumericsTransformer();
 		assertEquals("Tete a tete en 2", transformer.transform("Tête-à-tête en 2"));
 	}
 	
 	@Test
-	public void replaceEmDashes () {
+	public void replaceEmDashes () throws Exception {
 		Transformer transformer = new SafeStripNonAlphaNumericsTransformer();
 		assertEquals("hello emdash", transformer.transform("hello—emdash"));
 	}
 
 	@Test
-	public void testDifferentDiacritics () {
+	public void testDifferentDiacritics () throws Exception {
 		Transformer transformer = new SafeStripNonAlphaNumericsTransformer();
 		assertEquals("Sorensen", transformer.transform("Sørensen"));
 		assertEquals("Muller", transformer.transform("Müller"));

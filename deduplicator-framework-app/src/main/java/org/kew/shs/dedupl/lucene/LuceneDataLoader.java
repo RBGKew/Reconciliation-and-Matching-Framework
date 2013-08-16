@@ -87,7 +87,7 @@ public class LuceneDataLoader implements DataLoader {
         logger.info("Indexed " + i + " documents");
     }
 
-    public void indexRecord(Map<String, String> record) throws CorruptIndexException, IOException {
+    public void indexRecord(Map<String, String> record) throws Exception {
         Document doc = new Document();
         String idFieldName = Configuration.ID_FIELD_NAME;
         logger.debug("rawRecord: {}", record.toString());

@@ -8,7 +8,7 @@ import org.kew.shs.dedupl.transformers.Transformer;
 public class DotFDotCleanerTest {
 
     @Test
-    public void cleanIt() {
+    public void cleanIt() throws Exception {
         Transformer transformer = new DotFDotCleaner();
         String author = "Hans.f. bla";
         assertEquals("Hans bla", transformer.transform(author));
@@ -19,7 +19,7 @@ public class DotFDotCleanerTest {
     }
 
     @Test
-    public void alsoCleanSpaceFDot() {
+    public void alsoCleanSpaceFDot() throws Exception {
         Transformer transformer = new DotFDotCleaner();
         String author = "Hans f. bla";
         assertEquals("Hans bla", transformer.transform(author));

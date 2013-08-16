@@ -6,7 +6,7 @@ public class CompositeTransformer implements Transformer{
 
 	private List<Transformer> transformers;
 
-	public String transform(String s) {
+	public String transform(String s) throws Exception {
 		for (Transformer t : transformers)
 			s = t.transform(s);
 		return s;

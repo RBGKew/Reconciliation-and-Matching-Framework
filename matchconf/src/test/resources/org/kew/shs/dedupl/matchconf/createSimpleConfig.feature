@@ -8,10 +8,12 @@ Feature: Create a simple configuration
         And he has created a new configuration:
             | name          | workDirPath | maxSearchResults | recordFilter                          | nextConfig |
             | simple-config | some_path   | 100              | funny(recordCheck == javaScriptMagic) | someName   |
+        And he has added a dictionary "funkyDict" with the filepath field "/some_other_path/dict.txt"
         And he has added the following sourceTransformers
-            | name               | packageName                     | className                     | params |
-            | anotherTransformer | org.kew.shs.dedupl.transformers | SafeStripNonAlphasTransformer |        |
-            | 02BlankTransformer | org.kew.shs.dedupl.transformers | ZeroToBlankTransformer        |        |
+            | name               | packageName                     | className                     | params         |
+            | funkyTransformer   | org.kew.shs.dedupl.transformers | DictionaryTransformer         | dict=funkyDict |
+            | anotherTransformer | org.kew.shs.dedupl.transformers | SafeStripNonAlphasTransformer |                |
+            | 02BlankTransformer | org.kew.shs.dedupl.transformers | ZeroToBlankTransformer        |                |
         And he has added a matcher for the second column:
             | name         | packageName                 | className    | params            |
             | matchExactly | org.kew.shs.dedupl.matchers | ExactMatcher | blanksMatch=false |
@@ -44,10 +46,15 @@ Feature: Create a simple configuration
                 <bean id="sourcefile" class="java.io.File">
                     <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/source.tsv" />
                 </bean>
+                <bean id="funkyDict" class="org.kew.shs.dedupl.util.Dictionary"
+                    p:fileDelimiter="&#09;"
+                    p:filePath="/some_other_path/dict.txt" />
                 <bean id="matchExactly" class="org.kew.shs.dedupl.matchers.ExactMatcher"
                     p:blanksMatch="false"/>
                 <bean id="02BlankTransformer" class="org.kew.shs.dedupl.transformers.ZeroToBlankTransformer" />
                 <bean id="anotherTransformer" class="org.kew.shs.dedupl.transformers.SafeStripNonAlphasTransformer" />
+                <bean id="funkyTransformer" class="org.kew.shs.dedupl.transformers.DictionaryTransformer"
+                    p:dict-ref="funkyDict"/>
                 <util:list id="reporters">
                     <bean class="org.kew.shs.dedupl.reporters.DedupReporter"
                         p:name="standardReporter"
@@ -80,6 +87,7 @@ Feature: Create a simple configuration
                         p:matcher-ref="matchExactly">
                         <property name="sourceTransformers">
                             <util:list id="1">
+                                <ref bean="funkyTransformer"/>
                                 <ref bean="anotherTransformer"/>
                                 <ref bean="02BlankTransformer"/>
                             </util:list>

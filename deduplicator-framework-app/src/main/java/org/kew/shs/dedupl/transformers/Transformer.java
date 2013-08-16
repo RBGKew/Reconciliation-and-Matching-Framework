@@ -7,6 +7,6 @@ package org.kew.shs.dedupl.transformers;
  */
 public interface Transformer {
 	
-	public String transform(String s);
+	public String transform(String s) throws Exception;
 
 }

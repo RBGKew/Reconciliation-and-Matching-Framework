@@ -67,7 +67,7 @@ public class AuthorAbbreviationsMatcher extends AuthorCommonTokensMatcher{
 	boolean storeAndReuseTransformations;
 
 	@Cacheable(cacheName="aabMatchCache")
-	public boolean matches_new(String s1, String s2) {
+	public boolean matches_new(String s1, String s2) throws Exception {
 		// First check for match w/out transform
 		boolean matches = match_inner(s1, s2);
 		if (!matches){

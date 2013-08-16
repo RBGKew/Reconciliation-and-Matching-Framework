@@ -33,7 +33,11 @@ Feature: Match WCS against Ipni
             | 77111821-5 | Restionaceae | Cannomois   | scirpoides      | minor                |             | var.               | Cannomois scirpoides var. minor      |                 | Pillans                    | Roy. South Africa             | 16: 419                   | 1928 | Match on collation but less good than 77111821-5   |
             | 77111821-5 | Restionaceae | Cannomois   | scirpoides      | minor                |             | var.               | Cannomois scirpoides var. minor      |                 | Pillans                    | South Africa                  | 16: 419                   | 1928 | No match on publication (0.49)                     |
             | 77108795-4 | Restionaceae | Restio      | saxatilis       |                      | spec.       |                    | Restio saxatilis                     | (Esterh.)       | H.P.Linder & C.R.Hardy     | Bothalia                      | 40(1): 27 fig. 6-7 (2010) |      | No match on collation (0.49)                       |
+            | 123456     | Restionaceae    | funkyGenus  |                 |                      | Genus       |                    | funkyGenus                           |                 | B.G.Briggs & L.A.S.Johnson | Telopea       7: 349          | (1998)                    |      | that's for the dictionary                          |
 
+        And she has access to a tab-separated dictionary
+            | some none-existing value | super value | some comment that will be hopefully ignored |
+            | funkyGenus               | Kulinia     | this row should be used in our example      |
 
         And Alecs has set up a match configuration file according to her specs:
             """
@@ -61,6 +65,9 @@ Feature: Match WCS against Ipni
                 <bean id="lookupfile" class="java.io.File">
                     <constructor-arg value="REPLACE_WITH_TMPDIR/lookup.txt" />
                 </bean>
+                <bean id="funkyDict" class="org.kew.shs.dedupl.util.Dictionary"
+                    p:fileDelimiter="&#09;"
+                    p:filePath="REPLACE_WITH_TMPDIR/funkyDict.txt" />
                 <bean id="alwaysMatchingMatcher" class="org.kew.shs.dedupl.matchers.AlwaysMatchingMatcher" />
                 <bean id="exactMatcher" class="org.kew.shs.dedupl.matchers.ExactMatcher" />
                 <bean id="capitalLettersMatcher" class="org.kew.shs.dedupl.matchers.CapitalLettersMatcher"
@@ -71,6 +78,8 @@ Feature: Match WCS against Ipni
                 <bean id="fakeHybridSignCleaner" class="org.kew.shs.dedupl.transformers.FakeHybridSignCleaner" />
                 <bean id="safeStripNonAlphaNumericsTransformer" class="org.kew.shs.dedupl.transformers.SafeStripNonAlphaNumericsTransformer" />
                 <bean id="rcollationCleaner" class="org.kew.shs.dedupl.transformers.RomanNumeralTransformer " />
+                <bean id="funkyTransformer" class="org.kew.shs.dedupl.transformers.DictionaryTransformer"
+                    p:dict-ref="funkyDict" />
                 <util:list id="reporters">
                     <bean class="org.kew.shs.dedupl.reporters.MatchReporter"
                         p:name="standardReporter"
@@ -108,6 +117,7 @@ Feature: Match WCS against Ipni
                             <util:list id="1">
                                 <ref bean="safeStripNonAlphasTransformer"/>
                                 <ref bean="fakeHybridSignCleaner"/>
+                                <ref bean="funkyTransformer" />
                             </util:list>
                         </property>
                     </bean>
@@ -237,7 +247,7 @@ Feature: Match WCS against Ipni
         When this match config is run through the Match App
         Then a file should have been created in the same folder with the following data:
             | id     | family_transf | genus       | genus_transf | species_epithet | species_epithet_transf | lookup_species_epithet | lookup_species_epithet_transf | configLog | no_matches | matching_ids |
-            | 251171 | Restionaceae  | Kulinia     | Kulinia      |                 |                        |                        |                               | aConfig   | 0          |              |
+            | 251171 | Restionaceae  | Kulinia     | Kulinia      |                 |                        |                        |                               | aConfig   | 1          | 123456       |
             | 243223 | Restionaceae  | Empodisma   | Empodisma    | gracillimum     | gracillimum            |                        |                               | aConfig   | 0          |              |
             | 463816 | Restionaceae  | Platycaulos | Platycaulos  | mahonii         | mahonii                |                        |                               | aConfig   | 0          |              |
             | 224033 | Restionaceae  | Cannomois   | Cannomois    | scirpoides      | scirpoides             |                        |                               | aConfig   | 0          |              |

@@ -36,7 +36,7 @@ public class Dictionary extends HashMap<String, String> {
         return filePath;
     }
 
-    public void setFilePath(String filePath) {
+    public void setFilePath(String filePath) throws IOException {
         this.filePath = filePath;
     }
 

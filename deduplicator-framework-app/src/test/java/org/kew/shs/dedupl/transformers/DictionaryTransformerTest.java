@@ -36,7 +36,6 @@ public class DictionaryTransformerTest {
         Dictionary dict = new Dictionary();
         dict.setFilePath(this.dictFile.toString());
         dict.setFileDelimiter("&#09;");
-        dict.readFile();
         DictionaryTransformer transformer = new DictionaryTransformer();
         transformer.setDict(dict);
         assertThat(transformer.transform("a"), equalTo("b"));

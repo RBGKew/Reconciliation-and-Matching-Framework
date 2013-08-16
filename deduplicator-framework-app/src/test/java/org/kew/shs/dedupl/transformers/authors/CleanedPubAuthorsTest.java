@@ -8,7 +8,7 @@ import org.kew.shs.dedupl.transformers.Transformer;
 public class CleanedPubAuthorsTest {
 
     @Test
-    public void cleanIt() {
+    public void cleanIt() throws Exception {
         Transformer transformer = new CleanedPubAuthors();
         String author = "(Bla Blub) NotSoImportant ex (Bli b. Bloe) MoreImportant in whatsoever";
         assertEquals("MoreImportant", transformer.transform(author));

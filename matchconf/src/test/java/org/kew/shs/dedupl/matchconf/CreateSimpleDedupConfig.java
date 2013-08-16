@@ -67,6 +67,14 @@ public class CreateSimpleDedupConfig {
         assert (Configuration.findConfiguration(config.getId()) != null);
     }
 
+    @Given("^he has added a dictionary \"([^\"]*)\" with the filepath field \"([^\"]*)\"$")
+    public void he_has_added_a_dictionary_with_the_filepath_field(String name, String filePath) throws Throwable {
+        Dictionary dict = new Dictionary();
+        dict.setName(name);
+        dict.setFilePath(filePath);
+        dict.persist();
+    }
+
     @Given("^he has added the following sourceTransformers$")
     public void he_has_added_the_following_transformers(DataTable transformerDefTable) throws Throwable {
         List<Transformer> transis = new ArrayList<>();

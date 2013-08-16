@@ -19,6 +19,7 @@ def tempDir, tempConfigFile, tempSourceFile, tempOutputFile
 
 Before() {
     tempDir = Files.createTempDirectory("match_wcs_against_ipni")
+    dictFile = new File([tempDir, "funkyDict.txt"].join(File.separator)).toPath()
     tempConfigFile = new File([tempDir, "config.xml"].join(File.separator)).toPath()
     tempSourceFile = new File([tempDir, "source.txt"].join(File.separator)).toPath()
     tempLookupFile = new File([tempDir, "lookup.txt"].join(File.separator)).toPath()
@@ -40,6 +41,12 @@ Given(~'^she has created a lookup-file to match against$') { DataTable fileConte
     tempLookupFile.toFile().withWriter { out ->
         fileContent.asList().each {out.println it.join("\t")}
     }
+}
+
+Given(~'^she has access to a tab-separated dictionary$') { DataTable dictContent ->
+	dictFile.toFile().withWriter { out ->
+		dictContent.asList().each {out.println it.join("\t")}
+	}
 }
 
 Given(~'^Alecs has set up a match configuration file according to her specs:$') { String configXML ->

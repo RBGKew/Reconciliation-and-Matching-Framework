@@ -18,8 +18,9 @@ public class DictionaryEngine {
 			indent += shift;
 		}
 		ArrayList<String> outXML = new ArrayList<String>();
-		outXML.add(String.format("%s<bean id=\"Dictionary\"", indent));
-
+		outXML.add(String.format("%s<bean id=\"%s\" class=\"org.kew.shs.dedupl.util.Dictionary\"", indent, this.dict.getName()));
+        outXML.add(String.format("%s%sp:fileDelimiter=\"%s\"", indent, shift, this.dict.getFileDelimiter()));
+        outXML.add(String.format("%s%sp:filePath=\"%s\" />", indent, shift, this.dict.getFilePath()));
 		return outXML;
 	}
 }

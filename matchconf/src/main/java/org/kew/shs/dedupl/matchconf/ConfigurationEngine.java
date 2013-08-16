@@ -61,6 +61,13 @@ public class ConfigurationEngine {
             outXML.add(String.format("%s</bean>", shift));
         }
 
+        List<Dictionary> usedDicts = this.config.findDictionaries();
+        if (usedDicts.size() > 0) {
+            for (Dictionary dict:usedDicts) {
+                outXML.addAll(new DictionaryEngine(dict).toXML(1));
+            }
+        }
+
         List<Matcher> matchers = this.config.getMatchers();
         Collections.sort(matchers);
         for (Bot bot:matchers) {

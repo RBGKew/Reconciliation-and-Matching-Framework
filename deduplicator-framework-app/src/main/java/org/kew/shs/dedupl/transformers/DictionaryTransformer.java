@@ -1,5 +1,7 @@
 package org.kew.shs.dedupl.transformers;
 
+import java.io.IOException;
+
 import org.kew.shs.dedupl.util.Dictionary;
 import org.kew.shs.dedupl.util.LibraryRegister;
 
@@ -8,8 +10,13 @@ import org.kew.shs.dedupl.util.LibraryRegister;
 public class DictionaryTransformer implements Transformer {
 
     Dictionary dict;
+    private boolean fileLoaded = false;
 
-    public String transform (String key) {
+    public String transform (String key) throws IOException {
+        if (!fileLoaded) {
+            this.dict.readFile();
+            this.fileLoaded = true;
+        }
         String value = this.dict.get(key);
         return (value != null) ? value: key;
     }

@@ -234,7 +234,7 @@ public class Configuration extends CloneMe<Configuration> {
     		if (!bot.getParams().contains("dict=")) continue;
     		for (String param:bot.getParams().split(",")) {
 				String[] paramTuple = param.split("=");
-				if (paramTuple[0] == "dict") dicts.add(Dictionary.findDictionariesByNameEquals(paramTuple[1]).getSingleResult());
+				if (paramTuple[0].equals("dict")) dicts.add(Dictionary.findDictionariesByNameEquals(paramTuple[1]).getSingleResult());
     		}
     	}
     	return dicts;
