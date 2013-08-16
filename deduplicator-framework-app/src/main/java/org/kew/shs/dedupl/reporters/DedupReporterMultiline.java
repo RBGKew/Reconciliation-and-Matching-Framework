@@ -23,7 +23,6 @@ public class DedupReporterMultiline extends LuceneReporter {
 
 	@Override
 	public void reportResults(Map<String, String> fromRecord, List<Map<String, String>> cluster) throws IOException {
-        fromRecord.put("configLog", this.getConfigLog());
         String namespace = this.getNameSpacePrefix();
 		// TODO: make sure the fromRecord is in the cluster (should be!)
         for (Map<String, String> record:cluster) {

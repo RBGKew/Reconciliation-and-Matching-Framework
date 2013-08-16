@@ -10,7 +10,7 @@ import org.kew.shs.dedupl.util.LibraryRegister;
 @LibraryRegister(category="reporters")
 public class MatchReporter extends LuceneReporter {
 
-    protected static String[] AVAILABLE_FIELDS = new String[] {"no_matches", "matching_ids"};
+    protected static String[] AVAILABLE_FIELDS = new String[] {"configLog", "no_matches", "matching_ids"};
 
     public MatchReporter() {
         logger.info("I will be creating an enhanced output file for you with additional fields: " +
