@@ -9,7 +9,7 @@
   </appender>
 
   <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-    <file>./logs/matchconf-${byMinute}.log</file>
+    <file>./logs/matchconf-${byMinute}.log.gz</file>
     <encoder>
       <pattern>%d{HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
     </encoder>

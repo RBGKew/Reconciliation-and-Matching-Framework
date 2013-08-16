@@ -224,5 +224,20 @@ public class Configuration extends CloneMe<Configuration> {
         this.getReporters().remove(this.getReporterForName(reporterName));
         this.merge();
     }
+    
+    public List<Dictionary> findDictionaries() {
+    	List<Dictionary> dicts = new ArrayList<>();
+    	List<Bot> bots = new ArrayList<>();
+    	bots.addAll(this.getTransformers());
+    	bots.addAll(this.getMatchers());
+    	for (Bot bot:bots) {
+    		if (!bot.getParams().contains("dict=")) continue;
+    		for (String param:bot.getParams().split(",")) {
+				String[] paramTuple = param.split("=");
+				if (paramTuple[0] == "dict") dicts.add(Dictionary.findDictionariesByNameEquals(paramTuple[1]).getSingleResult());
+    		}
+    	}
+    	return dicts;
+    }
 
 }

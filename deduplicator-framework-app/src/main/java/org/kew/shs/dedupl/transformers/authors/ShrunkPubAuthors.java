@@ -2,6 +2,7 @@ package org.kew.shs.dedupl.transformers.authors;
 
 import org.apache.commons.lang.StringUtils;
 import org.kew.shs.dedupl.transformers.SafeStripNonAlphasTransformer;
+import org.kew.shs.dedupl.transformers.StringShrinker;
 import org.kew.shs.dedupl.transformers.Transformer;
 import org.kew.shs.dedupl.util.LibraryRegister;
 
@@ -21,7 +22,7 @@ public class ShrunkPubAuthors implements Transformer {
         if (this.shrinkTo != null) {
             String[] toShrink = s.split(" ");
             for (int i=0;i<toShrink.length;i++) {
-                if (toShrink[i].length() > this.shrinkTo) toShrink[i] = toShrink[i].substring(0, this.shrinkTo);
+                toShrink[i] = new StringShrinker(this.shrinkTo).transform(toShrink[i]);
             }
             s = StringUtils.join(toShrink, " ");
         }

@@ -1,5 +1,6 @@
 package org.kew.shs.dedupl.transformers.authors;
 
+import org.kew.shs.dedupl.transformers.RegexDefCollection;
 import org.kew.shs.dedupl.transformers.Transformer;
 import org.kew.shs.dedupl.util.LibraryRegister;
 
@@ -9,18 +10,16 @@ import org.kew.shs.dedupl.util.LibraryRegister;
  *
  */
 @LibraryRegister(category="transformers")
-public class StripExAuthorTransformer implements Transformer{
+public class StripExAuthorTransformer extends RegexDefCollection implements Transformer{
 
-	private static String EX_MARKER = " ex ";
-	
-	public String transform(String s) {
-		String cleaned = s;
-		if (s != null){
-			if (s.indexOf(EX_MARKER) != -1){
-				cleaned = s.replaceAll(".*" + EX_MARKER, "");
-			}
-		}
-		return cleaned;	
-	}
+    public String transform(String s) {
+        String cleaned = s;
+        if (s != null){
+            if (s.toLowerCase().indexOf(EX_MARKER) != -1){
+                cleaned = s.replaceAll(".*" + EX_MARKER_REGEX, "");
+            }
+        }
+        return cleaned;
+    }
 
 }
