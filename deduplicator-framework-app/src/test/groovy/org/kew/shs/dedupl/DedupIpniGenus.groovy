@@ -21,6 +21,7 @@ Before() {
     tempConfigFile = new File([tempDir, "config.xml"].join(File.separator)).toPath()
     tempInputFile = new File([tempDir, "input.txt"].join(File.separator)).toPath()
     tempOutputFile = new File([tempDir, "output.txt"].join(File.separator)).toPath()
+    tempOutputMultilineFile = new File([tempDir, "output_multiline.txt"].join(File.separator)).toPath()
 }
 
 After() {
@@ -58,5 +59,23 @@ Then(~'^a file should have been created in the same folder with the following ge
                 throw new AssertionError(newE)
             }
         }
-    }
+	}
+}
+	
+Then(~'^a file for the multiline output should have been created in the same folder with the following genus data:$') { DataTable expectedOutput ->
+    def expectedOutputList = expectedOutput.asList()
+    def output = tempOutputMultilineFile.toFile().readLines()
+    expectedOutputList.eachWithIndex { expectedLine, i ->
+        def lineList = output[i].split('\t')
+        expectedLine.eachWithIndex { col, k ->
+            try {
+                assertThat(lineList[k], is(col))
+            } catch (IndexOutOfBoundsException e) {
+                throw new IndexOutOfBoundsException("Columns missing!: ${expectedOutputList[k..-1]}")
+            } catch (AssertionError e) {
+                String newE = e.toString() + " -- error occurred in record ${i} at <${expectedOutputList[0][k]}>"
+                throw new AssertionError(newE)
+            }
+        }
+	}
 }
