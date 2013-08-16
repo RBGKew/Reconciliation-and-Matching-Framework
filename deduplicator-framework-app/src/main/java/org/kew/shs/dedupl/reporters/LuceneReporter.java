@@ -11,7 +11,7 @@ import org.kew.shs.dedupl.lucene.DocList;
 
 public abstract class LuceneReporter extends Reporter {
 
-	protected static String[] AVAILABLE_FIELDS = new String[] {};
+	protected static String[] AVAILABLE_FIELDS = new String[] {"configLog"};
 
 	protected String[] getAvailableFields () {
 		return (String[]) ArrayUtils.addAll(super.getAvailableFields(), LuceneReporter.AVAILABLE_FIELDS);
@@ -48,6 +48,10 @@ public abstract class LuceneReporter extends Reporter {
 			i++;
 		}
 		return Integer.toString(i);
+	}
+	
+	protected String getConfigLog() {
+		return this.configName;
 	}
 
 	protected String getBestRecordId(List<Map<String, String>> cluster) {

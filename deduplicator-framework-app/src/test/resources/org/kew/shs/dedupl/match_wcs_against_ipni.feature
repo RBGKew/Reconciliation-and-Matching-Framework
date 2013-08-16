@@ -74,6 +74,7 @@ Feature: Match WCS against Ipni
                 <util:list id="reporters">
                     <bean class="org.kew.shs.dedupl.reporters.MatchReporter"
                         p:name="standardReporter"
+                        p:configName="aConfig"
                         p:delimiter="&#09;"
                         p:idDelimiter="|">
                         <property name="file">
@@ -235,10 +236,10 @@ Feature: Match WCS against Ipni
             """
         When this match config is run through the Match App
         Then a file should have been created in the same folder with the following data:
-            | id     | family_transf | genus       | genus_transf | species_epithet | species_epithet_transf | lookup_species_epithet | lookup_species_epithet_transf | no_matches | matching_ids |
-            | 251171 | Restionaceae  | Kulinia     | Kulinia      |                 |                        |                        |                               | 0          |              |
-            | 243223 | Restionaceae  | Empodisma   | Empodisma    | gracillimum     | gracillimum            |                        |                               | 0          |              |
-            | 463816 | Restionaceae  | Platycaulos | Platycaulos  | mahonii         | mahonii                |                        |                               | 0          |              |
-            | 224033 | Restionaceae  | Cannomois   | Cannomois    | scirpoides      | scirpoides             |                        |                               | 0          |              |
-            | 247398 | Restionaceae  | Guringalia  | Guringalia   |                 |                        |                        |                               | 0          |              |
-            | 464139 | Restionaceae  | Restio      | Restio       | saxatilis       | saxatilis              |                        |                               | 0          |              |
+            | id     | family_transf | genus       | genus_transf | species_epithet | species_epithet_transf | lookup_species_epithet | lookup_species_epithet_transf | configLog | no_matches | matching_ids |
+            | 251171 | Restionaceae  | Kulinia     | Kulinia      |                 |                        |                        |                               | aConfig   | 0          |              |
+            | 243223 | Restionaceae  | Empodisma   | Empodisma    | gracillimum     | gracillimum            |                        |                               | aConfig   | 0          |              |
+            | 463816 | Restionaceae  | Platycaulos | Platycaulos  | mahonii         | mahonii                |                        |                               | aConfig   | 0          |              |
+            | 224033 | Restionaceae  | Cannomois   | Cannomois    | scirpoides      | scirpoides             |                        |                               | aConfig   | 0          |              |
+            | 247398 | Restionaceae  | Guringalia  | Guringalia   |                 |                        |                        |                               | aConfig   | 0          |              |
+            | 464139 | Restionaceae  | Restio      | Restio       | saxatilis       | saxatilis              |                        |                               | aConfig   | 0          |              |
