@@ -61,12 +61,14 @@
           <c:when test='${ field.equals("reporters") }'>
             <a href='/MatchConf/${ configType }/${ object.getName() }/reporters'>${ object[field] } </a>
           </c:when>
-          <c:when test='${ field.equals("sourceTransformers") }'>
+          <c:when test='${ field.equals("sourceTransformers") || field.equals("lookupTransformers") }'>
+            <c:if test='${ field.equals("sourceTransformers") }'><c:set var="transformerType" value="source"/></c:if>
+            <c:if test='${ field.equals("lookupTransformers") }'><c:set var="transformerType" value="lookup"/></c:if>
             <ul>
               <c:forEach items="${ object[field] }" var="wiredTransformer">
-	            <li> <a href='/MatchConf/${ configType }_configs/${ configName }/wires/${ object.getName() }/wired_transformers/${ wiredTransformer.getRank() }_${ wiredTransformer.getTransformer().getName() }?form'>${ wiredTransformer }</a></li>
+	            <li> <a href='/MatchConf/${ configType }_configs/${ configName }/wires/${ object.getName() }/${ transformerType }_transformers/${ wiredTransformer.getRank() }_${ wiredTransformer.getTransformer().getName() }?form'>${ wiredTransformer }</a></li>
               </c:forEach>
-              <a href='/MatchConf/${ configType }_configs/${ configName }/wires/${ object.getName() }/wired_transformers?form'>add a wired transformer</a>
+              <a href='/MatchConf/${ configType }_configs/${ configName }/wires/${ object.getName() }/${ transformerType }_transformers?form'>add a ${ transformerType }Transformer</a>
             </ul>
           </c:when>
           <c:otherwise>

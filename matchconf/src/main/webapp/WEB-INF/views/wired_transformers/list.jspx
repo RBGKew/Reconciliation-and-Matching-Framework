@@ -2,8 +2,8 @@
 <div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
-    <page:list id="pl_org_kew_shs_dedupl_matchconf_WiredTransformer" items="${wiredtransformers}" z="FDhXfxt2c9hCeesx9+M4C0TNQpI=">
-        <table:table data="${wiredtransformers}" id="l_org_kew_shs_dedupl_matchconf_WiredTransformer" path="/wiredtransformers" z="ZKc5FIAeWmQivJKk0XK2AsxmOVg=">
+    <page:list id="pl_org_kew_shs_dedupl_matchconf_WiredTransformer" items="${wiredTransformers}" z="FDhXfxt2c9hCeesx9+M4C0TNQpI=">
+        <table:table data="${wiredTransformers}" create="true" id="l_org_kew_shs_dedupl_matchconf_WiredTransformer" path="/${ configType }_configs/${ configName }/wires/${ wireName }/${ transformerType }_transformers" z="ZKc5FIAeWmQivJKk0XK2AsxmOVg=">
             <table:column id="c_org_kew_shs_dedupl_matchconf_WiredTransformer_rank" property="rank" z="pMvtNIP3PBKxCRE5REJbpKLLVq4="/>
             <table:column id="c_org_kew_shs_dedupl_matchconf_WiredTransformer_transformer" property="transformer" z="AP1Amp3PWft7/qK0M/QKVJPpGMk="/>
         </table:table>

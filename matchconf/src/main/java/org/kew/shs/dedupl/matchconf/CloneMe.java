@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.persistence.MappedSuperclass;
 
-import org.apache.commons.lang.StringUtils;
+import org.kew.shs.dedupl.matchconf.utils.GetterSetter;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
@@ -17,30 +17,23 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooJpaActiveRecord(mappedSuperclass=true)
 public abstract class CloneMe<T> {
 
-    public int getattr(String fieldName, int n) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-        String method = "get" + StringUtils.capitalise(fieldName);
-        return (int) this.getClass().getMethod(method, null).invoke(this, null);
+    public int getattr(String fieldName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+        return new GetterSetter<Integer>().getattr(this, fieldName);
     }
     public Boolean getattr(String fieldName, Boolean b) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-        String method = "get" + StringUtils.capitalise(fieldName);
-        return (Boolean) this.getClass().getMethod(method, null).invoke(this, null);
+        return new GetterSetter<Boolean>().getattr(this, fieldName);
     }
     public String getattr(String fieldName, String s) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-        String method = "get" + StringUtils.capitalise(fieldName);
-        return (String) this.getClass().getMethod(method, null).invoke(this, null);
+        return new GetterSetter<String>().getattr(this, fieldName);
     }
-
     public void setattr(String fieldName, int n) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-        String method = "set" + StringUtils.capitalise(fieldName);
-        this.getClass().getMethod(method, int.class).invoke(this, n);
+        new GetterSetter<Integer>().setattr(this, fieldName, n);;
     }
     public void setattr(String fieldName, Boolean b) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-        String method = "set" + StringUtils.capitalise(fieldName);
-        this.getClass().getMethod(method, Boolean.class).invoke(this, b);
+        new GetterSetter<Boolean>().setattr(this, fieldName, b);
     }
     public void setattr(String fieldName, String s) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-        String method = "set" + StringUtils.capitalise(fieldName);
-        this.getClass().getMethod(method, String.class).invoke(this, s);
+        if (s!= null) new GetterSetter<String>().setattr(this, fieldName, s);
     }
 
     // conflict of Generics, inheritance and spring roo as far as I understand; have moved this method out of Roo's way,

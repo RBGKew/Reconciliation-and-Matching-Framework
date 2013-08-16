@@ -1,4 +1,5 @@
 package org.kew.shs.dedupl.matchconf;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -6,10 +7,10 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
+import org.kew.shs.dedupl.matchconf.utils.GetterSetter;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
@@ -96,6 +97,13 @@ public class Wire extends CloneMe<Wire> implements Comparable<Wire> {
         }
         clone.persist();
         return clone;
+    }
+
+    public WiredTransformer getWiredTransformer(String transformerType, String transformerName) throws Exception {
+        for (WiredTransformer wT:new GetterSetter<List<WiredTransformer>>().getattr(this, transformerType + "Transformers")) {
+            if (wT.getName().equals(transformerName)) return wT;
+        };
+        return null;
     }
 
     public WiredTransformer getSourceTransformerForName(String wiredTransformerName) {
