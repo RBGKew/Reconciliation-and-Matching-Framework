@@ -120,7 +120,9 @@ public class CreateSimpleMatchConfig {
             for (String t:wireDef.get("sourceTransformers").split(",")) {
                 i ++;
                 WiredTransformer wTrans = new WiredTransformer();
-                wTrans.setRank(i);
+                // reverse the order to test whether the rank is actually used for sorting
+                // and not only the auto-generated id
+                wTrans.setRank(i * - 1);
                 wTrans.setTransformer(this.transformers.get(t.trim()));
                 wTrans.persist();
                 sourceTransis.add(wTrans);
@@ -131,7 +133,9 @@ public class CreateSimpleMatchConfig {
             for (String t:wireDef.get("lookupTransformers").split(",")) {
                 i ++;
                 WiredTransformer wTrans = new WiredTransformer();
-                wTrans.setRank(i);
+                // reverse the order to test whether the rank is actually used for sorting
+                // and not only the auto-generated id
+                wTrans.setRank(i * - 1);
                 wTrans.setTransformer(this.transformers.get(t.trim()));
                 wTrans.persist();
                 lookupTransis.add(wTrans);

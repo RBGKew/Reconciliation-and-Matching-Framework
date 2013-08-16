@@ -127,9 +127,9 @@ Feature: Create a simple configuration
             | matchExactly   | org.kew.shs.dedupl.matchers | ExactMatcher     | blanksMatch=false |
             | matchIntegers  | org.kew.shs.dedupl.matchers | IntegerMatcher   | blanksMatch=true  |
         And he has wired them together in the following way:
-            | sourceColumnName | lookupColumnName | sourceTransformers                     | lookupTransformers | matcher        | useInSelect |
-            | data_col1        | data_col1        | 02BlankTransformer, anotherTransformer | anotherTransformer | matchExactly   | true        |
-            | otherCol         | other_col        | 02BlankTransformer                     | anotherTransformer | matchIntegers  | false       |
+            | sourceColumnName | lookupColumnName | sourceTransformers                     | lookupTransformers                     | matcher        | useInSelect |
+            | data_col1        | data_col1        | anotherTransformer, 02BlankTransformer | 02BlankTransformer, anotherTransformer | matchExactly   | true        |
+            | otherCol         | other_col        | 02BlankTransformer                     | anotherTransformer                     | matchIntegers  | false       |
         And he has added the following match-reporters:
             | name              | fileName             | packageName                  | className              | params |
             | standardReporter  | output.tsv           | org.kew.shs.dedupl.reporters | MatchReporter          |        |
@@ -206,6 +206,7 @@ Feature: Create a simple configuration
                         <property name="lookupTransformers">
                             <util:list id="1">
                                 <ref bean="anotherTransformer"/>
+                                <ref bean="02BlankTransformer"/>
                             </util:list>
                         </property>
                     </bean>

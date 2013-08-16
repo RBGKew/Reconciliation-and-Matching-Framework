@@ -1,6 +1,8 @@
 package org.kew.shs.dedupl.matchconf;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class WireEngine {
 
@@ -39,19 +41,23 @@ public class WireEngine {
 
         outXML.add(String.format("%s%sp:matcher-ref=\"%s\">", indent, shift, this.wire.getMatcher().getName()));
 
-        if (this.wire.getSourceTransformers().size() > 0) {
+        List<WiredTransformer> sourceTransens = this.wire.getSourceTransformers();
+        if (sourceTransens.size() > 0) {
             outXML.add(String.format("%s%s<property name=\"sourceTransformers\">", indent, shift));
             outXML.add(String.format("%s%s%s<util:list id=\"1\">", indent, shift, shift));
-            for (WiredTransformer wTrans:this.wire.getSourceTransformers()) {
+            Collections.sort(sourceTransens);
+            for (WiredTransformer wTrans:sourceTransens) {
                 outXML.add(String.format("%s%s%s%s<ref bean=\"%s\"/>", indent, shift,shift,  shift, wTrans.getTransformer().getName()));
             }
             outXML.add(String.format("%s%s%s</util:list>", indent, shift, shift));
             outXML.add(String.format("%s%s</property>", indent, shift));
         }
-        if (this.wire.getLookupTransformers().size() > 0) {
+        List<WiredTransformer> lookupTransens = this.wire.getLookupTransformers();
+        if (lookupTransens.size() > 0) {
             outXML.add(String.format("%s%s<property name=\"lookupTransformers\">", indent, shift));
             outXML.add(String.format("%s%s%s<util:list id=\"1\">", indent, shift, shift));
-            for (WiredTransformer wTrans:this.wire.getLookupTransformers()) {
+            Collections.sort(lookupTransens);
+            for (WiredTransformer wTrans:lookupTransens) {
                 outXML.add(String.format("%s%s%s%s<ref bean=\"%s\"/>", indent, shift,shift,  shift, wTrans.getTransformer().getName()));
             }
             outXML.add(String.format("%s%s%s</util:list>", indent, shift, shift));
