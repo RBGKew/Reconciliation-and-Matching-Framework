@@ -23,6 +23,8 @@ public class DotFDotCleanerTest {
         Transformer transformer = new DotFDotCleaner();
         String author = "Hans f. bla";
         assertEquals("Hans bla", transformer.transform(author));
+        author = "Baker f.";
+        assertEquals("Baker", transformer.transform(author));
     }
 
 }

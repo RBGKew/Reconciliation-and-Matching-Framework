@@ -57,4 +57,14 @@ public class ShrunkPubAuthorsTest {
         assertEquals("gre wil ban", transformer.transform(author));
     }
 
+    @Test public void additionalCases() {
+        ShrunkPubAuthors transformer = new ShrunkPubAuthors();
+        transformer.setShrinkTo(3);
+        String author = "L. Ex Somebody";
+        assertEquals("som", transformer.transform(author));
+        author = "Hand.-Mazz";
+        assertEquals("han maz", transformer.transform(author));
+
+    }
+
 }

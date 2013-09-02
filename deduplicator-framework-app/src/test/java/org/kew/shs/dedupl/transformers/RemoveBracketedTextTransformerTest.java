@@ -52,4 +52,17 @@ public class RemoveBracketedTextTransformerTest {
 		assertEquals("text", transformer.transform("te()xt"));
 	}
 
+	@Test
+	public void severalBrackets () throws Exception {
+		Transformer transformer = new RemoveBracketedTextTransformer();
+		assertEquals("1 3", transformer.transform("1 (2) 3 (4)"));
+	}
+
+	@Test
+	public void otherCases() throws Exception {
+		Transformer transformer = new RemoveBracketedTextTransformer();
+		assertEquals("Prodr.", transformer.transform("Prodr. (DC.)"));
+		assertEquals("Bot. Voy. Herald", transformer.transform("Bot. Voy. Herald [Seemann]"));
+	}
+
 }

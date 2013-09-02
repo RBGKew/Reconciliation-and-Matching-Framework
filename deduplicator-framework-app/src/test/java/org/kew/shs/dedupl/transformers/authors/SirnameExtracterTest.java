@@ -51,5 +51,17 @@ public class SirnameExtracterTest {
         assertEquals("(Po.) Ludov.", transformer.transform(author));
     }
 
+    @Test
+    public void additionalCases() throws Exception {
+        Transformer transformer = new SirnameExtracter();
+        String author = "L. ex Somebody";
+        assertEquals("L. ex Somebody", transformer.transform(author));
+        author = "L. in Somebody";
+        assertEquals("L. in Somebody", transformer.transform(author));
+        //author = "Kosnik, Diggs, Redshaw & L.L.Lipscomb";
+        //assertEquals("Lipscomb", transformer.transform(author));
+        author = "L.Diggs";
+        assertEquals("Diggs", transformer.transform(author));
+    }
 
 }

@@ -31,7 +31,7 @@ public class ShrunkAuthorsTest {
         assertEquals("baum kunk", transformer.transform(author));
     }
 
-    // TODO: make work (if it really makes sense..); 
+    // TODO: make work (if it really makes sense..);
 //    @Test
 //    public void need_to_recognise_that_this_is_only_a_single_author_no_ampisand_or_comma1() {
 //        ShrunkAuthors transformer = new ShrunkAuthors();
@@ -92,7 +92,7 @@ public class ShrunkAuthorsTest {
     public void basionym_pub_in_and_dotFdot() {
         ShrunkAuthors transformer = new ShrunkAuthors();
         transformer.setShrinkTo(3);
-        String author = "(L.) A.Gray in Hook.f";
+        String author = "(L.) A.Gray in Hook.f.";
         assertEquals("l gra hoo", transformer.transform(author));
     }
 
@@ -149,7 +149,7 @@ public class ShrunkAuthorsTest {
         ShrunkAuthors transformer = new ShrunkAuthors();
         transformer.setShrinkTo(3);
         String author = "Hand.-Mazz.";
-        assertEquals("han", transformer.transform(author));
+        assertEquals("han maz", transformer.transform(author));
     }
 
     @Test
@@ -170,7 +170,15 @@ public class ShrunkAuthorsTest {
         ShrunkAuthors transformer = new ShrunkAuthors();
         transformer.setShrinkTo(3);
         String author = "Grey-Wilson & Banks";
-        assertEquals("gre ban", transformer.transform(author));
+        assertEquals("gre wil ban", transformer.transform(author));
+    }
+
+    @Test
+    public void additionalCases() {
+        ShrunkAuthors transformer = new ShrunkAuthors();
+        transformer.setShrinkTo(3);
+        String author = "L.A.S.Johnson & K.L.Wilson";
+        assertEquals("joh wil", transformer.transform(author));
     }
 
 

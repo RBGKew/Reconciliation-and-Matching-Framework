@@ -25,8 +25,8 @@ public class ShrunkAuthors extends RegexDefCollection implements Transformer {
         for (String authors: new String[] {bas, pub}) {
             authors = authors.replaceAll(exIn, " ");
             authors = authors.replaceAll("\\s+", " ");
+            authors = new SafeStripNonAlphaNumericsTransformer().transform(authors);
             for (String author:authors.split(" ")) {
-                author = new SafeStripNonAlphaNumericsTransformer().transform(author);
                 // shrink each identified author sirname to shrinkTo if set
                 if (this.shrinkTo != null) author = new StringShrinker(this.shrinkTo).transform(author);
                 if (!StringUtils.isBlank(author)) sirNames.add(author.trim());

@@ -7,6 +7,10 @@ public abstract class RegexDefCollection {
 	protected String IN_MARKER = " in ";
 	protected String IN_MARKER_REGEX = "( in | In )";
 
-    protected String ALPHANUMDIAC = "[\\wáéíóúÁÉÍÓÚâêîôÂÊÎÔãõÃĂÕçÇ]"; // to include diacritics in alphanumerics
+	// to catch (more than one) occurrences of bracket-pairs incl. their content
+	protected String ROUND_BRACKETS_AND_CONTENT = "\\([^\\(\\)]*?\\)";
+	protected String SQUARE_BRACKETS_AND_CONTENT = "\\[[^\\[\\]]*?\\]";
+
+    protected String ALPHANUMDIAC = "[a-zA-ZáéíóúÁÉÍÓÚâêîôÂÊÎÔãõÃĂÕçÇ]"; // to include diacritics in alphanumerics
 
 }
