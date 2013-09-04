@@ -52,7 +52,6 @@ public class Matcher extends Bot {
             Matcher compoClone = component.cloneMe(configClone);
             clone.getComposedBy().add(compoClone);
         }
-        clone.persist();
         return clone;
     }
 }

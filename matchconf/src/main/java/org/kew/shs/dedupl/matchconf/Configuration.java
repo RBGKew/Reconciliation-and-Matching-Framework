@@ -92,7 +92,6 @@ public class Configuration extends CloneMe<Configuration> {
         for (String method:Configuration.CLONE_STRING_FIELDS) {
             clone.setattr(method, this.getattr(method, ""));
         }
-        clone.persist();
         // then the relational attributes
         for (Transformer transformer:this.transformers) {
             clone.getTransformers().add(transformer.cloneMe(clone));
@@ -107,7 +106,7 @@ public class Configuration extends CloneMe<Configuration> {
         for (Wire wire:this.wiring) {
             clone.getWiring().add(wire.cloneMe(clone));
         }
-        clone.merge();
+        clone.persist();
         return clone;
     }
 
@@ -210,8 +209,13 @@ public class Configuration extends CloneMe<Configuration> {
         this.merge();
     }
 
-    public void removeTransformer(String transformerName) {
-        this.getTransformers().remove(this.getTransformerForName(transformerName));
+    public void removeTransformer(String transformerName) throws Exception {
+        Transformer toRemove = this.getTransformerForName(transformerName);
+        Wire stillWired = toRemove.hasWiredTransformers();
+        if (stillWired != null) {
+            throw new Exception(String.format("It seems that %s is still being used in a wire (%s), please remove it there first in order to delete it.", toRemove, stillWired));
+        }
+        this.getTransformers().remove(toRemove);
         this.merge();
     }
 
@@ -224,20 +228,19 @@ public class Configuration extends CloneMe<Configuration> {
         this.getReporters().remove(this.getReporterForName(reporterName));
         this.merge();
     }
-    
-    public List<Dictionary> findDictionaries() {
-    	List<Dictionary> dicts = new ArrayList<>();
-    	List<Bot> bots = new ArrayList<>();
-    	bots.addAll(this.getTransformers());
-    	bots.addAll(this.getMatchers());
-    	for (Bot bot:bots) {
-    		if (!bot.getParams().contains("dict=")) continue;
-    		for (String param:bot.getParams().split(",")) {
-				String[] paramTuple = param.split("=");
-				if (paramTuple[0].equals("dict")) dicts.add(Dictionary.findDictionariesByNameEquals(paramTuple[1]).getSingleResult());
-    		}
-    	}
-    	return dicts;
-    }
 
+    public List<Dictionary> findDictionaries() {
+        List<Dictionary> dicts = new ArrayList<>();
+        List<Bot> bots = new ArrayList<>();
+        bots.addAll(this.getTransformers());
+        bots.addAll(this.getMatchers());
+        for (Bot bot:bots) {
+            if (!bot.getParams().contains("dict=")) continue;
+            for (String param:bot.getParams().split(",")) {
+                String[] paramTuple = param.split("=");
+                if (paramTuple[0].equals("dict")) dicts.add(Dictionary.findDictionariesByNameEquals(paramTuple[1]).getSingleResult());
+            }
+        }
+        return dicts;
+    }
 }

@@ -114,18 +114,17 @@ public class CreateSimpleDedupConfig {
         wire.setSourceColumnName(this.secondColName);
         wire.setMatcher(this.matcher);
         wire.setConfiguration(config);
+        wire.persist();
         int i = 0;
-        List<WiredTransformer> wTransis = new ArrayList<>();
         for (Transformer t:this.transformers) {
             i ++;
             WiredTransformer wTrans = new WiredTransformer();
             wTrans.setRank(i);
             wTrans.setTransformer(t);
             wTrans.persist();
-            wTransis.add(wTrans);
+            wire.getSourceTransformers().add(wTrans);
         }
-        wire.setSourceTransformers(wTransis);
-        wire.persist();
+        wire.merge();
         assert (Wire.findWire(wire.getId()) != null);
         config.getWiring().add(wire);
         logger.info("config.getWiring(): {}, wire: {}", config.getWiring(), wire);

@@ -29,7 +29,7 @@ public class Transformer extends Bot {
 
     @ManyToMany(cascade = CascadeType.ALL)
     @Sort(type=SortType.NATURAL)
-    private List<Transformer> composedBy = new ArrayList<Transformer>();
+    private List<Transformer> composedBy = new ArrayList<>();
 
     @ManyToOne
     private Configuration configuration;
@@ -52,7 +52,50 @@ public class Transformer extends Bot {
             Transformer compoClone = component.cloneMe(configClone);
             clone.getComposedBy().add(compoClone);
         }
-        clone.persist();
         return clone;
     }
+
+    public void removeWiredTransformers() throws Exception {
+        try {
+            this.removeWiredTransformersLongWay();
+        } catch (Exception e) {
+            if (e instanceof Exception) {
+                throw new Exception(String.format("It seems that %s is still being used in a wire, please remove it there first in order to delete it.", this));
+            }
+        }
+    }
+
+    public Wire hasWiredTransformers() {
+        for (Wire wire:this.getConfiguration().getWiring()) {
+            for (WiredTransformer wt:wire.getSourceTransformers()) {
+                if (wt.getTransformer().getName().equals(this.getName())) {
+                    return wire;
+                }
+            }
+            for (WiredTransformer wt:wire.getLookupTransformers()) {
+                if (wt.getTransformer().getName().equals(this.getName())) {
+                    return wire;
+                }
+            }
+        }
+        return null;
+    }
+
+    public void removeWiredTransformersLongWay() {
+        List<WiredTransformer> wts;
+        for (Wire wire:this.getConfiguration().getWiring()) {
+            wts = wire.getSourceTransformers();
+            for (WiredTransformer wt:new ArrayList<WiredTransformer>(wts)) {
+                if (wt.getTransformer().getName().equals(this.getName())) {
+                    wts.remove(wt);
+                }
+            }
+            wts = wire.getLookupTransformers();
+            for (WiredTransformer wt:new ArrayList<WiredTransformer>(wts)) {
+                if (wt.getTransformer().getName().equals(this.getName())) wts.remove(wt);
+            }
+            wire.merge();
+        }
+    }
+
 }

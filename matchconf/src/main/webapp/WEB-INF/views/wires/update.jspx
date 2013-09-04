@@ -17,7 +17,7 @@
         <field:checkbox field="addOriginalLookupValue" id="c_org_kew_shs_dedupl_matchconf_Wire_addOriginalLookupValue" z="OTGOwNh7sNQWPa9RQlE91VCN5n8="/>
         <field:checkbox field="addTransformedSourceValue" id="c_org_kew_shs_dedupl_matchconf_Wire_addTransformedSourceValue" z="gz9SC9WXQU9Q8G7eX3YXT9eMaK8="/>
         <field:checkbox field="addTransformedLookupValue" id="c_org_kew_shs_dedupl_matchconf_Wire_addTransformedLookupValue" z="hgjah26dH9JrPRn+D6KcMTzQTrg="/>
-        <field:select field="sourceTransformers" id="c_org_kew_shs_dedupl_matchconf_Wire_sourceTransformers" itemValue="id" items="${wiredtransformers}" multiple="true" path="/wiredtransformers" z="uD6orgH4Of8to58vjfWQWqniHZs="/>
-        <field:select field="lookupTransformers" id="c_org_kew_shs_dedupl_matchconf_Wire_lookupTransformers" itemValue="id" items="${wiredtransformers}" multiple="true" path="/wiredtransformers" z="hsrZUBCk2wjpPTn46AXcwzsQgkA="/>
+        <field:simple field="sourceTransformers" id="c_org_kew_shs_dedupl_matchconf_Wire_sourceTransformers" messageCode="entity_reference_not_managed" messageCodeAttribute="Wired Transformer" z="f9kiqiOvtkNKMD9sV0nmNPk7UgU="/>
+        <field:simple field="lookupTransformers" id="c_org_kew_shs_dedupl_matchconf_Wire_lookupTransformers" messageCode="entity_reference_not_managed" messageCodeAttribute="Wired Transformer" z="xTHTJR2LFrp7AJY58v8I3CUi/b8="/>
     </form:update>
 </div>

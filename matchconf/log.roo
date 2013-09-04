@@ -229,3 +229,11 @@ web mvc scaffold --class ~.web.WiredTransformerController --backingType ~.WiredT
 // Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-08-16 12:26:41
 finder list --class ~.Bot
 finder list --class ~.Configuration
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-09-03 10:30:25
+finder list --class ~.WiredTransformer
+finder add --finderName findWiredTransformersByTransformer
+finder list --class ~.Wire
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-09-03 16:39:41
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-09-03 17:27:19
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-09-04 15:11:44
+// Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-09-04 15:15:19

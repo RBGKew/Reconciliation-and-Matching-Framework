@@ -17,7 +17,5 @@
         <field:display field="addOriginalLookupValue" id="s_org_kew_shs_dedupl_matchconf_Wire_addOriginalLookupValue" object="${wire}" z="co0V7nhlZnQs0YF4LUujrezuXJo="/>
         <field:display field="addTransformedSourceValue" id="s_org_kew_shs_dedupl_matchconf_Wire_addTransformedSourceValue" object="${wire}" z="41JsGovhZx9ZqTzVlt1bvwJAmtw="/>
         <field:display field="addTransformedLookupValue" id="s_org_kew_shs_dedupl_matchconf_Wire_addTransformedLookupValue" object="${wire}" z="NpC1ySXgNQycufwMBFWVdSAZoKM="/>
-        <field:display field="sourceTransformers" id="s_org_kew_shs_dedupl_matchconf_Wire_sourceTransformers" object="${wire}" z="SpBa5kQrilbTcclnoEJjiSoDHEc="/>
-        <field:display field="lookupTransformers" id="s_org_kew_shs_dedupl_matchconf_Wire_lookupTransformers" object="${wire}" z="Q+vEbVzr50jeTW9RFAeNikx7VV4="/>
     </page:show>
 </div>

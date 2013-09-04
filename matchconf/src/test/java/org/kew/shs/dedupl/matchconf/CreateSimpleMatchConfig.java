@@ -115,7 +115,7 @@ public class CreateSimpleMatchConfig {
             wire.setUseInSelect(Boolean.parseBoolean(wireDef.get("useInSelect")));
             wire.setMatcher(this.matchers.get(wireDef.get("matcher")));
             wire.setConfiguration(config);
-            List<WiredTransformer> sourceTransis = new ArrayList<>();
+            wire.persist();
             int i = 0;
             for (String t:wireDef.get("sourceTransformers").split(",")) {
                 i ++;
@@ -123,12 +123,11 @@ public class CreateSimpleMatchConfig {
                 // reverse the order to test whether the rank is actually used for sorting
                 // and not only the auto-generated id
                 wTrans.setRank(i * - 1);
-                wTrans.setTransformer(this.transformers.get(t.trim()));
+                Transformer transf = this.transformers.get(t.trim());
+                wTrans.setTransformer(transf);
                 wTrans.persist();
-                sourceTransis.add(wTrans);
+                wire.getSourceTransformers().add(wTrans);
             }
-            wire.setSourceTransformers(sourceTransis);
-            List<WiredTransformer> lookupTransis = new ArrayList<>();
             i = 0;
             for (String t:wireDef.get("lookupTransformers").split(",")) {
                 i ++;
@@ -136,12 +135,12 @@ public class CreateSimpleMatchConfig {
                 // reverse the order to test whether the rank is actually used for sorting
                 // and not only the auto-generated id
                 wTrans.setRank(i * - 1);
-                wTrans.setTransformer(this.transformers.get(t.trim()));
+                Transformer transf = this.transformers.get(t.trim());
+                wTrans.setTransformer(transf);
                 wTrans.persist();
-                lookupTransis.add(wTrans);
+                wire.getLookupTransformers().add(wTrans);
             }
-            wire.setLookupTransformers(lookupTransis);
-            wire.persist();
+            wire.merge();
             assert (Wire.findWire(wire.getId()) != null);
             config.getWiring().add(wire);
             logger.info("config.getWiring(): {}, wire: {}", config.getWiring(), wire);

@@ -18,6 +18,7 @@
   <logger name="org.kew.shs.dedupl.lucene.LuceneMatcher" level="info"/>
   <logger name="org.kew.shs.dedupl.lucene.LuceneHandler" level="info"/>
   <logger name="org.kew.shs.dedupl.lucene.LuceneUtils" level="info"/>
+  <logger name="org.kew.shs.dedupl.matchconf.CloneMe" level="debug"/>
 
   <root level="info">
     <appender-ref ref="STDOUT" />

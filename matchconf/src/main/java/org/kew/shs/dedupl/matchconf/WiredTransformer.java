@@ -1,5 +1,4 @@
 package org.kew.shs.dedupl.matchconf;
-
 import javax.persistence.ManyToOne;
 
 import org.springframework.roo.addon.javabean.RooJavaBean;
@@ -8,7 +7,7 @@ import org.springframework.roo.addon.tostring.RooToString;
 
 @RooJavaBean
 @RooToString
-@RooJpaActiveRecord()
+@RooJpaActiveRecord(finders = { "findWiredTransformersByTransformer" })
 public class WiredTransformer implements Comparable<WiredTransformer> {
 
     private int rank;
@@ -24,16 +23,14 @@ public class WiredTransformer implements Comparable<WiredTransformer> {
         WiredTransformer clone = new WiredTransformer();
         clone.setRank(this.rank);
         clone.setTransformer(this.getTransformer().cloneMe(configClone));
-        clone.persist();
         return clone;
     }
 
     public String getName() {
         return this.getRank() + "_" + this.getTransformer().getName();
     }
-    
-    public String toString() {
-    	return String.format("%s: %s", this.getRank(), this.getTransformer().getName());
-    }
 
+    public String toString() {
+        return String.format("%s: %s", this.getRank(), this.getTransformer().getName());
+    }
 }

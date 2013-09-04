@@ -36,7 +36,6 @@ public class DedupConfigTest extends AbstractJUnit4SpringContextTests {
         this.config.setWorkDirPath("/some/file/path");
         this.config.setRecordFilter("some_funny_javascript");
         this.config.setNextConfig("optional_name_of_the_config_to_run_afterwards");
-        this.config.persist();
 
         // trans1 has a parameter
         this.trans1 = new Transformer();
@@ -45,14 +44,12 @@ public class DedupConfigTest extends AbstractJUnit4SpringContextTests {
         this.trans1.setClassName("veryUpperClass");
         this.trans1.setParams("hairStyle=uebercrazy");
         this.trans1.setConfiguration(this.config);
-        this.trans1.persist();
         // trans2 has no parameter set
         this.trans2 = new Transformer();
         this.trans2.setName("hipsterTransformer");
         this.trans2.setPackageName("lon.don.people");
         this.trans2.setClassName("lowerMiddleClass");
         this.trans2.setConfiguration(this.config);
-        this.trans2.persist();
 
         // matcher1 doesn't have any params set
         this.matcher1 = new Matcher();
@@ -60,7 +57,6 @@ public class DedupConfigTest extends AbstractJUnit4SpringContextTests {
         this.matcher1.setPackageName("a.long.and.funny.javapackagename");
         this.matcher1.setClassName("SomeHalfUnreadableCamelCasedName");
         this.matcher1.setConfiguration(this.config);
-        this.matcher1.persist();
         // matcher2 does have params
         this.matcher2 = new Matcher();
         this.matcher2.setName("Klaus");
@@ -68,7 +64,6 @@ public class DedupConfigTest extends AbstractJUnit4SpringContextTests {
         this.matcher2.setClassName("KlausDieMaus");
         this.matcher2.setParams("matchEverything=true");
         this.matcher2.setConfiguration(this.config);
-        this.matcher2.persist();
 
         this.wire1 = new Wire();
         this.wire1.setSourceColumnName("sauceColumn");
@@ -76,31 +71,29 @@ public class DedupConfigTest extends AbstractJUnit4SpringContextTests {
         // wire1 has blanksMatch set to true
         this.wire1.setBlanksMatch(true);
         this.wire1.setMatcher(this.matcher1);
+
         this.wTrans1 = new WiredTransformer();
         this.wTrans1.setRank(1);
         this.wTrans1.setTransformer(this.trans1);
-        this.wTrans1.persist();
         // wire1 has only one transformer
         this.wire1.getSourceTransformers().add(this.wTrans1);
-        this.wire1.persist();
 
         this.wire2 = new Wire();
         this.wire2.setSourceColumnName("saladColumn");
         this.wire2.setConfiguration(this.config);
         // wire2 has *not* blanksMatch set to true
-        // wire2 has two transformers
         this.wire2.setMatcher(this.matcher2);
+
+        // wire2 has two transformers
         this.wTrans2 = new WiredTransformer();
         this.wTrans2.setRank(2);
         this.wTrans2.setTransformer(this.trans1);
-        this.wTrans2.persist();
+        this.wire2.getSourceTransformers().add(this.wTrans2);
+
         this.wTrans3 = new WiredTransformer();
         this.wTrans3.setRank(1);
         this.wTrans3.setTransformer(this.trans2);
-        this.wTrans3.persist();
-        this.wire2.getSourceTransformers().add(this.wTrans1);
-        this.wire2.getSourceTransformers().add(this.wTrans2);
-        this.wire2.persist();
+        this.wire2.getSourceTransformers().add(this.wTrans3);
 
         this.rep1 = new Reporter();
         this.rep1.setName("karkaKolumna");
@@ -125,7 +118,7 @@ public class DedupConfigTest extends AbstractJUnit4SpringContextTests {
         this.config.getWiring().add(this.wire1);
         this.config.getWiring().add(this.wire2);
 
-        this.config.merge();
+        this.config.persist();
     }
 
     @Test

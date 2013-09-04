@@ -50,7 +50,6 @@ public class Reporter extends CloneMe<Reporter> {
         }
         // then the relational attributes
         clone.setConfig(configClone);
-        clone.persist();
         return clone;
     }
 

@@ -105,7 +105,6 @@ public class CustomConfigController {
     @RequestMapping(value = "/{configType}_configs/{configName}", method = RequestMethod.DELETE, produces = "text/html")
     public String delete(@PathVariable String configType, @PathVariable("configName") String configName, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
         Configuration configuration = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
-        // for the redirect we want to nick the configType
         configuration.remove();
         uiModel.asMap().clear();
         uiModel.addAttribute("page", (page == null) ? "1" : page.toString());

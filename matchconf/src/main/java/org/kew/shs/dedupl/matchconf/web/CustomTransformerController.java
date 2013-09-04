@@ -107,7 +107,7 @@ public class CustomTransformerController {
 
     // DELETE a specific transformer from a collection's list
     @RequestMapping(value="/{configType}_configs/{configName}/transformers/{transformerName}", method = RequestMethod.DELETE, produces = "text/html")
-    public String delete(@PathVariable("configType") String configType, @PathVariable("configName") String configName, @PathVariable("transformerName") String transformerName, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
+    public String delete(@PathVariable("configType") String configType, @PathVariable("configName") String configName, @PathVariable("transformerName") String transformerName, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) throws Exception {
         Configuration config = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
         config.removeTransformer(transformerName);
         uiModel.asMap().clear();

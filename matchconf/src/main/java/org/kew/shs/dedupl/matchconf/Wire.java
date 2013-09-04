@@ -1,10 +1,10 @@
 package org.kew.shs.dedupl.matchconf;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.ManyToMany;
+import javax.persistence.CascadeType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -58,11 +58,11 @@ public class Wire extends CloneMe<Wire> implements Comparable<Wire> {
     @ManyToOne
     private Configuration configuration;
 
-    @ManyToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @Sort(type=SortType.NATURAL)
     private List<WiredTransformer> sourceTransformers = new ArrayList<WiredTransformer>();
 
-    @ManyToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WiredTransformer> lookupTransformers = new ArrayList<WiredTransformer>();
 
     public String getName() {
@@ -95,7 +95,6 @@ public class Wire extends CloneMe<Wire> implements Comparable<Wire> {
         for (WiredTransformer trans:this.getLookupTransformers()) {
             clone.getLookupTransformers().add(trans.cloneMe(configClone));
         }
-        clone.persist();
         return clone;
     }
 
@@ -119,4 +118,5 @@ public class Wire extends CloneMe<Wire> implements Comparable<Wire> {
         }
         return null;
     }
+
 }
