@@ -33,4 +33,12 @@ public class WiredTransformer implements Comparable<WiredTransformer> {
     public String toString() {
         return String.format("%s: %s", this.getRank(), this.getTransformer().getName());
     }
+
+    public boolean isWireOrphan() {
+        for (Wire wire:this.transformer.getConfiguration().getWiring()) {
+            if (wire.getSourceTransformerForName(this.getName()) != null) return false;
+            if (wire.getLookupTransformerForName(this.getName()) != null) return false;
+        }
+        return true;
+    }
 }

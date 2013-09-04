@@ -211,12 +211,23 @@ public class Configuration extends CloneMe<Configuration> {
 
     public void removeTransformer(String transformerName) throws Exception {
         Transformer toRemove = this.getTransformerForName(transformerName);
-        Wire stillWired = toRemove.hasWiredTransformers();
-        if (stillWired != null) {
-            throw new Exception(String.format("It seems that %s is still being used in a wire (%s), please remove it there first in order to delete it.", toRemove, stillWired));
+        this.removeTransformer(toRemove);
+    }
+
+    public void removeTransformer(Transformer toRemove) throws Exception {
+        try {
+            Wire stillWired = toRemove.hasWiredTransformers();
+            if (stillWired != null) {
+                throw new Exception(String.format("It seems that %s is still being used in a wire (%s), please remove it there first in order to delete it.", toRemove, stillWired));
+            }
+            if (this.getTransformers().contains(toRemove)) {
+                this.getTransformers().remove(toRemove);
+            }
+            this.merge();
+        } catch (Exception e) { //TODO: should catch a ConstraintViolationException but doesn't..
+            toRemove.removeOrphanedWiredTransformers();
+            this.removeTransformer(toRemove);
         }
-        this.getTransformers().remove(toRemove);
-        this.merge();
     }
 
     public void removeMatcher(String matcherName) {

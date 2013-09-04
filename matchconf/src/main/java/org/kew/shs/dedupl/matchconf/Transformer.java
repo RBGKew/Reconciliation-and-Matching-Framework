@@ -81,6 +81,19 @@ public class Transformer extends Bot {
         return null;
     }
 
+    public void removeOrphanedWiredTransformers() {
+        List<WiredTransformer> all_wts = WiredTransformer.findAllWiredTransformers();
+        for (WiredTransformer wt:all_wts) {
+            try {
+                if (wt.getTransformer().getName().equals(this.getName())) {
+                    if (wt.isWireOrphan()) wt.remove();
+                }
+            } catch (Exception e) {
+                if (wt.getTransformer() == null) wt.remove();
+            }
+        }
+    }
+
     public void removeWiredTransformersLongWay() {
         List<WiredTransformer> wts;
         for (Wire wire:this.getConfiguration().getWiring()) {
