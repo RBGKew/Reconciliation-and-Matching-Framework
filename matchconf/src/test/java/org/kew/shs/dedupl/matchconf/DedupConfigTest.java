@@ -122,6 +122,13 @@ public class DedupConfigTest extends AbstractJUnit4SpringContextTests {
     }
 
     @Test
+    public void deleteConfig() {
+        createTestConfig("Igor");
+        this.config = Configuration.findConfiguration(this.config.getId());
+        this.config.remove();
+    }
+
+    @Test
     public void testSortBots() {
         createTestConfig("Zetkin");
         List<Transformer> transformers = this.config.getTransformers();
@@ -165,6 +172,8 @@ public class DedupConfigTest extends AbstractJUnit4SpringContextTests {
         // wiring
         assertThat(clone.getWiring().get(0).getId(), not(equalTo(this.wire1.getId())));
         assertThat(clone.getWiring().get(0).getId(), not(equalTo(this.wire2.getId())));
+        assertThat(clone.getWiring().get(0).getMatcher().getConfiguration().getId(), not(equalTo(this.config.getId())));
+        assertThat(clone.getWiring().get(1).getMatcher().getConfiguration().getId(), not(equalTo(this.wire1.getMatcher().getConfiguration().getId())));
         for (String fieldName:Wire.CLONE_STRING_FIELDS) {
             assertThat(clone.getWiring().get(0).getattr(fieldName, ""), equalTo(this.wire1.getattr(fieldName, "")));
             assertThat(clone.getWiring().get(1).getattr(fieldName, ""), equalTo(this.wire2.getattr(fieldName, "")));

@@ -237,3 +237,7 @@ finder list --class ~.Wire
 // Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-09-03 17:27:19
 // Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-09-04 15:11:44
 // Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-09-04 15:15:19
+// Spring Roo 1.2.5.BUILD-SNAPSHOT [rev 61090d2] log opened at 2013-09-06 00:02:33
+finder list --class ~.Wire
+finder add findWiresByMatcher
+// Spring Roo 1.2.5.BUILD-SNAPSHOT [rev 61090d2] log opened at 2013-09-06 00:50:50

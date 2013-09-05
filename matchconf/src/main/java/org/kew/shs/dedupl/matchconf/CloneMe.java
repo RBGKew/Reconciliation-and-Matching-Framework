@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.MappedSuperclass;
+import javax.persistence.PostRemove;
 
 import org.kew.shs.dedupl.matchconf.utils.GetterSetter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
@@ -16,6 +19,8 @@ import org.springframework.roo.addon.tostring.RooToString;
 @MappedSuperclass
 @RooJpaActiveRecord(mappedSuperclass=true)
 public abstract class CloneMe<T> {
+
+    protected static Logger logger = LoggerFactory.getLogger(CloneMe.class);
 
     public int getattr(String fieldName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
         return new GetterSetter<Integer>().getattr(this, fieldName);
@@ -45,6 +50,11 @@ public abstract class CloneMe<T> {
     // not using it anyway
      public static List<CloneMe<Object>> findCloneMeEntries(int firstResult, int maxResults) {
         return new ArrayList<CloneMe<Object>>();
+    }
+
+    @PostRemove
+    public void loggRemoval() {
+        logger.info("Deleted {}", this);
     }
 
 }

@@ -9,6 +9,7 @@ import javax.validation.Valid;
 
 import org.kew.shs.dedupl.matchconf.Configuration;
 import org.kew.shs.dedupl.matchconf.ConfigurationEngine;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -105,7 +106,17 @@ public class CustomConfigController {
     @RequestMapping(value = "/{configType}_configs/{configName}", method = RequestMethod.DELETE, produces = "text/html")
     public String delete(@PathVariable String configType, @PathVariable("configName") String configName, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
         Configuration configuration = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
-        configuration.remove();
+        try {
+            configuration.remove();
+        } catch (JpaSystemException e) {
+            // assuming a possibly still exotically ocurring legacy error: a wire
+            // of a *different* config uses this matcher, hence it would have a
+            // foreign key into the void and complains so the matcher can't be
+            // deleted and this config neither..
+            configuration.fixMatchersForAlienWire();
+            configuration = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
+            configuration.remove();
+        }
         uiModel.asMap().clear();
         uiModel.addAttribute("page", (page == null) ? "1" : page.toString());
         uiModel.addAttribute("size", (size == null) ? "10" : size.toString());

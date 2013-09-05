@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.EntityManager;
 import javax.persistence.OneToMany;
+import javax.persistence.PostRemove;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -16,6 +17,7 @@ import org.hibernate.annotations.SortType;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
+import org.springframework.transaction.annotation.Transactional;
 
 @RooJavaBean
 @RooToString
@@ -107,6 +109,7 @@ public class Configuration extends CloneMe<Configuration> {
             clone.getWiring().add(wire.cloneMe(clone));
         }
         clone.persist();
+        logger.info("cloned configuration {}", this);
         return clone;
     }
 
@@ -215,19 +218,15 @@ public class Configuration extends CloneMe<Configuration> {
     }
 
     public void removeTransformer(Transformer toRemove) throws Exception {
-        try {
-            Wire stillWired = toRemove.hasWiredTransformers();
-            if (stillWired != null) {
-                throw new Exception(String.format("It seems that %s is still being used in a wire (%s), please remove it there first in order to delete it.", toRemove, stillWired));
-            }
-            if (this.getTransformers().contains(toRemove)) {
-                this.getTransformers().remove(toRemove);
-            }
-            this.merge();
-        } catch (Exception e) { //TODO: should catch a ConstraintViolationException but doesn't..
-            toRemove.removeOrphanedWiredTransformers();
-            this.removeTransformer(toRemove);
+        Wire stillWired = toRemove.hasWiredTransformers();
+        if (stillWired != null) {
+            throw new Exception(String.format("It seems that %s is still being used in a wire (%s), please remove it there first in order to delete it.", toRemove, stillWired));
         }
+        if (this.getTransformers().contains(toRemove)) {
+            toRemove.removeOrphanedWiredTransformers();
+            this.getTransformers().remove(toRemove);
+        }
+        this.merge();
     }
 
     public void removeMatcher(String matcherName) {
@@ -253,5 +252,31 @@ public class Configuration extends CloneMe<Configuration> {
             }
         }
         return dicts;
+    }
+
+    public void fixMatchersForAlienWire() {
+        for (Matcher matcher:this.getMatchers()) {
+            for (Wire possibleAlienWire:Wire.findWiresByMatcher(matcher).getResultList()) {
+                Configuration possibleAlienConfig = possibleAlienWire.getConfiguration();
+                if (!possibleAlienConfig.getId().equals(this.getId())) {
+                    logger.warn("Still found an alien wire ({} from config {}!!! trying to fix that now", possibleAlienWire.getName(), this.getName());
+                    possibleAlienWire.setMatcher(possibleAlienConfig.getMatcherForName(matcher.getName()));
+                    possibleAlienWire.merge();
+                    logger.info("Released alien wire into the void");
+                }
+            }
+
+        }
+    }
+
+    @Transactional
+    public void remove() {
+        if (this.entityManager == null) this.entityManager = entityManager();
+        if (this.entityManager.contains(this)) {
+            this.entityManager.remove(this);
+        } else {
+            Configuration attached = Configuration.findConfiguration(this.getId());
+            this.entityManager.remove(attached);
+        }
     }
 }
