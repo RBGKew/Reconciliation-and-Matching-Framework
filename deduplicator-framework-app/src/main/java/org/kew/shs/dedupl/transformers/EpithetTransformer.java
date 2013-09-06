@@ -13,18 +13,17 @@ public class EpithetTransformer implements Transformer {
 	public String transform(String s) {
 		  if (s != null){
 			  s = s.replaceAll("[^A-Za-z]", "");
-			  if (s.endsWith("ana") && !s.endsWith("iana"))
-				  s = s.replaceFirst("ana$", "iana");
+			  s = s.replaceFirst("(?<=[^i])ana$", "iana");
 			  s = s.replaceFirst("aef", "if");
 			  s = s.replaceFirst("colus$", "cola");
 			  s = s.replaceFirst("us$", "a");
 			  s = s.replaceFirst("um$", "a");
 			  s = s.replaceFirst("on$", "a");
-			  s = s.replace("iae$", "i");
-			  s = s.replace("ei$", "i");
-			  s = s.replace("ae$", "i");
-			  s = s.replace("ii$", "i");
-			  s = s.replace("ioi$", "oi");
+			  s = s.replaceFirst("iae$", "i");
+			  s = s.replaceFirst("ei$", "i");
+			  s = s.replaceFirst("ae$", "i");
+			  s = s.replaceFirst("ii$", "i");
+			  s = s.replaceFirst("ioi$", "oi");
 			  s = s.replace("j", "i");
 			  s = s.replace("y", "i");
 			  s = s.replace("-", "");
