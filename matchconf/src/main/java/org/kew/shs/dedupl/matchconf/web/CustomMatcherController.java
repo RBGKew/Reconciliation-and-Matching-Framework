@@ -94,6 +94,7 @@ public class CustomMatcherController {
     // PUT: update a specific matcher
     @RequestMapping(value="/{configType}_configs/{configName}/matchers", method = RequestMethod.PUT, produces = "text/html")
     public String update(@PathVariable("configType") String configType, @PathVariable("configName") String configName, @Valid Matcher matcher, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
+        this.customValidation(configName, matcher, bindingResult);
         if (bindingResult.hasErrors()) {
             populateEditForm(uiModel, configType, configName, matcher);
             return "config_matchers/update";

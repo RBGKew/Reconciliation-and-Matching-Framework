@@ -6,12 +6,11 @@ import org.kew.shs.dedupl.util.LibraryRegister;
 public class FakeHybridSignCleaner implements Transformer {
 
 	/*
-	 * First replaces diacritic characters with their ASCII equivalent, then removes
-	 * all the non-alphabetic (== the NON-ASCII letters leaving numbers) characters.
+	 * Replaces X and x that seem to be meant as hybrid signs
 	 */
 	@Override
 	public String transform(String s) {
-		return s.replaceAll("^X ", "");
+		return s.replaceAll("^[Xx]\\s|\\s[xX]\\s", " ").replaceAll("\\s+",  " ").trim();
 	}
 
 }

@@ -11,6 +11,13 @@ public class SafeStripNonAlphaNumericsTransformerTest {
 		Transformer transformer = new SafeStripNonAlphaNumericsTransformer();
 		assertEquals("", transformer.transform(""));
 	}
+	
+	@Test
+	public void customReplacement() throws Exception {
+		SafeStripNonAlphaNumericsTransformer transformer = new SafeStripNonAlphaNumericsTransformer();
+		transformer.setB("");
+		assertEquals("hyphenatedepithet", transformer.transform("hyphenated-epithet"));
+	}
 
 	@Test
 	public void wordWithHybridSignToAscii () throws Exception {
