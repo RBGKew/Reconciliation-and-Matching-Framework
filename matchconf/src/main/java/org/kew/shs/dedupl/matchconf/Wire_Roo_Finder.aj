@@ -9,7 +9,7 @@ import org.kew.shs.dedupl.matchconf.Matcher;
 import org.kew.shs.dedupl.matchconf.Wire;
 
 privileged aspect Wire_Roo_Finder {
-
+    
     public static TypedQuery<Wire> Wire.findWiresByMatcher(Matcher matcher) {
         if (matcher == null) throw new IllegalArgumentException("The matcher argument is required");
         EntityManager em = Wire.entityManager();
@@ -17,5 +17,5 @@ privileged aspect Wire_Roo_Finder {
         q.setParameter("matcher", matcher);
         return q;
     }
-
+    
 }

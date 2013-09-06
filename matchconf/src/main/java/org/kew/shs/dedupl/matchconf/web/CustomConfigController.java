@@ -9,6 +9,7 @@ import javax.validation.Valid;
 
 import org.kew.shs.dedupl.matchconf.Configuration;
 import org.kew.shs.dedupl.matchconf.ConfigurationEngine;
+import org.kew.shs.dedupl.matchconf.Transformer;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -107,6 +108,7 @@ public class CustomConfigController {
     public String delete(@PathVariable String configType, @PathVariable("configName") String configName, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
         Configuration configuration = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
         try {
+            for (Transformer t:configuration.getTransformers()) t.removeOrphanedWiredTransformers(); // this is expensive and should go soon
             configuration.remove();
         } catch (JpaSystemException e) {
             // assuming a possibly still exotically ocurring legacy error: a wire
