@@ -37,6 +37,12 @@ public class SafeStripNonAlphaNumericsTransformerTest {
 	}
 
 	@Test
+	public void replaceNDashes () throws Exception {
+		Transformer transformer = new SafeStripNonAlphaNumericsTransformer();
+		assertEquals("hello ndash", transformer.transform("hello–ndash"));
+	}
+
+	@Test
 	public void testDifferentDiacritics () throws Exception {
 		Transformer transformer = new SafeStripNonAlphaNumericsTransformer();
 		assertEquals("Sorensen", transformer.transform("Sørensen"));
@@ -45,6 +51,7 @@ public class SafeStripNonAlphaNumericsTransformerTest {
 		assertEquals("E Desv", transformer.transform("É.Desv."));
 		assertEquals("c or c", transformer.transform("č or ĉ"));
 		assertEquals("L and l", transformer.transform("Ł and ł"));
+		assertEquals("A", transformer.transform("Ă"));
 	}
 
 }

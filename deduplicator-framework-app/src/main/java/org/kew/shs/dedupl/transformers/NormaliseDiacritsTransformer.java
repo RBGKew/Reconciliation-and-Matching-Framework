@@ -13,11 +13,10 @@ public class NormaliseDiacritsTransformer implements Transformer {
 	static Map<String,String> ADDITIONAL_REPLACEMENTS = new HashMap<String,String>() {{
 		put("Ø", "O");
 		put("ø", "o");
-		put("č|ĉ", "c");
 		put("Ł", "L");
 		put("ł", "l");
-		put("Ă", "A");
-		put("—", "-");
+		put("—", "-"); // emdash to hyphen
+		put("–", "-"); // ndash to hyphen
 	}};
 
 	@Override
