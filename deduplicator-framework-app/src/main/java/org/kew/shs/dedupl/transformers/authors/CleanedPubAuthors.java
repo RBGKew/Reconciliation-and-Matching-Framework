@@ -4,7 +4,8 @@ import org.kew.shs.dedupl.transformers.Transformer;
 import org.kew.shs.dedupl.util.LibraryRegister;
 
 /**
- * Cleans ex after in after removing the basionym.
+ * Cleans ex (StripExAuthor) after in (StripInAuthor) after removing the
+ * basionym (StripBasionymAuthor).
  */
 @LibraryRegister(category="transformers")
 public class CleanedPubAuthors implements Transformer {

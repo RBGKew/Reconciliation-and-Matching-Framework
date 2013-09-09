@@ -52,6 +52,15 @@ public class SirnameExtracterTest {
     }
 
     @Test
+    public void dealWithHyphenatedNames() throws Exception {
+        Transformer transformer = new SirnameExtracter();
+        String author = "J.-C.Belmondo & H.-J.Bladibla";
+        assertEquals("Belmondo & Bladibla", transformer.transform(author));
+        author = "E. Wainwright-Deri & F.-S.Schmidt-Soltau";
+        assertEquals("Wainwright-Deri & Schmidt-Soltau", transformer.transform(author));
+    }
+
+    @Test
     public void additionalCases() throws Exception {
         Transformer transformer = new SirnameExtracter();
         String author = "L. ex Somebody";

@@ -23,7 +23,7 @@ public class RomanNumeralTransformer implements Transformer{
         50, 40, 10, 9, 5, 4, 1 };
 
 	static{
-		for (int i = 1; i <= 500; i++){
+		for (int i = 1; i <= 5000; i++){
 			map.put(toRomanValue(i), Integer.toString(i));
 		}
 	}

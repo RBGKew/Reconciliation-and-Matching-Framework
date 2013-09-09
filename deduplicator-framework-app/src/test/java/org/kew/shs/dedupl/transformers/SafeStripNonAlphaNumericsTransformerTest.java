@@ -15,7 +15,7 @@ public class SafeStripNonAlphaNumericsTransformerTest {
 	@Test
 	public void customReplacement() throws Exception {
 		SafeStripNonAlphaNumericsTransformer transformer = new SafeStripNonAlphaNumericsTransformer();
-		transformer.setB("");
+		transformer.setReplaceWith("");
 		assertEquals("hyphenatedepithet", transformer.transform("hyphenated-epithet"));
 	}
 
