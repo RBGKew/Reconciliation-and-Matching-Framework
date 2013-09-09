@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.kew.shs.dedupl.util.LibraryRegister;
+
 /**
  * Uses a Dictionary object of which it iterate over the keys to use as regular
  * expression; if this pattern matches, it transforms the string accordingly.
@@ -11,6 +13,7 @@ import java.util.regex.Pattern;
  * If multiTransform is set it goes on through the whole list of keys in the
  * same way, otherwise it returns after the first match.
  */
+@LibraryRegister(category="transformers")
 public class DictionaryRegexTransformer extends DictionaryTransformer {
 
     private boolean multiTransform = false;
