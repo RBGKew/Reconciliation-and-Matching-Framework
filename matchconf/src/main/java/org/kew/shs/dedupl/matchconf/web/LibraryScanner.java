@@ -2,6 +2,7 @@ package org.kew.shs.dedupl.matchconf.web;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,12 @@ public class LibraryScanner {
             String packageName = getPackageName(clazz.getName());
             if (items.get(category).get(packageName) == null) items.get(category).put(packageName, new ArrayList<String>());
             items.get(category).get(packageName).add(clazz.getSimpleName());
+        }
+        for (Map<String, List<String>> itemMap:items.values()) {
+            for (List<String> itemList:itemMap.values()) {
+                Collections.sort(itemList);
+            }
+
         }
         return items;
     }
