@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.kew.shs.dedupl.util.Dict;
 import org.kew.shs.dedupl.util.Dictionary;
 import org.supercsv.io.CsvListWriter;
 import org.supercsv.prefs.CsvPreference;
@@ -17,8 +18,12 @@ import com.google.common.io.Files;
 
 public class DictionaryTransformerTest {
 
-     File dictFile;
+    File dictFile;
 
+	public Dict getDict() {
+		return new Dictionary();
+	}
+	
     @Before
     public void createDictFile() throws IOException {
         File tempDir = Files.createTempDir();
@@ -33,7 +38,7 @@ public class DictionaryTransformerTest {
 
     @Test
     public void test() throws IOException {
-        Dictionary dict = new Dictionary();
+        Dict dict = new Dictionary();
         dict.setFilePath(this.dictFile.toString());
         dict.setFileDelimiter("&#09;");
         DictionaryTransformer transformer = new DictionaryTransformer();
