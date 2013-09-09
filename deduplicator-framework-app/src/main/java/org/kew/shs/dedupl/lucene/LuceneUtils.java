@@ -196,12 +196,12 @@ public class LuceneUtils {
         return sb.toString();
     }
 
-    public static boolean recordsMatch(Document from, Document to, List<Property> properties){
+    public static boolean recordsMatch(Document from, Document to, List<Property> properties) throws Exception{
         Map<String,String> map = doc2Map(from);
         return recordsMatch(map, to, properties);
     }
 
-    public static boolean recordsMatch(Map<String,String> from, Document to, List<Property> properties){
+    public static boolean recordsMatch(Map<String,String> from, Document to, List<Property> properties) throws Exception{
         boolean recordMatch = false;
         logger.debug("Comparing records: " + from.get(Configuration.ID_FIELD_NAME) + " " + to.get(Configuration.ID_FIELD_NAME));
         for (Property p : properties){

@@ -55,7 +55,7 @@ public class CapitalLettersMatcher extends CommonTokensMatcher{
 		return null;
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		CapitalLettersMatcher m = new CapitalLettersMatcher();
 		System.out.println(m.matches("Addit. Fl. Jam.", "Bull. Inst. Jamaica, Sci. Ser."));
 		CommonTokensMatcher cm = new CommonTokensMatcher();

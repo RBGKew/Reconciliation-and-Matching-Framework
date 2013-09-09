@@ -8,44 +8,44 @@ import org.junit.Test;
 public class ExactMatchingMatcherTest {
 
 	@Test
-	public void testNullMatches() {
+	public void testNullMatches() throws Exception {
 		Matcher matcher = new ExactMatcher();
 		assertTrue(matcher.matches(null, null));
 	}
 
 	@Test
-	public void testBlankMatches() {
+	public void testBlankMatches() throws Exception {
 		Matcher matcher = new ExactMatcher();
 		assertTrue(matcher.matches("", ""));
 	}
 
 	@Test
-	public void testNullBlankMatches() {
+	public void testNullBlankMatches() throws Exception {
 		Matcher matcher = new ExactMatcher();
 		assertFalse(matcher.matches("", null));
 		assertFalse(matcher.matches(null,""));
 	}
 
 	@Test
-	public void testStringMatches() {
+	public void testStringMatches() throws Exception {
 		Matcher matcher = new ExactMatcher();
 		assertTrue(matcher.matches("one", "one"));
 	}
 
 	@Test
-	public void testStringCaseMatches() {
+	public void testStringCaseMatches() throws Exception {
 		Matcher matcher = new ExactMatcher();
 		assertFalse(matcher.matches("one", "One"));
 	}
 
 	@Test
-	public void testStringTrimMatches() {
+	public void testStringTrimMatches() throws Exception {
 		Matcher matcher = new ExactMatcher();
 		assertFalse(matcher.matches("one", "one "));
 	}
 
 	@Test
-	public void testStringWithWhitespaces () {
+	public void testStringWithWhitespaces () throws Exception {
 		Matcher matcher = new ExactMatcher();
 		assertTrue(matcher.matches("hello kitty", "hello kitty"));
 	}

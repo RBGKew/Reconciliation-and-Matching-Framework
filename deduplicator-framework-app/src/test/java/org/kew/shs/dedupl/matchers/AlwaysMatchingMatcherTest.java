@@ -7,22 +7,22 @@ import org.junit.Test;
 public class AlwaysMatchingMatcherTest {
 
 	@Test
-	public void testNullMatches() {
+	public void testNullMatches() throws Exception {
 		Matcher matcher = new AlwaysMatchingMatcher();
 		assertTrue(matcher.matches(null, null));
 	}
 
-	public void testBlankMatches() {
+	public void testBlankMatches() throws Exception {
 		Matcher matcher = new AlwaysMatchingMatcher();
 		assertTrue(matcher.matches("", ""));
 	}
 
-	public void testNullBlankMatches() {
+	public void testNullBlankMatches() throws Exception {
 		Matcher matcher = new AlwaysMatchingMatcher();
 		assertTrue(matcher.matches("", null));
 	}
 
-	public void testStringMatches() {
+	public void testStringMatches() throws Exception {
 		Matcher matcher = new AlwaysMatchingMatcher();
 		assertTrue(matcher.matches("one", "two"));
 	}

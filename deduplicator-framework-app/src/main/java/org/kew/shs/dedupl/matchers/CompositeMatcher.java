@@ -13,7 +13,7 @@ public abstract class CompositeMatcher implements Matcher{
 
 	protected List<Matcher> matchers;
 
-	public abstract boolean matches(String s1, String s2);
+	public abstract boolean matches(String s1, String s2) throws Exception;
 	
 	public List<Matcher> getMatchers() {
 		return matchers;

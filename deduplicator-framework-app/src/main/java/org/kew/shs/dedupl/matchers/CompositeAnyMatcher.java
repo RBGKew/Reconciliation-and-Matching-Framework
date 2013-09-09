@@ -12,7 +12,7 @@ import org.kew.shs.dedupl.util.LibraryRegister;
 @LibraryRegister(category="matchers")
 public class CompositeAnyMatcher extends CompositeMatcher{
 
-	public boolean matches(String s1, String s2) {
+	public boolean matches(String s1, String s2) throws Exception {
 		boolean matches = false;
 		for (Matcher m : matchers)
 			if (m.matches(s1, s2)){

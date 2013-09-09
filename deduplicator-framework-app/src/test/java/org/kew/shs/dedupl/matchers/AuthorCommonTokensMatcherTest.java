@@ -8,24 +8,21 @@ import org.junit.Test;
 public class AuthorCommonTokensMatcherTest {
 
 	@Test
-	public void testMatchesExactly () {
+	public void testMatchesExactly () throws Exception {
 		AuthorCommonTokensMatcher matcher = new AuthorCommonTokensMatcher();
 		assertTrue(matcher.matches("Hans D.", "Hans D."));
 	}
 
 	@Test
-	public void testMatchesWithpunctuation () {
+	public void testMatchesWithpunctuation () throws Exception {
 		AuthorCommonTokensMatcher matcher = new AuthorCommonTokensMatcher();
 		assertFalse(matcher.matches("Hans Delafontaine", "Hans De-la-fointaine"));
 	}
 
 	@Test
-	public void testMatchesWithandWithoutDiacrits () {
+	public void testMatchesWithDiacrits () throws Exception {
 		AuthorCommonTokensMatcher matcher = new AuthorCommonTokensMatcher();
-		// diacrits are replaced with whitespace, so the following should fail:
-		assertFalse(matcher.matches("Jaques Leblée", "Jaques Leblee"));
-		// quick double-check
-		assertTrue(matcher.matches("Jaques Leblée", "Jaques Leblée"));
+		assertTrue(matcher.matches("Jaques Leblée", "Jaques Leblee"));
 	}
 
 }

@@ -7,25 +7,25 @@ import org.junit.Test;
 public class NeverMatchingMatcherTest {
 
 	@Test
-	public void testNullMatches() {
+	public void testNullMatches() throws Exception {
 		Matcher matcher = new NeverMatchingMatcher();
 		assertFalse(matcher.matches(null, null));
 	}
 
 	@Test
-	public void testBlankMatches() {
+	public void testBlankMatches() throws Exception {
 		Matcher matcher = new NeverMatchingMatcher();
 		assertFalse(matcher.matches("", ""));
 	}
 
 	@Test
-	public void testNullBlankMatches() {
+	public void testNullBlankMatches() throws Exception {
 		Matcher matcher = new NeverMatchingMatcher();
 		assertFalse(matcher.matches("", null));
 	}
 
 	@Test
-	public void testStringMatches() {
+	public void testStringMatches() throws Exception {
 		Matcher matcher = new NeverMatchingMatcher();
 		assertFalse(matcher.matches("one", "one"));
 	}

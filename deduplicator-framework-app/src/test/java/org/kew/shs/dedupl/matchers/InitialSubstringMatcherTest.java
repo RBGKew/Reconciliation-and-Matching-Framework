@@ -17,7 +17,7 @@ public class InitialSubstringMatcherTest {
 
 	}
 	@Test
-	public void exactMatch () {
+	public void exactMatch () throws Exception {
 		Matcher matcher = new InitialSubstringMatcher();
 		assertTrue(matcher.matches("2012", "2012"));
 	}

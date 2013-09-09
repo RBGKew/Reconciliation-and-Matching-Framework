@@ -15,7 +15,7 @@ package org.kew.shs.dedupl.matchers;
  */
 public interface Matcher {
 
-	public boolean matches(String s1, String s2);
+	public boolean matches(String s1, String s2) throws Exception;
 	public boolean isExact();
 	public int getCost();
 	public String getExecutionReport();

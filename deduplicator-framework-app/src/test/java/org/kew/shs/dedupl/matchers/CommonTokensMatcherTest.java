@@ -9,24 +9,13 @@ import org.junit.Test;
 public class CommonTokensMatcherTest {
 
 	@Test
-	public void testMatchesExactly () {
+	public void testMatchesExactly () throws Exception {
 		Matcher matcher = new CommonTokensMatcher();
 		assertTrue(matcher.matches("abc 123!", "abc 123!"));
 	}
 
 	@Test
-	public void testMatchesWhatAboutWhitespaceAndPunctuation () {
-		Matcher matcher = new CommonTokensMatcher();
-		// translates non-alphanumerics into whitespaces..
-		assertTrue(matcher.matches("abc 123!", "abc?123!"));
-		// ..which doesn't mean it ignores whitespaces at all!
-		assertFalse(matcher.matches("abc123!", "abc?123!"));
-		// double whitespaces are replace with one whitespace
-		assertTrue(matcher.matches("abc 123!", "abc  123!"));
-	}
-
-	@Test
-	public void testCommonTokens () {
+	public void testCommonTokens () throws Exception {
 		CommonTokensMatcher matcher = new CommonTokensMatcher();
 		// default acceptance is a ratio of 0.5
 		assertTrue(matcher.matches("first sec third", "first sec diff"));
