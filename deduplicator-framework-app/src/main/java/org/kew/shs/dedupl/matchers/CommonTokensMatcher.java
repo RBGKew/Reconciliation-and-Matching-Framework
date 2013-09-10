@@ -32,28 +32,20 @@ public class CommonTokensMatcher implements Matcher {
 	public boolean matches(String s1, String s2) throws Exception {
 		logger.debug("s1: " + s1);
 		logger.debug("s2: " + s2);
-		boolean matches = false;
-		if (s1 == null && s2 == null)
-			matches = true;
-		else{
-			try{
-			    String[] a1 = convToArray(s1);
-			    logger.debug(Arrays.toString(a1));
-			    
-			    String[] a2 = convToArray(s2);
-			    logger.debug(Arrays.toString(a2));
-			    
-			    matches = calculateTokensInCommon(a1,a2);
-			}
-			catch (Exception e) {
-				;
-			}
-		}
-		return matches;
+		if (s1 == null && s2 == null) return true;
+	    String[] a1 = convToArray(s1);
+	    logger.debug(Arrays.toString(a1));
+	    String[] a2 = convToArray(s2);
+	    logger.debug(Arrays.toString(a2));
+		return calculateTokensInCommon(a1,a2);
 	}
 
 	private String[] convToArray(String s){
-		return s.split(this.delimiter);
+		String[] a = s.split(this.delimiter);
+		// if delimiter is blank we want every element to be represented as one item in the array;
+		// however, the first element would be blank, which we correct here.
+		if (this.getDelimiter() == "") a = Arrays.copyOfRange(a, 1, a.length);
+		return a;
 	}
 	
 	public Boolean calculateTokensInCommon(String[] s1, String[] s2){

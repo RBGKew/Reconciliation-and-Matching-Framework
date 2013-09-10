@@ -9,11 +9,16 @@ import org.kew.shs.dedupl.util.LibraryRegister;
  * anywhere in the string if surrounded by white-spaces.
  */
 @LibraryRegister(category="transformers")
-public class FakeHybridSignCleaner implements Transformer {
+public class FakeHybridSignCleaner extends A2BTransformer {
 
-    @Override
-    public String transform(String s) {
-        return s.replaceAll("^[Xx]\\s|\\s[xX]\\s", " ").replaceAll("\\s+",  " ").trim();
-    }
+	private String a = "^[Xx]\\s|\\s[xX]\\s";
+	private String b = " ";
+	
+	public String getA() {
+		return this.a;
+	}
+	public String getB() {
+		return this.b;
+	}
 
 }

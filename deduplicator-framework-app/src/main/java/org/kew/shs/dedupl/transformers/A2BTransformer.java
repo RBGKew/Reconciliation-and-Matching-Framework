@@ -1,12 +1,17 @@
 package org.kew.shs.dedupl.transformers;
 
-public class A2BTransformer implements Transformer {
+public class A2BTransformer extends RegexDefCollection implements Transformer {
 
-    private String a = "";
-    private String b = "";
+    protected String a = "";
+    protected String b = "";
+    private boolean removeMultipleWhitespaces = true;
+    private boolean trimIt = true;
 
     public String transform(String s) {
-        return s.replaceAll(a, b);
+        s = s.replaceAll(this.getA(), this.getB());
+        if (this.removeMultipleWhitespaces) s = s.replaceAll("\\s+", " ");
+        if (this.trimIt) s = s.trim();
+        return s;
     }
 
     public String getA() {
@@ -21,5 +26,21 @@ public class A2BTransformer implements Transformer {
     public void setB(String b) {
         this.b = b;
     }
+
+	public boolean isRemoveMultipleWhitespaces() {
+		return removeMultipleWhitespaces;
+	}
+
+	public void setRemoveMultipleWhitespaces(boolean removeMultipleWhitespaces) {
+		this.removeMultipleWhitespaces = removeMultipleWhitespaces;
+	}
+
+	public boolean isTrimIt() {
+		return trimIt;
+	}
+
+	public void setTrimIt(boolean trimIt) {
+		this.trimIt = trimIt;
+	}
 
 }

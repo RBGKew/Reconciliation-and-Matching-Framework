@@ -1,7 +1,7 @@
 package org.kew.shs.dedupl.matchers;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -22,5 +22,14 @@ public class CommonTokensMatcherTest {
 		assertFalse(matcher.matches("first sec third", "first diff diff"));
 		matcher.setMinRatio(0.2);
 		assertTrue(matcher.matches("first sec third", "first diff diff"));
+	}
+	
+	@Test
+	public void testDelimiter() throws Exception {
+		CommonTokensMatcher matcher = new CommonTokensMatcher();
+		assertFalse(matcher.matches("USA", "U.S.A."));
+		matcher.setDelimiter("");
+		assertTrue(matcher.matches("USA", "U.S.A."));
+		assertTrue(matcher.matches("abc", "abcd"));
 	}
 }
