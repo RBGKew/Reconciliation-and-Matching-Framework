@@ -25,16 +25,9 @@ public class InitialSubstringMatcherTest {
 	@Test
 	public void PrefixSize () {
 		InitialSubstringMatcher matcher = new InitialSubstringMatcher();
-		// TODO: if prefixSize is not set, it appears be set to 0 and to return *always* true..
-		assertTrue(matcher.matches("2012", "something else"));
-		// if prefixSize => the length of at least one of the strings, it doesn't match
-		// TODO: why equals?
+		assertTrue(matcher.matches("2012", "201something else"));
+		assertTrue(matcher.matches("2012", "2013"));
 		matcher.setPrefixSize(4);
 		assertFalse(matcher.matches("2012", "2013"));
-		// these two should match on the first three digits
-		matcher.setPrefixSize(3);
-		assertTrue(matcher.matches("2012", "2013"));
-		// these should not match then
-		assertFalse(matcher.matches("2012", "2022"));
 	}
 }

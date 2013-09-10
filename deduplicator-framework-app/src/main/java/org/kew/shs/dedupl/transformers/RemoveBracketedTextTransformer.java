@@ -10,7 +10,7 @@ import org.kew.shs.dedupl.util.LibraryRegister;
 @LibraryRegister(category="transformers")
 public class RemoveBracketedTextTransformer extends A2BTransformer {
 	
-	private String a = String.format("%s|%s", ROUND_BRACKETS_AND_CONTENT, SQUARE_BRACKETS_AND_CONTENT);
+	final private String a = String.format("%s|%s", ROUND_BRACKETS_AND_CONTENT, SQUARE_BRACKETS_AND_CONTENT);
 
 	public String getA() {
 		return this.a;

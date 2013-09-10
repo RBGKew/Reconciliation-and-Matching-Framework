@@ -11,8 +11,8 @@ import org.kew.shs.dedupl.util.LibraryRegister;
 @LibraryRegister(category="transformers")
 public class FakeHybridSignCleaner extends A2BTransformer {
 
-	private String a = "^[Xx]\\s|\\s[xX]\\s";
-	private String b = " ";
+	final private String a = "^[Xx]\\s|\\s[xX]\\s";
+	final private String b = " ";
 	
 	public String getA() {
 		return this.a;

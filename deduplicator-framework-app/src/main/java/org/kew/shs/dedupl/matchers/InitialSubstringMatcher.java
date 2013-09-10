@@ -12,22 +12,18 @@ import org.kew.shs.dedupl.util.LibraryRegister;
 public class InitialSubstringMatcher implements Matcher {
 
 	public static int COST = 0;
-	public int prefixSize;
+	public int prefixSize = 3;
 	
 	public int getCost() {
 		return COST;
 	}
 
 	public boolean matches(String s1, String s2) {
-		boolean matches = false;
-		if (s1 == null && s2 == null)
-			matches = true;
-		else{
-			if ((s1.length() > prefixSize) && (s2.length() > prefixSize )){
-				matches=s1.substring(0, prefixSize).equals(s2.substring(0, prefixSize));
-			}
+		if (s1 == null && s2 == null) return true;
+		if ((s1.length() > prefixSize) && (s2.length() > prefixSize )){
+			return s1.substring(0, prefixSize).equals(s2.substring(0, prefixSize));
 		}
-		return matches;
+		return false;
 	}
 
 	public boolean isExact() {

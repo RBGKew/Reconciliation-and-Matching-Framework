@@ -2,6 +2,13 @@ package org.kew.shs.dedupl.transformers;
 
 import org.kew.shs.dedupl.util.LibraryRegister;
 
+/**
+ * A generic transformer that searches for all occurrences of a pattern (regEx)
+ * `a` in a string and replaces each with a string `b`;
+ *
+ * It takes two optional parameters, `removeMultipleWhitespaces` (default true) and
+ * `trimIt` (default true)
+ */
 @LibraryRegister(category="transformers")
 public class A2BTransformer extends RegexDefCollection implements Transformer {
 
@@ -30,20 +37,20 @@ public class A2BTransformer extends RegexDefCollection implements Transformer {
         this.b = b;
     }
 
-	public boolean isRemoveMultipleWhitespaces() {
-		return removeMultipleWhitespaces;
-	}
+    public boolean isRemoveMultipleWhitespaces() {
+        return removeMultipleWhitespaces;
+    }
 
-	public void setRemoveMultipleWhitespaces(boolean removeMultipleWhitespaces) {
-		this.removeMultipleWhitespaces = removeMultipleWhitespaces;
-	}
+    public void setRemoveMultipleWhitespaces(boolean removeMultipleWhitespaces) {
+        this.removeMultipleWhitespaces = removeMultipleWhitespaces;
+    }
 
-	public boolean isTrimIt() {
-		return trimIt;
-	}
+    public boolean isTrimIt() {
+        return trimIt;
+    }
 
-	public void setTrimIt(boolean trimIt) {
-		this.trimIt = trimIt;
-	}
+    public void setTrimIt(boolean trimIt) {
+        this.trimIt = trimIt;
+    }
 
 }

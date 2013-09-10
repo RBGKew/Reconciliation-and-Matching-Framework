@@ -1,6 +1,6 @@
 package org.kew.shs.dedupl.transformers;
 
-public class CapitalLettersTransformer extends A2BTransformer {
+public class CapitalLettersExtractor extends A2BTransformer {
 
     final private String a = "[^A-Z]";
     private String b = " ";
@@ -13,6 +13,9 @@ public class CapitalLettersTransformer extends A2BTransformer {
     }
     public String getB() {
         return this.b;
+    }
+    public void setB(String b) {
+        this.b = b;
     }
 
 }
