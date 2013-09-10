@@ -2,7 +2,7 @@ package org.kew.shs.dedupl.transformers;
 
 public class CapitalLettersTransformer extends A2BTransformer {
 
-    private String a = "[^A-Z]";
+    final private String a = "[^A-Z]";
     private String b = " ";
 
     // Without specifying the getters here Java inheritance would return `a` and

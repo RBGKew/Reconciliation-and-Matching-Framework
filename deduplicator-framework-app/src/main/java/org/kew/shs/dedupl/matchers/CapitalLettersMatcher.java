@@ -7,8 +7,6 @@ import org.kew.shs.dedupl.util.LibraryRegister;
 import com.googlecode.ehcache.annotations.Cacheable;
 
 
-
-
 /**
  * This matcher tests for common tokens using only the capital letters in the strings supplied.
  * @author nn00kg

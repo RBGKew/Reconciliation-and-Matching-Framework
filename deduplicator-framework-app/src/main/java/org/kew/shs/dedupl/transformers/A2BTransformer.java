@@ -1,5 +1,8 @@
 package org.kew.shs.dedupl.transformers;
 
+import org.kew.shs.dedupl.util.LibraryRegister;
+
+@LibraryRegister(category="transformers")
 public class A2BTransformer extends RegexDefCollection implements Transformer {
 
     protected String a = "";
