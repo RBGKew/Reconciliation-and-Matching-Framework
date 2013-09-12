@@ -39,7 +39,7 @@ public class BotEngine {
 					}
 					key = paramTuple[0];
 					value = paramTuple[1];
-					if (this.bot.getClassName().contains("Dict") && key.equals("dict")) {
+					if ((this.bot.getClassName().contains("Dict") || this.bot.getClassName().contains("LevenshteinMatcher")) && key.equals("dict")) {
 						outXML.add(String.format("%s%sp:dict-ref=\"%s\"", indent, shift, value));
 					} else outXML.add(String.format("%s%sp:%s=\"%s\"", indent, shift, key, value));
 				}
