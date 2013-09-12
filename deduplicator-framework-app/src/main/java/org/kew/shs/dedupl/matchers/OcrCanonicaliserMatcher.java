@@ -8,7 +8,6 @@ import org.kew.shs.dedupl.util.LibraryRegister;
  * @author nn00kg
  *
  */
-@LibraryRegister(category="matchers")
 public class OcrCanonicaliserMatcher implements Matcher {
 
 	public static int COST = 0;
