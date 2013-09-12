@@ -11,7 +11,6 @@ import org.kew.shs.dedupl.util.LibraryRegister;
  * 'continue' statement in the reporting logic, without swallowing the record
  * itself away
  */
-@LibraryRegister(category="reporters")
 public class Piper {
 
     private Reporter reporter;
