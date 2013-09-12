@@ -1,5 +1,6 @@
 package org.kew.shs.dedupl.transformers;
 
+
 public abstract class RegexDefCollection {
 
 	protected String EX_MARKER = " ex ";
@@ -10,6 +11,7 @@ public abstract class RegexDefCollection {
 	// to catch (more than one) occurrences of bracket-pairs incl. their content
 	protected String ROUND_BRACKETS_AND_CONTENT = "\\([^\\(\\)]*?\\)";
 	protected String SQUARE_BRACKETS_AND_CONTENT = "\\[[^\\[\\]]*?\\]";
+	protected String CURLY_BRACKETS_AND_CONTENT = "\\{[^\\{\\}]*?\\}";
 
     protected String ALPHANUMDIAC = "[a-zA-ZáéíóúÁÉÍÓÚâêîôÂÊÎÔãõÃĂÕçÇ]"; // to include diacritics in alphanumerics
 

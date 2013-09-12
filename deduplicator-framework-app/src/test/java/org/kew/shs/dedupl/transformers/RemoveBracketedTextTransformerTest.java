@@ -35,6 +35,12 @@ public class RemoveBracketedTextTransformerTest {
 	}
 
 	@Test
+	public void removeRoundBracketsWithoutText () throws Exception {
+		Transformer transformer = new RemoveBracketedTextTransformer();
+		assertEquals("text", transformer.transform("te()xt"));
+	}
+
+	@Test
 	public void removeSquareBracketsWithText () throws Exception {
 		Transformer transformer = new RemoveBracketedTextTransformer();
 		assertEquals("text", transformer.transform("[text] text"));
@@ -47,9 +53,15 @@ public class RemoveBracketedTextTransformerTest {
 	}
 
 	@Test
-	public void removeRoundBracketsWithoutText () throws Exception {
+	public void removeCurlyBracketsWithText () throws Exception {
 		Transformer transformer = new RemoveBracketedTextTransformer();
-		assertEquals("text", transformer.transform("te()xt"));
+		assertEquals("text", transformer.transform("{text} text"));
+	}
+
+	@Test
+	public void removeCurlyBracketsWithoutText () throws Exception {
+		Transformer transformer = new RemoveBracketedTextTransformer();
+		assertEquals("text", transformer.transform("text{}"));
 	}
 
 	@Test
