@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import org.kew.shs.dedupl.util.Dictionary;
+
 public class LevenshteinMatcherTest {
 
     @Test
@@ -13,6 +15,16 @@ public class LevenshteinMatcherTest {
         assertTrue(matcher.matches("hallo", "haaallo"));
         matcher.setMaxDistance(1);
         assertFalse(matcher.matches("hallo", "haaallo"));
+    }
+
+    @Test
+    public void testFalsePositives() {
+        LevenshteinMatcher matcher = new LevenshteinMatcher();
+        matcher.setMaxDistance(3);
+        assertTrue(matcher.matches("hinz", "kunz"));
+        Dictionary falsePositives = new Dictionary() {{ put("hinz", "kunz"); }};
+        matcher.setDict(falsePositives);
+        assertFalse(matcher.matches("hinz", "kunz"));
     }
 
 }

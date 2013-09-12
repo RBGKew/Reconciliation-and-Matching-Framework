@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import com.googlecode.ehcache.annotations.Cacheable;
 
+import org.kew.shs.dedupl.util.Dictionary;
+
 /**
  * This matcher uses the Levenshtein edit distance algorithm 
  * (provided by the Apache StringUtils class).  
@@ -28,14 +30,14 @@ public class LevenshteinMatcher implements Matcher {
 
     private static Logger logger = LoggerFactory.getLogger(LevenshteinMatcher.class);
 	
-	private Map<String,String> falsePositives;
+	private Dictionary dict;
 	
-	public Map<String, String> getFalsePositives() {
-		return falsePositives;
+	public Dictionary getDict() {
+		return dict;
 	}
 
-	public void setFalsePositives(Map<String, String> falsePositives) {
-		this.falsePositives = falsePositives;
+	public void setDict(Dictionary dict) {
+		this.dict = dict;
 	}
 
 	public int getCost() {
@@ -68,6 +70,7 @@ public class LevenshteinMatcher implements Matcher {
 	
 	private boolean doFalsePositiveCheck(String s1, String s2){
 		boolean passed = true;
+        Dictionary falsePositives = this.getDict();
 		if (falsePositives != null){
 			if (falsePositives.containsKey(s1) && falsePositives.get(s1).equals(s2))
 				passed = false;
