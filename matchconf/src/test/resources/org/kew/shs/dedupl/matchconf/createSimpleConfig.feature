@@ -13,7 +13,7 @@ Feature: Create a simple configuration
             | name               | packageName                     | className                     | params         |
             | funkyTransformer   | org.kew.shs.dedupl.transformers | DictionaryTransformer         | dict=funkyDict |
             | anotherTransformer | org.kew.shs.dedupl.transformers | SafeStripNonAlphasTransformer |                |
-            | 02BlankTransformer | org.kew.shs.dedupl.transformers | ZeroToBlankTransformer        |                |
+            | a2BTransformer     | org.kew.shs.dedupl.transformers | A2BTransformer                | a="a", b=" "   |
         And he has added a matcher for the second column:
             | name         | packageName                 | className    | params            |
             | matchExactly | org.kew.shs.dedupl.matchers | ExactMatcher | blanksMatch=false |
@@ -51,7 +51,9 @@ Feature: Create a simple configuration
                     p:filePath="/some_other_path/dict.txt" />
                 <bean id="matchExactly" class="org.kew.shs.dedupl.matchers.ExactMatcher"
                     p:blanksMatch="false"/>
-                <bean id="02BlankTransformer" class="org.kew.shs.dedupl.transformers.ZeroToBlankTransformer" />
+                <bean id="a2BTransformer" class="org.kew.shs.dedupl.transformers.A2BTransformer"
+                    p:a="a"
+                    p:b=" "/>
                 <bean id="anotherTransformer" class="org.kew.shs.dedupl.transformers.SafeStripNonAlphasTransformer" />
                 <bean id="funkyTransformer" class="org.kew.shs.dedupl.transformers.DictionaryTransformer"
                     p:dict-ref="funkyDict"/>
@@ -89,7 +91,7 @@ Feature: Create a simple configuration
                             <util:list id="1">
                                 <ref bean="funkyTransformer"/>
                                 <ref bean="anotherTransformer"/>
-                                <ref bean="02BlankTransformer"/>
+                                <ref bean="a2BTransformer"/>
                             </util:list>
                         </property>
                     </bean>

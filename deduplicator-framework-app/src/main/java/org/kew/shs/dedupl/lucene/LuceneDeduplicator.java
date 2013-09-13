@@ -50,10 +50,6 @@ public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration
                 Document fromDoc = getFromLucene(i);
 
                 Map<String, String> docAsMap = LuceneUtils.doc2Map(fromDoc);
-                String myVal = docAsMap.get("MR_test_config_cluster_size");
-                if (myVal != null) {
-                    String start = "debugger";
-                }
                 logger.debug("'Source'-Document from index: {}", docAsMap);
                 // pipe everything through to the output where an existing filter evals to false;
                 if (!StringUtils.isBlank(config.getRecordFilter()) && !jsEnv.evalFilter(config.getRecordFilter(), docAsMap)) {

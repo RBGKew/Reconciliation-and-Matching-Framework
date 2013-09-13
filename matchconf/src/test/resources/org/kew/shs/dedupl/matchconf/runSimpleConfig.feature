@@ -25,7 +25,9 @@ Feature: run a simple configuration
                 </bean>
                 <bean id="matchExactly" class="org.kew.shs.dedupl.matchers.ExactMatcher"
                     p:blanksMatch="false"/>
-                <bean id="02BlankTransformer" class="org.kew.shs.dedupl.transformers.ZeroToBlankTransformer" />
+                <bean id="a2BTransformer" class="org.kew.shs.dedupl.transformers.A2BTransformer"
+                    p:a="a"
+                    p:b="" />
                 <bean id="anotherTransformer" class="org.kew.shs.dedupl.transformers.SafeStripNonAlphasTransformer" />
                 <util:list id="reporters">
                     <bean class="org.kew.shs.dedupl.reporters.DedupReporter"
@@ -58,7 +60,7 @@ Feature: run a simple configuration
                         p:matcher-ref="matchExactly">
                         <property name="sourceTransformers">
                             <util:list id="1">
-                                <ref bean="02BlankTransformer"/>
+                                <ref bean="a2BTransformer"/>
                                 <ref bean="anotherTransformer"/>
                             </util:list>
                         </property>

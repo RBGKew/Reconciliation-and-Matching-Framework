@@ -37,8 +37,8 @@ public class BotEngine {
 					if (paramTuple.length != 2) {
 						throw new Exception(String.format("Wrong params configuration for %s -- params format has to be like < param1=value1, param2=value2, ..>, but was: < %s >)", this.bot.getName(), this.bot.getParams()));
 					}
-					key = paramTuple[0];
-					value = paramTuple[1];
+					key = paramTuple[0].trim();
+					value = paramTuple[1].trim().replaceAll("(\"$)|(^\")", ""); // replace surounding quotes on the values of the params
 					if ((this.bot.getClassName().contains("Dict") || this.bot.getClassName().contains("LevenshteinMatcher")) && key.equals("dict")) {
 						outXML.add(String.format("%s%sp:dict-ref=\"%s\"", indent, shift, value));
 					} else outXML.add(String.format("%s%sp:%s=\"%s\"", indent, shift, key, value));
