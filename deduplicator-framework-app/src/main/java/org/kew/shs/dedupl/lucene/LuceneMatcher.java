@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
@@ -43,6 +44,7 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
                 '"', this.getConfig().getSourceFileDelimiter().charAt(0), "\n").build();
         int i = 0;
         try (MatchConfiguration config = this.getConfig();
+             IndexReader indexReader= this.getIndexReader();
              IndexWriter indexWriter = this.indexWriter;
              CsvMapReader mr = new CsvMapReader(new FileReader(this.getConfig().getSourceFile()), csvPref)) {
 
