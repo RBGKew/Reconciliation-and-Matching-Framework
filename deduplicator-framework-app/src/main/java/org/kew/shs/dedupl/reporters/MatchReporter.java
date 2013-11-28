@@ -10,7 +10,7 @@ import org.kew.shs.dedupl.util.LibraryRegister;
 @LibraryRegister(category="reporters")
 public class MatchReporter extends LuceneReporter {
 
-    protected static String[] AVAILABLE_FIELDS = new String[] {"configLog", "no_matches", "matching_ids"};
+    protected static String[] AVAILABLE_FIELDS = new String[] {"configLog", "total_matches", "matching_ids"};
 
     public MatchReporter() {
         logger.info("I will be creating an enhanced output file for you with additional fields: " +
@@ -30,7 +30,7 @@ public class MatchReporter extends LuceneReporter {
     public void reportResults (Map<String, String> fromRecord, List<Map<String, String>> matches) throws IOException {
         String namespace = this.getNameSpacePrefix();
         fromRecord.put("configLog", this.getConfigLog());
-        fromRecord.put(namespace + "no_matches", this.getClusterSize(fromRecord, matches));
+        fromRecord.put(namespace + "total_matches", this.getClusterSize(fromRecord, matches));
         fromRecord.put(namespace + "matching_ids", this.getIDsInCluster(fromRecord, matches, this.getIdDelimiter()));
         // add the lookup values of the best match
         if (matches.size() > 0) fromRecord.putAll(Reporter.getNamespacedCopy(matches.get(0), namespace + "lookup_"));

@@ -246,7 +246,7 @@ Feature: Match WCS against Ipni
             """
         When this match config is run through the Match App
         Then a file should have been created in the same folder with the following data:
-            | id     | family_transf | genus       | genus_transf | species_epithet | species_epithet_transf | lookup_species_epithet | lookup_species_epithet_transf | configLog | no_matches | matching_ids |
+            | id     | family_transf | genus       | genus_transf | species_epithet | species_epithet_transf | lookup_species_epithet | lookup_species_epithet_transf | configLog | total_matches | matching_ids |
             | 251171 | Restionaceae  | Kulinia     | Kulinia      |                 |                        |                        |                               | aConfig   | 1          | 123456       |
             | 243223 | Restionaceae  | Empodisma   | Empodisma    | gracillimum     | gracillimum            |                        |                               | aConfig   | 0          |              |
             | 463816 | Restionaceae  | Platycaulos | Platycaulos  | mahonii         | mahonii                |                        |                               | aConfig   | 0          |              |
