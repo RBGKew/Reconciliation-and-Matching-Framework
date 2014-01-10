@@ -1,7 +1,7 @@
 package org.kew.shs.dedupl.matchers;
 
 /**
- * This matcher returns false in all cases.
+ * This matcher returns true if either of the strings is null
  * @author nn00kg
  *
  */

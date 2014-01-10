@@ -17,11 +17,10 @@ import org.slf4j.LoggerFactory;
  *
  */
 @LibraryRegister(category="matchers")
-public class CommonTokensMatcher implements Matcher {
+public class CommonTokensMatcher extends TokeniserMatcher {
 
     public static int COST = 5;
     protected double minRatio = 0.5;
-    private String delimiter = " ";
     private boolean uniqueCommonTokens = false;
 
     private static Logger logger = LoggerFactory.getLogger(CommonTokensMatcher.class);
@@ -40,14 +39,6 @@ public class CommonTokensMatcher implements Matcher {
         String[] a2 = convToArray(s2);
         logger.debug(Arrays.toString(a2));
         return calculateTokensInCommon(a1,a2);
-    }
-
-    private String[] convToArray(String s){
-        String[] a = s.split(this.delimiter);
-        // if delimiter is blank we want every element to be represented as one item in the array;
-        // however, the first element would be blank, which we correct here.
-        if (this.getDelimiter() == "") a = Arrays.copyOfRange(a, 1, a.length);
-        return a;
     }
 
     public Boolean calculateTokensInCommon(String[] s1, String[] s2){
@@ -77,14 +68,6 @@ public class CommonTokensMatcher implements Matcher {
 
     public String getExecutionReport() {
         return null;
-    }
-
-    public String getDelimiter() {
-        return delimiter;
-    }
-
-    public void setDelimiter(String delimiter) {
-        this.delimiter = delimiter;
     }
 
     public boolean isUniqueCommonTokens() {
