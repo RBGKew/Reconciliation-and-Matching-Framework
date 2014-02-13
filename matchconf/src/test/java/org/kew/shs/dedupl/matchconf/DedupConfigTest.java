@@ -138,7 +138,7 @@ public class DedupConfigTest extends AbstractJUnit4SpringContextTests {
     }
 
     public static String getattr(String method, Configuration aConfig) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-        return (String) aConfig.getClass().getMethod(method, null).invoke(aConfig, null);
+        return (String) aConfig.getClass().getMethod(method).invoke(aConfig);
     }
 
     @Test

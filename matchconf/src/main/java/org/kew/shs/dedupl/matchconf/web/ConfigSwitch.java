@@ -38,13 +38,14 @@ public class ConfigSwitch {
         String method = "countConfigurations";
         if (className.equals("match")) method = "countMatchConfigs";
         else if (className.equals("dedup")) method = "countDedupConfigs";
-        return (long) Configuration.class.getMethod(method, null).invoke(null, null);
+        return (long) Configuration.class.getMethod(method).invoke(null);
     }
 
-    public static List<Configuration> findAllConfigs(String configType) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+    @SuppressWarnings("unchecked")
+	public static List<Configuration> findAllConfigs(String configType) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
         String method = "findAllConfigurations";
         if (configType.equals("match")) method = "findAllMatchConfigs";
         else if (configType.equals("dedup")) method = "findAllDedupConfigs";
-        return (List<Configuration>) Configuration.class.getMethod(method, null).invoke(null, null);
+        return (List<Configuration>) Configuration.class.getMethod(method).invoke(null);
     }
 }

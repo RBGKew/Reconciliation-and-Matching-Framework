@@ -2,8 +2,6 @@ package org.kew.shs.dedupl.matchers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
 import org.kew.shs.dedupl.transformers.StripNonNumericCharactersTransformer;

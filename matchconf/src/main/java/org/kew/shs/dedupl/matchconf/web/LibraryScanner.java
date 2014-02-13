@@ -18,7 +18,7 @@ public class LibraryScanner {
         Map<String, Map<String, List<String>>> items = new HashMap<>();
         Reflections reflections = new Reflections("org.kew.shs.dedupl.*");
         Set<Class<?>> clazzes = reflections.getTypesAnnotatedWith(LibraryRegister.class);
-        for (Class clazz:clazzes) {
+        for (Class<?> clazz:clazzes) {
             LibraryRegister annotation = (LibraryRegister) clazz.getAnnotation(LibraryRegister.class);
             String category = annotation.category();
             if (items.get(category) == null) items.put(category,  new HashMap<String, List<String>>());

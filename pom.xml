@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.kew.shs.dedupl</groupId>
@@ -35,7 +35,7 @@
         <lucene.version>4.4.0</lucene.version>
         <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
         <reflections.version>0.9.9-RC1</reflections.version>
-        <roo.version>1.2.3.RELEASE</roo.version>
+        <roo.version>1.2.4.BUILD-SNAPSHOT</roo.version>
         <servlet-api.version>2.5</servlet-api.version>
         <slf4j.version>1.7.5</slf4j.version>
         <spring.version>3.1.0.RELEASE</spring.version>

@@ -13,6 +13,7 @@ import org.kew.shs.dedupl.DataHandler;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
+
 public class CoreApp {
 
 	public static void main(String[] args) throws Exception {
@@ -45,15 +46,16 @@ public class CoreApp {
 		return line;
 	}
 
+	/**
+	 * Get the "engine" bean from the Spring config - Spring has instantiated it
+	 * with the values set in the application-context file, which defaults to
+	 * deduplication mode. If the context provided is a matching one, the bean
+	 * definition will be changed prior to its initialisation.
+	 * @param context
+	 * @throws Exception
+	 */
 	protected static void runEngineAndCache (ConfigurableApplicationContext context) throws Exception {
-		/*
-		* Get the "engine" bean from the Spring config - Spring has instantiated it
-		* with the values set in the application-context file, which defaults to
-		* deduplication mode. If the context provided is a matching one, the bean
-		* definition will be changed prior to its initialisation.
-		* TODO: this is horrible, don't know of a better way of doing it.
-		*/
-		DataHandler engine = (DataHandler) context.getBean("engine");
+		DataHandler<?> engine = (DataHandler<?>) context.getBean("engine");
 		// Call the run method
 		engine.run();
 		// Dump the cache statistics

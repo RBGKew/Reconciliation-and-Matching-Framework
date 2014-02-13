@@ -1,6 +1,5 @@
 package org.kew.shs.dedupl.matchers;
 
-import org.kew.shs.dedupl.util.LibraryRegister;
 
 
 /**

@@ -1,15 +1,14 @@
 package org.kew.shs.dedupl.transformers.collations.ipni;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Arrays;
 import java.util.Collection;
- 
-import org.junit.Test;
+
 import org.junit.Before;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
+import org.junit.runners.Parameterized;
 
 @RunWith(Parameterized.class)
 public class CollationUtilsTest {

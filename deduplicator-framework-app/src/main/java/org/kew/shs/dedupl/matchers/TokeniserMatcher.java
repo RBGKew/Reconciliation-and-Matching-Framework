@@ -1,13 +1,6 @@
 package org.kew.shs.dedupl.matchers;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-
-import org.kew.shs.dedupl.util.LibraryRegister;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -19,8 +12,6 @@ import org.slf4j.LoggerFactory;
 public abstract class TokeniserMatcher implements Matcher {
 
     private String delimiter = " ";
-
-    private static Logger logger = LoggerFactory.getLogger(TokeniserMatcher.class);
 
     protected String[] convToArray(String s){
         String[] a = s.split(this.delimiter);
