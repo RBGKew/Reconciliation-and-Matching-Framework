@@ -1477,30 +1477,45 @@ public class CollationUtils {
 	    	BufferedWriter bw = new BufferedWriter(fw);
 			String line = null;
 	        while ((line = br.readLine()) != null) {
-	        	if ((count++ % 10000) == 0){
+	        	if ((count++ % 10000) == 0)
 	        		System.out.println(count);
-	        	}
-	        	String[] elems = line.split("\t");
+	        	String[] elems = line.split("\t",-1);
 	        	String id = elems[0];
 	        	if (elems.length > 1){
-		        	String collation = elems[1];
-		        	
-		        	String structure = new CollationStructureTransformer().transform(collation);
-		        	
-		        	String[] parsed = CollationUtils.parseCollation(collation);
-		        	
-		        	bw.write(id 
-		        			+ "\t" + collation
-		        			+ "\t" + structure
-		        			+ "\t" + parsed[SERIES_INDEX]
-		        			+ "\t" + parsed[VOL_INDEX]
-		        			+ "\t" + parsed[ISSUE_INDEX]
-		        			+ "\t" + parsed[PAGE_INDEX]
-		        			+ "\t" + parsed[TAB_OR_FIG_INDEX]
-		        			+ "\t" + parsed[YEAR_INDEX]
-		        			+ "\t" + CollationUtils.parsableCollation(collation)
-		        			+ "\t" + parsed[RULE_INDEX]
-		        			+ "\n");
+	        		if (elems.length==8){
+	        			String collation = elems[7];
+	        			if (collation.startsWith("\"")){
+	        				collation=collation.replaceFirst("\"", "");
+	        				collation=collation.replaceFirst("\"$", "");
+	        			}
+			        	String parsable=CollationUtils.parsableCollation(collation)?"Y":"N";
+			        	bw.write(elems[0]
+			        			+ "\t" + elems[1]
+			        			+ "\t" + elems[2]
+			        			+ "\t" + elems[3]
+			        			+ "\t" + elems[4]
+			        			+ "\t" + elems[5]
+			        			+ "\t" + elems[6]
+			        			+"\t" + parsable
+			        			+"\n");
+	        		}
+	        		else{
+	        			bw.write(line.replace("\t\n", "")+"\tN\n");
+	        		}
+		        	//String structure = new CollationStructureTransformer().transform(collation);
+		        	//String[] parsed = CollationUtils.parseCollation(collation);
+//		        	bw.write(id
+//		        			+ "\t" + collation
+//		        			+ "\t" + structure
+//		        			+ "\t" + parsed[SERIES_INDEX]
+//		        			+ "\t" + parsed[VOL_INDEX]
+//		        			+ "\t" + parsed[ISSUE_INDEX]
+//		        			+ "\t" + parsed[PAGE_INDEX]
+//		        			+ "\t" + parsed[TAB_OR_FIG_INDEX]
+//		        			+ "\t" + parsed[YEAR_INDEX]
+//		        			+ "\t" + CollationUtils.parsableCollation(collation)
+//		        			+ "\t" + parsed[RULE_INDEX]
+//		        			+ "\n");
 	        	}
 	        	else{
 	        		bw.write(id + "\n");
