@@ -38,10 +38,6 @@ public class LibraryScanner {
     public static String getPackageName(String packageAndClass) {
         String[] myList = packageAndClass.split("\\.");
         myList = Arrays.copyOfRange(myList, 0, myList.length - 1);
-        // crop the 'irrelevant' first bits of the package name to one character only
-        for (int i=0;i<myList.length - 2;i++) {
-            myList[i] = myList[i].substring(0,1);
-        }
         return StringUtils.join(myList, ".");
     }
 
