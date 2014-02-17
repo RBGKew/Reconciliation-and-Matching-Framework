@@ -14,6 +14,9 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
 
+/**
+ * Everything begins here.
+ */
 public class CoreApp {
 
 	public static void main(String[] args) throws Exception {
