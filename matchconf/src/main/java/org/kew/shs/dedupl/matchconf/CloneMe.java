@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PostRemove;
+import javax.persistence.PreRemove;
 
 import org.kew.shs.dedupl.matchconf.utils.GetterSetter;
 import org.slf4j.Logger;
@@ -50,6 +51,12 @@ public abstract class CloneMe<T> {
     // not using it anyway
      public static List<CloneMe<Object>> findCloneMeEntries(int firstResult, int maxResults) {
         return new ArrayList<CloneMe<Object>>();
+    }
+
+
+    @PreRemove
+    public void loggPreRemoval() {
+        logger.warn("Attempt to delete {} with id {}", this, this.getId());
     }
 
     @PostRemove
