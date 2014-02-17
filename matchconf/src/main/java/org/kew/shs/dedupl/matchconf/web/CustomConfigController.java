@@ -109,6 +109,9 @@ public class CustomConfigController {
         Configuration configuration = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
         try {
             for (Transformer t:configuration.getTransformers()) t.removeOrphanedWiredTransformers(); // this is expensive and should go soon
+            configuration.getWiring().clear();
+            configuration.merge();
+            configuration.removeTransformers();
             configuration.remove();
         } catch (JpaSystemException e) {
             // assuming a possibly still exotically ocurring legacy error: a wire
@@ -116,9 +119,6 @@ public class CustomConfigController {
             // foreign key into the void and complains so the matcher can't be
             // deleted and this config neither..
             configuration.fixMatchersForAlienWire();
-            configuration.getWiring().clear();
-            configuration.merge();
-            configuration.removeTransformers();
             configuration = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
             configuration.remove();
         }
