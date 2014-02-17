@@ -87,14 +87,16 @@ public class Transformer extends Bot {
             try {
                 if (wt.getTransformer().getName().equals(this.getName())) {
                     if (wt.isWireOrphan()) {
-                        logger.warn("Still found orphaned WiredTransformer!!! trying to remove..");
+                        logger.warn("Still found orphaned WiredTransformer with id {}!!! trying to remove..", wt.getId());
                         wt.remove();
                         logger.info("Released orphaned WiredTransformer into, er, liberty.");
                     }
                 }
             } catch (Exception e) {
                 if (wt.getTransformer() == null) {
+                    logger.warn("Still found orphaned WiredTransformer with id {}!!! trying to remove..", wt.getId());
                     wt.remove();
+                    logger.info("Released orphaned WiredTransformer into, er, liberty.");
                 } else throw e;
             }
         }

@@ -105,7 +105,7 @@ public class CustomConfigController {
     }
 
     @RequestMapping(value = "/{configType}_configs/{configName}", method = RequestMethod.DELETE, produces = "text/html")
-    public String delete(@PathVariable String configType, @PathVariable("configName") String configName, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
+    public String delete(@PathVariable String configType, @PathVariable("configName") String configName, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) throws Exception {
         Configuration configuration = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
         try {
             for (Transformer t:configuration.getTransformers()) t.removeOrphanedWiredTransformers(); // this is expensive and should go soon
@@ -116,6 +116,9 @@ public class CustomConfigController {
             // foreign key into the void and complains so the matcher can't be
             // deleted and this config neither..
             configuration.fixMatchersForAlienWire();
+            configuration.getWiring().clear();
+            configuration.merge();
+            configuration.removeTransformers();
             configuration = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
             configuration.remove();
         }
