@@ -8,6 +8,14 @@ import org.kew.shs.dedupl.reporters.LuceneReporter;
 import org.kew.shs.dedupl.reporters.Piper;
 
 
+/**
+ * A configuration doesn't do a lot, but it holds all the information,
+ * of which the most important is
+ * - how the named columns are mapped to Transformers and Matchers (via `properties`)
+ * - where are the input files (source and lookup file)
+ * - where and in which format to produce output (via `reporters`)
+ * This information is used by the implementation of DataHandler during the process.
+ */
 public abstract class Configuration implements AutoCloseable {
 
     private List<Property> properties;
@@ -47,18 +55,8 @@ public abstract class Configuration implements AutoCloseable {
     // TODO: replace
     private String scoreFieldName;
 
-    public String[] outputDefs() {
-        List<String> sourceOutputDefs = new ArrayList<>();
-        List<String> lookupOutputDefs = new ArrayList<>();
-        for (Property prop:this.getProperties()) {
-            if (prop.isAddOriginalSourceValue()) sourceOutputDefs.add(prop.getSourceColumnName());
-            if (prop.isAddTransformedSourceValue()) sourceOutputDefs.add(prop.getSourceColumnName() + "_transf");
-            if (prop.isAddOriginalLookupValue()) lookupOutputDefs.add("lookup_" + prop.getLookupColumnName());
-            if (prop.isAddTransformedLookupValue()) lookupOutputDefs.add("lookup_" + prop.getLookupColumnName() + "_transf");
-        }
-        sourceOutputDefs.addAll(lookupOutputDefs);
-        return sourceOutputDefs.toArray(new String[sourceOutputDefs.size()]);
-    }
+    public abstract String[] outputDefs();
+
     public void setupReporting() {
         for (LuceneReporter rep:this.getReporters()) {
             rep.setIdFieldName(Configuration.ID_FIELD_NAME);

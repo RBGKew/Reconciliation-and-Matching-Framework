@@ -7,9 +7,10 @@ import org.kew.shs.dedupl.matchers.Matcher;
 import org.kew.shs.dedupl.transformers.Transformer;
 
 /**
- * This is a simple JavaBean that holds configuration options relating 
+ * This is a simple JavaBean that holds configuration options relating
  * to how a value is cleaned, stored and matched.
- * @author nn00kg
+ *
+ * The mapping works via *named* columns.
  *
  */
 public class Property {
@@ -18,7 +19,7 @@ public class Property {
 	private String lookupColumnName;
 
 	private Matcher matcher;
-	
+
 	private boolean useInSelect=false;
 	private boolean useInNegativeSelect=false;
 	private boolean indexLength=false;
@@ -31,7 +32,7 @@ public class Property {
     // Matching specific as obsolete for Deduplication tasks
     private boolean addOriginalLookupValue = false;
     private boolean addTransformedLookupValue = false;
-	
+
 	private List<Transformer> sourceTransformers = new ArrayList<>();
 	private List<Transformer> lookupTransformers = new ArrayList<>();
 

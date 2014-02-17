@@ -4,6 +4,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The important aspect of a DeduplicationConfiguration is that for a
+ * deduplication process there is no real differentiation between source and
+ * lookup file as we only have one file that is matched to itself.
+ *
+ */
 public class DeduplicationConfiguration extends Configuration {
 
     // TODO: rename, possibly move to reporters
@@ -12,6 +18,7 @@ public class DeduplicationConfiguration extends Configuration {
     // TODO: replace
     private String scoreFieldName;
 
+    @Override
     public String[] outputDefs() {
         List<String> sourceOutputDefs = new ArrayList<>();
         for (Property prop:this.getProperties()) {
