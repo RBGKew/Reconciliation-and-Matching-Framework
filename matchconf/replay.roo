@@ -1,7 +1,7 @@
-project --topLevelPackage org.kew.shs.dedupl.matchconf --projectName MatchConf --java 7 --packaging JAR
+project --topLevelPackage org.kew.stringmod.matchconf --projectName MatchConf --java 7 --packaging JAR
 jpa setup --database HYPERSONIC_PERSISTENT --provider HIBERNATE 
 // set up Bot
-entity jpa --class org.kew.shs.dedupl.matchconf.Bot
+entity jpa --class org.kew.stringmod.matchconf.Bot
 field string --fieldName name 
 field string --fieldName packageName 
 field string --fieldName className 
@@ -9,7 +9,7 @@ field string --fieldName params
 field set --fieldName composedBy --type Bot --cardinality ONE_TO_MANY --mappedBy composer
 field reference --fieldName composer --type Bot --cardinality MANY_TO_ONE
 // set up Wire
-entity jpa --class org.kew.shs.dedupl.matchconf.Wire
+entity jpa --class org.kew.stringmod.matchconf.Wire
 field string columnName
 field number columnIndex --type java.lang.Integer
 field reference --fieldName matcher --type Bot
@@ -22,10 +22,10 @@ field boolean indexOriginal=false
 field boolean indexInitial=false
 field boolean useWildcard=false
 // set up Config
-entity jpa --class org.kew.shs.dedupl.matchconf.Configuration
+entity jpa --class org.kew.stringmod.matchconf.Configuration
 field string --fieldName workDirPath
 field string --fieldName inputFileName="input.csv"
-field string --fieldName packageName="org.kew.shs.dedupl.matchconf.configuration"
+field string --fieldName packageName="org.kew.stringmod.matchconf.configuration"
 field string --fieldName className="DeduplicationConfiguration"
 field set --fieldName wiring --type Wire --cardinality ONE_TO_MANY --mappedBy configuration
 field string inputFileEncoding="UTF8"
@@ -39,4 +39,4 @@ field string scoreFieldName="id"
 field reference --class Wire --fieldName configuration --type Configuration --cardinality MANY_TO_ONE
 // set up the web part
 web mvc setup 
-web mvc all --package org.kew.shs.dedupl.matchconf.web
+web mvc all --package org.kew.stringmod.matchconf.web

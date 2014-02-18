@@ -5,10 +5,10 @@
 
     <br/> <div id="config-link">for configuration: <a href="/MatchConf/${ configType }_configs/${ configName }">${ configName }</a></div> <br/>
 
-    <page:list id="pl_org_kew_shs_dedupl_matchconf_Reporter" items="${reporters}" z="SFmo6s3+U8+e12XA4JdDtU8XjLs=">
-        <table:table data="${reporters}" id="l_org_kew_shs_dedupl_matchconf_Reporter" path="/${ configType }_configs/${ configName }/reporters" z="VoHhy6VwUyQ6JiGbFnVUGU6pbbs=">
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Reporter_className" property="className" z="uYy5fj+Q1ayjW0OJaMiVOBPATyU="/>
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Reporter_name" property="name" z="ZDIgIY1tpgCC3EhQ7U/J3dOOtd8="/>
+    <page:list id="pl_org_kew_stringmod_matchconf_Reporter" items="${reporters}" z="SFmo6s3+U8+e12XA4JdDtU8XjLs=">
+        <table:table data="${reporters}" id="l_org_kew_stringmod_matchconf_Reporter" path="/${ configType }_configs/${ configName }/reporters" z="VoHhy6VwUyQ6JiGbFnVUGU6pbbs=">
+            <table:column id="c_org_kew_stringmod_matchconf_Reporter_className" property="className" z="uYy5fj+Q1ayjW0OJaMiVOBPATyU="/>
+            <table:column id="c_org_kew_stringmod_matchconf_Reporter_name" property="name" z="ZDIgIY1tpgCC3EhQ7U/J3dOOtd8="/>
         </table:table>
     </page:list>
 </div>

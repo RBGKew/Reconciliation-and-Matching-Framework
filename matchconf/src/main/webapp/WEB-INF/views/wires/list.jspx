@@ -2,14 +2,14 @@
 <div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
-    <page:list id="pl_org_kew_shs_dedupl_matchconf_Wire" items="${wires}" z="pHrV9Tymv8NNGMuYBinlVKivNx0=">
-        <table:table data="${wires}" id="l_org_kew_shs_dedupl_matchconf_Wire" path="/wires" z="mh2j7So59pSqUM85yfvMnKf4ikg=">
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Wire_useInSelect" property="useInSelect" z="kKh1sMas76ryBoMW2eh+14ZiorA="/>
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Wire_useInNegativeSelect" property="useInNegativeSelect" z="OQfgJg+TKrRVzZ8I7l1UkBC+ObA="/>
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Wire_indexLength" property="indexLength" z="r8Bqtl3Fv3TYgr5O3CH1fkxQJGM="/>
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Wire_sourceColumnName" property="sourceColumnName" z="o9aOfxdG6KdwAlKLRTId59kDy1c="/>
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Wire_lookupColumnName" property="lookupColumnName" z="xfV5khLKbl5Lrptz+43XBha4lKA="/>
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Wire_blanksMatch" property="blanksMatch" z="cjs2KU0iSqqrVctyKDLwh4h1R3c="/>
+    <page:list id="pl_org_kew_stringmod_matchconf_Wire" items="${wires}" z="/6JMhRy7a2be6sF+OcVhpTcG1nw=">
+        <table:table data="${wires}" id="l_org_kew_stringmod_matchconf_Wire" path="/wires" z="YH1xFT7HR/xTuI27MlKMV7u1rNw=">
+            <table:column id="c_org_kew_stringmod_matchconf_Wire_sourceColumnName" property="sourceColumnName" z="HalLNl0Q5moL582TX61Wu/sjtB8="/>
+            <table:column id="c_org_kew_stringmod_matchconf_Wire_lookupColumnName" property="lookupColumnName" z="NauKUxuDjAFEl2UGL/d21cUpH/o="/>
+            <table:column id="c_org_kew_stringmod_matchconf_Wire_useInSelect" property="useInSelect" z="WpdAtvklL2QkH9eQbiw4v7P+Awg="/>
+            <table:column id="c_org_kew_stringmod_matchconf_Wire_useInNegativeSelect" property="useInNegativeSelect" z="X5LnQrXp8QaqRwCf31ysr5hOgJ4="/>
+            <table:column id="c_org_kew_stringmod_matchconf_Wire_indexLength" property="indexLength" z="aEHHghSzxEZ0kgHw2pTzXD3oOqw="/>
+            <table:column id="c_org_kew_stringmod_matchconf_Wire_blanksMatch" property="blanksMatch" z="Lk36TjxUkblGWD/UpYuJdkFlKuQ="/>
         </table:table>
     </page:list>
 </div>

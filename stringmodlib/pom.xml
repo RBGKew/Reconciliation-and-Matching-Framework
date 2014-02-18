@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>stringmodlib</artifactId>
+  <name>stringmodlib</name>
+  <version>0.2-SNAPSHOT</version>
+  
+  <parent>
+    <groupId>org.kew.stringmod</groupId>
+    <artifactId>deduplicator-framework</artifactId>
+    <version>0.2-SNAPSHOT</version>
+  </parent>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <!-- internal multimodule dependencies -->
+    <dependency>
+        <groupId>org.kew.stringmod</groupId>
+      	<artifactId>stringmodutils</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+	<dependency>
+		<groupId>com.googlecode.ehcache-spring-annotations</groupId>
+		<artifactId>ehcache-spring-annotations</artifactId>
+	</dependency>
+	<!-- for testing -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+	<dependency>
+		<groupId>org.hamcrest</groupId>
+		<artifactId>hamcrest-all</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>net.sf.supercsv</groupId>
+		<artifactId>super-csv</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>commons-lang</groupId>
+		<artifactId>commons-lang</artifactId>
+	</dependency>
+  </dependencies>
+
+  <build>
+	<pluginManagement>
+     	<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+	  	</plugins>
+	</pluginManagement>
+  </build>
+</project>

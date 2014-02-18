@@ -2,27 +2,27 @@
 <div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
-    <form:create id="fc_org_kew_shs_dedupl_matchconf_Configuration" modelAttribute="configuration" path="/match_configs" render="${empty dependencies}" z="EfwW72aVNyp0+d7aY97TMj+v1ak=">
-        <field:input field="name" id="c_org_kew_shs_dedupl_matchconf_Configuration_name" z="3vEmBizJ9lnbwGZHjPc2LrnXZUU="/>
-        <field:input field="workDirPath" id="c_org_kew_shs_dedupl_matchconf_Configuration_workDirPath" z="CXfStjcGuxcfE6dfM+7XqPl9Y10="/>
+    <form:create id="fc_org_kew_stringmod_matchconf_Configuration" modelAttribute="configuration" path="/match_configs" render="${empty dependencies}" z="EfwW72aVNyp0+d7aY97TMj+v1ak=">
+        <field:input field="name" id="c_org_kew_stringmod_matchconf_Configuration_name" z="3vEmBizJ9lnbwGZHjPc2LrnXZUU="/>
+        <field:input field="workDirPath" id="c_org_kew_stringmod_matchconf_Configuration_workDirPath" z="CXfStjcGuxcfE6dfM+7XqPl9Y10="/>
 
-        <field:input field="sourceFileName" id="c_org_kew_shs_dedupl_matchconf_Configuration_sourceFileName" z="Xe0KyReTb9is0ixh1BzXLN4pV80="/>
-        <field:input field="sourceFileEncoding" id="c_org_kew_shs_dedupl_matchconf_Configuration_sourceFileEncoding" z="oZk6RExiWZ0ZK/O9Z7gyzq45Qs0="/>
-        <field:input field="sourceFileDelimiter" id="c_org_kew_shs_dedupl_matchconf_Configuration_sourceFileDelimiter" z="xTUiFAy070C340Xm5+DIXkCFqCI="/>
+        <field:input field="sourceFileName" id="c_org_kew_stringmod_matchconf_Configuration_sourceFileName" z="Xe0KyReTb9is0ixh1BzXLN4pV80="/>
+        <field:input field="sourceFileEncoding" id="c_org_kew_stringmod_matchconf_Configuration_sourceFileEncoding" z="oZk6RExiWZ0ZK/O9Z7gyzq45Qs0="/>
+        <field:input field="sourceFileDelimiter" id="c_org_kew_stringmod_matchconf_Configuration_sourceFileDelimiter" z="xTUiFAy070C340Xm5+DIXkCFqCI="/>
 
-        <field:input field="lookupFileName" id="c_org_kew_shs_dedupl_matchconf_Configuration_lookupFileName" z="d1C88UX0kdcXobRnxlBR+YCiUN4="/>
-        <field:input field="lookupFileEncoding" id="c_org_kew_shs_dedupl_matchconf_Configuration_lookupFileEncoding" z="nIW4RKilaNTPUKc9d5nswIsET3g="/>
-        <field:input field="lookupFileDelimiter" id="c_org_kew_shs_dedupl_matchconf_Configuration_lookupFileDelimiter" z="wdmGp4zNTXYZTlVaoShLBtxJL7E="/>
+        <field:input field="lookupFileName" id="c_org_kew_stringmod_matchconf_Configuration_lookupFileName" z="d1C88UX0kdcXobRnxlBR+YCiUN4="/>
+        <field:input field="lookupFileEncoding" id="c_org_kew_stringmod_matchconf_Configuration_lookupFileEncoding" z="nIW4RKilaNTPUKc9d5nswIsET3g="/>
+        <field:input field="lookupFileDelimiter" id="c_org_kew_stringmod_matchconf_Configuration_lookupFileDelimiter" z="wdmGp4zNTXYZTlVaoShLBtxJL7E="/>
 
-        <field:input field="loadReportFrequency" id="c_org_kew_shs_dedupl_matchconf_Configuration_loadReportFrequency" z="mBoLFpuK1YzFd1H+conojUVjvPo="/>
-        <field:input field="assessReportFrequency" id="c_org_kew_shs_dedupl_matchconf_Configuration_assessReportFrequency" z="kUCN8SWATVpCbwc2GZ1jJZy5FMw="/>
+        <field:input field="loadReportFrequency" id="c_org_kew_stringmod_matchconf_Configuration_loadReportFrequency" z="mBoLFpuK1YzFd1H+conojUVjvPo="/>
+        <field:input field="assessReportFrequency" id="c_org_kew_stringmod_matchconf_Configuration_assessReportFrequency" z="kUCN8SWATVpCbwc2GZ1jJZy5FMw="/>
 
-        <field:input field="maxSearchResults" id="c_org_kew_shs_dedupl_matchconf_Configuration_maxSearchResults" z=""/>
+        <field:input field="maxSearchResults" id="c_org_kew_stringmod_matchconf_Configuration_maxSearchResults" z=""/>
 
-        <field:input field="scoreFieldName" id="c_org_kew_shs_dedupl_matchconf_Configuration_scoreFieldName" z="eD+yX69x57/KyHPGWkrevkPRNWw="/>
+        <field:input field="scoreFieldName" id="c_org_kew_stringmod_matchconf_Configuration_scoreFieldName" z="eD+yX69x57/KyHPGWkrevkPRNWw="/>
 
-        <field:input field="recordFilter" id="c_org_kew_shs_dedupl_matchconf_Configuration_recordFilter" z="UblGjqepwYEnIJ2Qukb4uPwQ6Mw="/>
-        <field:input field="nextConfig" id="c_org_kew_shs_dedupl_matchconf_Configuration_nextConfig" z=""/>
+        <field:input field="recordFilter" id="c_org_kew_stringmod_matchconf_Configuration_recordFilter" z="UblGjqepwYEnIJ2Qukb4uPwQ6Mw="/>
+        <field:input field="nextConfig" id="c_org_kew_stringmod_matchconf_Configuration_nextConfig" z=""/>
     </form:create>
-    <form:dependency dependencies="${dependencies}" id="d_org_kew_shs_dedupl_matchconf_Configuration" render="${not empty dependencies}" z="0C0vyFYOe+A8T8VgmDKsxBtFphQ="/>
+    <form:dependency dependencies="${dependencies}" id="d_org_kew_stringmod_matchconf_Configuration" render="${not empty dependencies}" z="0C0vyFYOe+A8T8VgmDKsxBtFphQ="/>
 </div>

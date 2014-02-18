@@ -2,14 +2,14 @@
 <div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
-    <page:list id="pl_org_kew_shs_dedupl_matchconf_Matcher" items="${matchers}" z="AK9evHZPTHrtdtqfZ/2bpWEp7c4=">
-        <table:table data="${matchers}" id="l_org_kew_shs_dedupl_matchconf_Matcher" path="/matchers" z="mnfabbZUyhYRJ0t9H89xG4RzT2Q=">
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Matcher_name" property="name" z="AR/duKvVShe5KeMA6ZcWCvsh/UY="/>
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Matcher_className" property="className" z="tklQZCc48Avc4OwQMEaCz8a1yDg="/>
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Matcher_packageName" property="packageName" z="9l279oyOR1B2FfAdh/4CiFcksiI="/>
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Matcher_params" property="params" z="9mQoRytbnKGxk2hbsh7ZXJq1gh0="/>
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Matcher_composedBy" property="composedBy" z="r+i/LiENE8GrSU+SACvhtlRdfcA="/>
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Matcher_configuration" property="configuration" z="k9KIjOAtmi9hcGj/cDzg7Pzlbsk="/>
+    <page:list id="pl_org_kew_stringmod_matchconf_Matcher" items="${matchers}" z="lBIt2aOkHjBIN/lLWknEBX5q2Cg=">
+        <table:table data="${matchers}" id="l_org_kew_stringmod_matchconf_Matcher" path="/matchers" z="z5lhBiFVx3nT4KPMvnCN/RBS/Os=">
+            <table:column id="c_org_kew_stringmod_matchconf_Matcher_name" property="name" z="zk/vf6jrjQzegtOrDeBjYePPXdg="/>
+            <table:column id="c_org_kew_stringmod_matchconf_Matcher_packageName" property="packageName" z="fdGSOatR/UXKuo2IquKTnP65HRk="/>
+            <table:column id="c_org_kew_stringmod_matchconf_Matcher_className" property="className" z="p+cY3Ykf7/SmR4aWXrt+b3NE3F8="/>
+            <table:column id="c_org_kew_stringmod_matchconf_Matcher_params" property="params" z="8rq6QvaKOp7LwtsJ1baZySvcrOo="/>
+            <table:column id="c_org_kew_stringmod_matchconf_Matcher_composedBy" property="composedBy" z="u8/kRW6vfJgJ5FPBvEP6gXfIWXU="/>
+            <table:column id="c_org_kew_stringmod_matchconf_Matcher_configuration" property="configuration" z="1egJBtyjfIRq80dMrvaL40VxB3I="/>
         </table:table>
     </page:list>
 </div>

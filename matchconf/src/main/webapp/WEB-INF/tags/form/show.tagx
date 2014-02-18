@@ -97,7 +97,7 @@
                 </a>
               </c:if>
             </span>
-            <c:if test='${object.getClass().toString().split(" ")[1].equals("org.kew.shs.dedupl.matchconf.Configuration")}'>
+            <c:if test='${object.getClass().toString().split(" ")[1].equals("org.kew.stringmod.matchconf.Configuration")}'>
               <spring:url value="${path}/${itemId}/clone" var="clone_url" />
               <spring:url value="/resources/images/clone.png" var="clone_image_url" />
               <spring:message arguments="${typeName}" code="entity_clone" var="clone_label" htmlEscape="false" />

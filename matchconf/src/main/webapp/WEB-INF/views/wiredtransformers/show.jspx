@@ -2,8 +2,12 @@
 <div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
-    <page:show id="ps_org_kew_shs_dedupl_matchconf_WiredTransformer" object="${wiredTransformer}" path="/wiredtransformers" z="user-managed">
-        <field:display field="rank" id="s_org_kew_shs_dedupl_matchconf_WiredTransformer_rank" object="${wiredTransformer}" z="user-managed"/>
-        <field:display field="transformer" id="s_org_kew_shs_dedupl_matchconf_WiredTransformer_transformer" object="${wiredTransformer}" z="user-managed"/>
+    <page:show id="ps_org_kew_stringmod_matchconf_WiredTransformer" object="${wiredTransformer}" path="/wiredtransformers" z="user-managed">
+        <field:display field="rank" id="s_org_kew_stringmod_matchconf_WiredTransformer_rank" object="${wiredTransformer}" z="user-managed"/>
+        <field:display field="transformer" id="s_org_kew_stringmod_matchconf_WiredTransformer_transformer" object="${wiredTransformer}" z="user-managed"/>
+    </page:show>
+    <page:show id="ps_org_kew_stringmod_matchconf_WiredTransformer" object="${wiredtransformer}" path="/wiredtransformers" z="+SOOxLXCyhGj+Ifrczc6t/6JJ0Q=">
+        <field:display field="rank" id="s_org_kew_stringmod_matchconf_WiredTransformer_rank" object="${wiredtransformer}" z="E1tJxM2vBp7tPk7KQG8sefS72fU="/>
+        <field:display field="transformer" id="s_org_kew_stringmod_matchconf_WiredTransformer_transformer" object="${wiredtransformer}" z="FZGwdCdeayFD2U47SVsGo4Y+RuM="/>
     </page:show>
 </div>

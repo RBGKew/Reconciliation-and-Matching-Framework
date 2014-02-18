@@ -2,22 +2,22 @@
 <div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
-    <form:update id="fu_org_kew_shs_dedupl_matchconf_Wire" modelAttribute="wire" path="/wires" versionField="Version" z="KIOFyddiGDqdzu87ppIkV+87Zqs=">
-        <field:checkbox field="useInSelect" id="c_org_kew_shs_dedupl_matchconf_Wire_useInSelect" z="TTpnxEuYpzEvKPuXK5cTGD09y2Q="/>
-        <field:checkbox field="useInNegativeSelect" id="c_org_kew_shs_dedupl_matchconf_Wire_useInNegativeSelect" z="g6Fqf7lac9bj4i6phpDcyTMnAeg="/>
-        <field:checkbox field="indexLength" id="c_org_kew_shs_dedupl_matchconf_Wire_indexLength" z="6QgSy9T5WBzy83anNlEpwpqWz64="/>
-        <field:checkbox field="blanksMatch" id="c_org_kew_shs_dedupl_matchconf_Wire_blanksMatch" z="FLk6m3nIf+vniTawpdo+i0UjsKE="/>
-        <field:checkbox field="indexInitial" id="c_org_kew_shs_dedupl_matchconf_Wire_indexInitial" z="4Um0XUlwGw1gsH3hQKMnvD0woj4="/>
-        <field:checkbox field="useWildcard" id="c_org_kew_shs_dedupl_matchconf_Wire_useWildcard" z="H2cXRwoDy3CUtITSjtFU3P46ja8="/>
-        <field:select field="matcher" id="c_org_kew_shs_dedupl_matchconf_Wire_matcher" itemValue="id" items="${matchers}" path="/matchers" z="lXk5z0p02X2K5OrJ2d71mUvWp+E="/>
-        <field:input field="sourceColumnName" id="c_org_kew_shs_dedupl_matchconf_Wire_sourceColumnName" z="Iyj1E63QgPFC+EHUH9g08zRtbLU="/>
-        <field:input field="lookupColumnName" id="c_org_kew_shs_dedupl_matchconf_Wire_lookupColumnName" z="acpNUyZ2hyPEw0qgiaFL7zaONbU="/>
-        <field:select field="configuration" id="c_org_kew_shs_dedupl_matchconf_Wire_configuration" itemValue="id" items="${configurations}" path="/configurations" z="mt11rs6InvFf1CJZOy+5B2dnniw="/>
-        <field:checkbox field="addOriginalSourceValue" id="c_org_kew_shs_dedupl_matchconf_Wire_addOriginalSourceValue" z="FBobAPBovYc4gqRvKOcr0T+nySg="/>
-        <field:checkbox field="addOriginalLookupValue" id="c_org_kew_shs_dedupl_matchconf_Wire_addOriginalLookupValue" z="OTGOwNh7sNQWPa9RQlE91VCN5n8="/>
-        <field:checkbox field="addTransformedSourceValue" id="c_org_kew_shs_dedupl_matchconf_Wire_addTransformedSourceValue" z="gz9SC9WXQU9Q8G7eX3YXT9eMaK8="/>
-        <field:checkbox field="addTransformedLookupValue" id="c_org_kew_shs_dedupl_matchconf_Wire_addTransformedLookupValue" z="hgjah26dH9JrPRn+D6KcMTzQTrg="/>
-        <field:simple field="sourceTransformers" id="c_org_kew_shs_dedupl_matchconf_Wire_sourceTransformers" messageCode="entity_reference_not_managed" messageCodeAttribute="Wired Transformer" z="f9kiqiOvtkNKMD9sV0nmNPk7UgU="/>
-        <field:simple field="lookupTransformers" id="c_org_kew_shs_dedupl_matchconf_Wire_lookupTransformers" messageCode="entity_reference_not_managed" messageCodeAttribute="Wired Transformer" z="xTHTJR2LFrp7AJY58v8I3CUi/b8="/>
+    <form:update id="fu_org_kew_stringmod_matchconf_Wire" modelAttribute="wire" path="/wires" versionField="Version" z="HqDhQp6sdxHLJoQWxgSK5MaRtkQ=">
+        <field:input field="sourceColumnName" id="c_org_kew_stringmod_matchconf_Wire_sourceColumnName" z="/baTmO6IWunlit++4q3fQK/vHzI="/>
+        <field:input field="lookupColumnName" id="c_org_kew_stringmod_matchconf_Wire_lookupColumnName" z="yaDdzWCV5KDBzMe2GQApiHlEUP8="/>
+        <field:checkbox field="useInSelect" id="c_org_kew_stringmod_matchconf_Wire_useInSelect" z="rUwqjkFtZtDPn538dvHFTI8gXp8="/>
+        <field:checkbox field="useInNegativeSelect" id="c_org_kew_stringmod_matchconf_Wire_useInNegativeSelect" z="wYCe2kbp+Jky10PaVKkCBInFKss="/>
+        <field:checkbox field="indexLength" id="c_org_kew_stringmod_matchconf_Wire_indexLength" z="04nB73e4KOBgk218g1bryU7MIFA="/>
+        <field:checkbox field="blanksMatch" id="c_org_kew_stringmod_matchconf_Wire_blanksMatch" z="l4F6JAMcQG+1l6ewiR0c9Iz7bvM="/>
+        <field:checkbox field="addOriginalSourceValue" id="c_org_kew_stringmod_matchconf_Wire_addOriginalSourceValue" z="uX5j3L02nP4R38E1755KdmxCwAk="/>
+        <field:checkbox field="addOriginalLookupValue" id="c_org_kew_stringmod_matchconf_Wire_addOriginalLookupValue" z="PA0qV7uHoyv2opyVuFd8qgaV5TI="/>
+        <field:checkbox field="addTransformedSourceValue" id="c_org_kew_stringmod_matchconf_Wire_addTransformedSourceValue" z="q0KXY3pZqzGy0OLPRYK5AjQ8ta0="/>
+        <field:checkbox field="addTransformedLookupValue" id="c_org_kew_stringmod_matchconf_Wire_addTransformedLookupValue" z="0XGcPSUYPdxOgyrAEP50xfnWwqs="/>
+        <field:checkbox field="indexInitial" id="c_org_kew_stringmod_matchconf_Wire_indexInitial" z="EK7Xl60xS8J+FugQqVtMcg+GWdw="/>
+        <field:checkbox field="useWildcard" id="c_org_kew_stringmod_matchconf_Wire_useWildcard" z="4y25mX4i8dsQ1zn71FXI2S8qO6Y="/>
+        <field:select field="matcher" id="c_org_kew_stringmod_matchconf_Wire_matcher" itemValue="id" items="${matchers}" path="/matchers" z="fCKS9ZUjrMg8/OCaqbMf164bTcc="/>
+        <field:select field="configuration" id="c_org_kew_stringmod_matchconf_Wire_configuration" itemValue="id" items="${configurations}" path="/configurations" z="VtMfAVVYz3cR6SE4ZY8jI6kHfJ4="/>
+        <field:simple field="sourceTransformers" id="c_org_kew_stringmod_matchconf_Wire_sourceTransformers" messageCode="entity_reference_not_managed" messageCodeAttribute="Wired Transformer" z="X0b7lXLEvIVlrj1U6/tq9/Bpa2w="/>
+        <field:simple field="lookupTransformers" id="c_org_kew_stringmod_matchconf_Wire_lookupTransformers" messageCode="entity_reference_not_managed" messageCodeAttribute="Wired Transformer" z="Bqt0CCQX1YyWpe9PHPvaEgcr0nw="/>
     </form:update>
 </div>

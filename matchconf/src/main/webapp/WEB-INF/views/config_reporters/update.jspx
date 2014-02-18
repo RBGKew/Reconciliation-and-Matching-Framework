@@ -5,13 +5,13 @@
 
     <br/> <div id="config-link">for configuration: <a href="/MatchConf/${ configType }_configs/${ configName }">${ configName }</a></div> <br/>
 
-    <form:update id="fu_org_kew_shs_dedupl_matchconf_Reporter" modelAttribute="reporter" path="/${ configType }_configs/${ configName }/reporters" versionField="Version" z="7PaZGBSwVOktaQ98hlUq3cmoYn4=">
-        <field:input field="name" id="c_org_kew_shs_dedupl_matchconf_Reporter_name" z="NigfTCoBpfhf3TaOZajWNRdmCgI="/>
-        <field:input field="delimiter" id="c_org_kew_shs_dedupl_matchconf_Reporter_delimiter" z="wPsywL8g9CblfaOQI58ptljIiko="/>
-        <field:input field="idDelimiter" id="c_org_kew_shs_dedupl_matchconf_Reporter_idDelimiter" z="R/97Sxv2sUIGFCmK+gxSu0bLO3o="/>
-        <field:input field="fileName" id="c_org_kew_shs_dedupl_matchconf_Reporter_fileName" z="ny6MzFZ94/8dPkjSZ9cNLmZeLsk="/>
-        <field:input field="packageName" id="c_org_kew_shs_dedupl_matchconf_Reporter_packageName" z="Kklb8pLmCNBmQq8Fre2SXqJ/p6g="/>
-        <field:input field="className" id="c_org_kew_shs_dedupl_matchconf_Reporter_className" z="o67cLEPE/QXjJIJsvmyTDPY9JnA="/>
-        <field:input field="params" id="c_org_kew_shs_dedupl_matchconf_Reporter_params" z="DO1i/BcowfiYnFxmJw67KVaTou0="/>
+    <form:update id="fu_org_kew_stringmod_matchconf_Reporter" modelAttribute="reporter" path="/${ configType }_configs/${ configName }/reporters" versionField="Version" z="7PaZGBSwVOktaQ98hlUq3cmoYn4=">
+        <field:input field="name" id="c_org_kew_stringmod_matchconf_Reporter_name" z="NigfTCoBpfhf3TaOZajWNRdmCgI="/>
+        <field:input field="delimiter" id="c_org_kew_stringmod_matchconf_Reporter_delimiter" z="wPsywL8g9CblfaOQI58ptljIiko="/>
+        <field:input field="idDelimiter" id="c_org_kew_stringmod_matchconf_Reporter_idDelimiter" z="R/97Sxv2sUIGFCmK+gxSu0bLO3o="/>
+        <field:input field="fileName" id="c_org_kew_stringmod_matchconf_Reporter_fileName" z="ny6MzFZ94/8dPkjSZ9cNLmZeLsk="/>
+        <field:input field="packageName" id="c_org_kew_stringmod_matchconf_Reporter_packageName" z="Kklb8pLmCNBmQq8Fre2SXqJ/p6g="/>
+        <field:input field="className" id="c_org_kew_stringmod_matchconf_Reporter_className" z="o67cLEPE/QXjJIJsvmyTDPY9JnA="/>
+        <field:input field="params" id="c_org_kew_stringmod_matchconf_Reporter_params" z="DO1i/BcowfiYnFxmJw67KVaTou0="/>
     </form:update>
 </div>

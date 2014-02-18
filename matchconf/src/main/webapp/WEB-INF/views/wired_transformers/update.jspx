@@ -5,8 +5,8 @@
 
     <br/> <div id="config-link">for wire <a href="/MatchConf/${ configType }_configs/${ configName }/wires/${ wireName }">${ wireName }</a> in configuration <a href="/MatchConf/${ configType }_configs/${ configName }">${ configName }</a></div> <br/>
 
-    <form:update id="fu_org_kew_shs_dedupl_matchconf_WiredTransformer" modelAttribute="wiredTransformer" path="/${ configType }_configs/${ configName }/wires/${ wireName }/${ transformerType }_transformers" versionField="Version" z="WMZsDt7qyiW2lMIqIWjqOpqLqr4=">
-        <field:input field="rank" id="c_org_kew_shs_dedupl_matchconf_WiredTransformer_rank" z="fRx2hsN261bli8rinA+UIlN0RgI="/>
-        <field:select field="transformer" id="c_org_kew_shs_dedupl_matchconf_WiredTransformer_transformer" itemValue="id" items="${transformers}" path="/${ configType }_configs/${ configName }/transformers" z="JzWbHtJyvHQM89stpoVXr+eTlMc="/>
+    <form:update id="fu_org_kew_stringmod_matchconf_WiredTransformer" modelAttribute="wiredTransformer" path="/${ configType }_configs/${ configName }/wires/${ wireName }/${ transformerType }_transformers" versionField="Version" z="WMZsDt7qyiW2lMIqIWjqOpqLqr4=">
+        <field:input field="rank" id="c_org_kew_stringmod_matchconf_WiredTransformer_rank" z="fRx2hsN261bli8rinA+UIlN0RgI="/>
+        <field:select field="transformer" id="c_org_kew_stringmod_matchconf_WiredTransformer_transformer" itemValue="id" items="${transformers}" path="/${ configType }_configs/${ configName }/transformers" z="JzWbHtJyvHQM89stpoVXr+eTlMc="/>
     </form:update>
 </div>

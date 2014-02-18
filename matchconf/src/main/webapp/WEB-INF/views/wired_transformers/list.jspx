@@ -5,10 +5,10 @@
 
     <br/> <div id="config-link">for wire <a href="/MatchConf/${ configType }_configs/${ configName }/wires/${ wireName }">${ wireName }</a> in configuration <a href="/MatchConf/${ configType }_configs/${ configName }">${ configName }</a></div> <br/>
 
-    <page:list id="pl_org_kew_shs_dedupl_matchconf_WiredTransformer" items="${wiredTransformers}" z="FDhXfxt2c9hCeesx9+M4C0TNQpI=">
-        <table:table data="${wiredTransformers}" create="true" id="l_org_kew_shs_dedupl_matchconf_WiredTransformer" path="/${ configType }_configs/${ configName }/wires/${ wireName }/${ transformerType }_transformers" z="ZKc5FIAeWmQivJKk0XK2AsxmOVg=">
-            <table:column id="c_org_kew_shs_dedupl_matchconf_WiredTransformer_rank" property="rank" z="pMvtNIP3PBKxCRE5REJbpKLLVq4="/>
-            <table:column id="c_org_kew_shs_dedupl_matchconf_WiredTransformer_transformer" property="transformer" z="AP1Amp3PWft7/qK0M/QKVJPpGMk="/>
+    <page:list id="pl_org_kew_stringmod_matchconf_WiredTransformer" items="${wiredTransformers}" z="FDhXfxt2c9hCeesx9+M4C0TNQpI=">
+        <table:table data="${wiredTransformers}" create="true" id="l_org_kew_stringmod_matchconf_WiredTransformer" path="/${ configType }_configs/${ configName }/wires/${ wireName }/${ transformerType }_transformers" z="ZKc5FIAeWmQivJKk0XK2AsxmOVg=">
+            <table:column id="c_org_kew_stringmod_matchconf_WiredTransformer_rank" property="rank" z="pMvtNIP3PBKxCRE5REJbpKLLVq4="/>
+            <table:column id="c_org_kew_stringmod_matchconf_WiredTransformer_transformer" property="transformer" z="AP1Amp3PWft7/qK0M/QKVJPpGMk="/>
         </table:table>
     </page:list>
 </div>

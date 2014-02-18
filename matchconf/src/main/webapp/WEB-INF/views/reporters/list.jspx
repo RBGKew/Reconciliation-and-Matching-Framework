@@ -2,14 +2,14 @@
 <div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
-    <page:list id="pl_org_kew_shs_dedupl_matchconf_Reporter" items="${reporters}" z="SFmo6s3+U8+e12XA4JdDtU8XjLs=">
-        <table:table data="${reporters}" id="l_org_kew_shs_dedupl_matchconf_Reporter" path="/reporters" z="VoHhy6VwUyQ6JiGbFnVUGU6pbbs=">
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Reporter_name" property="name" z="ZDIgIY1tpgCC3EhQ7U/J3dOOtd8="/>
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Reporter_delimiter" property="delimiter" z="xmlv9rkjzbDBly1UlQVKlVj7ZxM="/>
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Reporter_idDelimiter" property="idDelimiter" z="WHdY+ahy0LRz8oAIpENx/8AZEu8="/>
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Reporter_fileName" property="fileName" z="sB3XTFtBgo+sqVm3v6Gr+MoUGFk="/>
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Reporter_packageName" property="packageName" z="dFag2d6tsDt51HlpGgfO5A9rznY="/>
-            <table:column id="c_org_kew_shs_dedupl_matchconf_Reporter_className" property="className" z="uYy5fj+Q1ayjW0OJaMiVOBPATyU="/>
+    <page:list id="pl_org_kew_stringmod_matchconf_Reporter" items="${reporters}" z="ME8ToSZM69nmEtYDDFIEZWDA/U8=">
+        <table:table data="${reporters}" id="l_org_kew_stringmod_matchconf_Reporter" path="/reporters" z="07rRlRn8RQggGYWVK7K+nZ2rlVI=">
+            <table:column id="c_org_kew_stringmod_matchconf_Reporter_name" property="name" z="nTtEdj+mtNTXtfBxGiZ5yXxw9zY="/>
+            <table:column id="c_org_kew_stringmod_matchconf_Reporter_delimiter" property="delimiter" z="f5LukEveneDnXd1bn2YmvezEols="/>
+            <table:column id="c_org_kew_stringmod_matchconf_Reporter_idDelimiter" property="idDelimiter" z="rBBykc+Ov7El+r60L2kcRL4YyFM="/>
+            <table:column id="c_org_kew_stringmod_matchconf_Reporter_fileName" property="fileName" z="R83GxrjGC7wIsGlcV2qeKPxfxTM="/>
+            <table:column id="c_org_kew_stringmod_matchconf_Reporter_packageName" property="packageName" z="ftyPJ8eN02vsh8b8UYuSCsoWrOs="/>
+            <table:column id="c_org_kew_stringmod_matchconf_Reporter_className" property="className" z="7SUBK3VVAuQchwleNK8D4DvIWPA="/>
         </table:table>
     </page:list>
 </div>

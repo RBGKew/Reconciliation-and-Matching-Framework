@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.kew.shs.dedupl.matchconf</groupId>
     <artifactId>MatchConf</artifactId>
     <packaging>war</packaging>
     <name>MatchConf</name>
@@ -9,16 +8,16 @@
 
     <parent>
         <artifactId>deduplicator-framework</artifactId>
-        <groupId>org.kew.shs.dedupl</groupId>
+        <groupId>org.kew.stringmod</groupId>
         <version>0.2-SNAPSHOT</version>
     </parent>
 
     <properties>
         <jetty.version>9.0.4.v20130625</jetty.version>
         <spring.version>3.2.0.RELEASE</spring.version>
+    <roo.version>1.2.5.BUILD-SNAPSHOT</roo.version>
     </properties>
     <repositories>
-
         <repository>
             <id>spring-maven-release</id>
             <name>Spring Maven Release Repository</name>
@@ -53,6 +52,17 @@
         </pluginRepository>
     </pluginRepositories>
     <dependencies>
+        <!-- internal multimodule dependencies -->
+        <dependency>
+            <groupId>org.kew.stringmod</groupId>
+      		<artifactId>stringmodutils</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kew.stringmod</groupId>
+            <artifactId>deduplicator</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
@@ -66,6 +76,12 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
         </dependency>
+        <dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
+            
         <!-- liquibase support -->
         <dependency>
             <groupId>org.liquibase</groupId>
@@ -74,12 +90,6 @@
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-maven-plugin</artifactId>
-        </dependency>
-        <!-- internal multimodule dependencies -->
-        <dependency>
-            <groupId>org.kew.shs.dedupl</groupId>
-            <artifactId>deduplicator-framework-app</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <!-- testing stuff -->
         <dependency>
@@ -219,12 +229,10 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
-            <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
-            <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-pool</groupId>

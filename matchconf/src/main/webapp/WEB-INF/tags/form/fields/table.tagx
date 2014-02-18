@@ -144,7 +144,7 @@
             </td>
           </c:if>
 
-          <c:if test='${item.getClass().toString().split(" ")[1].equals("org.kew.shs.dedupl.matchconf.Configuration")}'>
+          <c:if test='${item.getClass().toString().split(" ")[1].equals("org.kew.stringmod.matchconf.Configuration")}'>
             <td class="utilbox">
               <spring:url value="${path}/${itemId}/clone" var="clone_form_url" />
               <spring:url value="/resources/images/clone.png" var="clone_image_url" />

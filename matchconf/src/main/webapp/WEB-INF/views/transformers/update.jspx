@@ -2,12 +2,12 @@
 <div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
-    <form:update id="fu_org_kew_shs_dedupl_matchconf_Transformer" modelAttribute="transformer" path="/transformers" versionField="Version" z="DYpo9gOaybaM2adOkP7w7yv34Gw=">
-        <field:select field="composedBy" id="c_org_kew_shs_dedupl_matchconf_Transformer_composedBy" itemValue="id" items="${transformers}" multiple="true" path="/transformers" z="w6vi7lp+y4+Fs7Tra8j3nWUlDdc="/>
-        <field:input field="name" id="c_org_kew_shs_dedupl_matchconf_Transformer_name" z="xMjizgy7wf9jBszC7omJ8cp84os="/>
-        <field:input field="packageName" id="c_org_kew_shs_dedupl_matchconf_Transformer_packageName" z="qET4WRKkmsVACu40DvrpPogAsSM="/>
-        <field:input field="className" id="c_org_kew_shs_dedupl_matchconf_Transformer_className" z="29dGh8lQJYpA2TsN3nNQpJXh4AE="/>
-        <field:input field="params" id="c_org_kew_shs_dedupl_matchconf_Transformer_params" z="KxxihXMDX1VfJwcKM9PiBDb3LtU="/>
-        <field:select field="configuration" id="c_org_kew_shs_dedupl_matchconf_Transformer_configuration" itemValue="id" items="${configurations}" path="/configurations" z="7+jeKBQ/vwHe/FZWIpuUP215o+k="/>
+    <form:update id="fu_org_kew_stringmod_matchconf_Transformer" modelAttribute="transformer" path="/transformers" versionField="Version" z="0WpZIZBrojlDNQwPpyXq+lNr4bo=">
+        <field:input field="name" id="c_org_kew_stringmod_matchconf_Transformer_name" z="hGe7Fvb+H/BruPy8foBPmNxVMBk="/>
+        <field:input field="packageName" id="c_org_kew_stringmod_matchconf_Transformer_packageName" z="nQ335fMIofzbdxO74KzFTBB5ZQM="/>
+        <field:input field="className" id="c_org_kew_stringmod_matchconf_Transformer_className" z="hr2EImMk3sBbsUJLot1vPAjkl3s="/>
+        <field:input field="params" id="c_org_kew_stringmod_matchconf_Transformer_params" z="L0jVbe3Ji0NTyNhWk7Fbkz6z9NQ="/>
+        <field:select field="composedBy" id="c_org_kew_stringmod_matchconf_Transformer_composedBy" itemValue="id" items="${transformers}" multiple="true" path="/transformers" z="uGZz4esHr9I8ZcZKRDF0CMOXQqc="/>
+        <field:select field="configuration" id="c_org_kew_stringmod_matchconf_Transformer_configuration" itemValue="id" items="${configurations}" path="/configurations" z="hA4GO6pFgllxosQM9c3Bp9Te6fs="/>
     </form:update>
 </div>
