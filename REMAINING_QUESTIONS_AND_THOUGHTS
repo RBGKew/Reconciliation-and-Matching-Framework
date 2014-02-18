@@ -1,0 +1,8 @@
+[questions]
+- what to do with all the sample configs; most of them are not up-to-date, which ones to keep/adapt, which ones to throw away?
+- before thinking about open-sourcing this does one have to move the real-world records in the cucumber tests out of the code-base or modify them?
+- ehcache: haven't dealt with this at all, possibly add to more Matchers/Transformers to increase performance?
+
+[to-do]
+- provide more simple high-level tests that can be used as well for documentation
+
