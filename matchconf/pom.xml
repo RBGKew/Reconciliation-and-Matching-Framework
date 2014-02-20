@@ -15,7 +15,7 @@
     <properties>
         <jetty.version>9.0.4.v20130625</jetty.version>
         <spring.version>3.2.0.RELEASE</spring.version>
-    <roo.version>1.2.5.BUILD-SNAPSHOT</roo.version>
+        <roo.version>1.2.5.RELEASE</roo.version>
     </properties>
     <repositories>
         <repository>
