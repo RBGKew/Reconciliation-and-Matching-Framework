@@ -48,7 +48,8 @@ public class LevenshteinMatcher implements Matcher {
     public boolean matches(String s1, String s2) throws IOException {
         boolean matches = false;
         numCalls++;
-        if (StringUtils.isNotEmpty(s1) && StringUtils.isNotEmpty(s2)){
+        if (StringUtils.isEmpty(s1) && StringUtils.isEmpty(s2)) return true;
+        if (StringUtils.isNotEmpty(s1) && StringUtils.isNotEmpty(s2)) {
             matches = s1.equals(s2);
             if (!matches){
                 logger.debug("Testing ld(" + s1 + ", " + s2 + ")");
@@ -56,7 +57,7 @@ public class LevenshteinMatcher implements Matcher {
                 int longer = Math.max(s1.length(), s2.length());
                 if ((longer - shorter) > maxDistance)
                     matches = false;
-                else{
+                else {
                     int distance = calculateLevenshtein(s1, s2).intValue();
                     matches = (distance <= maxDistance);
                 }

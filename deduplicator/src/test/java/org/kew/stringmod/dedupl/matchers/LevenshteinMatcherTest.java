@@ -55,4 +55,10 @@ public class LevenshteinMatcherTest {
         assertFalse(matcher.matches("hinz", "kunz"));
     }
 
+    @Test
+    public void blankMatchesBlank() throws IOException {
+        LevenshteinMatcher matcher = new LevenshteinMatcher();
+        assertTrue(matcher.matches("", ""));
+    }
+
 }
