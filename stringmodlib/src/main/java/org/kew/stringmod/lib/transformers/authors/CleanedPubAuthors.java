@@ -12,8 +12,8 @@ public class CleanedPubAuthors implements Transformer {
 
     public String transform (String s) {
         s = new StripBasionymAuthorTransformer().transform(s);
-        s = new StripInAuthorTransformer().transform(s);
-        return new StripExAuthorTransformer().transform(s);
+        s = new StripExAuthorTransformer().transform(s);
+        return new StripInAuthorTransformer().transform(s);
     }
 
 }
