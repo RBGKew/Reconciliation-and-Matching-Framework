@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -12,12 +13,31 @@ import org.apache.commons.lang.StringUtils;
 import org.kew.stringmod.utils.LibraryRegister;
 import org.reflections.Reflections;
 
+/**
+ * The LibraryScanner filters for all LibraryRegister-annotated classes in the
+ * provided `BASE_PACKAGES`.
+ *
+ * It produces a map that groups the classes in packages.
+ */
 public class LibraryScanner {
 
+	public static final String[] BASE_PACKAGES = {
+		"org.kew.stringmod.dedupl.*", // the core deduplicator
+		"org.kew.stringmod.lib.*"     // the lib containing re-usable transformers etc.
+	};
+
+    /**
+     * Produces a map that groups the classes in packages.
+     */
     public static Map<String, Map<String, List<String>>> availableItems() {
         Map<String, Map<String, List<String>>> items = new HashMap<>();
-        Reflections reflections = new Reflections("org.kew.stringmod.dedupl.*");
-        Set<Class<?>> clazzes = reflections.getTypesAnnotatedWith(LibraryRegister.class);
+        Set<Class<?>> clazzes = new HashSet<>();
+        for (String packName : BASE_PACKAGES) {
+            Reflections reflections = new Reflections(packName);
+            clazzes.addAll(reflections.getTypesAnnotatedWith(LibraryRegister.class));
+        }
+        // TODO: add a field to Configuration that enables a user to add any package on the
+        //        classpath to the available items
         for (Class<?> clazz:clazzes) {
             LibraryRegister annotation = (LibraryRegister) clazz.getAnnotation(LibraryRegister.class);
             String category = annotation.category();
