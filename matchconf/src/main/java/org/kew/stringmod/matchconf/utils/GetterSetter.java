@@ -4,6 +4,12 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.lang.StringUtils;
 
+/**
+ * A helper class to get and set attributes via conventional getField and setField methods
+ * using generics.
+ *
+ * @param <ReturnType>
+ */
 public class GetterSetter<ReturnType> {
 
     @SuppressWarnings("unchecked")

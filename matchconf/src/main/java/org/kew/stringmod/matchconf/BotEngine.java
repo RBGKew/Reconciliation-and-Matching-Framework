@@ -2,14 +2,26 @@ package org.kew.stringmod.matchconf;
 
 import java.util.ArrayList;
 
+/**
+ * Writes out the xml to configure the 'real' deduplication/matching process of this specific
+ * <?extends Bot> instance.
+ */
 public class BotEngine {
 
 	Bot bot;
-	
+
 	public BotEngine(Bot bot) {
 		this.bot = bot;
 	}
-	
+
+	/**
+	 * Write out nicely formatted xml containing all necessary details for this instance.
+	 *
+	 * @param treatAs
+	 * @param indentLevel
+	 * @return
+	 * @throws Exception
+	 */
 	public ArrayList<String> toXML(String treatAs, int indentLevel) throws Exception {
 		int shiftWidth = 4;
 		String shift = String.format("%" + shiftWidth + "s", " ");
@@ -50,8 +62,8 @@ public class BotEngine {
 
 		}
 		return outXML;
-	}	
-	
+	}
+
 	public ArrayList<String> toXML(String treatAs) throws Exception {
 		return toXML(treatAs, 0);
 	}

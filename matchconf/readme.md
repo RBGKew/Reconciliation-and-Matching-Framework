@@ -4,7 +4,7 @@
 
 MatchConf is a wrapper around the deduplicator-framework that does two things:
 * it provides a basic web-based user interface to configure and run the
-  deduplicator-framework-app (from now on called TheAPP)
+  deduplicator
 * it stores the match- and deduplication configurations in a database
 
 ## installation&deployment
@@ -22,11 +22,10 @@ You can open a browser and start playing around at
 
 MatchConf doesnt 'do' anything other than storing configurations of match- and
 deduplication procedures. These configuration models are not at all connected
-to the deduplicator-framework-app (=TheAPP), the communication exclusively
-happens via a configuration being written out as xml. TheAPP uses this xml
-as a spring bean context, the only 'direct' connection at code-level is that
-MatchConf can run TheAPP providing the location of the previously written xml
-file.
+to the deduplicator, the communication exclusively happens via a configuration
+being written out as xml. The CoreApp uses this xml as a spring bean context,
+the only 'direct' connection at code-level is that MatchConf can run the
+CoreApp providing the location of the previously written xml file.
 
 (0) Matching and deduplication
 The deduplication of a data-set is very similar to matching two data-sets to
@@ -47,10 +46,10 @@ deduplicator-framework-app (see related readme):
 
  -----------------------------------------------------------
 |                                       [logical datamodel] |
-|   Configuration                                           |         
-|         |                                                 | 
+|   Configuration                                           |
+|         |                                                 |
 |         |---------< Transformer -------< WiredTransformer |
-|         |                                   \/    \/      |             
+|         |                                   \/    \/      |
 |         |---------< Matcher                 /     ·       |
 |         |                                  /     ·        |
 |         |---------< Wire ------------------······         |
@@ -60,15 +59,19 @@ deduplicator-framework-app (see related readme):
  -----------------------------------------------------------
 
 The basic principle is that a Configuration functions as a sandbox, all
-instances of the Transformer, Matcher, Wire (a 'Property' in TheApp) and
-Reporter classes are unique for each Configuration instance. This makes it
+instances of the Transformer, Matcher, Wire (a 'Property' in the deduplicator)
+and Reporter classes are unique for each Configuration instance. This makes it
 possible to easily clone configurations and then modify some bits and pieces
 without automatically changing other configurations.
 
 The necessary addition here is the WiredTransformer. This is due to the fact
-that a configuration can have 1:many transformers assigned without being wired.
+that a configuration can have 1:many transformers assigned without being wired,
+also, a wire can have 1:n source-transformers and 1:n lookup-transformers.
 
-(2) Communication TheApp <-> MatchConf
+The sandbox paradigm is not the case for Dictionaries, as they are meant to be
+re-usable by all configurations.
+
+(2) Communication deduplicator <-> MatchConf
 
 
 ## what it should do
@@ -76,9 +79,19 @@ that a configuration can have 1:many transformers assigned without being wired.
 [UI testing]
 There is currently no front-end testing at all. That is very bad.
 
-## known bugs
-- the orm is very broken due to my lack of knowledge of JPA/ROO; the most annoying bug is that the way the
-  WiredTransformer is implemented, they sometimes get orphaned in a deletion process and cause constraint
-  violation errors. All attempts to fix this have not been satisfying so far. I originally built this webapp
-  in Grails and did not encounter similar errors.
+[extendibility]
+- org.kew.stringmod.matchconf.web.LibraryScanner defines the packages availabe
+  within the library;
+  --> a configuration could have a field where you can add new packages (that
+  have to be on the classpath) defining them commaseparated in a string
+  ("org.a.b.c.*, com.bla.blub.*")
 
+## known bugs
+- the orm is probably very broken due to my lack of knowledge of JPA/ROO; the
+  most annoying bug is that the way the WiredTransformer is implemented, they
+  sometimes get orphaned in a deletion process and cause constraint violation
+  errors. All attempts to fix this have not been satisfying so far. I
+  originally built this webapp in Grails and did not encounter similar errors.
+
+
+TODO: dealing with logs and space!

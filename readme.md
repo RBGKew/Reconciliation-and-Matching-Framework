@@ -2,8 +2,13 @@
 
 This is a multi-module maven project. It consists of:
 
-* the deduplicator-framework-app: a command-line tool for deduplication and string matching tasks
-* match-conf: a wrapper around the app providing a UI with (persistent) configuration functionality
+* the deduplicator (incl. the CoreApp): a command-line tool for deduplication
+  and string matching task
+* match-conf: a wrapper around the app providing a UI with (persistent)
+  configuration functionality
+* stringmodlib: a set of string modification packages meant for easy re-use
+  as well by other apps
+* stringmodutils: several classes re-used by more than one submodule
 
 ## testing
 mvn clean test

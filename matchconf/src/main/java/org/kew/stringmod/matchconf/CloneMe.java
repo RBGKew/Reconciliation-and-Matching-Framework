@@ -15,6 +15,13 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 
+/**
+ * Think of this abstract class as if it provided an abstract method 'cloneMe', I didn't get it
+ * working explicitely due to some conflicts between generics, raw types and the way the ORM is
+ * built, but this is how it's used.
+ *
+ * @param <T>
+ */
 @RooJavaBean
 @RooToString
 @MappedSuperclass
@@ -52,7 +59,6 @@ public abstract class CloneMe<T> {
      public static List<CloneMe<Object>> findCloneMeEntries(int firstResult, int maxResults) {
         return new ArrayList<CloneMe<Object>>();
     }
-
 
     @PreRemove
     public void loggPreRemoval() {

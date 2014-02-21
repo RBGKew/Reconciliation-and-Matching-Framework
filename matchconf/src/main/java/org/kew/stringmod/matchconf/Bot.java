@@ -7,6 +7,11 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 
+/**
+ * A Bot serves as a template for all configurable entities that have a (instance) name,
+ * a package- and a className for the class to be identified and accept an arbitrary
+ * amount of comma-separated 'param=value' parameters.
+ */
 @RooJavaBean
 @RooToString
 @MappedSuperclass

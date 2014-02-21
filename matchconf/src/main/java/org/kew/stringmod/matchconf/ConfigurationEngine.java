@@ -17,6 +17,10 @@ import org.joda.time.format.DateTimeFormat;
 import org.kew.stringmod.dedupl.CoreApp;
 
 
+/**
+ * Creates the xml for the whole configuration, and runs the CoreApp of the deduplicator with
+ * this config file.
+ */
 public class ConfigurationEngine {
 
     Configuration config;
@@ -27,6 +31,13 @@ public class ConfigurationEngine {
         this.config = config;
     }
 
+    /**
+     * Creates the xml for the whole configuration calling all connected <?extends>Bots to write out
+     * their bit as well.
+	 *
+     * @return
+     * @throws Exception
+     */
     public ArrayList<String> toXML() throws Exception {
         int shiftWidth = 4;
         String shift = String.format("%" + shiftWidth + "s", " ");
@@ -131,6 +142,12 @@ public class ConfigurationEngine {
         return outXML;
     }
 
+    /**
+     * Writes the configuration to the file system. Takes care not to overwrite existing configs,
+     * complains in a nice way about not existing input and output files.
+     *
+     * @throws Exception
+     */
     public void write_to_filesystem () throws Exception {
         // Perform a few checks:
         // 1. does the working directory exist?
@@ -166,6 +183,15 @@ public class ConfigurationEngine {
         return this.runConfiguration(true);
     }
 
+    /**
+     * Runs the deduplicator's CoreApp providing the path to the written config. In case of chained
+     * configs it calls one after the other. Doing this it tries to collect as many Exception types
+     * as possible and pipes them back to the UI-user.
+     *
+     * @param writeBefore
+     * @return
+     * @throws Exception
+     */
     @SuppressWarnings("finally")
     public Map<String, List<String>> runConfiguration (boolean writeBefore) throws Exception {
         // TODO: is there an internal messaging system in spring mvc?
