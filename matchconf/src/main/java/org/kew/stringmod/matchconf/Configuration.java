@@ -18,6 +18,17 @@ import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * This is the ORM equivalent to
+ * {@link org.kew.stringmod.dedupl.configuration.Configuration}.
+ * Further, it offers a sandbox for all entities in MatchConf guaranteeing
+ * their Uniqueness per configuration instance. This facilitates cloning
+ * of whole configurations and further tweaking of the clones without messing
+ * with the original configuration.
+ *
+ * NOTE: the uniqueness paradigm is not valid for {@link Dictionary} instances,
+ * as they are meant to be available to all configurations.
+ */
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord(finders = { "findConfigurationsByNameEquals" })
@@ -259,6 +270,10 @@ public class Configuration extends CloneMe<Configuration> {
 		return dicts;
 	}
 
+	/**
+	 * This method fixes a bug introduced in a very-early-stage migration of the data improvement database. It can possibly be removed
+	 * for any new installations and in near future in general.
+	 */
 	public void fixMatchersForAlienWire() {
 		for (Matcher matcher:this.getMatchers()) {
 			for (Wire possibleAlienWire:Wire.findWiresByMatcher(matcher).getResultList()) {

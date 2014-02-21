@@ -14,6 +14,15 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 
+/**
+ * This is the ORM equivalent to any implementation of
+ * {@link org.kew.stringmod.dedupl.configuration.Property}.
+ *
+ * It maps named columns to a {@link Matcher} per column and 0:n {@link Transformer}s per column.
+ * It also takes care of dealing with the separation of source- and lookup- {@link Transformer}s.
+ *
+ * The link to the Transformers is via {@link WiredTransformer}s.
+ */
 @RooJavaBean
 @RooToString
 @Table(uniqueConstraints = @javax.persistence.UniqueConstraint(columnNames = { "configuration", "sourceColumnName", "lookupColumnName" }))

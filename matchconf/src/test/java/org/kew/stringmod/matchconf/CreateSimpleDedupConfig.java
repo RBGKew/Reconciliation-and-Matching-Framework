@@ -10,14 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
-import org.kew.stringmod.matchconf.Configuration;
-import org.kew.stringmod.matchconf.ConfigurationEngine;
-import org.kew.stringmod.matchconf.Dictionary;
-import org.kew.stringmod.matchconf.Matcher;
-import org.kew.stringmod.matchconf.Reporter;
-import org.kew.stringmod.matchconf.Transformer;
-import org.kew.stringmod.matchconf.Wire;
-import org.kew.stringmod.matchconf.WiredTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

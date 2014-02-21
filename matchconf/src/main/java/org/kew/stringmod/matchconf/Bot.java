@@ -8,7 +8,8 @@ import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 
 /**
- * A Bot serves as a template for all configurable entities that have a (instance) name,
+ * A Bot serves as a template for all configurable {@link Matcher} and {@link Transformer}
+ * entities that have a (instance) name,
  * a package- and a className for the class to be identified and accept an arbitrary
  * amount of comma-separated 'param=value' parameters.
  */
@@ -35,6 +36,8 @@ public abstract class Bot extends CloneMe<Bot> implements Comparable<Bot> {
     public abstract String getParams();
 
     public abstract List<? extends Bot> getComposedBy();
+
+    public abstract String getGroup();
 
     public String toString () {
         return this.getName();

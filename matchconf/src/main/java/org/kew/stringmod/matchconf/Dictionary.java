@@ -10,6 +10,13 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 
+/**
+ * This is the ORM equivalent for {@link org.kew.stringmod.utils.Dictionary}.
+ *
+ * It knows about a file that is supposed to have two columns which can be used to e.g.
+ * overwrite deprecated values of columnA with the good values of columnB prior to
+ * a Matching, or do falsePositives checks.
+ */
 @RooJavaBean
 @RooToString
 @Table(uniqueConstraints = @javax.persistence.UniqueConstraint(columnNames= { "name" }))

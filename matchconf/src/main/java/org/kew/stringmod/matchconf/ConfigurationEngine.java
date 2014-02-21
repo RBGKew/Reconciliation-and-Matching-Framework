@@ -26,7 +26,6 @@ public class ConfigurationEngine {
     Configuration config;
     String luceneDirectory = "/tmp/matchconf/lucene_directory/";
 
-
     public ConfigurationEngine(Configuration config) {
         this.config = config;
     }
@@ -38,7 +37,7 @@ public class ConfigurationEngine {
      * @return
      * @throws Exception
      */
-    public ArrayList<String> toXML() throws Exception {
+    public List<String> toXML() throws Exception {
         int shiftWidth = 4;
         String shift = String.format("%" + shiftWidth + "s", " ");
 
@@ -82,15 +81,11 @@ public class ConfigurationEngine {
 
         List<Matcher> matchers = this.config.getMatchers();
         Collections.sort(matchers);
-        for (Bot bot:matchers) {
-            outXML.addAll(new BotEngine(bot).toXML("matchers", 1));
-        }
+        for (Bot bot:matchers) outXML.addAll(new BotEngine(bot).toXML(1));
 
         List<Transformer> transformers = this.config.getTransformers();
         Collections.sort(transformers);
-        for (Bot bot:transformers) {
-            outXML.addAll(new BotEngine(bot).toXML("transformers", 1));
-        }
+        for (Bot bot:transformers) outXML.addAll(new BotEngine(bot).toXML(1));
 
         if (this.config.getReporters().size() > 0) {
             outXML.add(String.format("%s<util:list id=\"reporters\">", shift));

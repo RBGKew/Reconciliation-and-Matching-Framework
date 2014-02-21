@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Writes out the xml to configure the 'real' deduplication/matching process of this specific
+ * {@link Wire} instance.
+ */
 public class WireEngine {
 
     Wire wire;

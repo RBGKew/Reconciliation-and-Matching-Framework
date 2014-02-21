@@ -5,6 +5,11 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 
+/**
+ * A WiredTransformer complicates the whole thing a lot unfortunately; it has
+ * to exist as it adds an order (by a numeric 'rank') to the {@link Transformer}
+ * it wires to a column.
+ */
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord(finders = { "findWiredTransformersByTransformer" })
@@ -34,6 +39,11 @@ public class WiredTransformer implements Comparable<WiredTransformer> {
         return String.format("%s: %s", this.getRank(), this.getTransformer().getName());
     }
 
+    /**
+     * Helper method to deal with the problem of orphaned WiredTransformers;
+     * Once this problem is sorted out properly please delete!
+     * @return
+     */
     public boolean isWireOrphan() {
         for (Wire wire:this.transformer.getConfiguration().getWiring()) {
             if (wire.getSourceTransformerForName(this.getName()) != null) return false;

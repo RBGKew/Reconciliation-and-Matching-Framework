@@ -2,6 +2,11 @@ package org.kew.stringmod.matchconf;
 
 import java.util.ArrayList;
 
+
+/**
+ * Writes out the xml to configure the 'real' deduplication/matching process of this specific
+ * {@link Reporter} instance.
+ */
 public class ReporterEngine {
 
     Reporter reporter;

@@ -1,5 +1,6 @@
 package org.kew.stringmod.matchconf;
 import javax.persistence.ManyToOne;
+
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -7,6 +8,13 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 
+/**
+ *
+ * This is the ORM equivalent to any heir of {@link org.kew.stringmod.dedupl.reporters.Reporter}.
+ *
+ * It can describe any reporter, the provided params are expected to be a comma-separated
+ * String of key=value pairs.
+ */
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord
@@ -29,8 +37,8 @@ public class Reporter extends CloneMe<Reporter> {
     private String idDelimiter = "|";
     private String fileName;
 
-    private String packageName = "org.kew.stringmod.dedupl.reporters";
-    private String className = "LuceneOutputReporter";
+    private String packageName;
+    private String className;
 
     private String params;
 

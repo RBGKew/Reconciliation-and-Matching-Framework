@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Sort;
@@ -15,7 +16,13 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 
-
+/**
+ * This is the ORM equivalent to any implementation of
+ * {@link org.kew.stringmod.lib.transformers.Transformer}.
+ *
+ * It can describe any matcher, the provided params are expected to be a comma-separated
+ * String of key=value pairs.
+ */
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord()
@@ -26,6 +33,9 @@ public class Transformer extends Bot {
     private String packageName;
     private String className;
     private String params;
+
+    @Transient
+    private final String group = "transformers";
 
     @ManyToMany(cascade = CascadeType.ALL)
     @Sort(type=SortType.NATURAL)
@@ -55,6 +65,12 @@ public class Transformer extends Bot {
         return clone;
     }
 
+    /**
+     * Helper method to deal with the problem of orphaned WiredTransformer instances.
+     * If this problem is sorted please delete!
+     *
+     * @throws Exception
+     */
     public void removeWiredTransformers() throws Exception {
         try {
             this.removeWiredTransformersLongWay();
@@ -65,6 +81,10 @@ public class Transformer extends Bot {
         }
     }
 
+    /**
+     * Helper method to deal with the problem of orphaned WiredTransformer instances.
+     * If this problem is sorted please delete!
+     */
     public Wire hasWiredTransformers() {
         for (Wire wire:this.getConfiguration().getWiring()) {
             for (WiredTransformer wt:wire.getSourceTransformers()) {
@@ -81,6 +101,10 @@ public class Transformer extends Bot {
         return null;
     }
 
+    /**
+     * Helper method to deal with the problem of orphaned WiredTransformer instances.
+     * If this problem is sorted please delete!
+     */
     public void removeOrphanedWiredTransformers() {
         List<WiredTransformer> all_wts = WiredTransformer.findAllWiredTransformers();
         for (WiredTransformer wt:all_wts) {
@@ -102,6 +126,10 @@ public class Transformer extends Bot {
         }
     }
 
+    /**
+     * Helper method to deal with the problem of orphaned WiredTransformer instances.
+     * If this problem is sorted please delete!
+     */
     public void removeWiredTransformersLongWay() {
         List<WiredTransformer> wts;
         for (Wire wire:this.getConfiguration().getWiring()) {
@@ -118,5 +146,10 @@ public class Transformer extends Bot {
             wire.merge();
         }
     }
+
+    @Override
+	public String getGroup() {
+		return group;
+	}
 
 }

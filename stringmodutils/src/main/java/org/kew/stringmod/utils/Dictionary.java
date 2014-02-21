@@ -11,6 +11,8 @@ import org.supercsv.prefs.CsvPreference;
 /**
  * A Dictionary is a HashMap of Strings that is created from the first two
  * columns (key, value) of a csv file.
+ *
+ * The way it is used is open to the user :-)
  */
 @SuppressWarnings("serial")
 public class Dictionary extends HashMap<String, String> implements Dict {

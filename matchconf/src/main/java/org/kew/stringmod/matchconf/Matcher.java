@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Sort;
@@ -16,6 +17,13 @@ import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 
 
+/**
+ * This is the ORM equivalent to any implementation of
+ * {@link org.kew.stringmod.dedupl.matchers.Matcher}.
+ *
+ * It can describe any matcher, the provided params are expected to be a comma-separated
+ * String of key=value pairs.
+ */
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord
@@ -26,6 +34,9 @@ public class Matcher extends Bot {
     private String packageName;
     private String className;
     private String params;
+
+    @Transient
+    private final String group = "matchers";
 
     @ManyToMany(cascade = CascadeType.ALL)
     @Sort(type=SortType.NATURAL)
@@ -54,4 +65,9 @@ public class Matcher extends Bot {
         }
         return clone;
     }
+
+    @Override
+	public String getGroup() {
+		return group;
+	}
 }

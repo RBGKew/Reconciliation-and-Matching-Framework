@@ -65,8 +65,8 @@ possible to easily clone configurations and then modify some bits and pieces
 without automatically changing other configurations.
 
 The necessary addition here is the WiredTransformer. This is due to the fact
-that a configuration can have 1:many transformers assigned without being wired,
-also, a wire can have 1:n source-transformers and 1:n lookup-transformers.
+that a configuration can have 0:n transformers assigned without being wired,
+also, a wire can have 0:n source-transformers and 0:n lookup-transformers.
 
 The sandbox paradigm is not the case for Dictionaries, as they are meant to be
 re-usable by all configurations.
