@@ -8,6 +8,12 @@ import javax.script.ScriptException;
 import com.google.gson.Gson;
 
 
+/**
+ * This boxed javascript environment is able to evaluate a string as javascript.
+ *
+ * The available data to evaluate on is provided in form of a map of strings, hence
+ * a typical task would be "record['columnA'] > 10 && record['columnB'] != 'jumpOverMe'"
+ */
 public class JavaScriptEnv {
 
     private ScriptEngineManager factory;

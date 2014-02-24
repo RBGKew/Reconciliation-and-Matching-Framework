@@ -63,6 +63,10 @@ public class LuceneHandler<Config extends Configuration> {
 		return indexSearcher.search(q, maxSearchResults);
 	}
 	
+	/**
+	 * Asks the config to initialise the Reporters properly and initialises the in-the-box
+	 * javascript environment, if it will be used.
+	 */
     public void prepareEnvs() {
         // copy some necessary values to reporters and possibly create pipers if recordFilter is set
         config.setupReporting();

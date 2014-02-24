@@ -18,7 +18,7 @@ import org.supercsv.prefs.CsvPreference;
  * This is a CsvReporter really.
  *
  * Its subclasses manage the output of the deduplication/matching process,
- * recieve it row by row and writes it wherever it's configured to do so.
+ * receive it row by row and write it wherever they are configured to do so.
  *
  * TODO: design and implement the Reporter subclass to be more generic than
  * csv-focused.

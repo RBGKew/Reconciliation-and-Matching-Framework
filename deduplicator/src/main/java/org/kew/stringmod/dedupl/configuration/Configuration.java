@@ -57,6 +57,12 @@ public abstract class Configuration implements AutoCloseable {
 
     public abstract String[] outputDefs();
 
+    /**
+     * This does two things:
+     * (1) copy over some config-wide setting to each reporter
+     * (2) add a Piper (a dummy reporter that does the basic job for records where no reporter
+     *     needed) for each reporter
+     */
     public void setupReporting() {
         for (LuceneReporter rep:this.getReporters()) {
             rep.setIdFieldName(Configuration.ID_FIELD_NAME);

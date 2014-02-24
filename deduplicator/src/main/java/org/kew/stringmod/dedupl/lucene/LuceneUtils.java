@@ -14,6 +14,13 @@ import org.kew.stringmod.dedupl.configuration.Property;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * A helper class to
+ * --> map from Maps to Lucene Documents and vice versa
+ * --> build a query string that lucene understands
+ * --> check whether two strings match according to the configured
+ *     {@link org.kew.stringmod.dedupl.matchers.Matcher}
+ */
 public class LuceneUtils {
 
     private static Logger logger = LoggerFactory.getLogger(LuceneUtils.class);
@@ -58,91 +65,6 @@ public class LuceneUtils {
             sb.append(doc.getField(f.name()).stringValue());
         }
         return sb.toString();
-    }
-
-    public static String buildComparisonString(List<Property> properties, Document doc1, Document doc2){
-        return buildComparisonString(properties, doc2Map(doc1), doc2Map(doc2), "#");
-    }
-
-    /**
-     * Return a string containing the field names and values for those fields that
-     * differ in value between the two records supplied.
-     * @param doc1
-     * @param doc2
-     * @param prefix
-     * @return
-     */
-    public static String buildComparisonString(List<Property> properties, Map<String,String> map, Document doc){
-        return buildComparisonString(properties, map, doc2Map(doc), "#");
-    }
-
-    public static String buildComparisonString(List<Property> properties, Map<String,String> map, Document doc, String prefix){
-        return buildComparisonString(properties, map, doc2Map(doc), prefix);
-    }
-
-    public static String buildComparisonString(List<Property> properties, Map<String,String> map1, Map<String,String> map2, String prefix){
-        StringBuffer sb = new StringBuffer();
-        for (Property p : properties){
-            String key = p.getLookupColumnName();
-            if (!key.equals(Configuration.ID_FIELD_NAME)){
-                String v1 = map1.get(key);
-                String v2 = map2.get(key);
-                if (!v1.equals(v2)){
-                    sb.append(prefix).append(key).append("\n");
-                    sb.append(prefix).append(v1).append("\n");
-                    sb.append(prefix).append(v2).append("\n");
-                }
-            }
-        }
-        return sb.toString();
-    }
-
-    /**
-     * Return a string containing all the matched field names and comparison metrics
-     * String is written to a file which can be loaded into a db table for further analysis
-     * @param doc1
-     * @param doc2
-     * @param prefix
-     * @return
-     */
-    public static String buildFullComparisonString(Map<String,String> map, Document doc){
-        return buildFullComparisonString(map, doc2Map(doc), "#");
-    }
-
-    public static String buildFullComparisonString(Map<String,String> map, Document doc, String prefix){
-        return buildFullComparisonString(map, doc2Map(doc), prefix);
-    }
-
-    public static String buildFullComparisonString(Map<String,String> map1, Map<String,String> map2, String prefix){
-        StringBuffer sb = new StringBuffer();
-        for (String key : map1.keySet()){
-               String v1 = map1.get(key);
-               String v2 = map2.get(key);
-                //if (!v1.equals(v2)){
-                    //sb.append(key).append(prefix);
-                    sb.append(v1).append(prefix);
-                    sb.append(v2).append(prefix);
-
-                //}
-
-        }
-        sb.append("\n");
-        return sb.toString();
-    }
-
-    public static String buildNoMatchDelimitedString(Map<String,String> map){
-        return buildNoMatchDelimitedString(map, "#");
-    }
-
-    public static String buildNoMatchDelimitedString(Map<String,String> map, String prefix){
-        StringBuffer sb = new StringBuffer();
-        for (String key : map.keySet()){
-               String v1 = map.get(key);
-               sb.append(v1).append(prefix);
-               sb.append("").append(prefix);
-        }
-               sb.append("\n");
-               return sb.toString();
     }
 
     public static String buildQuery(List<Property> properties, Document doc, boolean dedupl){

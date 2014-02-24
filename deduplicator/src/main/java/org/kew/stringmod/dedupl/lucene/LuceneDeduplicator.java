@@ -17,10 +17,17 @@ import org.kew.stringmod.dedupl.reporters.LuceneReporter;
 import org.kew.stringmod.dedupl.reporters.Piper;
 
 
+/**
+ * This is the main handler for any de-duplication.
+ *
+ */
 public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration> implements DataHandler<DeduplicationConfiguration> {
 
     protected DeduplicationConfiguration dedupConfig;
 
+    /**
+     * Uses the {@link DataLoader} in a dedup specific way
+     */
     public void loadData() throws Exception {
         if (!getConfig().isReuseIndex()){
             dataLoader.setConfig(this.getConfig());
@@ -28,6 +35,18 @@ public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration
         }
     }
 
+    /**
+     * Run the whole de-duplication.
+     *
+     * The iterative flow is:
+     * - load the data (== write the index)
+     * - iterate over the index, using it here as source data
+     * 	- for each record, look for matches in the same index, using it now as lookup data
+     *	- for each record, report into new fields of this record about matches via reporters
+     *
+     * The main difference to a matching task as defined by {@link LuceneMatcher} is that we use
+     * the lucene index not only as lookup but as well as source file iterating over each record.
+     */
     public void run() throws Exception {
 
         this.loadData(); // writes the index according to the configuration

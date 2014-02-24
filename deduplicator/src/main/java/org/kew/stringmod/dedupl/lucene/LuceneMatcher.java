@@ -35,6 +35,19 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
             this.logger.info("Reusing existing index");
     }
 
+    /**
+     * Run the whole matching task.
+     *
+     * The iterative flow is:
+     * - load the data (== write the lucene index)
+     * - iterate over the source data file
+     * 	- for each record, look for matches in the index
+     *	- for each record, report into new fields of this record about matches via reporters
+     *
+     * The main difference to a deduplication task as defined by {@link LuceneDeduplicator}
+     * is that we use two different datasets, one to create the lookup index, the other one as
+     * source file (where we iterate over each record to look up possible matches).
+     */
     public void run() throws Exception {
 
         this.loadData(); // writes the index according to the configuration
