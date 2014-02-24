@@ -2,6 +2,11 @@ package org.kew.stringmod.dedupl.matchers;
 
 import org.kew.stringmod.utils.LibraryRegister;
 
+/**
+ * A simple number matcher that compares two Integers and accepts a maximal difference of
+ * `maxDiff` to match.
+ *
+ */
 @LibraryRegister(category="matchers")
 public class IntegerMatcher implements Matcher {
 
@@ -27,6 +32,14 @@ public class IntegerMatcher implements Matcher {
 	public String getExecutionReport() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public int getMaxDiff() {
+		return maxDiff;
+	}
+
+	public void setMaxDiff(int maxDiff) {
+		this.maxDiff = maxDiff;
 	}
 
 }
