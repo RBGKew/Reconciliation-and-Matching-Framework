@@ -11,7 +11,7 @@ public class IntegerMatcherTest {
 		IntegerMatcher matcher = new IntegerMatcher();
 		assertTrue(matcher.matches("10", "15"));
 		assertFalse(matcher.matches("10", "16"));
-		//matcher.setMaxDiff(6);
+		matcher.setMaxDiff(6);
 		assertTrue(matcher.matches("10", "16"));
 	}
 
