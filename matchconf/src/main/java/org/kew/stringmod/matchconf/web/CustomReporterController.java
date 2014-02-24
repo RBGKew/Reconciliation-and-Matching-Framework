@@ -113,7 +113,7 @@ public class CustomReporterController {
     }
 
     // DELETE by id
-    @RequestMapping(value="/{configType}_configs/{configName}/reporters/delete-by-id/{id}", method = RequestMethod.GET, produces = "text/html")
+    @RequestMapping(value="/{configType}_configs/{configName}/reporters/delete-by-id/{id}", method = RequestMethod.DELETE, produces = "text/html")
     public String deleteById(@PathVariable("configType") String configType, @PathVariable("configName") String configName, @PathVariable("id") long id, Model uiModel) {
         Reporter toDelete = Reporter.findReporter(id);
         Configuration config = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();

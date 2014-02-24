@@ -117,7 +117,7 @@ public class CustomTransformerController {
     }
 
     // DELETE by id
-    @RequestMapping(value="/{configType}_configs/{configName}/transformers/delete-by-id/{id}", method = RequestMethod.GET, produces = "text/html")
+    @RequestMapping(value="/{configType}_configs/{configName}/transformers/delete-by-id/{id}", method = RequestMethod.DELETE, produces = "text/html")
     public String deleteById(@PathVariable("configType") String configType, @PathVariable("configName") String configName, @PathVariable("id") long id, Model uiModel) {
         Transformer toDelete = Transformer.findTransformer(id);
         Configuration config = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();

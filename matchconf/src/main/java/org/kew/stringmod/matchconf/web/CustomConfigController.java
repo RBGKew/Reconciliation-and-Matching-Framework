@@ -129,7 +129,7 @@ public class CustomConfigController {
     }
 
     // DELETE by id
-    @RequestMapping(value="/{configType}_configs/delete-by-id/{id}", method = RequestMethod.GET, produces = "text/html")
+    @RequestMapping(value="/{configType}_configs/delete-by-id/{id}", method = RequestMethod.DELETE, produces = "text/html")
     public String deleteById(@PathVariable("configType") String configType, @PathVariable("id") long id, Model uiModel) {
         Configuration toDelete = Configuration.findConfiguration(id);
         toDelete.remove();

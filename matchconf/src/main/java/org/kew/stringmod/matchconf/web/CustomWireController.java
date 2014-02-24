@@ -108,7 +108,7 @@ public class CustomWireController {
     }
 
     // DELETE by id
-    @RequestMapping(value="/{configType}_configs/{configName}/wires/delete-by-id/{id}", method = RequestMethod.GET, produces = "text/html")
+    @RequestMapping(value="/{configType}_configs/{configName}/wires/delete-by-id/{id}", method = RequestMethod.DELETE, produces = "text/html")
     public String deleteById(@PathVariable("configType") String configType, @PathVariable("configName") String configName, @PathVariable("id") long id, Model uiModel) {
         Wire toDelete = Wire.findWire(id);
         Configuration config = Configuration.findConfigurationsByNameEquals(configName).getSingleResult();
