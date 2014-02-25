@@ -1,7 +1,10 @@
 package org.kew.stringmod.dedupl.lucene;
 
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -35,14 +38,79 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
             this.logger.info("Reusing existing index");
     }
 
+    public List<Map<String,String>> getMatches(Map<String, String> record, int numMatches) throws Exception {
+        // pipe everything through to the output where an existing filter evals to false;
+        if (!StringUtils.isBlank(config.getRecordFilter()) && !jsEnv.evalFilter(config.getRecordFilter(), record)) {
+            return null;
+        }
+        // transform fields where required
+        for (Property prop:config.getProperties()) {
+            String fName = prop.getSourceColumnName();
+            String fValue = record.get(fName);
+            // transform the field-value..
+            fValue = fValue == null ? "" : fValue; // super-csv treats blank as null, we don't for now
+            for (Transformer t:prop.getSourceTransformers()) {
+                fValue = t.transform(fValue);
+            }
+            // ..and put it into the record
+            record.put(fName + Configuration.TRANSFORMED_SUFFIX, fValue);
+        }
+
+        String fromId = record.get(Configuration.ID_FIELD_NAME);
+        // Use the properties to select a set of documents which may contain matches
+        String querystr = LuceneUtils.buildQuery(config.getProperties(), record, false);
+        // If the query for some reasons results being empty we pipe the record directly through to the output
+        // TODO: create a log-file that stores critical log messages?
+        if (querystr.equals("")) {
+            logger.warn("Empty query for record {}", record);
+            return null;
+        }
+
+        TopDocs td = queryLucene(querystr, this.getIndexSearcher(), config.getMaxSearchResults());
+        if (td.totalHits == config.getMaxSearchResults()) {
+            throw new Exception(String.format("Number of max search results exceeded for record %s! You should either tweak your config to bring back less possible results making better use of the \"useInSelect\" switch (recommended) or raise the \"maxSearchResults\" number.", record));
+        }
+        this.logger.debug("Found " + td.totalHits + " possibles to assess against " + fromId);
+
+        List<Map<String, String>> matches = new ArrayList<>();
+
+        for (ScoreDoc sd : td.scoreDocs){
+            Document toDoc = getFromLucene(sd.doc);
+            if (LuceneUtils.recordsMatch(record, toDoc, config.getProperties())) {
+                numMatches++;
+                matches.add(LuceneUtils.doc2Map(toDoc));
+            }
+        }
+        sortMatches(matches);
+        return matches;
+    }
+
+    public void sortMatches(List<Map<String, String>> matches) {
+        final String sortOn = config.getScoreFieldName();
+        try {
+            Collections.sort(matches, Collections.reverseOrder(new Comparator<Map<String, String>>() {
+                public int compare(final Map<String, String> m1,final Map<String, String> m2) {
+                    return Integer.valueOf(m1.get(sortOn)).compareTo(Integer.valueOf(m2.get(sortOn)));
+                }
+            }));
+        } catch (NumberFormatException e) {
+            // if the String can't be converted to an integer we do String comparison
+            Collections.sort(matches, Collections.reverseOrder(new Comparator<Map<String, String>>() {
+                public int compare(final Map<String, String> m1,final Map<String, String> m2) {
+                    return m1.get(sortOn).compareTo(m2.get(sortOn));
+                }
+            }));
+        }
+    }
+
     /**
      * Run the whole matching task.
      *
      * The iterative flow is:
      * - load the data (== write the lucene index)
      * - iterate over the source data file
-     * 	- for each record, look for matches in the index
-     *	- for each record, report into new fields of this record about matches via reporters
+     *     - for each record, look for matches in the index
+     *    - for each record, report into new fields of this record about matches via reporters
      *
      * The main difference to a deduplication task as defined by {@link LuceneDeduplicator}
      * is that we use two different datasets, one to create the lookup index, the other one as
@@ -76,62 +144,16 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
             if (!headerList.contains(idFieldName)) throw new Exception(String.format("%s: Id field name not found in header, should be %s!", this.config.getSourceFile().getPath(), idFieldName));
             Map<String, String> record;
             while((record = mr.read(header)) != null) {
-                // pipe everything through to the output where an existing filter evals to false;
-                if (!StringUtils.isBlank(config.getRecordFilter()) && !jsEnv.evalFilter(config.getRecordFilter(), record)) {
+                List<Map<String, String>> matches = getMatches(record, numMatches);
+                if (matches == null) {
                     for (Piper piper:config.getPipers()) piper.pipe(record);
                     continue;
                 }
-
-                // transform fields where required
-                for (Property prop:config.getProperties()) {
-                    String fName = prop.getSourceColumnName();
-                    String fValue = record.get(fName);
-                    // transform the field-value..
-                    fValue = fValue == null ? "" : fValue; // super-csv treats blank as null, we don't for now
-                    for (Transformer t:prop.getSourceTransformers()) {
-                        fValue = t.transform(fValue);
-                    }
-                    // ..and put it into the record
-                    record.put(fName + Configuration.TRANSFORMED_SUFFIX, fValue);
-                }
-
-                String fromId = record.get(Configuration.ID_FIELD_NAME);
-
-                // Use the properties to select a set of documents which may contain matches
-                String querystr = LuceneUtils.buildQuery(config.getProperties(), record, false);
-                // If the query for some reasons results being empty we pipe the record directly through to the output
-                // TODO: create a log-file that stores critical log messages?
-                if (querystr.equals("")) {
-                    logger.warn("Empty query for record {}", record);
-                    for (Piper piper:config.getPipers()) piper.pipe(record);
-                    continue;
-                }
-
-                TopDocs td = queryLucene(querystr, this.getIndexSearcher(), config.getMaxSearchResults());
-                if (td.totalHits == config.getMaxSearchResults()) {
-                    throw new Exception(String.format("Number of max search results exceeded for record %s! You should either tweak your config to bring back less possible results making better use of the \"useInSelect\" switch (recommended) or raise the \"maxSearchResults\" number.", record));
-                }
-                this.logger.debug("Found " + td.totalHits + " possibles to assess against " + fromId);
-
-                DocList matches = new DocList(record, config.getScoreFieldName());
-
-                for (ScoreDoc sd : td.scoreDocs){
-                    Document toDoc = getFromLucene(sd.doc);
-                    if (LuceneUtils.recordsMatch(record, toDoc, config.getProperties())){
-                        numMatches++;
-                        if (matches == null) {
-                            // TODO: might have to convert the sourceRecord to a Document instead, not sure..
-                            matches = new DocList(toDoc, config.getScoreFieldName());
-                        } else matches.add(toDoc);
-                    }
-                }
-                matches.sort();
-
                 if (i++ % config.getAssessReportFrequency() == 0) this.logger.info("Assessed " + i + " records, found " + numMatches + " matches");
                 // call each reporter that has a say; all they get is a complete list of duplicates for this record.
                 for (LuceneReporter reporter : config.getReporters()) {
                     // TODO: make idFieldName configurable, but not on reporter level
-                    reporter.report(matches);
+                    reporter.report(record, matches);
                 }
             }
             this.logger.info("Assessed " + i + " records, found " + numMatches + " matches");
