@@ -2,14 +2,18 @@ package org.kew.stringmod.utils;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.TreeMap;
 
 import org.supercsv.io.CsvListReader;
 import org.supercsv.prefs.CsvPreference;
 
+/**
+ * Same as a {@link Dict}, but maintains order of insertion.
+ *
+ */
 @SuppressWarnings("serial")
-public class OrderedDict extends TreeMap<String, String> implements Dict {
+public class OrderedDict extends LinkedHashMap<String, String> implements Dict {
 
     String fileDelimiter;
     String filePath;
