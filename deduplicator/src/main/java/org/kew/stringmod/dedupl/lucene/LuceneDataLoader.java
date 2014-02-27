@@ -76,11 +76,29 @@ public class LuceneDataLoader implements DataLoader {
             String idFieldName = Configuration.ID_FIELD_NAME;
             if (!headerList.contains(idFieldName)) throw new Exception(String.format("%s: Id field name not found in header, should be %s!", this.config.getLookupFile().getPath(), idFieldName));
             Map<String, String> record;
-            while((record = mr.read(header)) != null) {
-                this.indexRecord(record);
-                if (i++ % this.config.getLoadReportFrequency() == 0) logger.info("Indexed " + i + " documents");
+            record = mr.read(header);
+            while(record != null) {
+                if (i++ % this.config.getLoadReportFrequency() == 0){
+                	logger.info("Indexed " + i + " documents");
+                }
+                try{
+                	this.indexRecord(record);
+                	record = mr.read(header);
+                }
+                catch (Exception e) {
+                	if (config.isContinueOnError()){
+                		logger.info("Problem indexing record " + i);    		
+                	}
+                	else{
+                		logger.info("Problem indexing record " + i + ", exiting");
+                		throw e;
+                	}
+				}
             }
             indexWriter.commit();
+        }
+        catch(Exception e){
+        	throw e;
         }
         logger.info("Indexed " + i + " documents");
     }

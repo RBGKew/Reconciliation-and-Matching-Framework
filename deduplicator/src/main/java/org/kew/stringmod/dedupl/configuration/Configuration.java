@@ -18,6 +18,8 @@ import org.kew.stringmod.dedupl.reporters.Piper;
  */
 public abstract class Configuration implements AutoCloseable {
 
+	private String name;
+	
     private List<Property> properties;
 
     private File sourceFile;
@@ -31,7 +33,8 @@ public abstract class Configuration implements AutoCloseable {
     private boolean writeComparisonReport=false;
     private boolean writeDelimitedReport=false;
     private boolean includeNonMatchesInDelimitedReport=false;
-
+    private boolean continueOnError=false;
+    
     private int loadReportFrequency=50000;
     private int assessReportFrequency=100;
 
@@ -214,4 +217,16 @@ public abstract class Configuration implements AutoCloseable {
     public void setMaxSearchResults(int maxSearchResults) {
         this.maxSearchResults = maxSearchResults;
     }
+	public boolean isContinueOnError() {
+		return continueOnError;
+	}
+	public void setContinueOnError(boolean continueOnError) {
+		this.continueOnError = continueOnError;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
 }
