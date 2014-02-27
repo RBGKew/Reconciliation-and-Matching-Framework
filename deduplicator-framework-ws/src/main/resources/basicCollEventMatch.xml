@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation="
+                    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+	<bean id="preferencePlaceHolder"
+		class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+			</list>
+		</property>
+	</bean>
+	<bean id="lucene_directory" class="java.lang.String">
+		<constructor-arg value="#{ systemProperties['datadir']}/lucene_directory_basic/" />
+	</bean>
+	<bean id="sourcefile" class="java.io.File">
+		<constructor-arg value="#{ systemProperties['datadir']}/coll-event-source.txt" />
+	</bean>
+	<bean id="lookupfile" class="java.io.File">
+		<constructor-arg value="#{ systemProperties['datadir']}/coll-event-lookup.txt" />
+	</bean>
+	
+	<bean id="stripNonAlphaNumerics"
+		class="org.kew.shs.dedupl.transformers.StripNonAlphanumericCharactersTransformer"/>
+	<bean id="stripNulls"
+		class="org.kew.shs.dedupl.transformers.A2BTransformer" p:a="NULL" p:b="" />
+	<bean id="surnameExtractor"
+		class="org.kew.shs.dedupl.transformers.authors.SirnameExtracter"/>
+	<bean id="yearShrinker"
+		class="org.kew.shs.dedupl.transformers.StringShrinker" c:shrinkTo="4"/>
+
+	<bean id="exactMatch" class="org.kew.shs.dedupl.matchers.ExactMatcher"
+		p:blanksMatch="false" />
+	<bean id="exactMatchBlanksOk" class="org.kew.shs.dedupl.matchers.ExactMatcher"
+		p:blanksMatch="true" />
+	
+	<bean id="alwaysMatch" class="org.kew.shs.dedupl.matchers.AlwaysMatchingMatcher"/>
+	<bean id="neverMatch" class="org.kew.shs.dedupl.matchers.NeverMatchingMatcher"/>
+	
+	<bean id="ngramMatchColl" class="org.kew.shs.dedupl.matchers.NGramMatcher" p:nGramLength="2" p:minRatio="0.6"/>
+	<bean id="ngramMatchLocality" class="org.kew.shs.dedupl.matchers.NGramMatcher" p:nGramLength="2" p:minRatio="0.5"/>
+		
+	<util:list id="reporters">
+		<bean class="org.kew.shs.dedupl.reporters.MatchReporter" p:name="standardReporter"
+			p:configName="simple-match-config" p:delimiter="&#09;" p:idDelimiter="|">
+			<property name="file">
+				<bean class="java.io.File">
+					<constructor-arg
+						value="#{ systemProperties['datadir']}/paris-herbcat_output-as.tsv" />
+				</bean>
+			</property>
+		</bean>
+		<!--bean class="org.kew.shs.dedupl.reporters.MatchReporterMultiline"
+			p:name="multilineReporter" p:configName="simple-match-config"
+			p:delimiter="&#09;" p:idDelimiter="|">
+			<property name="file">
+				<bean class="java.io.File">
+					<constructor-arg
+						value="${datadir}/simple-match-config_output_multiline.tsv" />
+				</bean>
+			</property>
+		</bean-->
+	</util:list>
+	<util:list id="columnProperties">
+		<bean class="org.kew.shs.dedupl.configuration.Property"
+			p:sourceColumnName="coll" p:lookupColumnName="recordedBy"
+			p:useInSelect="false" p:matcher-ref="ngramMatchColl"
+			p:addOriginalLookupValue="true" p:addOriginalSourceValue="true">
+			<property name="sourceTransformers">
+                            <util:list id="1">
+                                <ref bean="surnameExtractor"/>
+                            </util:list>
+                        </property>
+                        <property name="lookupTransformers">
+                            <util:list id="1">
+                                <ref bean="surnameExtractor"/>
+                            </util:list>
+                        </property>
+		</bean>	
+		<bean class="org.kew.shs.dedupl.configuration.Property"
+			p:sourceColumnName="coll_no" p:lookupColumnName="recordNumber"
+			p:useInSelect="true" p:matcher-ref="exactMatch"
+			p:addOriginalLookupValue="true" p:addOriginalSourceValue="true">
+		</bean>	
+		<bean class="org.kew.shs.dedupl.configuration.Property"
+			p:sourceColumnName="locality" p:lookupColumnName="verbatimLocality"
+			p:useInSelect="false" p:matcher-ref="ngramMatchLocality"
+			p:addOriginalLookupValue="true" p:addOriginalSourceValue="true">
+			<!--property name="sourceTransformers">
+                            <util:list id="1">
+                                <ref bean="stripNonAlphaNumerics"/>
+                            </util:list>
+                        </property>
+                        <property name="lookupTransformers">
+                            <util:list id="1">
+                                <ref bean="stripNonAlphaNumerics"/>
+                            </util:list>
+                        </property-->
+		</bean>	
+		<bean class="org.kew.shs.dedupl.configuration.Property"
+			p:sourceColumnName="year" p:lookupColumnName="eventDate"
+			p:useInSelect="true" p:matcher-ref="exactMatchBlanksOk"
+			p:addOriginalLookupValue="true" p:addOriginalSourceValue="true">
+			<property name="sourceTransformers">
+                            <util:list id="1">
+                                <ref bean="stripNulls"/>
+                            </util:list>
+                        </property>
+                        <property name="lookupTransformers">
+                            <util:list id="1">
+                                <ref bean="stripNulls"/>
+                                <ref bean="yearShrinker"/>
+                            </util:list>
+                        </property>
+		</bean>	
+	</util:list>
+	
+	<bean id="config" class="org.kew.shs.dedupl.configuration.MatchConfiguration"
+		p:sourceFile-ref="sourcefile" p:sourceFileEncoding="UTF8"
+		p:sourceFileDelimiter="&#09;" p:lookupFile-ref="lookupfile"
+		p:lookupFileEncoding="UTF8" p:lookupFileDelimiter=","
+		p:properties-ref="columnProperties" p:scoreFieldName="id"
+		p:loadReportFrequency="50000" p:assessReportFrequency="100"
+		p:maxSearchResults="10000" p:recordFilter="" p:reporters-ref="reporters"
+		p:continueOnError="true" p:reuseIndex="false"
+		p:name="basicCollEventMatch"/>
+
+
+	<!-- import the generic application-context (equal for dedup/match configurations) -->
+	<import resource="classpath*:generic.xml" />
+	<!-- add the matching-specific bit -->
+	<import resource="classpath*:match.xml" />
+</beans>

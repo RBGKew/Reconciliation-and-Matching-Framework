@@ -9,8 +9,9 @@
     <modules>
         <module>deduplicator</module>
         <module>matchconf</module>
-  		<module>stringmodlib</module>
-    	<module>stringmodutils</module>
+        <module>stringmodlib</module>
+        <module>stringmodutils</module>
+        <module>deduplicator-framework-ws</module>
   </modules>
 
     <properties>
