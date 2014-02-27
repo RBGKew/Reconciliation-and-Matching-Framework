@@ -6,7 +6,7 @@ Feature: Deduplicate Ipni
     I want the deduplicator framework to do the work for me, I just have to provide a decent configuration.
 
     Scenario: Genus level
-        Given Rachel has created an input-file to feed the deduplicator framework containing tab-separated Genus data
+        Given Rachel has created an input-file to feed the deduplicator containing tab-separated Genus data
             | id         | family      | genus           | authors     | basionym_author | publishing_author | full_name_without_family_and_authors | publication              | collation     | publication_year | reference_remarks | remarks | std_score | test_concern                                                                                      |
             | 30022170-2 | Rapateaceae | Saxo-fridericia | R.H.Schomb. |                 | R.H.Schomb.       | Saxo-fridericia                      | Rapatea                  | 13            | 1845             |                   |         | 9         | Does presence of hyphen in genus name prevent clustering                                          |
             | 1001-1     | Ericaceae   | Leucothoë       | D.Don       |                 | D.Don             | Leucothoë                            | Edinburgh New Philos. J. | 17: 159       | 1834             |                   |         | 9         | Does presence of diacritic character at end of name prevent clustering                            |
@@ -28,7 +28,7 @@ Feature: Deduplicate Ipni
             | 5001-2     | Orchidaceae | X Amphorchis    | Thouars     |                 | Thouars           | X Amphorchis                         | Hist. Orchid.            | 11            | 1822             |                   |         | 8         | Does presence of capital letter X at start of name prevent clustering                             |
             | 9999-1     | Rapateaceae | Saxo-fridericia | R.H.Schomb. |                 | R.H.Schomb.       | Saxo-fridericia                      | Rapatea                  | 13            | 1845             |                   |         | 7         | Does presence of hyphen in genus name prevent clustering                                          |
 
-        And Alecs has set up a genus-dedup configuration file according to her specs:
+        And Alecs has set up a genus-dedup configuration file:
             """
             <?xml version="1.0" encoding="UTF-8"?>
             <beans xmlns="http://www.springframework.org/schema/beans"
@@ -49,7 +49,7 @@ Feature: Deduplicate Ipni
                     <constructor-arg value="target/deduplicator"/>
                 </bean>
                 <bean id="inputfile" class="java.io.File">
-                    <constructor-arg value="REPLACE_WITH_TMPDIR/input.txt" />
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/source.txt" />
                 </bean>
                 <bean id="exactMatcher" class="org.kew.stringmod.dedupl.matchers.ExactMatcher" />
                 <bean id="authorCommonTokensMatcher" class="org.kew.stringmod.dedupl.matchers.AuthorCommonTokensMatcher"
@@ -216,8 +216,8 @@ Feature: Deduplicate Ipni
                 <import resource="classpath*:application-context-dedup.xml"/>
             </beans>
             """
-        When this genus config is run through the Dedupl App
-        Then a file should have been created in the same folder with the following genus data:
+        When this config is run through the deduplicator
+        Then a file should have been created in the same folder with the following data:
             | id         | family      | genus           | genus_transf    | publishing_author      | publishing_author_transf | full_name_without_family_and_authors | publication_transf       | collation      | collation_transf | publication_year | std_score | test_concern                                                                                      | cluster_size | from_id    | ids_in_cluster                  |
             | 30022170-2 | Rapateaceae | Saxo-fridericia | Saxo fridericia | R.H.Schomb.            | R H Schomb               | Saxo-fridericia                      | Rapatea                  | 13             | 13               | 1845             | 9         | Does presence of hyphen in genus name prevent clustering                                          | 3            | 30022170-2 | 30022170-2 \| 33288-1 \| 9999-1 |
             | 1001-1     | Ericaceae   | Leucothoë       | Leucothoe       | D.Don                  | D Don                    | Leucothoë                            | Edinburgh New Philos J   | 17: 159        | 17 159           | 1834             | 9         | Does presence of diacritic character at end of name prevent clustering                            | 2            | 1001-1     | 1001-1 \| 1001-2                |
@@ -229,7 +229,7 @@ Feature: Deduplicate Ipni
             | 4001-1     | Orchidaceae | ×Amphorchis     | Amphorchis      | Thouars                | Thouars                  | ×Amphorchis                          | Hist Orchid              | 56             | 56               | 1822             | 8         | Does presence of multiplication sign without whitespace at start of genus name prevent clustering | 2            | 4001-1     | 4001-1 \| 4001-2                |
             | 5001-1     | Orchidaceae | X Amphorchis    | Amphorchis      | Thouars                | Thouars                  | X Amphorchis                         | Hist Orchid              | 11             | 11               | 1822             | 8         | Does presence of capital letter X at start of name prevent clustering                             | 2            | 5001-1     | 5001-1 \| 5001-2                |
 
-        And a file for the multiline output should have been created in the same folder with the following genus data:
+        And a file for the multiline output should have been created in the same folder with the following data:
             | id         | family      | genus           |  genus_transf    | publishing_author | publishing_author_transf | full_name_without_family_and_authors | publication_transf     | collation     | collation_transf | publication_year | std_score | test_concern                                                                                      | cluster_size | best_record_id | rank |
             | 30022170-2 | Rapateaceae | Saxo-fridericia |  Saxo fridericia | R.H.Schomb.       | R H Schomb               | Saxo-fridericia                      | Rapatea                | 13            | 13               | 1845             | 9         | Does presence of hyphen in genus name prevent clustering                                          | 3            | 30022170-2     | 1    |
             | 33288-1    | Rapateaceae | Saxo-fridericia |  Saxo fridericia | R.H.Schomb.       | R H Schomb               | Saxo-fridericia                      | Rapatea                | 13            | 13               | 1845             | 8         | Does presence of hyphen in genus name prevent clustering                                          | 3            | 30022170-2     | 2    |
@@ -253,7 +253,7 @@ Feature: Deduplicate Ipni
 
 
     Scenario: Species level
-        Given Eszter has created an input-file to feed the deduplicator framework containing tab-separated Species data
+        Given Eszter has created an input-file to feed the deduplicator containing tab-separated Species data
             |         id |          family |       genus |  rank | basionym_author |                   publishing_author | full_name_without_family_and_authors |                       publication |            collation | publication_year | reference_remarks |             remarks | std_score |      dit_family |                                                                                                                                           test_concern |
             |   307089-2 |        Fabaceae |    Baptisia | spec. |                 |   Kosnik, Diggs, Redshaw & Lipscomb |                Baptisia × variicolor |                              Sida |              17: 498 |             1996 |                   |                     |        13 |     Leguminosae |                                                  Does presence of multiplication sign and whitespace between genus and species name prevent clustering |
             |   300547-2 |     Orchidaceae |    Barkeria | spec. |                 |                         Soto Arenas |         Barkeria fritz-halbingeriana |            Orquidea (Mexico City) | 13: 245 (-246; fig.) |             1993 |                   |                     |        13 |     Orchidaceae |                                                                                          Does presence of hyphen in species epithet prevent clustering |
@@ -288,7 +288,7 @@ Feature: Deduplicate Ipni
             | 17325300-1 | Dryopteridaceae | Dryopteris  | spec. |                 |                        Schott       |                 Dryopteris filix-mas |                                   |                      |                  |                   |                     |         1 | Dryopteridaceae |                                                                                                    Does hybrid epithet cluster with non-hybrid epithet |
             | 17270100-1 | Dryopteridaceae | Dryopteris  | spec. |                 |                                     |     Dryopteris filix mas x spinulosa |                                   |                      |                  |                   |                     |         1 | Dryopteridaceae |                                                                                                    Does hybrid epithet cluster with non-hybrid epithet |
 
-        And Alecs has set up a species-dedup configuration file in the same folder according to her specs:
+        And Alecs has set up a species-dedup configuration file:
             """
             <?xml version="1.0" encoding="UTF-8"?>
             <beans xmlns="http://www.springframework.org/schema/beans"
@@ -309,7 +309,7 @@ Feature: Deduplicate Ipni
                     <constructor-arg value="target/deduplicator"/>
                 </bean>
                 <bean id="inputfile" class="java.io.File">
-                    <constructor-arg value="REPLACE_WITH_TMPDIR/input.txt" />
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/source.txt" />
                 </bean>
                 <bean id="exactMatcher" class="org.kew.stringmod.dedupl.matchers.ExactMatcher" />
                 <bean id="authorCommonTokensMatcher" class="org.kew.stringmod.dedupl.matchers.AuthorCommonTokensMatcher"
@@ -480,8 +480,8 @@ Feature: Deduplicate Ipni
                 <import resource="classpath*:application-context-dedup.xml"/>
             </beans>
             """
-        When this species config is run through the Dedupl App
-        Then a file should have been created in the same folder with the following species data:
+        When this config is run through the deduplicator
+        Then a file should have been created in the same folder with the following data:
             |         id |          family |  genus      | genus_transf |                 publishing_author |      publishing_author_transf |      full_name_without_family_and_authors | full_name_without_family_and_authors_transf |             publication_transf |            collation | collation_transf | publication_year | reference_remarks |             remarks | std_score |      dit_family | cluster_size |    from_id |                           ids_in_cluster |
             |   307089-2 |        Fabaceae |    Baptisia |     Baptisia | Kosnik, Diggs, Redshaw & Lipscomb | Kosnik Diggs Redshaw Lipscomb |                     Baptisia × variicolor |                  Baptisia variicolor        |                           Sida |              17: 498 |           17 498 |             1996 |                   |                     |        13 |     Leguminosae |            2 |   307089-2 |                     307089-2 \| 993921-1 |
             |   300547-2 |     Orchidaceae |    Barkeria |     Barkeria |                       Soto Arenas |                   Soto Arenas |              Barkeria fritz-halbingeriana |         Barkeria fritz halbingeriana        |           Orquidea Mexico City | 13: 245 (-246; fig.) |   13 245 246 fig |             1993 |                   |                     |        13 |     Orchidaceae |            2 |   300547-2 |                     300547-2 \| 312304-2 |

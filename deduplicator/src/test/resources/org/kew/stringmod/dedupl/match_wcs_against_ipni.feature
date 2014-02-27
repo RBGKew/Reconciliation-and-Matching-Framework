@@ -6,7 +6,7 @@ Feature: Match WCS against Ipni
     I want the deduplicator framework to do the work for me, I just have to provide a decent configuration.
 
     Scenario: Genus level
-        Given Eszter has created an source-file to feed the deduplicator framework containing tab-separated WCS data
+        Given Eszter has created an source-file to feed the deduplicator containing tab-separated WCS data
             | id     | family       | genus       | species_epithet | infraspecies_epithet | rank        | infraspecific_rank | full_name                            | basionym_author | publishing_author          | publication                   | collation         | year |
             | 251171 | Restionaceae | Kulinia     |                 |                      |   Genus     |                    | Kulinia                              |                 | B.G.Briggs & L.A.S.Johnson | Telopea       7: 349          | (1998)            |      |
             | 243223 | Restionaceae | Empodisma   |     gracillimum |                      | Species     |                    | Empodisma gracillimum                | F.Muell.        | L.A.S.Johnson & D.F.Cutler | Kew Bull.      28: 383        | (1973 publ. 1974) |      |
@@ -33,13 +33,13 @@ Feature: Match WCS against Ipni
             | 77111821-5 | Restionaceae | Cannomois   | scirpoides      | minor                |             | var.               | Cannomois scirpoides var. minor      |                 | Pillans                    | Roy. South Africa             | 16: 419                   | 1928 | Match on collation but less good than 77111821-5   |
             | 77111821-5 | Restionaceae | Cannomois   | scirpoides      | minor                |             | var.               | Cannomois scirpoides var. minor      |                 | Pillans                    | South Africa                  | 16: 419                   | 1928 | No match on publication (0.49)                     |
             | 77108795-4 | Restionaceae | Restio      | saxatilis       |                      | spec.       |                    | Restio saxatilis                     | (Esterh.)       | H.P.Linder & C.R.Hardy     | Bothalia                      | 40(1): 27 fig. 6-7 (2010) |      | No match on collation (0.49)                       |
-            | 123456     | Restionaceae    | funkyGenus  |                 |                      | Genus       |                    | funkyGenus                           |                 | B.G.Briggs & L.A.S.Johnson | Telopea       7: 349          | (1998)                    |      | that's for the dictionary                          |
+            | 123456     | Restionaceae | funkyGenus  |                 |                      | Genus       |                    | funkyGenus                           |                 | B.G.Briggs & L.A.S.Johnson | Telopea       7: 349          | (1998)                    |      | that's for the dictionary                          |
 
         And she has access to a tab-separated dictionary
             | some none-existing value | super value | some comment that will be hopefully ignored |
             | funkyGenus               | Kulinia     | this row should be used in our example      |
 
-        And Alecs has set up a match configuration file according to her specs:
+        And Alecs has set up a match configuration file:
             """
             <?xml version="1.0" encoding="UTF-8"?>
             <beans xmlns="http://www.springframework.org/schema/beans"
@@ -244,7 +244,7 @@ Feature: Match WCS against Ipni
                 <import resource="classpath*:application-context-match.xml"/>
             </beans>
             """
-        When this match config is run through the Match App
+        When this config is run through the deduplicator
         Then a file should have been created in the same folder with the following data:
             | id     | family_transf | genus       | genus_transf | species_epithet | species_epithet_transf | lookup_species_epithet | lookup_species_epithet_transf | configLog | total_matches | matching_ids |
             | 251171 | Restionaceae  | Kulinia     | Kulinia      |                 |                        |                        |                               | aConfig   | 1          | 123456       |

@@ -8,7 +8,7 @@ Feature: Deduplication with Levenshtein
             | id | name | anotherName |
             | 1  | Hinz | exactly     |
             | 2  | Kunz | exactly     |
-        And Alecs has set up a config file
+        And Alecs has set up a configuration file
             """
             <?xml version="1.0" encoding="UTF-8"?>
             <beans xmlns="http://www.springframework.org/schema/beans"
@@ -29,7 +29,7 @@ Feature: Deduplication with Levenshtein
                     <constructor-arg value="target/deduplicator"/>
                 </bean>
                 <bean id="inputfile" class="java.io.File">
-                    <constructor-arg value="REPLACE_WITH_TMPDIR/input.txt" />
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/source.txt" />
                 </bean>
                 <bean id="exactMatcher" class="org.kew.stringmod.dedupl.matchers.ExactMatcher" />
                 <bean id="levenshteinMatcher" class="org.kew.stringmod.dedupl.matchers.LevenshteinMatcher"
@@ -71,20 +71,20 @@ Feature: Deduplication with Levenshtein
                 <import resource="classpath*:application-context-dedup.xml"/>
             </beans>
             """
-        When this levenshtein config is run through the Dedup App
-        Then a file should have been created in the same folder with the following levenshtein deduplicated records
+        When this config is run through the deduplicator
+        Then a file should have been created in the same folder with the following data:
             | id | name | cluster_size | from_id | ids_in_cluster |
             | 2  | Kunz |            2 |       1 |         2 \| 1 |
 
     Scenario: Scenario with false positives
-        Given Alecs has created an input file as simple as before
+        Given Alecs has created an input file
             | id | name | anotherName |
             | 1  | Hinz | exactly     |
             | 2  | Kunz | exactly     |
-        And he has added a dictionary containing the following data
+        And he has access to a tab-separated dictionary
             | Hinz | Kunz |
             | Kunz | Hinz |
-        And Alecs has set up a config file, this time with false positives in a dictionary
+        And Alecs has set up a configuration file, this time with false positives in a dictionary
             """
             <?xml version="1.0" encoding="UTF-8"?>
             <beans xmlns="http://www.springframework.org/schema/beans"
@@ -105,11 +105,11 @@ Feature: Deduplication with Levenshtein
                     <constructor-arg value="target/deduplicator"/>
                 </bean>
                 <bean id="inputfile" class="java.io.File">
-                    <constructor-arg value="REPLACE_WITH_TMPDIR/input.txt" />
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/source.txt" />
                 </bean>
                 <bean id="falsePositivesDict" class="org.kew.stringmod.utils.Dictionary"
                      p:fileDelimiter="&#09;"
-                     p:filePath="REPLACE_WITH_TMPDIR/false_positives.tsv" />
+                     p:filePath="REPLACE_WITH_TMPDIR/funkyDict.txt" />
                 <bean id="exactMatcher" class="org.kew.stringmod.dedupl.matchers.ExactMatcher" />
                 <bean id="levenshteinMatcher" class="org.kew.stringmod.dedupl.matchers.LevenshteinMatcher"
                     p:maxDistance="3"
@@ -151,8 +151,8 @@ Feature: Deduplication with Levenshtein
                 <import resource="classpath*:application-context-dedup.xml"/>
             </beans>
             """
-        When this levenshtein false-positives config is run through the Dedup App
-        Then a file should have been created in the same folder with the following levenshtein false-positives deduplicated records
+        When this config is run through the deduplicator
+        Then a file should have been created in the same folder with the following data:
             | id | name | cluster_size | from_id | ids_in_cluster |
             | 1  | Hinz | 1            | 1       | 1              |
             | 2  | Kunz | 1            | 2       | 2              |
