@@ -183,7 +183,7 @@ public class CreateSimpleMatchConfig {
         assert configFile.exists();
         @SuppressWarnings("unchecked")
         List<String> configFileLines = FileUtils.readLines(configFile);
-        String[] configXMLLines =configXML.split("\n");
+        String[] configXMLLines =configXML.split("\r?\n|\r");
         for (int i=0;i<configXMLLines.length;i++) {
             String correctedLine = configXMLLines[i].replaceAll("REPLACE_WITH_TMPDIR", this.tempDir.toString());
             try {

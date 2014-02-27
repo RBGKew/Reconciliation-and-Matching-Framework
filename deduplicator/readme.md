@@ -63,10 +63,5 @@ Besides the file location and file format the most important here are the
 
 The Reporter(s) define the output format of the match- and deduplication tasks.
 
-## what it should do
-- the transformers including the Dictionary should be moved into their own
-  module in order to make them better accessible for other uses
-  (e.g. from pentahoo, what the DataImprovementTeam use a lot)
-
 ## further reading
 * see the old README for more background info
