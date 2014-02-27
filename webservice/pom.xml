@@ -8,16 +8,15 @@
 		<groupId>org.kew.shs.dedupl</groupId>
 		<version>0.2-SNAPSHOT</version>
 	</parent>
-	<groupId>org.kew.shs.dedupl</groupId>
-	<artifactId>deduplicator-framework-ws</artifactId>
+	<groupId>org.kew.stringmod</groupId>
+	<artifactId>webservice</artifactId>
 	<packaging>war</packaging>
 	<version>0.2-SNAPSHOT</version>
-	<name>deduplicator-framework-ws</name>
-	<url>http://maven.apache.org</url>
+	<name>webservice</name>
 	<dependencies>
 		<dependency>
-			<groupId>org.kew.shs.dedupl</groupId>
-			<artifactId>deduplicator-framework-app</artifactId>
+			<groupId>org.kew.stringmod</groupId>
+			<artifactId>deduplicator</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -67,7 +66,6 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

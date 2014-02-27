@@ -11,7 +11,7 @@
         <module>matchconf</module>
         <module>stringmodlib</module>
         <module>stringmodutils</module>
-        <module>deduplicator-framework-ws</module>
+        <module>webservice</module>
   </modules>
 
     <properties>

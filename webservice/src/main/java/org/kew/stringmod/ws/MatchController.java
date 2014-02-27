@@ -1,4 +1,4 @@
-package org.kew.shs.dedupl.ws;
+package org.kew.stringmod.ws;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,11 +9,10 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.kew.shs.dedupl.configuration.Property;
-import org.kew.shs.dedupl.lucene.DocList;
-import org.kew.shs.dedupl.lucene.LuceneDataLoader;
-import org.kew.shs.dedupl.lucene.LuceneMatcher;
-import org.kew.shs.dedupl.transformers.Transformer;
+import org.kew.stringmod.dedupl.configuration.Property;
+import org.kew.stringmod.dedupl.lucene.LuceneDataLoader;
+import org.kew.stringmod.dedupl.lucene.LuceneMatcher;
+import org.kew.stringmod.lib.transformers.Transformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +87,7 @@ public class MatchController {
 	    		for (Property p : matcher.getConfig().getProperties()){
 	    			properties.add(p.getSourceColumnName());
 	    			p_matchers.put(p.getSourceColumnName(), p.getMatcher().getClass().getCanonicalName());
-	    			List p_t = new ArrayList<String>();
+	    			List<String> p_t = new ArrayList<>();
 	    			for (Transformer t : p.getSourceTransformers()){
 	    				p_t.add(t.getClass().getCanonicalName());
 	    			}
@@ -117,19 +116,19 @@ public class MatchController {
 		    	// Build a map by looping over each property in the config, reading its value from the 
 		    	// request object, and applying any transformations specified in the config
 	    		Map<String, String> userSuppliedRecord = new HashMap<String, String>();
-	    		Map<String,String[]> params = (Map<String,String[]>)request.getParameterMap();
+	    		@SuppressWarnings("unchecked")
+				Map<String,String[]> params = (Map<String,String[]>) request.getParameterMap();
 	    		for(String key : params.keySet()){
 	    			userSuppliedRecord.put(key, params.get(key)[0]);
 	    			logger.debug(key + ":" + params.get(key)[0]);
 	    		}
-		    	// We’re now at the same point as if we had read the map from a file 
+		    	// Weï¿½re now at the same point as if we had read the map from a file 
 		    	// Pass this map to the new method in the LuceneMatcher - 
 		    	// getMatches(Map<String,String> record) to get a DocList of matches: 
 	    		try{
-	    			DocList doclist = matcher.doMatch(userSuppliedRecord);
+	    			matches = matcher.getMatches(userSuppliedRecord, 0);
 	    			// Just write out some matches to std out:
-	    			logger.debug("Found some matches: " + doclist.storeToMapList().size());
-	    			matches = doclist.storeToMapList();
+	    			logger.debug("Found some matches: " + matches.size());
 	    		}
 	    		catch(Exception e){
 	    			logger.error("problem handling match", e);
