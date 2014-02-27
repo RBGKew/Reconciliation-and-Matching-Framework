@@ -4,8 +4,6 @@ import org.kew.stringmod.utils.LibraryRegister;
 
 /**
  * This transformer strips non numeric characters
- * @author nn00kg
- *
  */
 @LibraryRegister(category="transformers")
 public class StripNonNumericCharactersTransformer extends A2BTransformer {

@@ -2,6 +2,10 @@ package org.kew.stringmod.lib.transformers;
 
 import java.util.List;
 
+/**
+ * A CompositeTransformer can have other transformers and
+ * executes them in order on the given string.
+ */
 public class CompositeTransformer implements Transformer{
 
 	private List<Transformer> transformers;

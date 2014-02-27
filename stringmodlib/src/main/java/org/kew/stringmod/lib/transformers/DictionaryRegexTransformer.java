@@ -7,10 +7,12 @@ import java.util.regex.Pattern;
 import org.kew.stringmod.utils.LibraryRegister;
 
 /**
- * Uses a Dictionary object of which it iterate over the keys to use as regular
- * expression; if this pattern matches, it transforms the string accordingly.
+ * Uses a {@link org.kew.stringmod.utils.Dict} object of which it iterates over
+ * the keys to use each as a regular expression; if the pattern matches, it
+ * transforms the string accordingly returning the corresponding value of the
+ * Dictionary.
  *
- * If multiTransform is set it goes on through the whole list of keys in the
+ * If multiTransform is set it goes through the whole list of keys in the
  * same way, otherwise it returns after the first match.
  */
 @LibraryRegister(category="transformers")

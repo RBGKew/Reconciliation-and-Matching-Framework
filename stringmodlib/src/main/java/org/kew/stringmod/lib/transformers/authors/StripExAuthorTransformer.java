@@ -6,8 +6,6 @@ import org.kew.stringmod.utils.LibraryRegister;
 
 /**
  * This transformer translates author strings in the form "Author1 ex Author2" to "Author2"
- * @author nn00kg
- *
  */
 @LibraryRegister(category="transformers")
 public class StripExAuthorTransformer extends RegexDefCollection implements Transformer{

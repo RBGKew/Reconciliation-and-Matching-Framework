@@ -4,6 +4,12 @@ import org.kew.stringmod.lib.transformers.RegexDefCollection;
 import org.kew.stringmod.lib.transformers.Transformer;
 import org.kew.stringmod.utils.LibraryRegister;
 
+/**
+ * This transformer tries to identify all Sirnames of plant name authors in a string
+ * and deletes everything else.
+ *
+ * For examples see {@link SirnameExtracterTest}
+ */
 @LibraryRegister(category="transformers")
 public class SirnameExtracter extends RegexDefCollection implements Transformer {
 

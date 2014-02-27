@@ -3,13 +3,21 @@ package org.kew.stringmod.lib.transformers.authors;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.kew.stringmod.lib.transformers.RegexDefCollection;
 import org.kew.stringmod.lib.transformers.SafeStripNonAlphaNumericsTransformer;
 import org.kew.stringmod.lib.transformers.StringShrinker;
 import org.kew.stringmod.lib.transformers.Transformer;
 import org.kew.stringmod.utils.LibraryRegister;
-import org.apache.commons.lang.StringUtils;
 
+/**
+ * This transformer tries to identify *all* authors (accepts publishing-,
+ * basionym-, ex-, in-) of plant names in a string and returns a string where
+ * each of their sirnames are shrunk/cropped to a length
+ * of `shrinkTo`.
+ *
+ * For examples of standard usage and corner cases see {@link ShrunkAuthorsTest}
+ */
 @LibraryRegister(category="transformers")
 public class ShrunkAuthors extends RegexDefCollection implements Transformer {
 

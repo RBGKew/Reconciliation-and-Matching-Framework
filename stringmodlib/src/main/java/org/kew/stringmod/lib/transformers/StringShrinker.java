@@ -1,5 +1,8 @@
 package org.kew.stringmod.lib.transformers;
 
+/**
+ * Crops/shrinks a string to a length of `shrinkTo` characters.
+ */
 public class StringShrinker implements Transformer {
 
     private Integer shrinkTo = null;

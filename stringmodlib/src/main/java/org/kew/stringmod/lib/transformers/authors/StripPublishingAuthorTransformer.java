@@ -6,8 +6,6 @@ import org.kew.stringmod.utils.LibraryRegister;
 
 /**
  * This transformer translates author strings in the form "(Author1) Author2" to "Author1"
- * @author nn00kg
- *
  */
 @LibraryRegister(category="transformers")
 public class StripPublishingAuthorTransformer implements Transformer{
@@ -20,12 +18,12 @@ public class StripPublishingAuthorTransformer implements Transformer{
 			transformed = "";
 		return transformed;
 	}
-	
+
 	public static void main(String[] args) {
-		StripPublishingAuthorTransformer t  = new StripPublishingAuthorTransformer(); 
+		StripPublishingAuthorTransformer t  = new StripPublishingAuthorTransformer();
 		System.out.println(t.transform("(Author1) Author 2"));
 		System.out.println(t.transform("Author3"));
 		System.out.println(t.transform("(Author4)"));
 	}
-	
+
 }

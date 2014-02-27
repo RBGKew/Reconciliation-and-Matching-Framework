@@ -2,8 +2,8 @@ package org.kew.stringmod.lib.transformers;
 
 import org.kew.stringmod.utils.LibraryRegister;
 
-/*
- * Replaces X and x that seem to be meant as hybrid signs
+/**
+ * Deletes X and x that seem to be meant as hybrid signs
  *
  * X and x can be at the beginning of a string followed by a whitespace or
  * anywhere in the string if surrounded by white-spaces.

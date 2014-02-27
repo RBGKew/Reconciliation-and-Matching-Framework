@@ -7,8 +7,9 @@ import org.kew.stringmod.utils.LibraryRegister;
 
 
 /**
- * Uses a Dictionary object to lookup a string in its keys and returns
- * the value if the key is found. Otherwise it returns the original string.
+ * Uses a {@link org.kew.stringmod.utils.Dict} object to lookup a string in its
+ * keys and returns the value if the key is found. Otherwise it returns the
+ * original string.
  */
 @LibraryRegister(category="transformers")
 public class DictionaryTransformer implements Transformer {

@@ -2,7 +2,7 @@ package org.kew.stringmod.lib.transformers;
 
 import org.kew.stringmod.utils.LibraryRegister;
 
-/*
+/**
  * This is just a best-practise chain of three transformations:
  * (1) replaces diacritic characters with their ASCII equivalent (NormaliseDiacriticsTransformer)
  * (2) replaces all non-alphanumeric characters with `b` (default: whitespace)

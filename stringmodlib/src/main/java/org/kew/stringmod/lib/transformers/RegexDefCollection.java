@@ -1,6 +1,10 @@
 package org.kew.stringmod.lib.transformers;
 
 
+/**
+ * A collection of regular expressions that are meaningful to the domain and/or
+ * are used multiple times.
+ */
 public abstract class RegexDefCollection {
 
 	protected String EX_MARKER = " ex ";

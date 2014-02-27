@@ -7,6 +7,14 @@ import org.kew.stringmod.lib.transformers.Transformer;
 import org.kew.stringmod.utils.LibraryRegister;
 
 
+/**
+ * This transformer tries to identify all publication authors of plant names in
+ * a string and returns a string where each of their sirnames are shrunk/cropped
+ * to a length of `shrinkTo`.
+ *
+ * For examples of standard usage and corner cases see {@link
+ * ShrunkPubAuthorsTest}
+ */
 @LibraryRegister(category="transformers")
 public class ShrunkPubAuthors implements Transformer {
 

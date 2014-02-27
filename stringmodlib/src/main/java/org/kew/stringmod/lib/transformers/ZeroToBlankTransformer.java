@@ -5,8 +5,6 @@ import org.kew.stringmod.utils.LibraryRegister;
 
 /**
  * This transformer translates zeros to blanks
- * @author nn00kg
- *
  */
 @LibraryRegister(category="transformers")
 public class ZeroToBlankTransformer implements Transformer{
