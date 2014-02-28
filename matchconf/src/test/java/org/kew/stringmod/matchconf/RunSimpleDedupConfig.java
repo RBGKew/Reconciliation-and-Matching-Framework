@@ -42,9 +42,9 @@ public class RunSimpleDedupConfig {
     }
 
 
-	@Given("^Alecs has set up a simple Configuration resulting in the following config \"([^\"]*)\" written to \"([^\"]*)\":$")
-	public void Alecs_has_set_up_a_simple_Configuration_resulting_in_the_following_config_written_to_(String configFileName, String workDirPath, String configXML) throws Throwable {
-		this.workDir = new File(workDirPath.replaceAll("REPLACE_WITH_TMPDIR", tempDir.toString()));
+	@Given("^Alecs has set up a simple Configuration resulting in the following config \"([^\"]*)\":$")
+	public void Alecs_has_set_up_a_simple_Configuration_resulting_in_the_following_config_written_to_(String configFileName, String configXML) throws Throwable {
+		this.workDir = new File(tempDir.getAbsolutePath(), "workDir");
 		Configuration config = new Configuration();
 		config.setName("simple-config-to-run");
 		config.setWorkDirPath(this.workDir.toString());
@@ -53,7 +53,7 @@ public class RunSimpleDedupConfig {
 		this.workDir.mkdirs();
 		File configFile = new File(workDir, configFileName);
 		configFile.createNewFile();
-		String correctedConfigXML = configXML.replaceAll("REPLACE_WITH_TMPDIR", tempDir.toString());
+		String correctedConfigXML = configXML.replaceAll("REPLACE_WITH_TMPDIR", workDir.toString());
 		try (BufferedWriter br = new BufferedWriter(new FileWriter(configFile))) {
 			br.write(correctedConfigXML);
 		}

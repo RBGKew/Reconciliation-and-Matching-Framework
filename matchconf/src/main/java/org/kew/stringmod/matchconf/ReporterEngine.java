@@ -48,7 +48,12 @@ public class ReporterEngine {
         outXML.set(outXML.size()-1, outXML.get(outXML.size()-1) + ">");
         outXML.add(String.format("%s%s<property name=\"file\">", indent, shift));
         outXML.add(String.format("%s%s%s<bean class=\"java.io.File\">", indent, shift, shift));
-        outXML.add(String.format("%s%s%s%s<constructor-arg value=\"%s/%s_%s\" />", indent, shift, shift, shift, this.reporter.getConfig().getWorkDirPath(), this.reporter.getConfig().getName(), this.reporter.getFileName()));
+        // change path to unix-style for convencience, even if on windows..
+        String rPath = String.format("%s/%s_%s",
+                this.reporter.getConfig().getWorkDirPath(),
+                this.reporter.getConfig().getName(),
+                this.reporter.getFileName()).replace("\\\\", "/");
+        outXML.add(String.format("%s%s%s%s<constructor-arg value=\"%s\" />", indent, shift, shift, shift, rPath));
         outXML.add(String.format("%s%s%s</bean>", indent, shift, shift));
         outXML.add(String.format("%s%s</property>", indent, shift));
         outXML.add(String.format("%s</bean>", indent));

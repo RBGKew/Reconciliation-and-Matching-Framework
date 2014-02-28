@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>deduplicator-framework</artifactId>
-		<groupId>org.kew.shs.dedupl</groupId>
+		<groupId>org.kew.stringmod</groupId>
 		<version>0.2-SNAPSHOT</version>
 	</parent>
 	<groupId>org.kew.stringmod</groupId>

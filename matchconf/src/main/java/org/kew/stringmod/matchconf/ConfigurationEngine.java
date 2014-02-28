@@ -42,8 +42,13 @@ public class ConfigurationEngine {
         String shift = String.format("%" + shiftWidth + "s", " ");
 
         ArrayList<String> outXML = new ArrayList<String>();
+
         String sourceFilePath = new File(new File(this.config.getWorkDirPath()), this.config.getSourceFileName()).getPath();
+        // change to unix-style path for convencience, even if on windows..
+        sourceFilePath = sourceFilePath.replace("\\\\", "/");
         String lookupFilePath = new File(new File(this.config.getWorkDirPath()), this.config.getLookupFileName()).getPath();
+        // change to unix-style path for convencience, even if on windows..
+        lookupFilePath = lookupFilePath.replace("\\\\", "/");
 
         outXML.add("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         outXML.add("<beans xmlns=\"http://www.springframework.org/schema/beans\"");

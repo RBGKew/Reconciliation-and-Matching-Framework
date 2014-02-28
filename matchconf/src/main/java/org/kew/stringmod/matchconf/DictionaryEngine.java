@@ -24,7 +24,8 @@ public class DictionaryEngine {
 		ArrayList<String> outXML = new ArrayList<String>();
 		outXML.add(String.format("%s<bean id=\"%s\" class=\"org.kew.stringmod.utils.Dictionary\"", indent, this.dict.getName()));
         outXML.add(String.format("%s%sp:fileDelimiter=\"%s\"", indent, shift, this.dict.getFileDelimiter()));
-        outXML.add(String.format("%s%sp:filePath=\"%s\" />", indent, shift, this.dict.getFilePath()));
+        // change path to unix-style for convencience, even if on windows..
+        outXML.add(String.format("%s%sp:filePath=\"%s\" />", indent, shift, this.dict.getFilePath().replace("\\\\", "/")));
 		return outXML;
 	}
 }

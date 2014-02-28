@@ -1,6 +1,6 @@
 Feature: run a simple configuration
     Scenario: run the configuration as set up by createSimpleConfig step
-        Given Alecs has set up a simple Configuration resulting in the following config "config_simple-config-to-run.xml" written to "REPLACE_WITH_TMPDIR/some_path":
+        Given Alecs has set up a simple Configuration resulting in the following config "config_simple-config-to-run.xml":
             """
             <?xml version="1.0" encoding="UTF-8"?>
             <beans xmlns="http://www.springframework.org/schema/beans"
@@ -21,7 +21,7 @@ Feature: run a simple configuration
                     <constructor-arg value="target/deduplicator"/>
                 </bean>
                 <bean id="sourcefile" class="java.io.File">
-                    <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/source.tsv" />
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/source.tsv" />
                 </bean>
                 <bean id="matchExactly" class="org.kew.stringmod.dedupl.matchers.ExactMatcher"
                     p:blanksMatch="false"/>
@@ -37,7 +37,7 @@ Feature: run a simple configuration
                         p:idDelimiter="|">
                         <property name="file">
                             <bean class="java.io.File">
-                                <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/output.tsv" />
+                                <constructor-arg value="REPLACE_WITH_TMPDIR/output.tsv" />
                             </bean>
                         </property>
                     </bean>
@@ -47,7 +47,7 @@ Feature: run a simple configuration
                         p:idDelimiter="|">
                         <property name="file">
                             <bean class="java.io.File">
-                                <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/output_multiline.tsv" />
+                                <constructor-arg value="REPLACE_WITH_TMPDIR/output_multiline.tsv" />
                             </bean>
                         </property>
                     </bean>

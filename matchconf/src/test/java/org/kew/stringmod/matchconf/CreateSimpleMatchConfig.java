@@ -185,11 +185,15 @@ public class CreateSimpleMatchConfig {
         List<String> configFileLines = FileUtils.readLines(configFile);
         String[] configXMLLines =configXML.split("\r?\n|\r");
         for (int i=0;i<configXMLLines.length;i++) {
-            String correctedLine = configXMLLines[i].replaceAll("REPLACE_WITH_TMPDIR", this.tempDir.toString());
+            String expectedLine = configXMLLines[i];
+            if (expectedLine.contains("REPLACE_WITH_TMPDIR")) {
+                String sep = File.separator;
+                expectedLine = expectedLine.replaceAll("REPLACE_WITH_TMPDIR", this.tempDir.toString().replace("\\", sep)).replaceAll("/(?=[^>])", sep);
+            }
             try {
-                assertThat(configFileLines.get(i), is(correctedLine));
+                assertThat(configFileLines.get(i), is(expectedLine));
             } catch (IndexOutOfBoundsException e) {
-                throw new IndexOutOfBoundsException(String.format("\n--> line %s not found in calculated output.", correctedLine));
+                throw new IndexOutOfBoundsException(String.format("\n--> line %s not found in calculated output.", expectedLine));
             }
         }
         assertThat(configFileLines.size(), is(configXMLLines.length));
