@@ -1,0 +1,12 @@
+<!-- html>
+<body-->
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:jsp="http://java.sun.com/JSP/Page">
+	<jsp:output omit-xml-declaration="yes"/>
+	<ul>
+   <c:forEach var="availableMatcher" items="${availableMatchers}">
+      <li><a href="/about/${availableMatcher}">${availableMatcher}</a></li>
+   </c:forEach>
+   </ul>
+</div>
+<!--/body>
+</html-->

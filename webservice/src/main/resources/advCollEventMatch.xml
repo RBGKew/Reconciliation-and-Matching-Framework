@@ -16,10 +16,10 @@
 		<constructor-arg value="#{ systemProperties['datadir']}/lucene_directory_adv/" />
 	</bean>
 	<bean id="sourcefile" class="java.io.File">
-		<constructor-arg value="#{ systemProperties['datadir']}/coll-event-source.txt" />
+		<constructor-arg value="#{ systemProperties['datadir']}/sourcefile.csv" />
 	</bean>
 	<bean id="lookupfile" class="java.io.File">
-		<constructor-arg value="#{ systemProperties['datadir']}/coll-event-lookup.txt" />
+		<constructor-arg value="#{ systemProperties['datadir']}/E-darwin_core.csv" />
 	</bean>
 	
 	<bean id="stripNonAlphaNumerics"
@@ -65,7 +65,7 @@
 	</util:list>
 	<util:list id="columnProperties">
 		<bean class="org.kew.shs.dedupl.configuration.Property"
-			p:sourceColumnName="coll" p:lookupColumnName="recordedBy"
+			p:sourceColumnName="coll" p:lookupColumnName="coll"
 			p:useInSelect="false" p:matcher-ref="exactMatch"
 			p:addOriginalLookupValue="true" p:addOriginalSourceValue="true">
 			<property name="sourceTransformers">
@@ -80,15 +80,15 @@
                         </property>
 		</bean>	
 		<bean class="org.kew.shs.dedupl.configuration.Property"
-			p:sourceColumnName="coll_no" p:lookupColumnName="recordNumber"
+			p:sourceColumnName="coll_no" p:lookupColumnName="coll_no"
 			p:useInSelect="true" p:matcher-ref="exactMatch"
 			p:addOriginalLookupValue="true" p:addOriginalSourceValue="true">
 		</bean>	
 		<bean class="org.kew.shs.dedupl.configuration.Property"
-			p:sourceColumnName="locality" p:lookupColumnName="verbatimLocality"
+			p:sourceColumnName="locality" p:lookupColumnName="locality"
 			p:useInSelect="false" p:matcher-ref="ngramMatchLocality"
 			p:addOriginalLookupValue="true" p:addOriginalSourceValue="true">
-			<!--property name="sourceTransformers">
+			<property name="sourceTransformers">
                             <util:list id="1">
                                 <ref bean="stripNonAlphaNumerics"/>
                             </util:list>
@@ -97,7 +97,7 @@
                             <util:list id="1">
                                 <ref bean="stripNonAlphaNumerics"/>
                             </util:list>
-                        </property-->
+                        </property>
 		</bean>	
 		<bean class="org.kew.shs.dedupl.configuration.Property"
 			p:sourceColumnName="year" p:lookupColumnName="eventDate"

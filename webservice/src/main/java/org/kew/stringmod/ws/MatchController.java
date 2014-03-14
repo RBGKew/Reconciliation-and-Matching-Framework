@@ -1,5 +1,7 @@
 package org.kew.stringmod.ws;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +11,17 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
+import org.kew.reconciliation.refine.domain.metadata.Metadata;
+import org.kew.reconciliation.refine.domain.metadata.MetadataView;
+import org.kew.reconciliation.refine.domain.query.Query;
+import org.kew.reconciliation.refine.domain.response.QueryResponse;
+import org.kew.reconciliation.refine.domain.response.QueryResult;
 import org.kew.stringmod.dedupl.configuration.Property;
+import org.kew.stringmod.dedupl.lucene.DocList;
 import org.kew.stringmod.dedupl.lucene.LuceneDataLoader;
 import org.kew.stringmod.dedupl.lucene.LuceneMatcher;
 import org.kew.stringmod.lib.transformers.Transformer;
@@ -23,7 +35,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.supercsv.io.CsvMapReader;
+import org.supercsv.prefs.CsvPreference;
 
 @Controller
 public class MatchController {
@@ -37,7 +53,12 @@ public class MatchController {
 	private Map<String, Integer> totals;
 	
 	private boolean initialised=false;
-    
+
+	/* Added for recon service */
+	@Autowired
+	protected ObjectMapper jsonMapper;
+	private String[] types;
+	
     @PostConstruct
     public void init() {
     	logger.debug("initiaising match controller");
@@ -87,7 +108,7 @@ public class MatchController {
 	    		for (Property p : matcher.getConfig().getProperties()){
 	    			properties.add(p.getSourceColumnName());
 	    			p_matchers.put(p.getSourceColumnName(), p.getMatcher().getClass().getCanonicalName());
-	    			List<String> p_t = new ArrayList<>();
+	    			List p_t = new ArrayList<String>();
 	    			for (Transformer t : p.getSourceTransformers()){
 	    				p_t.add(t.getClass().getCanonicalName());
 	    			}
@@ -105,7 +126,9 @@ public class MatchController {
     }
     
     @RequestMapping(value = "/match/{configName}", method = RequestMethod.GET)
-    public @ResponseBody List<Map<String,String>> doMatch (@PathVariable String configName, HttpServletRequest request, Model model) { 
+    public @ResponseBody List<Map<String,String>> doMatch (@PathVariable String configName
+    														, HttpServletRequest request
+    														, Model model) { 
     	List<Map<String,String>> matches = null;
     	// Assuming that multiple configurations may be accessed from a single webapp, 
     	// look for the one with the specified name (keyed to this in a map as explained above)
@@ -116,17 +139,16 @@ public class MatchController {
 		    	// Build a map by looping over each property in the config, reading its value from the 
 		    	// request object, and applying any transformations specified in the config
 	    		Map<String, String> userSuppliedRecord = new HashMap<String, String>();
-	    		@SuppressWarnings("unchecked")
-				Map<String,String[]> params = (Map<String,String[]>) request.getParameterMap();
+	    		Map<String,String[]> params = (Map<String,String[]>)request.getParameterMap();
 	    		for(String key : params.keySet()){
 	    			userSuppliedRecord.put(key, params.get(key)[0]);
 	    			logger.debug(key + ":" + params.get(key)[0]);
 	    		}
-		    	// Weï¿½re now at the same point as if we had read the map from a file 
+		    	// We’re now at the same point as if we had read the map from a file 
 		    	// Pass this map to the new method in the LuceneMatcher - 
 		    	// getMatches(Map<String,String> record) to get a DocList of matches: 
 	    		try{
-	    			matches = matcher.getMatches(userSuppliedRecord, 0);
+	    			matches = matcher.getMatches(userSuppliedRecord,5);
 	    			// Just write out some matches to std out:
 	    			logger.debug("Found some matches: " + matches.size());
 	    		}
@@ -138,6 +160,60 @@ public class MatchController {
     	// matches will be returned as JSON
     	return matches;
     }
+
+    @RequestMapping(value = "/filematch/{configName}", method = RequestMethod.POST)
+    public String doFileMatch (@PathVariable String configName
+    							, @RequestParam("file") MultipartFile file
+    							, Model model) {
+    	// Map of matches
+    	// Key is the ID of supplied records
+    	// Entries are a List of Map<String,String>
+    	Map<String,List<Map<String,String>>> matches = new HashMap<String,List<Map<String,String>>>();
+    	// Map of supplied data (useful for display)
+    	List<Map<String,String>> suppliedData = new ArrayList<Map<String,String>>();
+        List<String> properties = new ArrayList<String>();
+    	if (!file.isEmpty()) {
+        	try{
+            	if (matchers != null){
+            		logger.debug("Looking for : " + configName);
+            		LuceneMatcher matcher = matchers.get(configName);
+        	    	if (matcher != null){
+        	    		// Save the property names:
+        	    		for (Property p : matcher.getConfig().getProperties())
+        	    			properties.add(p.getSourceColumnName());
+        	    		CsvPreference customCsvPref = new CsvPreference.Builder('"', ',', "\n").build();
+        	    		CsvMapReader mr = new CsvMapReader(new InputStreamReader(file.getInputStream()), customCsvPref);
+        	    		final String[] header = mr.getHeader(true);
+        	    		Map<String, String> record = null;
+        	    	    while ((record = mr.read(header)) != null){
+        	    	    	suppliedData.add(record);
+        	    	    	try{
+        	    	    		List<Map<String,String>> theseMatches = matcher.getMatches(record, 5);
+	        	    			// Just write out some matches to std out:
+	        	    			logger.debug("Record ID " + record.get("id") + ", matched: " + theseMatches.size());
+	        	    			matches.put(record.get("id"), theseMatches);
+        	    	    	}
+        	    	    	catch(Exception e){
+        	    	    		// swallow inner exception
+        	    	    		e.printStackTrace();
+        	    	    	}
+        	    	    }
+        	    		logger.debug("got file's bytes");
+        	    	}
+        	    	model.addAttribute("suppliedData", suppliedData);
+        	    	model.addAttribute("matches", matches);
+        	    	model.addAttribute("properties", properties);
+            	}
+        	}
+        	catch(Exception e){
+        		logger.error("Problem reading file", e);
+        	}
+            // store the bytes somewhere
+           //return "redirect:uploadSuccess";
+       } 
+       return "file-matcher-results";
+    }    
+    
     
 	public List<String> getConfigFiles() {
 		return configFiles;
@@ -147,4 +223,161 @@ public class MatchController {
 		this.configFiles = configFiles;
 	}
 
+	//
+	// Following stuff added for GR recon service
+	//
+    @RequestMapping(value = "/reconcile/{configName}"
+    			, method={RequestMethod.GET,RequestMethod.POST}
+    			, produces="application/json; charset=UTF-8")
+    public @ResponseBody String getMetadata(@PathVariable String configName
+    										, @RequestParam(value="callback",required=false) String callback
+    										, Model model) throws JsonGenerationException, JsonMappingException, IOException{
+    	System.out.println("In get metadata");
+    	String metadata = jsonMapper.writeValueAsString(getMetadata(configName));
+		// Work out if the response needs to be JSONP wrapped in a callback		
+		if (callback != null)
+				return callback + "(" + metadata + ")";
+		else
+			return metadata;
+	}
+
+    @RequestMapping(value = "/reconcile/{configName}"
+	, method={RequestMethod.GET,RequestMethod.POST}
+    , params={"queries"}
+	, produces="application/json; charset=UTF-8")
+    public @ResponseBody String doMultipleQueries(@PathVariable String configName
+    		, @RequestParam("queries") String queries) {
+    	System.out.println("In multiple query, queries:" + queries);
+		return doMultipleQueries(configName, queries, null);
+	}
+	
+
+    @RequestMapping(value = "/reconcile/{configName}"
+	, method={RequestMethod.GET,RequestMethod.POST}
+    , params={"queries","callback"}
+	, produces="application/json; charset=UTF-8")
+    public @ResponseBody String doMultipleQueries(@PathVariable String configName
+    						, @RequestParam("queries") String queries
+							, @RequestParam(value="callback",required=false) String callback) {
+    	System.out.println("In multi query w callback, query:" + queries);
+    	String jsonres = null;
+		Map<String,QueryResponse> res = new HashMap<String,QueryResponse>();
+		try{
+			// Convert JSON to map of queries
+			Map<String,Query> qs = jsonMapper.readValue(queries, new TypeReference<Map<String,Query>>() { });
+			for (String key : qs.keySet()){
+				Query q = qs.get(key);
+				QueryResult[] qres = doQuery(q, configName);
+				QueryResponse response = new QueryResponse();
+				response.setResult(qres);
+				res.put(key,response);
+			}
+			jsonres = jsonMapper.writeValueAsString(res);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return wrapResponse(callback, jsonres);
+	}
+		   
+    @RequestMapping(value = "/reconcile/{configName}"
+    	, method={RequestMethod.GET,RequestMethod.POST}
+		, params={"query"}
+		,produces="application/json; charset=UTF-8")
+	public @ResponseBody String doSingleQuery(@PathVariable String configName, @RequestParam("query") String query) {
+    	System.out.println("In single query, query:" + query);
+		return doSingleQuery(configName, query, null);
+	}
+		
+    @RequestMapping(value = "/reconcile/{configName}"
+    	, method={RequestMethod.GET,RequestMethod.POST}
+		, params={"query","callback"}
+		,produces="application/json; charset=UTF-8")
+	public @ResponseBody String doSingleQuery(@PathVariable String configName, @RequestParam("query") String query
+							, @RequestParam(value="callback",required=false) String callback) {
+		String jsonres = null;
+		System.out.println("In single query w callback, query:" + query);
+		try{
+			Query q = jsonMapper.readValue(query, Query.class);
+			QueryResult[] qres = doQuery(q, configName);
+			QueryResponse response = new QueryResponse();
+			response.setResult(qres);
+			jsonres = jsonMapper.writeValueAsString(response);
+		}
+		catch(Exception e){
+			logger.error("", e);
+		}
+		return wrapResponse(callback, jsonres);
+	}
+
+	private String wrapResponse(String callback, String jsonres){
+		if (callback != null)
+			return callback + "(" + jsonres + ")";
+		else
+			return jsonres;
+	}
+
+	public String[] getTypes() {
+		return types;
+	}
+
+	public void setTypes(String[] types) {
+		this.types = types;
+	}	
+
+	private Metadata getMetadata(String configName){
+		Metadata m = new Metadata();
+		
+		// Set up the metadata object with whatever is set in the specified config:
+		// For now just push in the same config no matter what:
+		m.setName(configName + " name reconciliation");
+		m.setIdentifierSpace("http://www.ipni.org");
+		m.setSchemaSpace("http://www.ipni.org");
+		MetadataView mv = new MetadataView();
+		mv.setUrl("http://www.ipni.org/ipni/idPlantNameSearch.do?id={{id}}");
+		m.setView(mv);
+		return m;
+	}
+	
+	private QueryResult[] doQuery(Query q, String configName){
+		List<QueryResult> qr = new ArrayList<QueryResult>();
+		//
+		List<Map<String,String>> matches = null;
+    	// Assuming that multiple configurations may be accessed from a single webapp, 
+    	// look for the one with the specified name (keyed to this in a map as explained above)
+    	if (matchers != null){
+    		System.out.println("Looking for : " + configName);
+    		LuceneMatcher matcher = matchers.get(configName);
+	    	if (matcher != null){
+		    	// Build a map by looping over each property in the config, reading its value from the 
+		    	// request object, and applying any transformations specified in the config
+	    		Map<String, String> userSuppliedRecord = new HashMap<String, String>();
+	    		for (org.kew.reconciliation.refine.domain.query.Property p : q.getProperties()){
+	    			System.out.println("Setting: " + p.getPid() + " to " + p.getV());
+	    			userSuppliedRecord.put(p.getPid(), p.getV());
+	    		}
+	    		
+	    		try{
+	    			matches = matcher.getMatches(userSuppliedRecord, 5);
+	    			// Just write out some matches to std out:
+	    			System.out.println("GR Found some matches: " + matches.size());
+	    		}
+	    		catch(Exception e){
+	    			logger.error("problem handling match", e);
+	    		}
+	    	}
+    	}
+    	for (Map<String,String> match : matches){
+    		QueryResult res = new QueryResult();
+    		res.setId(match.get("id"));
+    		res.setMatch(true);
+    		res.setScore(100);
+    		res.setName(match.get("genus") + " " + match.get("species") + " " + match.get("authors"));
+    		String[] types = {"name"};
+    		res.setType(types);
+    		qr.add(res);
+    	}
+		//
+		return qr.toArray(new QueryResult[0]);
+	}
 }

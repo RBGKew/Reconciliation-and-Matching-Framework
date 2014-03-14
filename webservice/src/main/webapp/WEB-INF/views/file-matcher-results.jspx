@@ -1,0 +1,50 @@
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" 
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	<c:set var="numberOfMatches" value="0"/>
+	<c:forEach var="entry" items="${matches}">
+		<c:if test="${fn:length(entry.value) &gt; 0}">
+			<c:set var="numberOfMatches" value="${numberOfMatches+1}"/>
+		</c:if>
+	</c:forEach>	
+	Processed ${fn:length(matches)} records, found ${numberOfMatches} matches:
+	<table class="table">
+	<thead>
+		<tr>
+			<th>id</th>
+			<c:forEach var="property" items="${properties}">
+				<th>${property}</th>
+			</c:forEach>
+		</tr>
+	</thead>
+	<tbody>
+		<c:forEach var="suppliedRecord" items="${suppliedData}">
+			<c:set var="id" value="${suppliedRecord['id']}"/>
+			<c:if test="${fn:length(matches[id]) &gt; 0}">
+				<tr class="supplied">
+					<td style="background-color: lightgray;">
+					${id}
+					<!--a href="http://www.ipni.org/ipni/idPlantNameSearch.do?id=${id}">${id}</a-->
+					</td>
+					<c:forEach var="property" items="${properties}">
+						<td style="background-color: lightgray;">${suppliedRecord[property]}</td>
+					</c:forEach>
+				</tr>
+				<c:set var="matchedRecords" value="${matches[id]}"/>
+				<c:forEach var="match" items="${matchedRecords}">
+					<tr class="linked">
+						<td class="linked">
+						<span class="glyphicon glyphicon-link">
+						${match['id']}
+						</span>
+						<!--a href="http://data.rbge.org.uk/herb/${match['id']}">${match['id']}</a></span-->
+						</td>
+						<c:forEach var="property" items="${properties}">
+							<td>${match[property]}</td>
+						</c:forEach>
+					</tr>
+				</c:forEach>
+			</c:if>
+		</c:forEach>		
+	</tbody>
+	</table>	
+</div>

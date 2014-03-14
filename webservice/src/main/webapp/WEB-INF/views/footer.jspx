@@ -1,0 +1,4 @@
+<jsp:output omit-xml-declaration="yes"/>
+<!--div xmlns:c="http://java.sun.com/jsp/jstl/core" >
+	this is the footer
+</div-->

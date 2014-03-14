@@ -10,11 +10,11 @@
         http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.1.xsd">
 
 	<!--  caching stuff goes here -->
-    <ehcache:annotation-driven />
+    <!--ehcache:annotation-driven />
 
     <ehcache:config cache-manager="cacheManager">
         <ehcache:evict-expired-elements interval="60" />
-    </ehcache:config>
+    </ehcache:config-->
 
 	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
 		p:configLocation="ehcache.xml"/>
@@ -58,7 +58,7 @@
 
 	<!-- This defines a LuceneDataLoader, and passes in some Lucene-specific object
 	references (defined above) and the dedup/match configuration ("config") -->
-	<bean id="dataLoader" class="org.kew.shs.dedupl.lucene.LuceneDataLoader"
+	<bean id="dataLoader" class="org.kew.stringmod.dedupl.lucene.LuceneDataLoader"
 		p:luceneVersion-ref="LUCENE_VERSION"
 		p:indexWriter-ref="indexWriter"
 		p:analyzer-ref="luceneAnalyzer"

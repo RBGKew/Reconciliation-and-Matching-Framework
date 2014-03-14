@@ -1,0 +1,77 @@
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" 
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	<div>
+		<h3>
+			<span class="glyphicon glyphicon-list-alt"></span> ${configName} configuration
+		</h3>
+		Contains <span class="badge">${total}</span> records.
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Property</th>
+					<th>Transformer(s)</th>
+					<th>Matcher</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach var="property" items="${properties}">
+					<tr>
+						<td>${property}</td>
+						<td>
+							<c:forEach var="entry" items="${transformers}">
+								<c:if test="${entry.key == property}">
+									<c:forEach var="t" items="${entry.value}">
+										<c:out value="${t}" />
+										<br />
+									</c:forEach>
+								</c:if>
+							</c:forEach>							
+						</td>
+						<td><c:forEach var="entry" items="${matchers}">
+								<c:if test="${entry.key == property}">
+								<c:out value="${entry.value}" />
+								</c:if>
+							</c:forEach></td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+		<div>
+			<h3>
+				<span class="glyphicon glyphicon-cog"></span> JSON web service
+			</h3>
+			<c:set var="req" value="${pageContext.request}" />
+			<c:set var="baseURL" value="${fn:replace(req.requestURL, fn:substring(req.requestURI, 1, fn:length(req.requestURI)), req.contextPath)}" />
+			<c:set var="serverAndPort" value="${req.serverName}"/>
+			<c:if test="${req.localPort != 80}">
+				<c:set var="serverAndPort" value="${req.serverName}:${req.localPort}"/>
+			</c:if>
+			<c:url value="http://${serverAndPort}${baseUrl}/match/${configName}" var="url" />
+			Endpoint: <span class="badge">${url}</span><br/> 
+			Provide the following data as URL-encoded HTTP GET parameters:
+			<ul>
+				<li>id</li>
+				<c:forEach var="property" items="${properties}">
+					<li>${property}</li>
+				</c:forEach>
+			</ul>
+		</div>
+		<div>
+			<h3>
+				<span class="glyphicon glyphicon-file"></span> File upload
+			</h3>
+			Provide a CSV file (with a header line), containing the following fields:
+			<ul>
+				<li>id</li>
+				<c:forEach var="property" items="${properties}">
+					<li>${property}</li>
+				</c:forEach>
+			</ul>			
+			<form method="post" action="/filematch/${configName}"
+				enctype="multipart/form-data">
+				<input type="text" name="name" /> <input type="file" name="file" />
+				<input type="submit" />
+			</form>
+		</div>
+	</div>
+</div>
