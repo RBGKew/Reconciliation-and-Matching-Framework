@@ -59,9 +59,4 @@ public class RegexExtractorTransformer extends RegexDefCollection implements Tra
         this.trimIt = trimIt;
     }
 
-    public static void main(String[] args) {
-		RegexExtractorTransformer t = new RegexExtractorTransformer();
-		t.setRegex("[A-Z][a-z]+");
-		System.out.println(t.transform("T. Wendt; Heriberto Hernández G.; P. Tenorio; E. Torres; G. Salazar; M.A. Soto; O. Rocha"));
-	}
 }

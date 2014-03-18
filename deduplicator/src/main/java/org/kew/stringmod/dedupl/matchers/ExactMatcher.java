@@ -19,6 +19,7 @@ public class ExactMatcher implements Matcher {
 
 	public boolean matches(String s1, String s2) {
 		boolean matches = false;
+		//if (s1 == null && s2 == null && this.blanksMatch) {
 		if (this.blanksMatch && (StringUtils.isBlank(s1) || StringUtils.isBlank(s2))) {
 			matches = true;
 		} else{

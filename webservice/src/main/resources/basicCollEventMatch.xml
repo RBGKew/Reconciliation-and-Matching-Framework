@@ -19,7 +19,7 @@
 		<constructor-arg value="#{ systemProperties['datadir']}/sourcefile.csv" />
 	</bean>
 	<bean id="lookupfile" class="java.io.File">
-		<constructor-arg value="#{ systemProperties['datadir']}/E-darwin_core-skinny.csv" />
+		<constructor-arg value="#{ systemProperties['datadir']}/E-darwin_core.csv" />
 	</bean>
 	
 	<bean id="stripNonAlphaNumerics"
@@ -126,7 +126,7 @@
 		p:properties-ref="columnProperties" p:scoreFieldName="id"
 		p:loadReportFrequency="50000" p:assessReportFrequency="100"
 		p:maxSearchResults="10000" p:recordFilter="" 
-		p:continueOnError="true" p:reuseIndex="false"
+		p:continueOnError="true" p:reuseIndex="true"
 		p:name="basicCollEventMatch"/>
 
 
