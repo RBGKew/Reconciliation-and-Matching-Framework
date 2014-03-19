@@ -4,7 +4,6 @@
 	<artifactId>deduplicator</artifactId>
 	<packaging>jar</packaging>
 	<name>deduplicator</name>
-    <version>0.2-SNAPSHOT</version>
 
  	<parent>
 		<artifactId>deduplicator-framework</artifactId>
@@ -35,16 +34,12 @@
 			<artifactId>hamcrest-all</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.codehaus.groovy</groupId>
-			<artifactId>groovy-all</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>info.cukes</groupId>
 			<artifactId>cucumber-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>info.cukes</groupId>
-			<artifactId>cucumber-groovy</artifactId>
+			<artifactId>cucumber-java</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>info.cukes</groupId>
@@ -143,6 +138,9 @@
 					<mainClass>org.kew.stringmod.dedupl.CoreApp</mainClass>
 				</configuration>
 			</plugin>
+		</plugins>
+	  </pluginManagement>
+	<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -150,18 +148,9 @@
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
-					<compilerId>groovy-eclipse-compiler</compilerId>
 				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>org.codehaus.groovy</groupId>
-						<artifactId>groovy-eclipse-compiler</artifactId>
-						<version>${groovy-eclipse-compiler.version}</version>
-					</dependency>
-				</dependencies>
 			</plugin>
-        </plugins>
-	  </pluginManagement>
+		</plugins>
 	</build>
 
 	<repositories>

@@ -3,7 +3,6 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>stringmodutils</artifactId>
   <name>stringmodutils</name>
-  <version>0.2-SNAPSHOT</version>
 
   <parent>
     <groupId>org.kew.stringmod</groupId>

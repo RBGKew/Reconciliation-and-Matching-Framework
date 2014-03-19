@@ -6,3 +6,4 @@ data/
 .project
 *.properties
 matchconf/src/main/resources/META-INF/spring/database.properties
+logs/
