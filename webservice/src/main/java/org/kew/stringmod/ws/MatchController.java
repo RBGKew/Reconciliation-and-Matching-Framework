@@ -9,7 +9,6 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -21,8 +20,6 @@ import org.kew.reconciliation.refine.domain.query.Query;
 import org.kew.reconciliation.refine.domain.response.QueryResponse;
 import org.kew.reconciliation.refine.domain.response.QueryResult;
 import org.kew.stringmod.dedupl.configuration.Property;
-import org.kew.stringmod.dedupl.lucene.DocList;
-import org.kew.stringmod.dedupl.lucene.LuceneDataLoader;
 import org.kew.stringmod.dedupl.lucene.LuceneMatcher;
 import org.kew.stringmod.lib.transformers.Transformer;
 import org.slf4j.Logger;
@@ -43,8 +40,7 @@ import org.supercsv.prefs.CsvPreference;
 
 @Controller
 public class MatchController {
-	
-	private static Logger logger = LoggerFactory.getLogger(LuceneDataLoader.class);
+	private static Logger logger = LoggerFactory.getLogger(MatchController.class);
 
 	@Autowired
 	private @Resource(name="configFiles") List<String> configFiles;
@@ -108,7 +104,7 @@ public class MatchController {
 	    		for (Property p : matcher.getConfig().getProperties()){
 	    			properties.add(p.getSourceColumnName());
 	    			p_matchers.put(p.getSourceColumnName(), p.getMatcher().getClass().getCanonicalName());
-	    			List p_t = new ArrayList<String>();
+	    			List<String> p_t = new ArrayList<String>();
 	    			for (Transformer t : p.getSourceTransformers()){
 	    				p_t.add(t.getClass().getCanonicalName());
 	    			}
@@ -126,9 +122,11 @@ public class MatchController {
     }
     
     @RequestMapping(value = "/match/{configName}", method = RequestMethod.GET)
-    public @ResponseBody List<Map<String,String>> doMatch (@PathVariable String configName
-    														, HttpServletRequest request
-    														, Model model) { 
+    public synchronized @ResponseBody List<Map<String,String>> doMatch (@PathVariable String configName
+    														//, HttpServletRequest request
+    														, @RequestParam Map<String,String> requestParams
+    														, Model model) {
+    	logger.info("Match query for {}?{}", configName, requestParams);
     	List<Map<String,String>> matches = null;
     	// Assuming that multiple configurations may be accessed from a single webapp, 
     	// look for the one with the specified name (keyed to this in a map as explained above)
@@ -139,12 +137,11 @@ public class MatchController {
 		    	// Build a map by looping over each property in the config, reading its value from the 
 		    	// request object, and applying any transformations specified in the config
 	    		Map<String, String> userSuppliedRecord = new HashMap<String, String>();
-	    		Map<String,String[]> params = (Map<String,String[]>)request.getParameterMap();
-	    		for(String key : params.keySet()){
-	    			userSuppliedRecord.put(key, params.get(key)[0]);
-	    			logger.debug(key + ":" + params.get(key)[0]);
+	    		for(String key : requestParams.keySet()){
+	    			userSuppliedRecord.put(key, requestParams.get(key));
+	    			logger.debug(key + ":" + requestParams.get(key));
 	    		}
-		    	// We’re now at the same point as if we had read the map from a file 
+		    	// We are now at the same point as if we had read the map from a file
 		    	// Pass this map to the new method in the LuceneMatcher - 
 		    	// getMatches(Map<String,String> record) to get a DocList of matches: 
 	    		try{
@@ -198,6 +195,7 @@ public class MatchController {
         	    	    		e.printStackTrace();
         	    	    	}
         	    	    }
+        	    	    mr.close();
         	    		logger.debug("got file's bytes");
         	    	}
         	    	model.addAttribute("suppliedData", suppliedData);
