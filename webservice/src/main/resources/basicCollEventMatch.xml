@@ -19,7 +19,7 @@
 		<constructor-arg value="#{ systemProperties['datadir']}/sourcefile.csv" />
 	</bean>
 	<bean id="lookupfile" class="java.io.File">
-		<constructor-arg value="#{ systemProperties['datadir']}/E-darwin_core.csv" />
+		<constructor-arg value="#{ systemProperties['datadir']}/all-collectors.csv" />
 	</bean>
 	
 	<bean id="stripNonAlphaNumerics"
@@ -61,7 +61,7 @@
 		
 	<util:list id="columnProperties">
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:sourceColumnName="coll" p:lookupColumnName="coll"
+			p:sourceColumnName="recordedBy" p:lookupColumnName="recordedBy"
 			p:useInSelect="false" p:matcher-ref="commonTokensCollector"
 			p:addOriginalLookupValue="true" p:addOriginalSourceValue="true">
 			<property name="sourceTransformers">
@@ -82,7 +82,7 @@
 			</property>
 		</bean>	
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:sourceColumnName="coll_no" p:lookupColumnName="coll_no"
+			p:sourceColumnName="fieldNumber" p:lookupColumnName="fieldNumber"
 			p:useInSelect="true" p:matcher-ref="exactMatch"
 			p:addOriginalLookupValue="true" p:addOriginalSourceValue="true">
 		</bean>	
@@ -102,12 +102,13 @@
 			</property>
 		</bean>	
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:sourceColumnName="year" p:lookupColumnName="eventDate"
+			p:sourceColumnName="eventDate" p:lookupColumnName="eventDate"
 			p:useInSelect="true" p:matcher-ref="exactMatchBlanksOk"
 			p:addOriginalLookupValue="true" p:addOriginalSourceValue="true">
 			<property name="sourceTransformers">
                             <util:list id="1">
                                 <ref bean="stripNulls"/>
+                                <ref bean="yearShrinker"/>
                             </util:list>
                         </property>
                         <property name="lookupTransformers">
@@ -116,7 +117,7 @@
                                 <ref bean="yearShrinker"/>
                             </util:list>
                         </property>
-		</bean>	
+		</bean>
 	</util:list>
 	
 	<bean id="config" class="org.kew.stringmod.dedupl.configuration.MatchConfiguration"
@@ -126,7 +127,7 @@
 		p:properties-ref="columnProperties" p:scoreFieldName="id"
 		p:loadReportFrequency="50000" p:assessReportFrequency="100"
 		p:maxSearchResults="10000" p:recordFilter="" 
-		p:continueOnError="true" p:reuseIndex="true"
+		p:continueOnError="true" p:reuseIndex="false"
 		p:name="basicCollEventMatch"/>
 
 
