@@ -4,6 +4,4 @@ data/
 .classpath
 .settings
 .project
-*.properties
-matchconf/src/main/resources/META-INF/spring/database.properties
 logs/
