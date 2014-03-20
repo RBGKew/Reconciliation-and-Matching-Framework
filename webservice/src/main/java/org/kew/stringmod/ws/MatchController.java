@@ -27,6 +27,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -122,8 +124,7 @@ public class MatchController {
     }
     
     @RequestMapping(value = "/match/{configName}", method = RequestMethod.GET)
-    public synchronized @ResponseBody List<Map<String,String>> doMatch (@PathVariable String configName
-    														//, HttpServletRequest request
+    public synchronized ResponseEntity<List<Map<String,String>>> doMatch (@PathVariable String configName
     														, @RequestParam Map<String,String> requestParams
     														, Model model) {
     	logger.info("Match query for {}?{}", configName, requestParams);
@@ -146,16 +147,19 @@ public class MatchController {
 		    	// getMatches(Map<String,String> record) to get a DocList of matches: 
 	    		try{
 	    			matches = matcher.getMatches(userSuppliedRecord,5);
-	    			// Just write out some matches to std out:
-	    			logger.debug("Found some matches: " + matches.size());
+	    			logger.debug("Found some matches: {}", matches.size());
+	    			if (matches.size() < 4) {
+	    				logger.debug("Matches for {} are {}", requestParams, matches);
+	    			}
 	    		}
 	    		catch(Exception e){
 	    			logger.error("problem handling match", e);
+	    			return new ResponseEntity<List<Map<String,String>>>(HttpStatus.INTERNAL_SERVER_ERROR);
 	    		}
 	    	}
     	}
     	// matches will be returned as JSON
-    	return matches;
+    	return new ResponseEntity<List<Map<String,String>>>(matches, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/filematch/{configName}", method = RequestMethod.POST)
@@ -183,16 +187,22 @@ public class MatchController {
         	    		final String[] header = mr.getHeader(true);
         	    		Map<String, String> record = null;
         	    	    while ((record = mr.read(header)) != null){
+        	    	    	logger.debug("Next record is {}", record);
         	    	    	suppliedData.add(record);
         	    	    	try{
         	    	    		List<Map<String,String>> theseMatches = matcher.getMatches(record, 5);
 	        	    			// Just write out some matches to std out:
-	        	    			logger.debug("Record ID " + record.get("id") + ", matched: " + theseMatches.size());
+        	    	    		if (theseMatches != null) {
+        	    	    			logger.debug("Record ID {}, matched: {}", record.get("id"), theseMatches.size());
+        	    	    		}
+        	    	    		else {
+        	    	    			logger.debug("Record ID {}, matched: null", record.get("id"));
+        	    	    		}
 	        	    			matches.put(record.get("id"), theseMatches);
         	    	    	}
         	    	    	catch(Exception e){
         	    	    		// swallow inner exception
-        	    	    		e.printStackTrace();
+        	    	    		logger.error("Exception processing record", e);
         	    	    	}
         	    	    }
         	    	    mr.close();
@@ -230,7 +240,7 @@ public class MatchController {
     public @ResponseBody String getMetadata(@PathVariable String configName
     										, @RequestParam(value="callback",required=false) String callback
     										, Model model) throws JsonGenerationException, JsonMappingException, IOException{
-    	System.out.println("In get metadata");
+    	logger.debug("In get metadata");
     	String metadata = jsonMapper.writeValueAsString(getMetadata(configName));
 		// Work out if the response needs to be JSONP wrapped in a callback		
 		if (callback != null)
@@ -245,7 +255,7 @@ public class MatchController {
 	, produces="application/json; charset=UTF-8")
     public @ResponseBody String doMultipleQueries(@PathVariable String configName
     		, @RequestParam("queries") String queries) {
-    	System.out.println("In multiple query, queries:" + queries);
+    	logger.debug("In multiple query, queries:" + queries);
 		return doMultipleQueries(configName, queries, null);
 	}
 	
@@ -257,7 +267,7 @@ public class MatchController {
     public @ResponseBody String doMultipleQueries(@PathVariable String configName
     						, @RequestParam("queries") String queries
 							, @RequestParam(value="callback",required=false) String callback) {
-    	System.out.println("In multi query w callback, query:" + queries);
+    	logger.debug("In multi query w callback, query: {}", queries);
     	String jsonres = null;
 		Map<String,QueryResponse> res = new HashMap<String,QueryResponse>();
 		try{
@@ -282,8 +292,8 @@ public class MatchController {
     	, method={RequestMethod.GET,RequestMethod.POST}
 		, params={"query"}
 		,produces="application/json; charset=UTF-8")
-	public @ResponseBody String doSingleQuery(@PathVariable String configName, @RequestParam("query") String query) {
-    	System.out.println("In single query, query:" + query);
+	public ResponseEntity<String> doSingleQuery(@PathVariable String configName, @RequestParam("query") String query) {
+    	logger.debug("In single query, query:{}", query);
 		return doSingleQuery(configName, query, null);
 	}
 		
@@ -291,10 +301,10 @@ public class MatchController {
     	, method={RequestMethod.GET,RequestMethod.POST}
 		, params={"query","callback"}
 		,produces="application/json; charset=UTF-8")
-	public @ResponseBody String doSingleQuery(@PathVariable String configName, @RequestParam("query") String query
+	public ResponseEntity<String> doSingleQuery(@PathVariable String configName, @RequestParam("query") String query
 							, @RequestParam(value="callback",required=false) String callback) {
 		String jsonres = null;
-		System.out.println("In single query w callback, query:" + query);
+		logger.debug("In single query w callback, query: {}", query);
 		try{
 			Query q = jsonMapper.readValue(query, Query.class);
 			QueryResult[] qres = doQuery(q, configName);
@@ -304,8 +314,9 @@ public class MatchController {
 		}
 		catch(Exception e){
 			logger.error("", e);
+			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return wrapResponse(callback, jsonres);
+		return new ResponseEntity<String>(wrapResponse(callback, jsonres), HttpStatus.OK);
 	}
 
 	private String wrapResponse(String callback, String jsonres){
@@ -344,21 +355,24 @@ public class MatchController {
     	// Assuming that multiple configurations may be accessed from a single webapp, 
     	// look for the one with the specified name (keyed to this in a map as explained above)
     	if (matchers != null){
-    		System.out.println("Looking for : " + configName);
+    		logger.debug("Looking for : {}", configName);
     		LuceneMatcher matcher = matchers.get(configName);
 	    	if (matcher != null){
 		    	// Build a map by looping over each property in the config, reading its value from the 
 		    	// request object, and applying any transformations specified in the config
 	    		Map<String, String> userSuppliedRecord = new HashMap<String, String>();
 	    		for (org.kew.reconciliation.refine.domain.query.Property p : q.getProperties()){
-	    			System.out.println("Setting: " + p.getPid() + " to " + p.getV());
+	    			logger.debug("Setting: {} to {}", p.getPid(), p.getV());
 	    			userSuppliedRecord.put(p.getPid(), p.getV());
 	    		}
 	    		
 	    		try{
 	    			matches = matcher.getMatches(userSuppliedRecord, 5);
 	    			// Just write out some matches to std out:
-	    			System.out.println("GR Found some matches: " + matches.size());
+	    			logger.debug("GR Found some matches: {}", matches.size());
+	    			if (matches.size() < 4) {
+	    				logger.debug("GR Matches for {} are {}", q, matches);
+	    			}
 	    		}
 	    		catch(Exception e){
 	    			logger.error("problem handling match", e);
