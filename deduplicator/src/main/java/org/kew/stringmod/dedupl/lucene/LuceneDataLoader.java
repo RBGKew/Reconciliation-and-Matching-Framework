@@ -46,6 +46,7 @@ public class LuceneDataLoader implements DataLoader {
      * This is why we copy over the source-related properties to the
      * lookup-related ones
      */
+    @Override
     public void load() throws Exception {
         Configuration config = this.getConfig();
         for (Property p : config.getProperties()) {
@@ -60,6 +61,7 @@ public class LuceneDataLoader implements DataLoader {
         this.load(config.getSourceFile());
     }
 
+    @Override
     public void load(File file) throws Exception {
         int i = 0;
         // TODO: either make quote characters and line break characters configurable or simplify even more?
@@ -83,17 +85,16 @@ public class LuceneDataLoader implements DataLoader {
                 }
                 try{
                 	this.indexRecord(record);
-                	record = mr.read(header);
                 }
                 catch (Exception e) {
                 	if (config.isContinueOnError()){
-                		logger.info("Problem indexing record " + i);    		
+                		logger.warn("Problem indexing record " + i + ", " + record, e);
                 	}
                 	else{
-                		logger.info("Problem indexing record " + i + ", exiting");
-                		throw e;
+                		throw new Exception("Problem indexing record " + i + ", " + record, e);
                 	}
 				}
+            	record = mr.read(header);
             }
             indexWriter.commit();
         }
@@ -180,6 +181,7 @@ public class LuceneDataLoader implements DataLoader {
         return this.config;
     }
 
+    @Override
     public void setConfig(Configuration config) {
         this.config = config;
     }
