@@ -35,6 +35,8 @@
 		class="org.kew.stringmod.lib.transformers.RegexExtractorTransformer" p:regex="[A-Z][a-z]+" />
 	<bean id="yearShrinker"
 		class="org.kew.stringmod.lib.transformers.StringShrinker" c:shrinkTo="4"/>
+	<bean id="countryShrinker"
+		class="org.kew.stringmod.lib.transformers.StringShrinker" c:shrinkTo="2"/>
 
 	<bean id="exactMatch" class="org.kew.stringmod.dedupl.matchers.ExactMatcher"
 		p:blanksMatch="false" />
@@ -101,6 +103,23 @@
 				</util:list>
 			</property>
 		</bean>	
+		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+			p:sourceColumnName="country" p:lookupColumnName="country"
+			p:useInSelect="false" p:matcher-ref="exactMatchBlanksOk"
+			p:addOriginalLookupValue="true" p:addOriginalSourceValue="true">
+			<property name="sourceTransformers">
+				<util:list id="1">
+					<ref bean="stripNulls" />
+					<ref bean="countryShrinker" />
+				</util:list>
+			</property>
+			<property name="lookupTransformers">
+				<util:list id="1">
+					<ref bean="stripNulls" />
+					<ref bean="countryShrinker" />
+				</util:list>
+			</property>
+		</bean>
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
 			p:sourceColumnName="eventDate" p:lookupColumnName="eventDate"
 			p:useInSelect="true" p:matcher-ref="exactMatchBlanksOk"
