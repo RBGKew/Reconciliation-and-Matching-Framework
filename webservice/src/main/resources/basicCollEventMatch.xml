@@ -126,7 +126,7 @@
 		p:properties-ref="columnProperties" p:scoreFieldName="id"
 		p:loadReportFrequency="50000" p:assessReportFrequency="100"
 		p:maxSearchResults="10000" p:recordFilter="" 
-		p:continueOnError="true" p:reuseIndex="true"
+		p:continueOnError="true" p:reuseIndex="false"
 		p:name="basicCollEventMatch"/>
 
 

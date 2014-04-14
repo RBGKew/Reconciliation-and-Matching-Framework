@@ -166,7 +166,9 @@ public class CreateSimpleDedupConfig {
             String expectedLine = configXMLLines[i];
             if (expectedLine.contains("REPLACE_WITH_TMPDIR")) {
                 String sep = File.separator;
-                expectedLine = expectedLine.replaceAll("REPLACE_WITH_TMPDIR", this.tempDir.toString().replace("\\", sep)).replaceAll("/(?=[^>])", sep);
+                String s = this.tempDir.toString().replace("\\", sep);
+                expectedLine = expectedLine.replaceAll("REPLACE_WITH_TMPDIR", s);
+                expectedLine = expectedLine.replaceAll("/(?=[^>])", sep);
             }
             try {
                 assertThat(configFileLines.get(i), is(expectedLine));

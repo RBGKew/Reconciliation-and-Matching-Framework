@@ -2,3 +2,4 @@ The config files for this project looks for files using a system property "datad
 which needs to be set when running the webapps - e.g. to run it in Jetty use:
 mvn -Ddatadir=C:/matchconf/matching/ws-data jetty:run
 
+mvn -Ddatadir=C:/nicky/2014-workspace/data package jetty:run

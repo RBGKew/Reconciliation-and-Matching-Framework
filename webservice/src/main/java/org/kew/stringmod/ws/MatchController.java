@@ -232,7 +232,7 @@ public class MatchController {
     public @ResponseBody String getMetadata(@PathVariable String configName
     										, @RequestParam(value="callback",required=false) String callback
     										, Model model) throws JsonGenerationException, JsonMappingException, IOException{
-    	System.out.println("In get metadata");
+    	logger.debug("In get metadata");
     	String metadata = jsonMapper.writeValueAsString(getMetadata(configName));
 		// Work out if the response needs to be JSONP wrapped in a callback		
 		if (callback != null)
@@ -247,7 +247,7 @@ public class MatchController {
 	, produces="application/json; charset=UTF-8")
     public @ResponseBody String doMultipleQueries(@PathVariable String configName
     		, @RequestParam("queries") String queries) {
-    	System.out.println("In multiple query, queries:" + queries);
+    	logger.debug("In multiple query, queries:" + queries);
 		return doMultipleQueries(configName, queries, null);
 	}
 	
@@ -259,7 +259,7 @@ public class MatchController {
     public @ResponseBody String doMultipleQueries(@PathVariable String configName
     						, @RequestParam("queries") String queries
 							, @RequestParam(value="callback",required=false) String callback) {
-    	System.out.println("In multi query w callback, query:" + queries);
+    	logger.debug("In multi query w callback, query:" + queries);
     	String jsonres = null;
 		Map<String,QueryResponse> res = new HashMap<String,QueryResponse>();
 		try{
@@ -285,7 +285,7 @@ public class MatchController {
 		, params={"query"}
 		,produces="application/json; charset=UTF-8")
 	public @ResponseBody String doSingleQuery(@PathVariable String configName, @RequestParam("query") String query) {
-    	System.out.println("In single query, query:" + query);
+    	logger.debug("In single query, query:" + query);
 		return doSingleQuery(configName, query, null);
 	}
 		
@@ -296,7 +296,7 @@ public class MatchController {
 	public @ResponseBody String doSingleQuery(@PathVariable String configName, @RequestParam("query") String query
 							, @RequestParam(value="callback",required=false) String callback) {
 		String jsonres = null;
-		System.out.println("In single query w callback, query:" + query);
+		logger.debug("In single query w callback, query:" + query);
 		try{
 			Query q = jsonMapper.readValue(query, Query.class);
 			QueryResult[] qres = doQuery(q, configName);
@@ -330,7 +330,7 @@ public class MatchController {
 		
 		// Set up the metadata object with whatever is set in the specified config:
 		// For now just push in the same config no matter what:
-		m.setName(configName + " name reconciliation");
+		m.setName(configName + " reconciliation");
 		m.setIdentifierSpace("http://www.ipni.org");
 		m.setSchemaSpace("http://www.ipni.org");
 		MetadataView mv = new MetadataView();
@@ -346,21 +346,21 @@ public class MatchController {
     	// Assuming that multiple configurations may be accessed from a single webapp, 
     	// look for the one with the specified name (keyed to this in a map as explained above)
     	if (matchers != null){
-    		System.out.println("Looking for : " + configName);
+    		logger.debug("Looking for : " + configName);
     		LuceneMatcher matcher = matchers.get(configName);
 	    	if (matcher != null){
 		    	// Build a map by looping over each property in the config, reading its value from the 
 		    	// request object, and applying any transformations specified in the config
 	    		Map<String, String> userSuppliedRecord = new HashMap<String, String>();
 	    		for (org.kew.reconciliation.refine.domain.query.Property p : q.getProperties()){
-	    			System.out.println("Setting: " + p.getPid() + " to " + p.getV());
+	    			logger.debug("Setting: " + p.getPid() + " to " + p.getV());
 	    			userSuppliedRecord.put(p.getPid(), p.getV());
 	    		}
 	    		
 	    		try{
 	    			matches = matcher.getMatches(userSuppliedRecord, 5);
 	    			// Just write out some matches to std out:
-	    			System.out.println("GR Found some matches: " + matches.size());
+	    			logger.debug("GR Found some matches: " + matches.size());
 	    		}
 	    		catch(Exception e){
 	    			logger.error("problem handling match", e);
