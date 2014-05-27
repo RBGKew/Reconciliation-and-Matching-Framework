@@ -9,6 +9,10 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
+	<!-- • STANDARD IPNI NAME MATCH •
+		Matches on genus, species and infraspecies epithets, plus author.
+	-->
+
 	<context:property-placeholder location="classpath:/match-webservice.properties"/>
 
 	<bean id="lucene_directory" class="java.lang.String">
@@ -29,14 +33,14 @@
 	</bean>
 	<bean id="lookupFromIpniDatabase" class="org.kew.stringmod.ws.DatabaseCursorRecordReader">
 		<property name="dataSource" ref="ipniFlatDatabase"/>
-		<property name="sql" value="SELECT id,genus,species,authors FROM ipni_flat WHERE infraspecies IS NULL"/>
+		<property name="sql" value="SELECT id,genus,species,infraspecies,authors FROM ipni_flat WHERE genus IS NOT NULL"/>
 	</bean>
 
 	<bean id="epithetTransformer"
 		class="org.kew.stringmod.lib.transformers.EpithetTransformer"/>
-	
+
 	<bean id="surnameExtractor"
-		class="org.kew.stringmod.lib.transformers.authors.SirnameExtracter"/>
+		class="org.kew.stringmod.lib.transformers.authors.SurnameExtractor"/>
 
 	<bean id="stripBasionymAuthor"
 		class="org.kew.stringmod.lib.transformers.authors.StripBasionymAuthorTransformer"/>
@@ -60,22 +64,25 @@
 			</util:list>
 		</property>
 	</bean>
-	
+
 	<bean id="alwaysMatch" class="org.kew.stringmod.dedupl.matchers.AlwaysMatchingMatcher"/>
 	<bean id="neverMatch" class="org.kew.stringmod.dedupl.matchers.NeverMatchingMatcher"/>
 	<bean id="ldMatch" class="org.kew.stringmod.dedupl.matchers.LevenshteinMatcher" p:maxDistance="1"/>
 	<bean id="ldMatchAuthor" class="org.kew.stringmod.dedupl.matchers.LevenshteinMatcher" p:maxDistance="2"/>
-	
+
 	<bean id="ngramMatchAuthors" class="org.kew.stringmod.dedupl.matchers.NGramMatcher" p:nGramLength="2" p:minRatio="0.7"/>
-		
+
 	<util:list id="reporters"/>
 
 	<util:list id="columnProperties">
+		<!-- Genus -->
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
 			p:sourceColumnName="genus" p:lookupColumnName="genus"
 			p:useInSelect="true" p:matcher-ref="exactMatch"
 			p:addOriginalLookupValue="true" p:addOriginalSourceValue="true">
-		</bean>	
+		</bean>
+
+		<!-- Species -->
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
 			p:sourceColumnName="species" p:lookupColumnName="species"
 			p:indexInitial="true"
@@ -90,8 +97,30 @@
 				<util:list id="1">
 					<ref bean="epithetTransformer" />
 				</util:list>
-			</property>			
-		</bean>	
+			</property>
+		</bean>
+
+		<!-- Infraspecific epithet -->
+		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+			p:sourceColumnName="infraspecies" p:lookupColumnName="infraspecies"
+			p:indexInitial="true"
+			p:useInSelect="true"
+			p:matcher-ref="ldMatch"
+			p:addOriginalLookupValue="true"
+			p:addOriginalSourceValue="true">
+			<property name="sourceTransformers">
+				<util:list id="1">
+					<ref bean="epithetTransformer" />
+				</util:list>
+			</property>
+			<property name="lookupTransformers">
+				<util:list id="1">
+					<ref bean="epithetTransformer" />
+				</util:list>
+			</property>
+		</bean>
+
+		<!-- Authors -->
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
 			p:sourceColumnName="authors" p:lookupColumnName="authors"
 			p:useInSelect="false" p:matcher-ref="authorCompositeMatcher"
@@ -116,18 +145,18 @@
 					<ref bean="shrunkAuthor"/>
 				</util:list>
 			</property>
-		</bean>	
+		</bean>
 	</util:list>
 
 	<bean id="config" class="org.kew.stringmod.dedupl.configuration.MatchConfiguration"
-		p:name="basicIpniNameMatch"
+		p:name="standardIpniNameMatch"
 		p:sourceFile-ref="sourcefile"
 		p:sourceFileEncoding="UTF8"
 		p:sourceFileDelimiter="&#09;"
 		p:lookupRecords-ref="lookupFromIpniDatabase"
 		p:properties-ref="columnProperties"
 		p:scoreFieldName="id"
-		p:loadReportFrequency="50000"
+		p:loadReportFrequency="500"
 		p:assessReportFrequency="100"
 		p:maxSearchResults="10000"
 		p:recordFilter=""
