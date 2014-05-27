@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+
+	<!--
+		Data file extracted from Checklist Flat using PSQL:
+			\copy (select plant_name_id as id, ipni_id, rank, family, full_name_without_family, b_authors, genus_hybrid_marker, genus, species_hybrid_marker, species, infraspecific_rank, infraspecific_epithet, parenthetical_author, primary_author, place_of_publication, volume_and_page, first_published, nomenclatural_remarks from checklist_flat_plant) to 'wcs-names.csv' with CSV header;
+	 -->
+
+	<bean id="preferencePlaceHolder" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
+		<property name="locations">
+			<list/>
+		</property>
+	</bean>
+	<bean id="lucene_directory" class="java.lang.String">
+		<constructor-arg value="#{ systemProperties['datadir']}/lucene_directory_wcsbasic/" />
+	</bean>
+	<bean id="sourcefile" class="java.io.File">
+		<constructor-arg value="#{ systemProperties['datadir']}/sourcefile.csv" />
+	</bean>
+	<bean id="lookupfile" class="java.io.File">
+		<!--constructor-arg value="#{ systemProperties['datadir']}/wcs-genus-species.csv" /-->
+		<constructor-arg value="#{ systemProperties['datadir']}/wcs-gs-and-ildis-gs-and-solanaceae-gs.csv" />
+	</bean>
+
+	<bean id="epithetTransformer" class="org.kew.stringmod.lib.transformers.EpithetTransformer"/>
+
+	<bean id="surnameExtractor" class="org.kew.stringmod.lib.transformers.authors.SirnameExtracter"/>
+
+	<bean id="stripBasionymAuthor" class="org.kew.stringmod.lib.transformers.authors.StripBasionymAuthorTransformer"/>
+	<bean id="stripInAuthor" class="org.kew.stringmod.lib.transformers.authors.StripInAuthorTransformer"/>
+	<bean id="stripExAuthor" class="org.kew.stringmod.lib.transformers.authors.StripExAuthorTransformer"/>
+	<bean id="shrunkAuthor" class="org.kew.stringmod.lib.transformers.authors.ShrunkAuthors" p:shrinkTo="4"/>
+
+	<bean id="exactMatch" class="org.kew.stringmod.dedupl.matchers.ExactMatcher" p:blanksMatch="false" />
+	<bean id="exactMatchBlanksOk" class="org.kew.stringmod.dedupl.matchers.ExactMatcher" p:blanksMatch="true" />
+
+	<bean id="authorCompositeMatcher" class="org.kew.stringmod.dedupl.matchers.CompositeAnyMatcher">
+		<property name="matchers">
+			<util:list id="comp1">
+				<ref bean="exactMatchBlanksOk" />
+				<ref bean="ldMatchAuthor" />
+			</util:list>
+		</property>
+	</bean>
+
+	<bean id="alwaysMatch" class="org.kew.stringmod.dedupl.matchers.AlwaysMatchingMatcher"/>
+	<bean id="neverMatch" class="org.kew.stringmod.dedupl.matchers.NeverMatchingMatcher"/>
+	<bean id="ldMatch" class="org.kew.stringmod.dedupl.matchers.LevenshteinMatcher" p:maxDistance="1"/>
+	<bean id="ldMatchAuthor" class="org.kew.stringmod.dedupl.matchers.LevenshteinMatcher" p:maxDistance="2"/>
+
+	<bean id="ngramMatchAuthors" class="org.kew.stringmod.dedupl.matchers.NGramMatcher" p:nGramLength="2" p:minRatio="0.7"/>
+
+	<util:list id="reporters"/>
+
+	<util:list id="columnProperties">
+		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+			p:sourceColumnName="genus" p:lookupColumnName="genus"
+			p:useInSelect="true" p:matcher-ref="exactMatch"
+			p:addOriginalLookupValue="true" p:addOriginalSourceValue="true">
+		</bean>
+		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+			p:sourceColumnName="species" p:lookupColumnName="species"
+			p:indexInitial="true"
+			p:useInSelect="true" p:matcher-ref="ldMatch"
+			p:addOriginalLookupValue="true" p:addOriginalSourceValue="true">
+			<property name="sourceTransformers">
+				<util:list id="1">
+					<ref bean="epithetTransformer" />
+				</util:list>
+			</property>
+			<property name="lookupTransformers">
+				<util:list id="1">
+					<ref bean="epithetTransformer" />
+				</util:list>
+			</property>
+		</bean>
+		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+			p:sourceColumnName="authors" p:lookupColumnName="b_authors"
+			p:useInSelect="false" p:matcher-ref="authorCompositeMatcher"
+			p:addOriginalLookupValue="true" p:addOriginalSourceValue="true">
+			<property name="sourceTransformers">
+				<util:list id="1">
+					<!--ref bean="stripNonAlphaNumerics" /-->
+					<ref bean="stripBasionymAuthor" />
+					<ref bean="stripExAuthor" />
+					<ref bean="stripInAuthor" />
+					<ref bean="surnameExtractor"/>
+					<ref bean="shrunkAuthor"/>
+				</util:list>
+			</property>
+			<property name="lookupTransformers">
+				<util:list id="1">
+					<!--ref bean="stripNonAlphaNumerics" /-->
+					<ref bean="stripBasionymAuthor" />
+					<ref bean="stripExAuthor" />
+					<ref bean="stripInAuthor" />
+					<ref bean="surnameExtractor"/>
+					<ref bean="shrunkAuthor"/>
+				</util:list>
+			</property>
+		</bean>
+	</util:list>
+
+	<bean id="config" class="org.kew.stringmod.dedupl.configuration.MatchConfiguration"
+		p:sourceFile-ref="sourcefile" p:sourceFileEncoding="UTF8"
+		p:sourceFileDelimiter="&#09;" p:lookupFile-ref="lookupfile"
+		p:lookupFileEncoding="UTF8" p:lookupFileDelimiter=","
+		p:properties-ref="columnProperties" p:scoreFieldName="id"
+		p:loadReportFrequency="50000" p:assessReportFrequency="100"
+		p:maxSearchResults="10000" p:recordFilter=""
+		p:continueOnError="true" p:reuseIndex="false"
+		p:name="basicWcsNameMatch"/>
+
+	<!-- import the generic application-context (equal for dedup/match configurations) -->
+	<import resource="classpath*:generic.xml" />
+	<!-- add the matching-specific bit -->
+	<import resource="classpath*:match.xml" />
+</beans>
