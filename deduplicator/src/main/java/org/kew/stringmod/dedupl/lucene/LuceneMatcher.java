@@ -29,19 +29,34 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
 
     protected MatchConfiguration matchConfig;
 
+    @Override
     public void loadData() throws Exception{ // from DataMatcher
         if (!getConfig().isReuseIndex()){
             this.dataLoader.setConfig(this.getConfig());
-            this.dataLoader.load(this.getConfig().getStoreFile());
+            this.dataLoader.load();
         }
-        else
+        else {
             this.logger.info("Reusing existing index");
+        }
     }
 
-    public List<Map<String,String>> getMatches(Map<String, String> record, int numMatches) throws Exception {
-        // pipe everything through to the output where an existing filter evals to false;
-        if (!StringUtils.isBlank(config.getRecordFilter()) && !jsEnv.evalFilter(config.getRecordFilter(), record)) {
-            return null;
+    /**
+     * Performs a match against the Lucene index, and returns a list of matches.
+     * @param record The record needing to be matched
+     * @param maximumMatches Maximum number of matches to return, otherwise throws TooManyMatchesException
+     * @return A list of matched records
+     * @throws TooManyMatchesException Thrown if more than maximumMatches matches are found
+     * @throws MatchExecutionException For other errors finding a match
+     */
+    public List<Map<String,String>> getMatches(Map<String, String> record, int maximumMatches) throws TooManyMatchesException, MatchExecutionException {
+        // pipe everything through to the output where an existing filter evaluates to false;
+        try {
+            if (!StringUtils.isBlank(config.getRecordFilter()) && !jsEnv.evalFilter(config.getRecordFilter(), record)) {
+                return null;
+            }
+        }
+        catch (ScriptException e) {
+            throw new MatchExecutionException("Error evaluating recordFilter on record "+record, e);
         }
         // transform fields where required
         for (Property prop:config.getProperties()) {
@@ -89,6 +104,7 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
         final String sortOn = config.getScoreFieldName();
         try {
             Collections.sort(matches, Collections.reverseOrder(new Comparator<Map<String, String>>() {
+                @Override
                 public int compare(final Map<String, String> m1,final Map<String, String> m2) {
                     return Integer.valueOf(m1.get(sortOn)).compareTo(Integer.valueOf(m2.get(sortOn)));
                 }
@@ -96,6 +112,7 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
         } catch (NumberFormatException e) {
             // if the String can't be converted to an integer we do String comparison
             Collections.sort(matches, Collections.reverseOrder(new Comparator<Map<String, String>>() {
+                @Override
                 public int compare(final Map<String, String> m1,final Map<String, String> m2) {
                     return m1.get(sortOn).compareTo(m2.get(sortOn));
                 }
@@ -116,6 +133,7 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
      * is that we use two different datasets, one to create the lookup index, the other one as
      * source file (where we iterate over each record to look up possible matches).
      */
+    @Override
     public void run() throws Exception {
 
         this.loadData(); // writes the index according to the configuration

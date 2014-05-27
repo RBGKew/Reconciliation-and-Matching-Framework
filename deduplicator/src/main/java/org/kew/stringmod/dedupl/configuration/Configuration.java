@@ -4,16 +4,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kew.stringmod.dedupl.DatabaseRecordSource;
 import org.kew.stringmod.dedupl.reporters.LuceneReporter;
 import org.kew.stringmod.dedupl.reporters.Piper;
 
-
 /**
- * A configuration doesn't do a lot, but it holds all the information,
- * of which the most important is
- * - how the named columns are mapped to Transformers and Matchers (via `properties`)
+ * A configuration holds all the information, of which the most important is
+ * - how the named columns are mapped to Transformers and Matchers (via {@link #properties})
  * - where are the input files (source and lookup file)
- * - where and in which format to produce output (via `reporters`)
+ * - where and in which format to produce output (via {@link #reporters})
  * This information is used by the implementation of DataHandler during the process.
  */
 public abstract class Configuration implements AutoCloseable {
@@ -53,6 +52,7 @@ public abstract class Configuration implements AutoCloseable {
     private File lookupFile;
     private String lookupFileEncoding = "UTF8";
     private String lookupFileDelimiter;
+    private DatabaseRecordSource lookupRecords;
 
     private boolean outputAllMatches;
     // TODO: replace
@@ -97,12 +97,6 @@ public abstract class Configuration implements AutoCloseable {
     }
 
     // Getters and Setters
-    public File getStoreFile() {
-        return lookupFile;
-    }
-    public void setStoreFile(File lookupFile) {
-        this.lookupFile = lookupFile;
-    }
     public boolean isOutputAllMatches() {
         return outputAllMatches;
     }
@@ -228,5 +222,11 @@ public abstract class Configuration implements AutoCloseable {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public DatabaseRecordSource getLookupRecords() {
+		return lookupRecords;
+	}
+	public void setLookupRecords(DatabaseRecordSource lookupRecords) {
+		this.lookupRecords = lookupRecords;
 	}
 }

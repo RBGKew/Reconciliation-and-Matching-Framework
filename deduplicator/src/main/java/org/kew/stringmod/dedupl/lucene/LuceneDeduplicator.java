@@ -28,6 +28,7 @@ public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration
     /**
      * Uses the {@link DataLoader} in a dedup specific way
      */
+    @Override
     public void loadData() throws Exception {
         if (!getConfig().isReuseIndex()){
             dataLoader.setConfig(this.getConfig());
@@ -47,6 +48,7 @@ public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration
      * The main difference to a matching task as defined by {@link LuceneMatcher} is that we use
      * the lucene index not only as lookup but as well as source file iterating over each record.
      */
+    @Override
     public void run() throws Exception {
 
         this.loadData(); // writes the index according to the configuration

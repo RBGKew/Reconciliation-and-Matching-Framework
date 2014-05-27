@@ -62,6 +62,7 @@ public class DocList  {
 		if (!this.isSorted() && this.store.size() > 0) {
 			try {
 				Collections.sort(this.store, Collections.reverseOrder(new Comparator<Document>() {
+					@Override
 					public int compare(final Document d1,final Document d2) {
 						return Integer.valueOf(d1.get(sortOn)).compareTo(Integer.valueOf(d2.get(sortOn)));
 					}
@@ -69,6 +70,7 @@ public class DocList  {
 			} catch (NumberFormatException e) {
 				// if the String can't be converted to an integer we do String comparison
 				Collections.sort(this.store, Collections.reverseOrder(new Comparator<Document>() {
+					@Override
 					public int compare(final Document d1,final Document d2) {
 						return d1.get(sortOn).compareTo(d2.get(sortOn));
 					}

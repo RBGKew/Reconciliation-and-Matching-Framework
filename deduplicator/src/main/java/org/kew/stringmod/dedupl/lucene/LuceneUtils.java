@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexableField;
 import org.kew.stringmod.dedupl.configuration.Configuration;
 import org.kew.stringmod.dedupl.configuration.Property;
@@ -16,9 +17,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A helper class to
- * --> map from Maps to Lucene Documents and vice versa
- * --> build a query string that lucene understands
- * --> check whether two strings match according to the configured
+ * → map from Maps to Lucene Documents and vice versa
+ * → build a query string that lucene understands
+ * → check whether two strings match according to the configured
  *     {@link org.kew.stringmod.dedupl.matchers.Matcher}
  */
 public class LuceneUtils {
@@ -42,7 +43,7 @@ public class LuceneUtils {
         for (String key:map.keySet()) {
             String value = map.get(key);
             value = (value != null) ? value: "";
-            doc.add(new Field(key, value, Field.Store.YES, Field.Index.ANALYZED));
+            doc.add(new TextField(key, value, Field.Store.YES));
         }
         return doc;
     }

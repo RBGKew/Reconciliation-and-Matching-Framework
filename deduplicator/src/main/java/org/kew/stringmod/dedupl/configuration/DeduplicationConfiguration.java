@@ -36,9 +36,11 @@ public class DeduplicationConfiguration extends Configuration {
     public void setTopCopyFile(File topCopyFile) {
         this.topCopyFile = topCopyFile;
     }
+    @Override
     public String getScoreFieldName() {
         return scoreFieldName;
     }
+    @Override
     public void setScoreFieldName(String scoreFieldName) {
         this.scoreFieldName = scoreFieldName;
     }
