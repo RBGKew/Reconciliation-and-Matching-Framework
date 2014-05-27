@@ -27,7 +27,7 @@
 	<bean id="stripNulls"
 		class="org.kew.shs.dedupl.transformers.A2BTransformer" p:a="NULL" p:b="" />
 	<bean id="surnameExtractor"
-		class="org.kew.shs.dedupl.transformers.authors.SirnameExtracter"/>
+		class="org.kew.shs.dedupl.transformers.authors.SurnameExtractor"/>
 	<bean id="yearShrinker"
 		class="org.kew.shs.dedupl.transformers.StringShrinker" c:shrinkTo="4"/>
 

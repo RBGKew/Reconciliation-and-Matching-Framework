@@ -13,7 +13,7 @@ import org.kew.stringmod.utils.LibraryRegister;
 /**
  * This transformer tries to identify *all* authors (accepts publishing-,
  * basionym-, ex-, in-) of plant names in a string and returns a string where
- * each of their sirnames are shrunk/cropped to a length
+ * each of their surnames are shrunk/cropped to a length
  * of `shrinkTo`.
  *
  * For examples of standard usage and corner cases see {@link ShrunkAuthorsTest}
@@ -25,22 +25,22 @@ public class ShrunkAuthors extends RegexDefCollection implements Transformer {
 
     public String transform(String s) {
         s = new DotFDotCleaner().transform(s);
-        s = new SirnameExtracter().transform(s);
+        s = new SurnameExtractor().transform(s);
         String pub = new StripBasionymAuthorTransformer().transform(s);
         String bas = new StripPublishingAuthorTransformer().transform(s);
         String exIn = String.format("%s|%s", EX_MARKER_REGEX, IN_MARKER_REGEX);
-        List<String> sirNames = new ArrayList<>();
+        List<String> surnames = new ArrayList<>();
         for (String authors: new String[] {bas, pub}) {
             authors = authors.replaceAll(exIn, " ");
             authors = authors.replaceAll("\\s+", " ");
             authors = new SafeStripNonAlphaNumericsTransformer().transform(authors);
             for (String author:authors.split(" ")) {
-                // shrink each identified author sirname to shrinkTo if set
+                // shrink each identified author surname to shrinkTo if set
                 if (this.shrinkTo != null) author = new StringShrinker(this.shrinkTo).transform(author);
-                if (!StringUtils.isBlank(author)) sirNames.add(author.trim());
+                if (!StringUtils.isBlank(author)) surnames.add(author.trim());
             }
         }
-        return StringUtils.join(sirNames, " ").toLowerCase();
+        return StringUtils.join(surnames, " ").toLowerCase();
     }
 
     public Integer getShrinkTo() {

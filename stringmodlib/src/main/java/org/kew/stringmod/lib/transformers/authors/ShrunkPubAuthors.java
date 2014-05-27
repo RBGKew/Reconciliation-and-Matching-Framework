@@ -9,7 +9,7 @@ import org.kew.stringmod.utils.LibraryRegister;
 
 /**
  * This transformer tries to identify all publication authors of plant names in
- * a string and returns a string where each of their sirnames are shrunk/cropped
+ * a string and returns a string where each of their surnames are shrunk/cropped
  * to a length of `shrinkTo`.
  *
  * For examples of standard usage and corner cases see {@link
@@ -23,10 +23,10 @@ public class ShrunkPubAuthors implements Transformer {
     public String transform(String s) {
         s = new DotFDotCleaner().transform(s);
         s = new CleanedPubAuthors().transform(s);
-        s = new SirnameExtracter().transform(s);
+        s = new SurnameExtractor().transform(s);
         s = new SafeStripNonAlphasTransformer().transform(s);
         s = s.replaceAll("\\s+", " ");
-        // shrink each identified author sirname to shrinkTo if set
+        // shrink each identified author surname to shrinkTo if set
         if (this.shrinkTo != null) {
             String[] toShrink = s.split(" ");
             for (int i=0;i<toShrink.length;i++) {

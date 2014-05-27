@@ -1,25 +1,19 @@
 package org.kew.stringmod.lib.transformers.authors;
 
-import org.kew.stringmod.lib.transformers.RegexDefCollection;
-import org.kew.stringmod.lib.transformers.Transformer;
-import org.kew.stringmod.utils.LibraryRegister;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This transformer tries to identify all Sirnames of plant name authors in a string
  * and deletes everything else.
  *
- * For examples see {@link SirnameExtracterTest}
+ * For examples see {@link SurnameExtractorTest}
+ * @deprecated use {@link SurnameExtractor} instead.
  */
-@LibraryRegister(category="transformers")
-public class SirnameExtracter extends RegexDefCollection implements Transformer {
+public class SirnameExtracter extends SurnameExtractor {
+	private static Logger logger = LoggerFactory.getLogger(SirnameExtracter.class);
 
-    public String transform(String s) {
-        // Linnaeus special: first we remove the Dot after <L> in order to make it appear as a sirname,
-        //  but only where it's very likely to be Linnaeus; afterwards we'll add it again.
-        s = s.replaceAll(String.format("L\\.(?=\\s)", ALPHANUMDIAC), "L ");
-        String chars = String.format("(?<!%s)(-*%s\\.\\s*)(?=[^$\\)])", ALPHANUMDIAC, ALPHANUMDIAC);
-        s = s.replaceAll(chars, "");
-        return s.replaceAll("L ", "L\\.");
-    }
-
+	public SirnameExtracter() {
+		logger.warn("\"SirnameExtracter\" should be changed to \"SurnameExtractor\"");
+	}
 }
