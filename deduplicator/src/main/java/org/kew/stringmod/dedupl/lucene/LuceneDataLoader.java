@@ -89,7 +89,7 @@ public class LuceneDataLoader implements DataLoader {
                     resultSet.findColumn(headerName);
                 }
                 catch (SQLException se) {
-                    throw new Exception(String.format("%s: Header doesn't contain field name «%s» as defined in config.", this.config.getLookupFile().getPath(), headerName));
+                    throw new Exception(String.format("%s: Database result doesn't contain field name «%s» as defined in config.", this.config.getName(), headerName));
                 }
             }
             // same for the id-field
@@ -97,7 +97,7 @@ public class LuceneDataLoader implements DataLoader {
                 resultSet.findColumn(Configuration.ID_FIELD_NAME);
             }
             catch (SQLException se) {
-                throw new Exception(String.format("%s: Header doesn't contain field name «%s» as defined in config.", this.config.getLookupFile().getPath(), Configuration.ID_FIELD_NAME));
+                throw new Exception(String.format("%s: Database result doesn't contain field name «%s» as defined in config.", this.config.getName(), Configuration.ID_FIELD_NAME));
             }
 
             Document doc = null;
@@ -115,7 +115,7 @@ public class LuceneDataLoader implements DataLoader {
                 }
                 if (i++ % this.config.getLoadReportFrequency() == 0){
                     logger.info("Indexed {} documents", i);
-                    logger.debug("Most recent indexed document was {}", i, doc);
+                    logger.debug("Most recent indexed document was {}", doc);
                 }
             }
             indexWriter.commit();
@@ -159,7 +159,7 @@ public class LuceneDataLoader implements DataLoader {
 				}
                 if (i++ % this.config.getLoadReportFrequency() == 0){
                     logger.info("Indexed {} documents", i);
-                    logger.debug("Most recent indexed document was {}", i, doc);
+                    logger.debug("Most recent indexed document was {}", doc);
                 }
             	record = mr.read(header);
             }
@@ -179,7 +179,7 @@ public class LuceneDataLoader implements DataLoader {
     private Document indexRecord(ResultSet record) throws Exception {
         Document doc = new Document();
         String idFieldName = Configuration.ID_FIELD_NAME;
-        logger.debug("rawRecord: {}", record.toString());
+        logger.trace("rawRecord: {}", record.toString());
 
         doc.add(new StringField(idFieldName, record.getString(idFieldName), Field.Store.YES));
 
@@ -212,7 +212,7 @@ public class LuceneDataLoader implements DataLoader {
             }
         }
 
-        logger.debug("Document to be indexed: {}", doc.toString());
+        logger.trace("Document to be indexed: {}", doc.toString());
         this.indexWriter.addDocument(doc);
         return doc;
     }
@@ -220,7 +220,7 @@ public class LuceneDataLoader implements DataLoader {
     private Document indexRecord(Map<String, String> record) throws Exception {
         Document doc = new Document();
         String idFieldName = Configuration.ID_FIELD_NAME;
-        logger.debug("rawRecord: {}", record.toString());
+        logger.trace("rawRecord: {}", record.toString());
         doc.add(new StringField(idFieldName, record.get(idFieldName), Field.Store.YES));
         // The remainder of the columns are added as specified in the properties
         for (Property p : this.config.getProperties()) {
@@ -254,7 +254,7 @@ public class LuceneDataLoader implements DataLoader {
                 doc.add(finit);
             }
         }
-        logger.debug("Document to be indexed: {}", doc.toString());
+        logger.trace("Document to be indexed: {}", doc.toString());
         this.indexWriter.addDocument(doc);
         return doc;
     }

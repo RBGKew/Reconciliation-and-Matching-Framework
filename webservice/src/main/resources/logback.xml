@@ -9,7 +9,7 @@
       <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
     </encoder>
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>info</level>
+      <level>debug</level>
     </filter>
   </appender>
 
@@ -20,8 +20,8 @@
     </encoder>
   </appender>
 
-  <logger name="org.kew.stringmod.ws" level="debug"/>
-  <logger name="org.kew.stringmod.dedupl.lucene.LuceneDataLoader" level="info"/>
+  <logger name="org.kew.stringmod.ws" level="info"/>
+  <logger name="org.kew.stringmod.dedupl.lucene.LuceneDataLoader" level="debug"/>
 
   <root level="info">
     <appender-ref ref="STDOUT" />
