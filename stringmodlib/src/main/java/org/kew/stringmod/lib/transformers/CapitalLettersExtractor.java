@@ -15,14 +15,18 @@ public class CapitalLettersExtractor extends A2BTransformer {
     // Without specifying the getters here Java inheritance would return `a` and
     // `b` of the superclass as the getters are defined there, how strange is
     // that..
+    @Override
     public String getA() {
         return this.a;
     }
+
+    @Override
     public String getB() {
         return this.b;
     }
+
+    @Override
     public void setB(String b) {
         this.b = b;
     }
-
 }

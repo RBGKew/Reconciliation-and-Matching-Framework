@@ -10,7 +10,6 @@ import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.kew.stringmod.lib.transformers.DictionaryTransformer;
 import org.kew.stringmod.utils.Dict;
 import org.kew.stringmod.utils.Dictionary;
 import org.supercsv.io.CsvListWriter;
@@ -40,7 +39,7 @@ public class DictionaryTransformerTest {
     }
 
     @Test
-    public void test() throws IOException {
+    public void test() throws IOException, TransformationException {
         Dict dict = new Dictionary();
         dict.setFilePath(this.dictFile.toString());
         dict.setFileDelimiter("&#09;");

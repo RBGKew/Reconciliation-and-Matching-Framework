@@ -12,8 +12,8 @@ public class RemoveBracketedTextTransformer extends A2BTransformer {
 	
 	final private String a = String.format("%s|%s|%s", ROUND_BRACKETS_AND_CONTENT, SQUARE_BRACKETS_AND_CONTENT, CURLY_BRACKETS_AND_CONTENT);
 
+	@Override
 	public String getA() {
 		return this.a;
 	}
-
 }

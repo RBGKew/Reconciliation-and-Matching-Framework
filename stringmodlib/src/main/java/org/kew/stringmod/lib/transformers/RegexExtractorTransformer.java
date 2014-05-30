@@ -19,6 +19,7 @@ public class RegexExtractorTransformer extends RegexDefCollection implements Tra
     private boolean removeMultipleWhitespaces = true;
     private boolean trimIt = true;
 
+    @Override
     public String transform(String s) {
     	StringBuffer sb = new StringBuffer();
     	if (s != null){
@@ -41,7 +42,6 @@ public class RegexExtractorTransformer extends RegexDefCollection implements Tra
 	public void setRegex(String regex) {
 		this.regex = regex;
 	}
-
 
 	public boolean isRemoveMultipleWhitespaces() {
         return removeMultipleWhitespaces;

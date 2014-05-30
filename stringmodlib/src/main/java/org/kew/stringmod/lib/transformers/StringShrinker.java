@@ -10,7 +10,8 @@ public class StringShrinker implements Transformer {
     public StringShrinker(int shrinkTo) {
         this.shrinkTo = shrinkTo;
     }
-    
+
+    @Override
     public String transform(String s) {
         if (s.length() > this.shrinkTo) s = s.substring(0, this.shrinkTo);
         return s;

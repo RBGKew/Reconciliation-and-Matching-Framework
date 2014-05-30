@@ -10,6 +10,7 @@ import org.kew.stringmod.utils.LibraryRegister;
 @LibraryRegister(category="transformers")
 public class CleanedPubAuthors implements Transformer {
 
+    @Override
     public String transform (String s) {
         s = new StripBasionymAuthorTransformer().transform(s);
         s = new StripExAuthorTransformer().transform(s);

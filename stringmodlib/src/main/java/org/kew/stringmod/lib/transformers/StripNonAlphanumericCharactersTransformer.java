@@ -8,6 +8,7 @@ package org.kew.stringmod.lib.transformers;
 @Deprecated
 public class StripNonAlphanumericCharactersTransformer implements Transformer{
 
+	@Override
 	public String transform(String s) {
 		return s.replaceAll("[^A-Za-z0-9]", " ").replaceAll("\\s+", " ");
 	}

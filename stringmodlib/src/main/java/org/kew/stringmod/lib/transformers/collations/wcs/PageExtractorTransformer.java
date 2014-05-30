@@ -7,9 +7,8 @@ import org.kew.stringmod.utils.LibraryRegister;
 public class PageExtractorTransformer implements Transformer{
 
 	@Override
-	public String transform(String s) throws Exception {
+	public String transform(String s) {
 		String[] collationElements = CollationUtils.parseCollation(s);
 		return collationElements[CollationUtils.PAGE_INDEX];
 	}
-
 }

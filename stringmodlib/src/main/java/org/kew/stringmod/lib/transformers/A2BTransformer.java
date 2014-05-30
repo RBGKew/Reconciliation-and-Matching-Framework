@@ -2,7 +2,6 @@ package org.kew.stringmod.lib.transformers;
 
 import org.kew.stringmod.utils.LibraryRegister;
 
-
 /**
  * A generic transformer that searches for all occurrences of a pattern (regEx)
  * `a` in a string and replaces each with a string `b`;
@@ -18,6 +17,7 @@ public class A2BTransformer extends RegexDefCollection implements Transformer {
     private boolean removeMultipleWhitespaces = true;
     private boolean trimIt = true;
 
+    @Override
     public String transform(String s) {
         s = s.replaceAll(this.getA(), this.getB());
         if (this.removeMultipleWhitespaces) s = s.replaceAll("\\s+", " ");
@@ -53,5 +53,4 @@ public class A2BTransformer extends RegexDefCollection implements Transformer {
     public void setTrimIt(boolean trimIt) {
         this.trimIt = trimIt;
     }
-
 }

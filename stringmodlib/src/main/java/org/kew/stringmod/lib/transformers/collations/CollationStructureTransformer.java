@@ -7,7 +7,7 @@ import org.kew.stringmod.utils.LibraryRegister;
 public class CollationStructureTransformer implements Transformer{
 
 	@Override
-	public String transform(String s) throws Exception {
+	public String transform(String s) {
 		return assessCollationStructure(s);
 	}
 
@@ -53,5 +53,4 @@ public class CollationStructureTransformer implements Transformer{
 		}
 		return c_structure;
 	}
-
 }

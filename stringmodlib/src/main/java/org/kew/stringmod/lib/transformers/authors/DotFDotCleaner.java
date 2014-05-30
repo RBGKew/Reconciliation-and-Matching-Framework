@@ -11,6 +11,7 @@ import org.kew.stringmod.utils.LibraryRegister;
 @LibraryRegister(category="transformers")
 public class DotFDotCleaner extends RegexDefCollection implements Transformer {
 
+    @Override
     public String transform(String s) {
         String c = String.format("(?<=%s)[\\.\\s]f\\.", ALPHANUMDIAC);
         return s.replaceAll(c, "");

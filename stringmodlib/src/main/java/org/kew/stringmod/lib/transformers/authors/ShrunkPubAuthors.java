@@ -20,6 +20,7 @@ public class ShrunkPubAuthors implements Transformer {
 
     private Integer shrinkTo = null;
 
+    @Override
     public String transform(String s) {
         s = new DotFDotCleaner().transform(s);
         s = new CleanedPubAuthors().transform(s);

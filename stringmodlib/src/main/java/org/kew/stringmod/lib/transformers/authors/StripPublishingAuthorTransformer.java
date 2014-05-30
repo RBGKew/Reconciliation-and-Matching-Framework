@@ -10,6 +10,7 @@ import org.kew.stringmod.utils.LibraryRegister;
 @LibraryRegister(category="transformers")
 public class StripPublishingAuthorTransformer implements Transformer{
 
+	@Override
 	public String transform(String s) {
 		String transformed = s;
 		if (StringUtils.isNotBlank(s) && ((s.indexOf("(") != -1) && s.indexOf(")") != -1))

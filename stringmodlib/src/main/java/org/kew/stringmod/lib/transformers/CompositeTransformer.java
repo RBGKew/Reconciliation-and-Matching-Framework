@@ -10,9 +10,11 @@ public class CompositeTransformer implements Transformer{
 
 	private List<Transformer> transformers;
 
-	public String transform(String s) throws Exception {
-		for (Transformer t : transformers)
+	@Override
+	public String transform(String s) throws TransformationException {
+		for (Transformer t : transformers) {
 			s = t.transform(s);
+		}
 		return s;
 	}
 
@@ -23,5 +25,4 @@ public class CompositeTransformer implements Transformer{
 	public void setTransformers(List<Transformer> transformers) {
 		this.transformers = transformers;
 	}
-		
 }

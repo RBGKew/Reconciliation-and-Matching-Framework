@@ -10,6 +10,7 @@ import org.kew.stringmod.utils.LibraryRegister;
 @LibraryRegister(category="transformers")
 public class StripBasionymAuthorTransformer implements Transformer{
 
+	@Override
 	public String transform(String s) {
 		if (StringUtils.isNotBlank(s))
 			// replace ALL bits in brackets, then remove double whitespaces and surrounding whitespaces

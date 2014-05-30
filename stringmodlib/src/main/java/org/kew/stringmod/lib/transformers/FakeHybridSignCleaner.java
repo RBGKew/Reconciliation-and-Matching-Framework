@@ -13,12 +13,14 @@ public class FakeHybridSignCleaner extends A2BTransformer {
 
 	final private String a = "^[Xx]\\s|\\s[xX]\\s";
 	final private String b = " ";
-	
+
+	@Override
 	public String getA() {
 		return this.a;
 	}
+
+	@Override
 	public String getB() {
 		return this.b;
 	}
-
 }

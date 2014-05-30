@@ -9,11 +9,12 @@ import org.kew.stringmod.utils.LibraryRegister;
 @LibraryRegister(category="transformers")
 public class ZeroToBlankTransformer implements Transformer{
 
+	@Override
 	public String transform(String s) {
 		String transformed = s;
-		if (StringUtils.isNotBlank(s) & s.equals("0"))
+		if (StringUtils.isNotBlank(s) & s.equals("0")) {
 			transformed = "";
+		}
 		return transformed;
 	}
-	
 }

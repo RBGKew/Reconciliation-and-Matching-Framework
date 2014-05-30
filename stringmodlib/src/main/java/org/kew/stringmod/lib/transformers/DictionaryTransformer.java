@@ -5,7 +5,6 @@ import java.io.IOException;
 import org.kew.stringmod.utils.Dict;
 import org.kew.stringmod.utils.LibraryRegister;
 
-
 /**
  * Uses a {@link org.kew.stringmod.utils.Dict} object to lookup a string in its
  * keys and returns the value if the key is found. Otherwise it returns the
@@ -17,10 +16,16 @@ public class DictionaryTransformer implements Transformer {
     Dict dict;
     private boolean fileLoaded = false;
 
-    final public String transform (String s) throws IOException {
+    @Override
+    final public String transform (String s) throws TransformationException {
         if (!fileLoaded) {
-            this.dict.readFile();
-            this.fileLoaded = true;
+            try {
+                this.dict.readFile();
+                this.fileLoaded = true;
+            }
+            catch (IOException e) {
+                throw new TransformationException("Unable to load dictionary file "+dict, e);
+            }
         }
         return this.transformWithDict(s);
     }
@@ -37,5 +42,4 @@ public class DictionaryTransformer implements Transformer {
     public void setDict(Dict dict) {
         this.dict = dict;
     }
-
 }

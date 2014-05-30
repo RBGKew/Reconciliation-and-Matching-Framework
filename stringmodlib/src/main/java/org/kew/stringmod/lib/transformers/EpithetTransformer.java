@@ -10,6 +10,7 @@ import org.kew.stringmod.utils.LibraryRegister;
 @LibraryRegister(category="transformers")
 public class EpithetTransformer implements Transformer {
 
+	@Override
 	public String transform(String s) {
 		  if (s != null){
 			  s = s.replaceAll("[^A-Za-z]", "");

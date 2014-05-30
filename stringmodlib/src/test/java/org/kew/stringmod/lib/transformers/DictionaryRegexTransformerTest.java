@@ -6,14 +6,14 @@ import static org.junit.Assert.assertThat;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.kew.stringmod.lib.transformers.DictionaryRegexTransformer;
 import org.kew.stringmod.utils.Dict;
 import org.kew.stringmod.utils.OrderedDict;
 
 public class DictionaryRegexTransformerTest extends DictionaryTransformerTest {
 
     @Test
-    public void test() throws IOException {
+    @Override
+    public void test() throws IOException, TransformationException {
         Dict dict = new OrderedDict();
         dict.setFilePath(this.dictFile.toString());
         dict.setFileDelimiter("&#09;");

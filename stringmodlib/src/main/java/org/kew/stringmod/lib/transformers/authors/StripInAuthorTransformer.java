@@ -10,6 +10,7 @@ import org.kew.stringmod.utils.LibraryRegister;
 @LibraryRegister(category="transformers")
 public class StripInAuthorTransformer extends RegexDefCollection implements Transformer{
 
+    @Override
     public String transform(String s) {
         String cleaned = s;
         if (s != null){

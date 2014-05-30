@@ -40,5 +40,4 @@ public class DictionaryRegexTransformer extends DictionaryTransformer {
     public void setMultiTransform(boolean multiTransform) {
         this.multiTransform = multiTransform;
     }
-
 }
