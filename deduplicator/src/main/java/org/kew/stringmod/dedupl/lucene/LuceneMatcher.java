@@ -1,30 +1,43 @@
 package org.kew.stringmod.dedupl.lucene;
 
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.script.ScriptException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.kew.stringmod.dedupl.DataHandler;
 import org.kew.stringmod.dedupl.configuration.Configuration;
 import org.kew.stringmod.dedupl.configuration.MatchConfiguration;
 import org.kew.stringmod.dedupl.configuration.Property;
+import org.kew.stringmod.dedupl.exception.MatchExecutionException;
+import org.kew.stringmod.dedupl.exception.TooManyMatchesException;
+import org.kew.stringmod.dedupl.matchers.MatchException;
 import org.kew.stringmod.dedupl.reporters.LuceneReporter;
 import org.kew.stringmod.dedupl.reporters.Piper;
+import org.kew.stringmod.lib.transformers.TransformationException;
 import org.kew.stringmod.lib.transformers.Transformer;
 import org.supercsv.io.CsvMapReader;
 import org.supercsv.prefs.CsvPreference;
 
-
+/**
+ * Performs the actual match against the Lucene index.
+ *
+ * {@link #getMatches(Map, int)} returns a list of matches.
+ */
 public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements DataHandler<MatchConfiguration> {
 
     protected MatchConfiguration matchConfig;
@@ -65,7 +78,12 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
             // transform the field-value..
             fValue = fValue == null ? "" : fValue; // super-csv treats blank as null, we don't for now
             for (Transformer t:prop.getSourceTransformers()) {
-                fValue = t.transform(fValue);
+                try {
+                    fValue = t.transform(fValue);
+                }
+                catch (TransformationException e) {
+                    throw new MatchExecutionException("Error evaluating transformer "+t+" on record "+record, e);
+                }
             }
             // ..and put it into the record
             record.put(fName + Configuration.TRANSFORMED_SUFFIX, fValue);
@@ -81,19 +99,37 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
             return null;
         }
 
-        TopDocs td = queryLucene(querystr, this.getIndexSearcher(), config.getMaxSearchResults());
-        if (td.totalHits == config.getMaxSearchResults()) {
-            throw new Exception(String.format("Number of max search results exceeded for record %s! You should either tweak your config to bring back less possible results making better use of the \"useInSelect\" switch (recommended) or raise the \"maxSearchResults\" number.", record));
+        // Perform the match
+        TopDocs td;
+        try {
+            td = queryLucene(querystr, this.getIndexSearcher(), config.getMaxSearchResults());
+            if (td.totalHits >= config.getMaxSearchResults()) {
+                this.logger.info("Error matching {}", "query");
+                throw new TooManyMatchesException(String.format("Number of max search results exceeded for record %s! You should either tweak your config to bring back less possible results making better use of the \"useInSelect\" switch (recommended) or raise the \"maxSearchResults\" number.", record));
+            }
+            this.logger.debug("Found {} possibles to assess against {}", td.totalHits, fromId);
         }
-        this.logger.debug("Found " + td.totalHits + " possibles to assess against " + fromId);
+        catch (ParseException | IOException e) {
+            throw new MatchExecutionException("Error querying Lucene on query "+record, e);
+        }
 
         List<Map<String, String>> matches = new ArrayList<>();
 
         for (ScoreDoc sd : td.scoreDocs){
-            Document toDoc = getFromLucene(sd.doc);
-            if (LuceneUtils.recordsMatch(record, toDoc, config.getProperties())) {
-                numMatches++;
-                matches.add(LuceneUtils.doc2Map(toDoc));
+            try {
+                Document toDoc = getFromLucene(sd.doc);
+                if (LuceneUtils.recordsMatch(record, toDoc, config.getProperties())) {
+                    maximumMatches++;
+                    Map<String,String> toDocAsMap = LuceneUtils.doc2Map(toDoc);
+                    matches.add(toDocAsMap);
+                    logger.info("Match is {}", toDocAsMap);
+                }
+            }
+            catch (MatchException e) {
+                throw new MatchExecutionException("Error running matcher for "+record, e);
+            }
+            catch (IOException e) {
+                throw new MatchExecutionException("Error retrieving match result from Lucene "+sd.doc, e);
             }
         }
         sortMatches(matches);
@@ -177,5 +213,4 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
             this.logger.info("Assessed " + i + " records, found " + numMatches + " matches");
         }
     }
-
 }
