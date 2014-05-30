@@ -12,11 +12,13 @@ public class ExactMatcher implements Matcher {
 
 	public static int COST = 0;
 	protected boolean blanksMatch = true;
-	
+
+	@Override
 	public int getCost() {
 		return COST;
 	}
 
+	@Override
 	public boolean matches(String s1, String s2) {
 		boolean matches = false;
 		//if (s1 == null && s2 == null && this.blanksMatch) {
@@ -33,10 +35,12 @@ public class ExactMatcher implements Matcher {
 		return matches;
 	}
 
+	@Override
 	public boolean isExact() {
 		return true;
 	}
 
+	@Override
 	public String getExecutionReport() {
 		return null;
 	}
@@ -44,5 +48,4 @@ public class ExactMatcher implements Matcher {
 	public void setBlanksMatch(boolean blanksMatch) {
 		this.blanksMatch = blanksMatch;
 	}
-
 }

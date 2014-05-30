@@ -12,6 +12,7 @@ import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexableField;
 import org.kew.stringmod.dedupl.configuration.Configuration;
 import org.kew.stringmod.dedupl.configuration.Property;
+import org.kew.stringmod.dedupl.matchers.MatchException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -124,7 +125,7 @@ public class LuceneUtils {
         return recordsMatch(map, to, properties);
     }
 
-    public static boolean recordsMatch(Map<String,String> from, Document to, List<Property> properties) throws Exception{
+    public static boolean recordsMatch(Map<String,String> from, Document to, List<Property> properties) throws MatchException {
         boolean recordMatch = false;
         logger.debug("Comparing records: " + from.get(Configuration.ID_FIELD_NAME) + " " + to.get(Configuration.ID_FIELD_NAME));
         for (Property p : properties){

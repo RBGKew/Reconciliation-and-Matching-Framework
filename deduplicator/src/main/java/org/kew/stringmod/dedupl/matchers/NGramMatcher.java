@@ -19,7 +19,8 @@ public class NGramMatcher extends CommonTokensMatcher{
 
 	private int nGramLength;
 	public static int COST = 10;
-	
+
+	@Override
 	@Cacheable(cacheName="ngMatchCache")
 	public boolean matches(String s1, String s2){
 		boolean matches = false;
@@ -58,11 +59,13 @@ public class NGramMatcher extends CommonTokensMatcher{
 	public void setnGramLength(int nGramLength) {
 		this.nGramLength = nGramLength;
 	}
-	
+
+	@Override
 	public boolean isExact() {
 		return false;
 	}
-	
+
+	@Override
 	public String getExecutionReport() {
 		return null;
 	}
@@ -73,5 +76,4 @@ public class NGramMatcher extends CommonTokensMatcher{
 		nGramMatcher.setnGramLength(2);
 		System.out.println(nGramMatcher.matches("lofgreniana", "loefgreniana"));
 	}
-	
 }

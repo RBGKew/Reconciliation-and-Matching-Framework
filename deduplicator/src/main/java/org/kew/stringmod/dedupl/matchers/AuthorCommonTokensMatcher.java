@@ -1,7 +1,6 @@
 package org.kew.stringmod.dedupl.matchers;
 
 import org.kew.stringmod.lib.transformers.SafeStripNonAlphaNumericsTransformer;
-import org.kew.stringmod.lib.transformers.Transformer;
 import org.kew.stringmod.lib.transformers.authors.StripExAuthorTransformer;
 import org.kew.stringmod.lib.transformers.authors.StripInAuthorTransformer;
 import org.kew.stringmod.utils.LibraryRegister;
@@ -18,16 +17,18 @@ public class AuthorCommonTokensMatcher extends CommonTokensMatcher{
 
     public static int COST = 1;
 
-    final private Transformer inCleaner = new StripInAuthorTransformer();
-    final private Transformer exCleaner = new StripExAuthorTransformer();
-    final private Transformer stripNonDs = new SafeStripNonAlphaNumericsTransformer();
+    final private StripInAuthorTransformer inCleaner = new StripInAuthorTransformer();
+    final private StripExAuthorTransformer exCleaner = new StripExAuthorTransformer();
+    final private SafeStripNonAlphaNumericsTransformer stripNonDs = new SafeStripNonAlphaNumericsTransformer();
 
+    @Override
     public int getCost() {
         return COST;
     }
 
+    @Override
     @Cacheable(cacheName="actMatchCache")
-    public boolean matches(String s1, String s2) throws Exception {
+    public boolean matches(String s1, String s2) {
         boolean matches = false;
         if (s1 == null && s2 == null)
             matches = true;
@@ -37,16 +38,17 @@ public class AuthorCommonTokensMatcher extends CommonTokensMatcher{
         return matches;
     }
 
-    private String clean(String s) throws Exception{
+    private String clean(String s) {
         return this.inCleaner.transform(this.exCleaner.transform(this.stripNonDs.transform(s)));
     }
 
+    @Override
     public boolean isExact() {
         return false;
     }
 
+    @Override
     public String getExecutionReport() {
         return null;
     }
-
 }

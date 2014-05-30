@@ -23,9 +23,18 @@ public class ExactMatchingMatcherTest {
 
 	@Test
 	public void testNullBlankMatches() throws Exception {
-		Matcher matcher = new ExactMatcher();
-		//assertFalse(matcher.matches("", null));
-		//assertFalse(matcher.matches(null,""));
+		ExactMatcher matcher = new ExactMatcher();
+
+		assertTrue(matcher.matches("", null));
+		assertTrue(matcher.matches(null,""));
+
+		matcher.setBlanksMatch(true); // Default
+		assertTrue(matcher.matches("", null));
+		assertTrue(matcher.matches(null,""));
+
+		matcher.setBlanksMatch(false);
+		assertFalse(matcher.matches("", null));
+		assertFalse(matcher.matches(null,""));
 	}
 
 	@Test

@@ -10,7 +10,8 @@ package org.kew.stringmod.dedupl.matchers;
 public class OcrCanonicaliserMatcher implements Matcher {
 
 	public static int COST = 0;
-	
+
+	@Override
 	public int getCost() {
 		return COST;
 	}
@@ -85,7 +86,8 @@ public class OcrCanonicaliserMatcher implements Matcher {
 		,{"y","u"}
 		};
 	private static final String CANONICAL = "#";
-	
+
+	@Override
 	public boolean matches(String s1, String s2) {
 		boolean matches = false;
 		if (s1 == null && s2 == null)
@@ -109,10 +111,12 @@ public class OcrCanonicaliserMatcher implements Matcher {
 		return matches;
 	}
 
+	@Override
 	public boolean isExact() {
 		return false;
 	}
 
+	@Override
 	public String getExecutionReport() {
 		return null;
 	}

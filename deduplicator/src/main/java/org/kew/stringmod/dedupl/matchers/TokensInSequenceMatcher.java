@@ -24,12 +24,14 @@ public class TokensInSequenceMatcher extends TokeniserMatcher {
 
     private static Logger logger = LoggerFactory.getLogger(TokensInSequenceMatcher.class);
 
+    @Override
     public int getCost() {
         return COST;
     }
 
+    @Override
     /*@Cacheable(cacheName="ctMatchCache")*/
-    public boolean matches(String s1, String s2) throws Exception {
+    public boolean matches(String s1, String s2) {
         logger.debug("s1: " + s1);
         logger.debug("s2: " + s2);
         if (s1 == null && s2 == null) return true;
@@ -63,14 +65,19 @@ public class TokensInSequenceMatcher extends TokeniserMatcher {
         return tokensInSeq;
     }
 
+    @Override
     public boolean isExact() {
         return false;
     }
 
+    @Override
     public String getExecutionReport() {
         return null;
     }
 
+    /*
+     * TODO: Looks like this should be in a test.
+     */
     public static void main(String[] args) {
 		TokensInSequenceMatcher tsm = new TokensInSequenceMatcher();
 		StripNonNumericCharactersTransformer stripper = new StripNonNumericCharactersTransformer();

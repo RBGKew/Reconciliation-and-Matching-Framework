@@ -12,7 +12,8 @@ import org.kew.stringmod.utils.LibraryRegister;
 @LibraryRegister(category="matchers")
 public class CompositeAllMatcher extends CompositeMatcher{
 
-	public boolean matches(String s1, String s2) throws Exception {
+	@Override
+	public boolean matches(String s1, String s2) throws MatchException {
 		boolean matches = true;
 		for (Matcher m : matchers)
 			if (!m.matches(s1, s2)){
@@ -21,5 +22,4 @@ public class CompositeAllMatcher extends CompositeMatcher{
 			}
 		return matches;
 	}
-
 }

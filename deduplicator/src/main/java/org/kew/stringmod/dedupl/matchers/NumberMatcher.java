@@ -1,7 +1,6 @@
 package org.kew.stringmod.dedupl.matchers;
 
 import org.kew.stringmod.lib.transformers.StripNonNumericCharactersTransformer;
-import org.kew.stringmod.lib.transformers.Transformer;
 import org.kew.stringmod.utils.LibraryRegister;
 
 import com.googlecode.ehcache.annotations.Cacheable;
@@ -17,15 +16,17 @@ public class NumberMatcher extends CommonTokensMatcher {
 
 	public static int COST = 5;
 	public boolean noNumbersRequireRestMatch = true;
-	
-	Transformer removeNumbers = new StripNonNumericCharactersTransformer();
-	
+
+	StripNonNumericCharactersTransformer removeNumbers = new StripNonNumericCharactersTransformer();
+
+	@Override
 	public int getCost() {
 		return COST;
 	}
 
+	@Override
 	@Cacheable(cacheName="nctMatchCache")
-	public boolean matches(String s1, String s2) throws Exception {
+	public boolean matches(String s1, String s2) {
 		if (s1 == null && s2 == null) return true;
 		String no1 = doConvert(s1);
 		String no2 = doConvert(s2);
@@ -34,18 +35,20 @@ public class NumberMatcher extends CommonTokensMatcher {
 		} else return super.matches(no1, no2);
 	}
 
-	private String doConvert(String s) throws Exception{
+	private String doConvert(String s) {
 		return this.removeNumbers.transform(s);
 	}
-	
+
+	@Override
 	public boolean isExact() {
 		return false;
 	}
-	
+
+	@Override
 	public String getExecutionReport() {
 		return null;
 	}
-	
+
 	public static void main(String[] args) throws Exception {
 		NumberMatcher m = new NumberMatcher();
 		System.out.println(m.matches("7: 139", "7: 139 (-140)"));
@@ -58,5 +61,4 @@ public class NumberMatcher extends CommonTokensMatcher {
 	public void setNoNumbersRequireRestMatch(boolean noNumbersRequireRestMatch) {
 		this.noNumbersRequireRestMatch = noNumbersRequireRestMatch;
 	}
-	
 }

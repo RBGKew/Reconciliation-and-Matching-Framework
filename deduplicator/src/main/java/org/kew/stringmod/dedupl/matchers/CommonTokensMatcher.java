@@ -25,12 +25,14 @@ public class CommonTokensMatcher extends TokeniserMatcher {
 
     private static Logger logger = LoggerFactory.getLogger(CommonTokensMatcher.class);
 
+    @Override
     public int getCost() {
         return COST;
     }
 
     /*@Cacheable(cacheName="ctMatchCache")*/
-    public boolean matches(String s1, String s2) throws Exception {
+    @Override
+    public boolean matches(String s1, String s2) {
         logger.debug("s1: " + s1);
         logger.debug("s2: " + s2);
         if (s1 == null && s2 == null) return true;
@@ -62,10 +64,12 @@ public class CommonTokensMatcher extends TokeniserMatcher {
         this.minRatio = minRatio;
     }
 
+    @Override
     public boolean isExact() {
         return false;
     }
 
+    @Override
     public String getExecutionReport() {
         return null;
     }

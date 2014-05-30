@@ -13,8 +13,9 @@ public abstract class CompositeMatcher implements Matcher{
 
 	protected List<Matcher> matchers;
 
-	public abstract boolean matches(String s1, String s2) throws Exception;
-	
+	@Override
+	public abstract boolean matches(String s1, String s2) throws MatchException;
+
 	public List<Matcher> getMatchers() {
 		return matchers;
 	}
@@ -22,12 +23,14 @@ public abstract class CompositeMatcher implements Matcher{
 	public void setMatchers(List<Matcher> matchers) {
 		this.matchers = matchers;
 		Collections.sort(matchers,  new Comparator<Matcher>() {
+			@Override
 	        public int compare(Matcher m1,Matcher m2) {
 	        	return Integer.valueOf(m1.getCost()).compareTo(Integer.valueOf(m2.getCost()));
 	        }
 	    });
 	}
 
+	@Override
 	public boolean isExact() {
 		boolean exact = true;
 		for (Matcher m : matchers){
@@ -38,6 +41,7 @@ public abstract class CompositeMatcher implements Matcher{
 		return exact;
 	}
 
+	@Override
 	public int getCost() {
 		int cost = 0;
 		for (Matcher m : matchers)
@@ -45,6 +49,7 @@ public abstract class CompositeMatcher implements Matcher{
 		return cost;
 	}
 
+	@Override
 	public String getExecutionReport() {
 		StringBuffer sb = new StringBuffer();
 		for (Matcher m : matchers)

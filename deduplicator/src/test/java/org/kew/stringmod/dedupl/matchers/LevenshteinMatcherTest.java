@@ -35,7 +35,7 @@ public class LevenshteinMatcherTest {
     }
 
     @Test
-    public void test() throws IOException {
+    public void test() throws MatchException {
         LevenshteinMatcher matcher = new LevenshteinMatcher();
         matcher.setMaxDistance(2);
         assertTrue(matcher.matches("hallo", "haaallo"));
@@ -44,7 +44,7 @@ public class LevenshteinMatcherTest {
     }
 
     @Test
-    public void testFalsePositives() throws IOException {
+    public void testFalsePositives() throws IOException, MatchException {
         Dictionary dict = new Dictionary();
         dict.setFilePath(this.dictFile.toString());
         dict.setFileDelimiter("&#09;");
@@ -56,7 +56,7 @@ public class LevenshteinMatcherTest {
     }
 
     @Test
-    public void blankMatchesBlank() throws IOException {
+    public void blankMatchesBlank() throws MatchException {
         LevenshteinMatcher matcher = new LevenshteinMatcher();
         assertTrue(matcher.matches("", ""));
     }

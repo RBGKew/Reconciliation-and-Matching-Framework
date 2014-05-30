@@ -37,6 +37,7 @@ public class AuthorAbbreviationsMatcher extends AuthorCommonTokensMatcher{
 	}
 	
 
+	@Override
 	public int getCost() {
 		return COST;
 	}
@@ -96,7 +97,8 @@ public class AuthorAbbreviationsMatcher extends AuthorCommonTokensMatcher{
 		}
 		return matches;
 	}
-	
+
+	@Override
 	@Cacheable(cacheName="aabMatchCache")
 	public boolean matches(String s1, String s2) {
 		boolean matches = false;
@@ -170,8 +172,7 @@ public class AuthorAbbreviationsMatcher extends AuthorCommonTokensMatcher{
 		}
 		return matches;
 	}
-	
-	
+
 	public String translateMisspellings(String str1) {
 		
 		String misspell = null;
@@ -181,10 +182,8 @@ public class AuthorAbbreviationsMatcher extends AuthorCommonTokensMatcher{
 			misspell = str1;
 		
 		return misspell;
-		
-		
 	}
-	
+
 	public String[] translateAbbreviation(String[] str1) {
 		
 		String abbrev = null;
@@ -205,8 +204,6 @@ public class AuthorAbbreviationsMatcher extends AuthorCommonTokensMatcher{
 		}
 		
 		return trans;
-		
-		
 	}
 	
 	/*
@@ -236,8 +233,6 @@ public class AuthorAbbreviationsMatcher extends AuthorCommonTokensMatcher{
     	return abbrevMatch;
     }
     */
-	
-	
 	
     public String clean(String strIn) {
     	//replace any diacritical mark characters with 'a-z' characters and replace any 'in', 'ex', '&', 'forma' with space.
@@ -406,16 +401,20 @@ public class AuthorAbbreviationsMatcher extends AuthorCommonTokensMatcher{
 		return map;
 		
 	}
-	
-	
+
+	@Override
 	public boolean isExact() {
 		return false;
 	}
 
+	@Override
 	public String getExecutionReport() {
 		return null;
 	}
-	
+
+	/*
+	 * TODO: This should be moved into a unit test.
+	 */
 	public static void main(String[] args) {
 		//test this matcher using a test file of author pairs to match. File layout example = 'authorID%author1%author2'
 		//The output file shows each author pair after they are cleaned, any abbreviation translated and finally if they match.  
@@ -490,9 +489,5 @@ public class AuthorAbbreviationsMatcher extends AuthorCommonTokensMatcher{
 		catch (Exception e) {
 			e.printStackTrace();
 		}		
-		
-
-		
 	}
-
 }

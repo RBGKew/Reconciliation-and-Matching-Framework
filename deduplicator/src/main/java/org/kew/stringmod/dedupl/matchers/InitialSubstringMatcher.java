@@ -13,11 +13,13 @@ public class InitialSubstringMatcher implements Matcher {
 
 	public static int COST = 0;
 	public int prefixSize = 3;
-	
+
+	@Override
 	public int getCost() {
 		return COST;
 	}
 
+	@Override
 	public boolean matches(String s1, String s2) {
 		if (s1 == null && s2 == null) return true;
 		if ((s1.length() > prefixSize) && (s2.length() > prefixSize )){
@@ -26,10 +28,12 @@ public class InitialSubstringMatcher implements Matcher {
 		return false;
 	}
 
+	@Override
 	public boolean isExact() {
 		return false;
 	}
 
+	@Override
 	public String getExecutionReport() {
 		return null;
 	}

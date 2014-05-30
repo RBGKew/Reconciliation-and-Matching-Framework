@@ -40,12 +40,14 @@ public class LevenshteinMatcher implements Matcher {
         this.dict = dict;
     }
 
+    @Override
     public int getCost() {
         return COST;
     }
 
+    @Override
     @Cacheable(cacheName="ldMatchCache")
-    public boolean matches(String s1, String s2) throws IOException {
+    public boolean matches(String s1, String s2) throws MatchException {
         boolean matches = false;
         numCalls++;
         if (StringUtils.isEmpty(s1) && StringUtils.isEmpty(s2)) return true;
@@ -69,11 +71,16 @@ public class LevenshteinMatcher implements Matcher {
         return matches;
     }
 
-    private boolean doFalsePositiveCheck(String s1, String s2) throws IOException{
+    private boolean doFalsePositiveCheck(String s1, String s2) throws MatchException {
         logger.info("FALSE_POSITIVES_CHECK");
         if (!fileLoaded) {
-            this.dict.readFile();
-            this.fileLoaded = true;
+            try {
+                this.dict.readFile();
+                this.fileLoaded = true;
+            }
+            catch (IOException e) {
+                throw new MatchException("Error loading dictionary "+this.dict+" for false positive check.", e);
+            }
         }
         boolean passed = true;
         Dictionary falsePositives = this.getDict();
@@ -89,6 +96,7 @@ public class LevenshteinMatcher implements Matcher {
         return new Integer(StringUtils.getLevenshteinDistance(s1, s2));
     }
 
+    @Override
     public boolean isExact() {
         return false;
     }
@@ -101,8 +109,8 @@ public class LevenshteinMatcher implements Matcher {
         this.maxDistance = maxDistance;
     }
 
+    @Override
     public String getExecutionReport(){
         return "Number of calls: "+ numCalls + ", num executions: " + numExecutions;
     }
-
 }
