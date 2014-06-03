@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+	<!-- • CARELESS (optimistic) TPL NAME MATCH •
+		Matches on genus, species and infraspecies epithets, plus author.
+	-->
+
+	<context:property-placeholder location="classpath:/match-webservice.properties"/>
+
+	<bean id="lucene_directory" class="java.lang.String">
+		<constructor-arg value="#{systemProperties['datadir']}/lucene_directory_tplstandard/" />
+	</bean>
+	<bean id="sourcefile" class="java.io.File">
+		<constructor-arg value="#{systemProperties['datadir']}/sourcefile.csv" />
+	</bean>
+
+	<!-- IPNI Flat datasource for lookup data -->
+	<bean id="tplDatabase" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${tpl.database.driverClassName}" />
+		<property name="url" value="${tpl.database.url}" />
+		<property name="username" value="${tpl.database.username}" />
+		<property name="password" value="${tpl.database.password}" />
+		<property name="defaultAutoCommit" value="false" />
+		<property name="defaultReadOnly" value="true" />
+	</bean>
+	<bean id="lookupFromTplDatabase" class="org.kew.stringmod.ws.DatabaseCursorRecordReader">
+		<property name="dataSource" ref="tplDatabase"/>
+		<property name="sql" value="SELECT t1ID AS id, genus, species, infraspecificEpithet AS infraspecies, primaryAuthors AS authors, taxonomicStatus, acceptedNameID FROM tpl2_final"/>
+		<property name="fetchSize" value="150000"/>
+	</bean>
+
+	<bean id="epithetTransformer" class="org.kew.stringmod.lib.transformers.EpithetTransformer"/>
+
+	<bean id="fakeHybridSignCleaner" class="org.kew.stringmod.lib.transformers.FakeHybridSignCleaner" />
+	<bean id="safeStripNonAlphasTransformerNothing" class="org.kew.stringmod.lib.transformers.SafeStripNonAlphasTransformer" p:replaceWith=""/>
+
+	<bean id="surnameExtractor" class="org.kew.stringmod.lib.transformers.authors.SurnameExtractor"/>
+
+	<bean id="stripBasionymAuthor" class="org.kew.stringmod.lib.transformers.authors.StripBasionymAuthorTransformer"/>
+	<bean id="stripInAuthor" class="org.kew.stringmod.lib.transformers.authors.StripInAuthorTransformer"/>
+	<bean id="stripExAuthor" class="org.kew.stringmod.lib.transformers.authors.StripExAuthorTransformer"/>
+	<bean id="shrunkAuthor" class="org.kew.stringmod.lib.transformers.authors.ShrunkAuthors" p:shrinkTo="3"/>
+
+	<bean id="exactMatch" class="org.kew.stringmod.dedupl.matchers.ExactMatcher" p:blanksMatch="false" />
+	<bean id="exactMatchBlanksOk" class="org.kew.stringmod.dedupl.matchers.ExactMatcher" p:blanksMatch="true" />
+
+	<bean id="commonTokensMatcher" class="org.kew.stringmod.dedupl.matchers.CommonTokensMatcher" p:minRatio="0.5"/>
+
+	<bean id="alwaysMatch" class="org.kew.stringmod.dedupl.matchers.AlwaysMatchingMatcher"/>
+	<bean id="ld1Match" class="org.kew.stringmod.dedupl.matchers.LevenshteinMatcher" p:maxDistance="1"/>
+
+	<bean id="exactOrBlankOrCommonTokensOrLd1Matcher" class="org.kew.stringmod.dedupl.matchers.CompositeAnyMatcher">
+		<property name="matchers">
+			<util:list>
+				<ref bean="exactMatchBlanksOk"/>
+				<ref bean="commonTokensMatcher"/>
+				<ref bean="ld1Match"/>
+			</util:list>
+		</property>
+	</bean>
+
+	<bean id="author_dictionary" class="org.kew.stringmod.utils.Dictionary"
+		p:fileDelimiter="&#09;"
+		p:filePath="/vol/Departmental/Development/SHS Project/Data Improvement/MatchConf/Dictionaries/author_dictionary.csv" />
+	<bean id="authordictionary" class="org.kew.stringmod.lib.transformers.DictionaryTransformer" p:dict-ref="author_dictionary"/>
+
+	<bean id="doubleLettersDictionary" class="org.kew.stringmod.utils.Dictionary"
+		p:fileDelimiter="&#09;"
+		p:filePath="/vol/Departmental/Development/SHS Project/Data Improvement/MatchConf/Dictionaries/double_letters_dictionary.csv" />
+	<bean id="doubleLettersTransformer" class="org.kew.stringmod.lib.transformers.DictionaryTransformer"
+		p:dict-ref="doubleLettersDictionary"/>
+
+	<util:list id="reporters"/>
+
+	<util:list id="columnProperties">
+		<!-- Genus -->
+		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+			p:sourceColumnName="genus"
+			p:lookupColumnName="genus"
+			p:useInSelect="true"
+			p:addOriginalLookupValue="true"
+			p:addOriginalSourceValue="true"
+			p:matcher-ref="exactMatch">
+			<property name="sourceTransformers">
+				<util:list id="1">
+					<ref bean="fakeHybridSignCleaner" />
+					<ref bean="safeStripNonAlphasTransformerNothing" />
+					<ref bean="doubleLettersTransformer" />
+					<ref bean="epithetTransformer" />
+				</util:list>
+			</property>
+			<property name="lookupTransformers">
+				<util:list id="1">
+					<ref bean="safeStripNonAlphasTransformerNothing" />
+					<ref bean="doubleLettersTransformer" />
+					<ref bean="epithetTransformer" />
+				</util:list>
+			</property>
+		</bean>
+
+		<!-- Species -->
+		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+			p:sourceColumnName="species"
+			p:lookupColumnName="species"
+			p:useInSelect="true"
+			p:addOriginalLookupValue="true"
+			p:addOriginalSourceValue="true"
+			p:matcher-ref="ld1Match">
+			<property name="sourceTransformers">
+				<util:list id="1">
+					<ref bean="fakeHybridSignCleaner" />
+					<ref bean="safeStripNonAlphasTransformerNothing" />
+					<ref bean="doubleLettersTransformer" />
+					<ref bean="epithetTransformer" />
+				</util:list>
+			</property>
+			<property name="lookupTransformers">
+				<util:list id="1">
+					<ref bean="safeStripNonAlphasTransformerNothing"/>
+					<ref bean="doubleLettersTransformer"/>
+					<ref bean="epithetTransformer" />
+				</util:list>
+			</property>
+		</bean>
+
+		<!-- Infraspecific epithet -->
+		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+			p:sourceColumnName="infraspecies"
+			p:lookupColumnName="infraspecies"
+			p:useInSelect="true"
+			p:addOriginalLookupValue="true"
+			p:addOriginalSourceValue="true"
+			p:matcher-ref="ld1Match">
+			<property name="sourceTransformers">
+				<util:list id="1">
+					<ref bean="safeStripNonAlphasTransformerNothing"/>
+					<ref bean="doubleLettersTransformer"/>
+					<ref bean="epithetTransformer" />
+				</util:list>
+			</property>
+			<property name="lookupTransformers">
+				<util:list id="1">
+					<ref bean="safeStripNonAlphasTransformerNothing"/>
+					<ref bean="doubleLettersTransformer"/>
+					<ref bean="epithetTransformer" />
+				</util:list>
+			</property>
+		</bean>
+
+		<!-- Authors -->
+		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+			p:sourceColumnName="authors"
+			p:lookupColumnName="authors"
+			p:useInSelect="false"
+			p:matcher-ref="exactOrBlankOrCommonTokensOrLd1Matcher"
+			p:addOriginalLookupValue="true"
+			p:addOriginalSourceValue="true"
+			p:addTransformedSourceValue="true"
+			p:addTransformedLookupValue="true">
+			<property name="sourceTransformers">
+				<util:list id="1">
+					<ref bean="authordictionary" />
+					<ref bean="stripBasionymAuthor" />
+					<ref bean="shrunkAuthor" />
+				</util:list>
+			</property>
+			<property name="lookupTransformers">
+				<util:list id="1">
+					<ref bean="authordictionary" />
+					<ref bean="stripBasionymAuthor" />
+					<ref bean="shrunkAuthor" />
+				</util:list>
+			</property>
+		</bean>
+
+		<!-- TaxonomicStatus -->
+		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+			p:sourceColumnName="taxonomicStatus"
+			p:lookupColumnName="taxonomicStatus"
+			p:addOriginalLookupValue="true"
+			p:matcher-ref="alwaysMatch">
+		</bean>
+
+		<!-- AcceptedNameID -->
+		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+			p:sourceColumnName="acceptedNameID"
+			p:lookupColumnName="acceptedNameID"
+			p:addOriginalLookupValue="true"
+			p:matcher-ref="alwaysMatch">
+		</bean>
+	</util:list>
+
+	<bean id="config" class="org.kew.stringmod.dedupl.configuration.MatchConfiguration"
+		p:name="carelessTplNameMatch"
+		p:sourceFile-ref="sourcefile"
+		p:sourceFileEncoding="UTF8"
+		p:sourceFileDelimiter="&#09;"
+		p:lookupRecords-ref="lookupFromTplDatabase"
+		p:properties-ref="columnProperties"
+		p:scoreFieldName="id"
+		p:loadReportFrequency="5000"
+		p:assessReportFrequency="500"
+		p:maxSearchResults="10000"
+		p:recordFilter=""
+		p:continueOnError="true"
+		p:reuseIndex="false"/>
+
+	<!-- import the generic application-context (equal for dedup/match configurations) -->
+	<import resource="classpath*:generic.xml" />
+	<!-- add the matching-specific bit -->
+	<import resource="classpath*:match.xml" />
+</beans>
