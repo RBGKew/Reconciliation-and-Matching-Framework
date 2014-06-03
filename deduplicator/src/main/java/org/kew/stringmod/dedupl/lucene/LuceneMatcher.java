@@ -65,7 +65,8 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
         // pipe everything through to the output where an existing filter evaluates to false;
         try {
             if (!StringUtils.isBlank(config.getRecordFilter()) && !jsEnv.evalFilter(config.getRecordFilter(), record)) {
-                return null;
+                logger.debug("All records excluded by record filter");
+                return new ArrayList<>();
             }
         }
         catch (ScriptException e) {
@@ -96,7 +97,7 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
         // TODO: create a log-file that stores critical log messages?
         if (querystr.equals("")) {
             logger.warn("Empty query for record {}", record);
-            return null;
+            return new ArrayList<>();
         }
 
         // Perform the match

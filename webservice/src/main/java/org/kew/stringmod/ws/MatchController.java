@@ -19,6 +19,8 @@ import org.kew.reconciliation.refine.domain.query.Query;
 import org.kew.reconciliation.refine.domain.response.QueryResponse;
 import org.kew.reconciliation.refine.domain.response.QueryResult;
 import org.kew.stringmod.dedupl.configuration.Property;
+import org.kew.stringmod.dedupl.exception.MatchExecutionException;
+import org.kew.stringmod.dedupl.exception.TooManyMatchesException;
 import org.kew.stringmod.dedupl.lucene.LuceneMatcher;
 import org.kew.stringmod.lib.transformers.Transformer;
 import org.slf4j.Logger;
@@ -146,13 +148,13 @@ public class MatchController {
 		    	// Pass this map to the new method in the LuceneMatcher - 
 		    	// getMatches(Map<String,String> record) to get a DocList of matches: 
 	    		try{
-	    			matches = matcher.getMatches(userSuppliedRecord,5);
+	    			matches = matcher.getMatches(userSuppliedRecord,10);
 	    			logger.debug("Found some matches: {}", matches.size());
 	    			if (matches.size() < 4) {
 	    				logger.debug("Matches for {} are {}", requestParams, matches);
 	    			}
 	    		}
-	    		catch(Exception e){
+	    		catch (TooManyMatchesException | MatchExecutionException e) {
 	    			logger.error("problem handling match", e);
 	    			return new ResponseEntity<List<Map<String,String>>>(HttpStatus.INTERNAL_SERVER_ERROR);
 	    		}
