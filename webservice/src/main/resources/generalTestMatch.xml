@@ -33,7 +33,7 @@
 	</bean>
 	<bean id="lookupFromTplDatabase" class="org.kew.stringmod.ws.DatabaseCursorRecordReader">
 		<property name="dataSource" ref="tplDatabase"/>
-		<property name="sql" value="SELECT t1ID AS id, genus, species, infraspecificEpithet AS infraspecies, primaryAuthors AS authors, taxonomicStatus, acceptedNameID FROM tpl2_final LIMIT 100"/>
+		<property name="sql" value="SELECT t1ID AS id, genus, species, infraspecificEpithet AS infraspecies, primaryAuthors AS authors, taxonomicStatus, acceptedNameID FROM tpl2_final WHERE genus = 'Congea'"/>
 		<property name="fetchSize" value="150000"/>
 	</bean>
 
@@ -202,7 +202,7 @@
 		p:maxSearchResults="10000"
 		p:recordFilter=""
 		p:continueOnError="true"
-		p:reuseIndex="false"
+		p:reuseIndex="true"
 		p:reconciliationServiceMetadata-ref="metadata"/>
 
 	<bean id="metadata" class="org.kew.reconciliation.refine.domain.metadata.Metadata"

@@ -7,6 +7,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.kew.reconciliation.refine.domain.metadata.Metadata;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +32,12 @@ public class GeneralReconciliationServiceStepdefs extends WebMvcConfigurationSup
 	@Autowired
 	private WebApplicationContext wac;
 
+	private ObjectMapper mapper = new ObjectMapper();
 	private MockMvc mockMvc;
 
-	private Metadata response;
+	private String responseJson;
+	private Metadata responseMetadata;
+
 	private MvcResult result;
 
 	@Before
@@ -49,18 +53,34 @@ public class GeneralReconciliationServiceStepdefs extends WebMvcConfigurationSup
 				.andExpect(content().contentType("application/json;charset=UTF-8"))
 				.andReturn();
 
-		ObjectMapper mapper = new ObjectMapper();
 		String msg = result.getResponse().getContentAsString();
 		log.debug("Response as string was {}", msg);
-		response = mapper.readValue(msg, Metadata.class);
+		responseMetadata = mapper.readValue(msg, Metadata.class);
 
 		// Check response
-		log.info("Received response {}", response);
+		log.info("Received response {}", responseMetadata);
 	}
 
 	@Then("^I receive the following metadata response:$")
 	public void i_receive_the_following_metadata_response(String expectedResponseString) throws Throwable {
 		Metadata expectedResponse = new ObjectMapper().readValue(expectedResponseString, Metadata.class);
-		Assert.assertThat("Metadata response correct", response, Matchers.equalTo(expectedResponse));
+		Assert.assertThat("Metadata response correct", responseMetadata, Matchers.equalTo(expectedResponse));
+	}
+
+	@When("^I make a match query for \"(.*?)\"$")
+	public void i_make_a_match_query_for(String queryString) throws Throwable {
+		// Call
+		result = mockMvc.perform(get("/match/generalTest?"+queryString).accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType("application/json;charset=UTF-8"))
+				.andReturn();
+
+		responseJson = result.getResponse().getContentAsString();
+		log.debug("Response as string was {}", responseJson);
+	}
+
+	@Then("^I receive the following match response:$")
+	public void i_receive_the_following_match_response(String expectedJson) throws Throwable {
+		JSONAssert.assertEquals(expectedJson, responseJson, true);
 	}
 }

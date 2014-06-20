@@ -82,7 +82,10 @@ public class MatchController {
 		}
     	return "about-matcher";
     }
-    
+
+    /**
+     * Performs a single match query.
+     */
     @RequestMapping(value = "/match/{configName}", method = RequestMethod.GET)
     public synchronized ResponseEntity<List<Map<String,String>>> doMatch (@PathVariable String configName
     														, @RequestParam Map<String,String> requestParams
@@ -91,9 +94,8 @@ public class MatchController {
     	List<Map<String,String>> matches = null;
     	// Assuming that multiple configurations may be accessed from a single webapp, 
     	// look for the one with the specified name (keyed to this in a map as explained above)
-		logger.debug("Looking for : " + configName);
 		LuceneMatcher matcher = reconciliationService.getMatcher(configName);
-		if (matcher != null){
+		if (matcher != null) {
 			// Build a map by looping over each property in the config, reading its value from the
 			// request object, and applying any transformations specified in the config
 			Map<String, String> userSuppliedRecord = new HashMap<String, String>();
