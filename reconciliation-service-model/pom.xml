@@ -1,0 +1,46 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.kew.stringmod</groupId>
+		<artifactId>deduplicator-framework</artifactId>
+		<version>0.2-SNAPSHOT</version>
+	</parent>
+	<artifactId>reconciliation-service-model</artifactId>
+	<packaging>jar</packaging>
+
+	<name>reconciliation-service-model</name>
+	<description>
+		This module provides JavaBeans which represent the query and response objects used in an Open Refine / Google Refine reconciliation call.
+		These are annotated to allow conversion to / from JSON.
+		See https://github.com/OpenRefine/OpenRefine/wiki/Reconciliation-Service-API for further details.
+	</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.7</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

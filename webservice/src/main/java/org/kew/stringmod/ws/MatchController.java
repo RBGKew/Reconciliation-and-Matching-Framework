@@ -14,7 +14,6 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.kew.reconciliation.refine.domain.metadata.Metadata;
-import org.kew.reconciliation.refine.domain.metadata.MetadataView;
 import org.kew.reconciliation.refine.domain.query.Query;
 import org.kew.reconciliation.refine.domain.response.QueryResponse;
 import org.kew.reconciliation.refine.domain.response.QueryResult;
@@ -344,7 +343,7 @@ public class MatchController {
 		m.setName(configName + " name reconciliation");
 		m.setIdentifierSpace("http://www.ipni.org");
 		m.setSchemaSpace("http://www.ipni.org");
-		MetadataView mv = new MetadataView();
+		Metadata.MetadataView mv = m.new MetadataView();
 		mv.setUrl("http://www.ipni.org/ipni/idPlantNameSearch.do?id={{id}}");
 		m.setView(mv);
 		return m;

@@ -11,6 +11,7 @@
         <module>matchconf</module>
         <module>stringmodlib</module>
         <module>stringmodutils</module>
+        <module>reconciliation-service-model</module>
         <module>webservice</module>
   </modules>
 
