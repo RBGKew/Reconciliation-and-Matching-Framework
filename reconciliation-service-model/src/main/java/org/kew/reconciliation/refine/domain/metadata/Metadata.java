@@ -1,5 +1,7 @@
 package org.kew.reconciliation.refine.domain.metadata;
 
+import java.util.Arrays;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -30,90 +32,65 @@ public class Metadata {
 				+ "]";
 	}
 
-	public class MetadataView {
-		private String url;
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
 
-		@Override
-		public String toString() {
-			return "MetadataView [url="+url+"]";
+		if (obj == null)
+			return false;
+
+		if (getClass() != obj.getClass())
+			return false;
+
+		Metadata other = (Metadata) obj;
+
+		if (!Arrays.equals(defaultTypes, other.defaultTypes))
+			return false;
+
+		if (identifierSpace == null) {
+			if (other.identifierSpace != null)
+				return false;
 		}
+		else if (!identifierSpace.equals(other.identifierSpace))
+			return false;
 
-		/* • Getters and setters • */
-		public String getUrl() { return url; }
-		public void setUrl(String url) { this.url = url; }
-	}
-
-	public class MetadataPreview {
-		private String url;
-		private int width;
-		private int height;
-
-		@Override
-		public String toString() {
-			return "MetadataPreview ["
-					+ "url=" + url
-					+ ", width=" + width
-					+ ", height=" + height
-					+ "]";
+		if (name == null) {
+			if (other.name != null)
+				return false;
 		}
+		else if (!name.equals(other.name))
+			return false;
 
-		/* • Getters and setters • */
-		public String getUrl() { return url; }
-		public void setUrl(String url) { this.url = url; }
-		public int getWidth() { return width; }
-		public void setWidth(int width) { this.width = width; }
-		public int getHeight() { return height; }
-		public void setHeight(int height) { this.height = height; }
-	}
-
-	public class MetadataSuggest {
-		private MetadataSuggestDetails type;
-		private MetadataSuggestDetails property;
-		private MetadataSuggestDetails entity;
-
-		@Override
-		public String toString() {
-			return "MetadataSuggest ["
-					+ "type=" + type
-					+ ", property=" + property
-					+ ", entity=" + entity
-					+ "]";
+		if (preview == null) {
+			if (other.preview != null)
+				return false;
 		}
+		else if (!preview.equals(other.preview))
+			return false;
 
-		public class MetadataSuggestDetails {
-			private String service_url;
-			private String service_path;
-			private String flyout_service_url;
-			private String flyout_service_path;
-
-			@Override
-			public String toString() {
-				return "MetadataSuggestDetails ["
-						+ "service_url=" + service_url
-						+ ", service_path=" + service_path
-						+ ", flyout_service_url=" + flyout_service_url
-						+ ", flyout_service_path=" + flyout_service_path
-						+ "]";
-			}
-
-			/* • Getters and setters • */
-			public String getService_url() { return service_url; }
-			public void setService_url(String serviceUrl) { this.service_url = serviceUrl; }
-			public String getService_path() { return service_path; }
-			public void setService_path(String servicePath) { this.service_path = servicePath; }
-			public String getFlyout_service_url() { return flyout_service_url; }
-			public void setFlyout_service_url(String flyoutServiceUrl) { this.flyout_service_url = flyoutServiceUrl; }
-			public String getFlyout_service_path() { return flyout_service_path; }
-			public void setFlyout_service_path(String flyoutServicePath) { this.flyout_service_path = flyoutServicePath; }
+		if (schemaSpace == null) {
+			if (other.schemaSpace != null)
+				return false;
 		}
+		else if (!schemaSpace.equals(other.schemaSpace))
+			return false;
 
-		/* • Getters and setters • */
-		public MetadataSuggestDetails getType() { return type; }
-		public void setType(MetadataSuggestDetails type) { this.type = type; }
-		public MetadataSuggestDetails getProperty() { return property; }
-		public void setProperty(MetadataSuggestDetails property) { this.property = property; }
-		public MetadataSuggestDetails getEntity() { return entity; }
-		public void setEntity(MetadataSuggestDetails entity) { this.entity = entity; }
+		if (suggest == null) {
+			if (other.suggest != null)
+				return false;
+		}
+		else if (!suggest.equals(other.suggest))
+			return false;
+
+		if (view == null) {
+			if (other.view != null)
+				return false;
+		}
+		else if (!view.equals(other.view))
+			return false;
+
+		return true;
 	}
 
 	/* • Getters and setters • */

@@ -50,7 +50,9 @@ public class GeneralReconciliationServiceStepdefs extends WebMvcConfigurationSup
 				.andReturn();
 
 		ObjectMapper mapper = new ObjectMapper();
-		response = mapper.readValue(result.getResponse().getContentAsString(), Metadata.class);
+		String msg = result.getResponse().getContentAsString();
+		log.debug("Response as string was {}", msg);
+		response = mapper.readValue(msg, Metadata.class);
 
 		// Check response
 		log.info("Received response {}", response);

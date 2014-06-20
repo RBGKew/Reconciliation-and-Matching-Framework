@@ -33,6 +33,6 @@ Feature: Functionality not particular to a specific match configuration is teste
 						"flyout_service_path" : "/flyout"
 					}
 				},
-				"defaultTypes" : []
+				"defaultTypes" : null
 			}
 			"""

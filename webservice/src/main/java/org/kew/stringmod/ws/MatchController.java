@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -17,6 +15,7 @@ import org.kew.reconciliation.refine.domain.metadata.Metadata;
 import org.kew.reconciliation.refine.domain.query.Query;
 import org.kew.reconciliation.refine.domain.response.QueryResponse;
 import org.kew.reconciliation.refine.domain.response.QueryResult;
+import org.kew.reconciliation.service.ReconciliationService;
 import org.kew.stringmod.dedupl.configuration.Property;
 import org.kew.stringmod.dedupl.exception.MatchExecutionException;
 import org.kew.stringmod.dedupl.exception.TooManyMatchesException;
@@ -25,9 +24,6 @@ import org.kew.stringmod.lib.transformers.Transformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -45,52 +41,17 @@ import org.supercsv.prefs.CsvPreference;
 public class MatchController {
 	private static Logger logger = LoggerFactory.getLogger(MatchController.class);
 
-	@Value("#{'${configFiles}'.split(',')}")
-	private List<String> configFiles;
-
-	private Map<String, LuceneMatcher> matchers;
-	private Map<String, Integer> totals;
-	
-	private boolean initialised=false;
+	@Autowired
+	ReconciliationService reconciliationService;
 
 	/* Added for recon service */
 	@Autowired
 	protected ObjectMapper jsonMapper;
 	private String[] types;
-	
-    @PostConstruct
-    public void init() {
-    	logger.debug("initiaising match controller");
-    	if (!initialised){
-	       // Load up the matchers from the specified files
-	    	matchers = new HashMap<String, LuceneMatcher>();
-	    	totals = new HashMap<String, Integer>();
-	    	if (configFiles != null){
-		    	for (String configFile : configFiles){
-		    		logger.debug("processing config: " + configFile);
-		    		ConfigurableApplicationContext context = new GenericXmlApplicationContext(configFile);
-		    		LuceneMatcher matcher = (LuceneMatcher) context.getBean("engine");
-		    		try{
-			    		matcher.loadData(); 
-			    		logger.debug("loaded data");
-			    		String configName = matcher.getConfig().getName(); 
-			    		matchers.put(configName, matcher);
-			    		totals.put(configName, matcher.getIndexReader().numDocs());
-			    		logger.debug("Stored matcher with name: " + configName);
-		    		}
-		    		catch(Exception e){
-		    			logger.error("Problem initialising handler w. config", e);
-		    		}
-		    	}
-	    	}
-	    	initialised=true;
-    	}
-    }
 
     @RequestMapping(produces="text/html", value = "/about", method = RequestMethod.GET)
     public String doWelcome(Model model) {
-    	if (matchers != null)
-    		model.addAttribute("availableMatchers", matchers.keySet());
+		model.addAttribute("availableMatchers", reconciliationService.getMatchers().keySet());
     	return "about-general";
     }
 
@@ -99,28 +60,26 @@ public class MatchController {
     	List<String> properties = new ArrayList<String>();
     	Map<String,String> p_matchers = new HashMap<String,String>();
     	Map<String,List<String>> p_transformers = new HashMap<String,List<String>>();
-    	if (matchers != null){
-    		logger.debug("Looking for : " + configName);
-    		LuceneMatcher matcher = matchers.get(configName);
-    		if (matcher != null){
-	    		model.addAttribute("matchConfig", matcher.getConfig());
-	    		for (Property p : matcher.getConfig().getProperties()){
-	    			properties.add(p.getSourceColumnName());
-	    			p_matchers.put(p.getSourceColumnName(), p.getMatcher().getClass().getCanonicalName());
-	    			List<String> p_t = new ArrayList<String>();
-	    			for (Transformer t : p.getSourceTransformers()){
-	    				p_t.add(t.getClass().getCanonicalName());
-	    			}
-	    			p_transformers.put(p.getSourceColumnName(), p_t);
-	    		}
-	    		if (totals.containsKey(configName))
-	    			model.addAttribute("total", totals.get(configName));
-	    		model.addAttribute("configName", configName);
-	    		model.addAttribute("properties", properties);
-	    		model.addAttribute("matchers", p_matchers);
-	    		model.addAttribute("transformers", p_transformers);
-    		}
-    	}
+		logger.debug("Looking for : " + configName);
+		LuceneMatcher matcher = reconciliationService.getMatcher(configName);
+		if (matcher != null){
+			model.addAttribute("matchConfig", matcher.getConfig());
+			for (Property p : matcher.getConfig().getProperties()){
+				properties.add(p.getSourceColumnName());
+				p_matchers.put(p.getSourceColumnName(), p.getMatcher().getClass().getCanonicalName());
+				List<String> p_t = new ArrayList<String>();
+				for (Transformer t : p.getSourceTransformers()){
+					p_t.add(t.getClass().getCanonicalName());
+				}
+				p_transformers.put(p.getSourceColumnName(), p_t);
+			}
+			//if (totals.containsKey(configName))
+			//	model.addAttribute("total", totals.get(configName));
+			model.addAttribute("configName", configName);
+			model.addAttribute("properties", properties);
+			model.addAttribute("matchers", p_matchers);
+			model.addAttribute("transformers", p_transformers);
+		}
     	return "about-matcher";
     }
     
@@ -132,33 +91,33 @@ public class MatchController {
     	List<Map<String,String>> matches = null;
     	// Assuming that multiple configurations may be accessed from a single webapp, 
     	// look for the one with the specified name (keyed to this in a map as explained above)
-    	if (matchers != null){
-    		logger.debug("Looking for : " + configName);
-    		LuceneMatcher matcher = matchers.get(configName);
-	    	if (matcher != null){
-		    	// Build a map by looping over each property in the config, reading its value from the 
-		    	// request object, and applying any transformations specified in the config
-	    		Map<String, String> userSuppliedRecord = new HashMap<String, String>();
-	    		for(String key : requestParams.keySet()){
-	    			userSuppliedRecord.put(key, requestParams.get(key));
-	    			logger.debug(key + ":" + requestParams.get(key));
-	    		}
-		    	// We are now at the same point as if we had read the map from a file
-		    	// Pass this map to the new method in the LuceneMatcher - 
-		    	// getMatches(Map<String,String> record) to get a DocList of matches: 
-	    		try{
-	    			matches = matcher.getMatches(userSuppliedRecord,10);
-	    			logger.debug("Found some matches: {}", matches.size());
-	    			if (matches.size() < 4) {
-	    				logger.debug("Matches for {} are {}", requestParams, matches);
-	    			}
-	    		}
-	    		catch (TooManyMatchesException | MatchExecutionException e) {
-	    			logger.error("problem handling match", e);
-	    			return new ResponseEntity<List<Map<String,String>>>(HttpStatus.INTERNAL_SERVER_ERROR);
-	    		}
-	    	}
-    	}
+		logger.debug("Looking for : " + configName);
+		LuceneMatcher matcher = reconciliationService.getMatcher(configName);
+		if (matcher != null){
+			// Build a map by looping over each property in the config, reading its value from the
+			// request object, and applying any transformations specified in the config
+			Map<String, String> userSuppliedRecord = new HashMap<String, String>();
+			for(String key : requestParams.keySet()){
+				userSuppliedRecord.put(key, requestParams.get(key));
+				logger.debug(key + ":" + requestParams.get(key));
+			}
+			// We are now at the same point as if we had read the map from a file
+			// Pass this map to the new method in the LuceneMatcher -
+			// getMatches(Map<String,String> record) to get a DocList of matches:
+			try{
+				matches = matcher.getMatches(userSuppliedRecord,50000);
+				logger.debug("Found some matches: {}", matches.size());
+				if (matches.size() < 4) {
+					logger.debug("Matches for {} are {}", requestParams, matches);
+				}
+			}
+			catch (TooManyMatchesException | MatchExecutionException e) {
+				logger.error("problem handling match", e);
+				return new ResponseEntity<List<Map<String,String>>>(HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+
+		// Reporter is needed to cause only configured properties to be returned in the JSON.
+		}
     	// matches will be returned as JSON
     	return new ResponseEntity<List<Map<String,String>>>(matches, HttpStatus.OK);
     }
@@ -175,79 +134,75 @@ public class MatchController {
     	List<Map<String,String>> suppliedData = new ArrayList<Map<String,String>>();
         List<String> properties = new ArrayList<String>();
     	if (!file.isEmpty()) {
-        	try{
-            	if (matchers != null){
-            		logger.debug("Looking for : " + configName);
-            		LuceneMatcher matcher = matchers.get(configName);
-        	    	if (matcher != null){
-        	    		// Save the property names:
-        	    		for (Property p : matcher.getConfig().getProperties())
-        	    			properties.add(p.getSourceColumnName());
-        	    		CsvPreference customCsvPref = new CsvPreference.Builder('"', ',', "\n").build();
-        	    		CsvMapReader mr = new CsvMapReader(new InputStreamReader(file.getInputStream()), customCsvPref);
-        	    		final String[] header = mr.getHeader(true);
-        	    		Map<String, String> record = null;
-        	    	    while ((record = mr.read(header)) != null){
-        	    	    	logger.debug("Next record is {}", record);
-        	    	    	suppliedData.add(record);
-        	    	    	try{
-        	    	    		List<Map<String,String>> theseMatches = matcher.getMatches(record, 5);
-	        	    			// Just write out some matches to std out:
-        	    	    		if (theseMatches != null) {
-        	    	    			logger.debug("Record ID {}, matched: {}", record.get("id"), theseMatches.size());
-        	    	    		}
-        	    	    		else {
-        	    	    			logger.debug("Record ID {}, matched: null", record.get("id"));
-        	    	    		}
-	        	    			matches.put(record.get("id"), theseMatches);
-        	    	    	}
-        	    	    	catch(Exception e){
-        	    	    		// swallow inner exception
-        	    	    		logger.error("Exception processing record", e);
-        	    	    	}
-        	    	    }
-        	    	    mr.close();
-        	    		logger.debug("got file's bytes");
-        	    	}
-        	    	model.addAttribute("suppliedData", suppliedData);
-        	    	model.addAttribute("matches", matches);
-        	    	model.addAttribute("properties", properties);
-            	}
-        	}
-        	catch(Exception e){
-        		logger.error("Problem reading file", e);
-        	}
+			try {
+				logger.debug("Looking for : " + configName);
+				LuceneMatcher matcher = reconciliationService.getMatcher(configName);
+				if (matcher != null){
+					// Save the property names:
+					for (Property p : matcher.getConfig().getProperties())
+						properties.add(p.getSourceColumnName());
+					CsvPreference customCsvPref = new CsvPreference.Builder('"', ',', "\n").build();
+					CsvMapReader mr = new CsvMapReader(new InputStreamReader(file.getInputStream()), customCsvPref);
+					final String[] header = mr.getHeader(true);
+					Map<String, String> record = null;
+					while ((record = mr.read(header)) != null){
+						logger.debug("Next record is {}", record);
+						suppliedData.add(record);
+						try{
+							List<Map<String,String>> theseMatches = matcher.getMatches(record, 5);
+							// Just write out some matches to std out:
+							if (theseMatches != null) {
+								logger.debug("Record ID {}, matched: {}", record.get("id"), theseMatches.size());
+							}
+							else {
+								logger.debug("Record ID {}, matched: null", record.get("id"));
+							}
+							matches.put(record.get("id"), theseMatches);
+						}
+						catch(Exception e){
+							// swallow inner exception
+							logger.error("Exception processing record", e);
+						}
+					}
+					mr.close();
+					logger.debug("got file's bytes");
+				}
+				model.addAttribute("suppliedData", suppliedData);
+				model.addAttribute("matches", matches);
+				model.addAttribute("properties", properties);
+			}
+			catch(Exception e){
+				logger.error("Problem reading file", e);
+			}
             // store the bytes somewhere
            //return "redirect:uploadSuccess";
        } 
        return "file-matcher-results";
     }    
-    
-    
-	public List<String> getConfigFiles() {
-		return configFiles;
-	}
-
-	public void setConfigFiles(List<String> configFiles) {
-		this.configFiles = configFiles;
-	}
 
 	//
 	// Following stuff added for GR recon service
 	//
-    @RequestMapping(value = "/reconcile/{configName}"
-    			, method={RequestMethod.GET,RequestMethod.POST}
-    			, produces="application/json; charset=UTF-8")
-    public @ResponseBody String getMetadata(@PathVariable String configName
-    										, @RequestParam(value="callback",required=false) String callback
-    										, Model model) throws JsonGenerationException, JsonMappingException, IOException{
-    	logger.debug("In get metadata");
-    	String metadata = jsonMapper.writeValueAsString(getMetadata(configName));
-		// Work out if the response needs to be JSONP wrapped in a callback		
-		if (callback != null)
-				return callback + "(" + metadata + ")";
-		else
-			return metadata;
+	/**
+	 * Retrieve reconciliation service metadata.
+	 */
+	@RequestMapping(value = "/reconcile/{configName}",
+			method={RequestMethod.GET,RequestMethod.POST},
+			produces="application/json; charset=UTF-8")
+	public @ResponseBody String getMetadata(@PathVariable String configName, @RequestParam(value="callback",required=false) String callback, Model model) throws JsonGenerationException, JsonMappingException, IOException {
+		logger.debug("Get Metadata for config {}, callback {}", configName, callback);
+		Metadata metadata = reconciliationService.getMetadata(configName);
+		if (metadata != null) {
+			String metadataJson = jsonMapper.writeValueAsString(metadata);
+			// Work out if the response needs to be JSONP wrapped in a callback
+			if (callback != null) {
+				return callback + "(" + metadataJson + ")";
+			}
+			else {
+				return metadataJson;
+			}
+		}
+		return null;
 	}
 
     @RequestMapping(value = "/reconcile/{configName}"
@@ -306,16 +261,20 @@ public class MatchController {
 							, @RequestParam(value="callback",required=false) String callback) {
 		String jsonres = null;
 		logger.debug("In single query w callback, query: {}", query);
-		try{
+		try {
 			Query q = jsonMapper.readValue(query, Query.class);
 			QueryResult[] qres = doQuery(q, configName);
 			QueryResponse response = new QueryResponse();
 			response.setResult(qres);
 			jsonres = jsonMapper.writeValueAsString(response);
 		}
-		catch(Exception e){
-			logger.error("", e);
+		catch (JsonMappingException | JsonGenerationException e) {
+			logger.error("Error parsing JSON", e);
 			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return new ResponseEntity<String>(wrapResponse(callback, jsonres), HttpStatus.OK);
 	}
@@ -335,51 +294,35 @@ public class MatchController {
 		this.types = types;
 	}	
 
-	private Metadata getMetadata(String configName){
-		Metadata m = new Metadata();
-		
-		// Set up the metadata object with whatever is set in the specified config:
-		// For now just push in the same config no matter what:
-		m.setName(configName + " name reconciliation");
-		m.setIdentifierSpace("http://www.ipni.org");
-		m.setSchemaSpace("http://www.ipni.org");
-		Metadata.MetadataView mv = m.new MetadataView();
-		mv.setUrl("http://www.ipni.org/ipni/idPlantNameSearch.do?id={{id}}");
-		m.setView(mv);
-		return m;
-	}
-	
 	private QueryResult[] doQuery(Query q, String configName){
 		List<QueryResult> qr = new ArrayList<QueryResult>();
 		//
 		List<Map<String,String>> matches = null;
     	// Assuming that multiple configurations may be accessed from a single webapp, 
     	// look for the one with the specified name (keyed to this in a map as explained above)
-    	if (matchers != null){
-    		logger.debug("Looking for : {}", configName);
-    		LuceneMatcher matcher = matchers.get(configName);
-	    	if (matcher != null){
-		    	// Build a map by looping over each property in the config, reading its value from the 
-		    	// request object, and applying any transformations specified in the config
-	    		Map<String, String> userSuppliedRecord = new HashMap<String, String>();
-	    		for (org.kew.reconciliation.refine.domain.query.Property p : q.getProperties()){
-	    			logger.debug("Setting: {} to {}", p.getPid(), p.getV());
-	    			userSuppliedRecord.put(p.getPid(), p.getV());
-	    		}
-	    		
-	    		try{
-	    			matches = matcher.getMatches(userSuppliedRecord, 5);
-	    			// Just write out some matches to std out:
-	    			logger.debug("GR Found some matches: {}", matches.size());
-	    			if (matches.size() < 4) {
-	    				logger.debug("GR Matches for {} are {}", q, matches);
-	    			}
-	    		}
-	    		catch(Exception e){
-	    			logger.error("problem handling match", e);
-	    		}
-	    	}
-    	}
+		logger.debug("Looking for : {}", configName);
+		LuceneMatcher matcher = reconciliationService.getMatcher(configName);
+		if (matcher != null){
+			// Build a map by looping over each property in the config, reading its value from the
+			// request object, and applying any transformations specified in the config
+			Map<String, String> userSuppliedRecord = new HashMap<String, String>();
+			for (org.kew.reconciliation.refine.domain.query.Property p : q.getProperties()){
+				logger.debug("Setting: {} to {}", p.getPid(), p.getV());
+				userSuppliedRecord.put(p.getPid(), p.getV());
+			}
+
+			try{
+				matches = matcher.getMatches(userSuppliedRecord, 5);
+				// Just write out some matches to std out:
+				logger.debug("GR Found some matches: {}", matches.size());
+				if (matches.size() < 4) {
+					logger.debug("GR Matches for {} are {}", q, matches);
+				}
+			}
+			catch(Exception e){
+				logger.error("problem handling match", e);
+			}
+		}
     	for (Map<String,String> match : matches){
     		QueryResult res = new QueryResult();
     		res.setId(match.get("id"));

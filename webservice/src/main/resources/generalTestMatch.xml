@@ -189,7 +189,7 @@
 		</bean>
 	</util:list>
 
-	<bean id="config" class="org.kew.stringmod.dedupl.configuration.MatchConfiguration"
+	<bean id="config" class="org.kew.stringmod.dedupl.configuration.ReconciliationServiceConfiguration"
 		p:name="generalTest"
 		p:sourceFile-ref="sourcefile"
 		p:sourceFileEncoding="UTF8"
@@ -202,7 +202,46 @@
 		p:maxSearchResults="10000"
 		p:recordFilter=""
 		p:continueOnError="true"
-		p:reuseIndex="false"/>
+		p:reuseIndex="false"
+		p:reconciliationServiceMetadata-ref="metadata"/>
+
+	<bean id="metadata" class="org.kew.reconciliation.refine.domain.metadata.Metadata"
+		p:name="General Test Match Reconciliation Service"
+		p:identifierSpace="http://kew.test/identifierSpace"
+		p:schemaSpace="http://kew.test/schemaSpace">
+		<property name="view">
+			<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataView"
+				p:url="http://kew.test/{{id}}"/>
+		</property>
+		<property name="preview">
+			<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataPreview"
+				p:url="http://kew.test/preview/{{id}}"
+				p:width="400"
+				p:height="400"/>
+		</property>
+		<property name="suggest">
+			<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataSuggest">
+				<property name="type">
+					<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataSuggestDetails"
+						p:service_url="http://kew.test"
+						p:service_path="/suggestType"
+						p:flyout_service_url="http://www.kew.test"/>
+				</property>
+				<property name="property">
+					<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataSuggestDetails"
+						p:service_url="http://kew.test"
+						p:service_path="/suggestProperty"
+						p:flyout_service_url="http://www.kew.test"/>
+				</property>
+				<property name="entity">
+					<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataSuggestDetails"
+						p:service_url="http://kew.test"
+						p:service_path="/suggest"
+						p:flyout_service_path="/flyout"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
 
 	<!-- import the generic application-context (equal for dedup/match configurations) -->
 	<import resource="classpath*:generic.xml" />

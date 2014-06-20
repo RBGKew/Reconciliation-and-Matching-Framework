@@ -7,6 +7,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Assert;
 import org.junit.Test;
 import org.kew.reconciliation.refine.domain.metadata.Metadata;
+import org.kew.reconciliation.refine.domain.metadata.MetadataView;
 import org.kew.reconciliation.refine.domain.query.Property;
 import org.kew.reconciliation.refine.domain.query.Query;
 import org.kew.reconciliation.refine.domain.response.QueryResponse;
@@ -33,7 +34,7 @@ public class ConversionTest {
 		metadata.setName("Freebase Reconciliation Service");
 		metadata.setSchemaSpace("http://rdf.freebase.com/ns/type.object.mid");
 		metadata.setIdentifierSpace("http://rdf.freebase.com/ns/type.object.id");
-		Metadata.MetadataView metadataView = metadata.new MetadataView();
+		MetadataView metadataView = new MetadataView();
 		metadataView.setUrl("http://www.freebase.com/view{{id}}");
 		metadata.setView(metadataView);
 
