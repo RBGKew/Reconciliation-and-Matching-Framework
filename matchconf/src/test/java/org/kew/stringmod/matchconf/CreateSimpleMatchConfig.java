@@ -11,15 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
-import org.kew.stringmod.matchconf.Configuration;
-import org.kew.stringmod.matchconf.ConfigurationEngine;
-import org.kew.stringmod.matchconf.Matcher;
-import org.kew.stringmod.matchconf.Reporter;
-import org.kew.stringmod.matchconf.Transformer;
-import org.kew.stringmod.matchconf.Wire;
-import org.kew.stringmod.matchconf.WiredTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.test.context.ContextConfiguration;
 
 import cucumber.api.DataTable;
 import cucumber.api.Scenario;
@@ -29,7 +23,7 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-
+@ContextConfiguration(locations="classpath:/META-INF/spring/applicationContext.xml")
 public class CreateSimpleMatchConfig {
 
     Logger logger = LoggerFactory.getLogger(CreateSimpleDedupConfig.class);
@@ -69,7 +63,7 @@ public class CreateSimpleMatchConfig {
 
     @Given("^he has created a new match configuration:$")
     public void he_has_created_a_new_match_configuration(DataTable colDefTable) throws Throwable {
-        List<Map<String,String>> colDef = colDefTable.asMaps();
+        List<Map<String,String>> colDef = colDefTable.asMaps(String.class, String.class);
         this.configName = colDef.get(0).get("name");
         config = new Configuration();
         config.setName(this.configName);
@@ -83,7 +77,7 @@ public class CreateSimpleMatchConfig {
     @Given("^he has added the following source- and lookupTransformers$")
     public void he_has_added_the_following_source_and_lookupTransformers(DataTable transformerDefTable) throws Throwable {
         List<Transformer> transis = new ArrayList<>();
-        for (Map<String,String> transDef:transformerDefTable.asMaps()) {
+        for (Map<String,String> transDef:transformerDefTable.asMaps(String.class, String.class)) {
             Transformer transi = new Transformer();
             transi.setName(transDef.get("name"));
             transi.setPackageName(transDef.get("packageName"));
@@ -98,7 +92,7 @@ public class CreateSimpleMatchConfig {
 
     @Given("^he has added two matchers:$")
     public void he_has_added_two_matchers(DataTable matcherDefTable) throws Throwable {
-        for (Map<String,String> matcherDef:matcherDefTable.asMaps()) {
+        for (Map<String,String> matcherDef:matcherDefTable.asMaps(String.class, String.class)) {
             Matcher matcher = new Matcher();
             matcher.setName(matcherDef.get("name"));
             matcher.setPackageName(matcherDef.get("packageName"));
@@ -115,7 +109,7 @@ public class CreateSimpleMatchConfig {
 
     @Given("^he has wired them together in the following way:$")
     public void he_has_wired_them_together_in_the_following_way(DataTable wireDefTable) throws Throwable {
-        for (Map<String,String> wireDef:wireDefTable.asMaps()) {
+        for (Map<String,String> wireDef:wireDefTable.asMaps(String.class, String.class)) {
             Wire wire = new Wire();
             wire.setSourceColumnName(wireDef.get("sourceColumnName"));
             wire.setLookupColumnName(wireDef.get("lookupColumnName"));
@@ -157,7 +151,7 @@ public class CreateSimpleMatchConfig {
     @Given("^he has added the following match-reporters:$")
         public void he_has_added_the_following_reporters(DataTable reporterDefTable) throws Throwable {
         List<Reporter> reps = new ArrayList<>();
-        for (Map<String,String> repDef:reporterDefTable.asMaps()) {
+        for (Map<String,String> repDef:reporterDefTable.asMaps(String.class, String.class)) {
             Reporter rep = new Reporter();
             rep.setName(repDef.get("name"));
             rep.setFileName(repDef.get("fileName"));

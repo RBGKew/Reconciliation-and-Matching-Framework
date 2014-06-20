@@ -1,5 +1,8 @@
 package org.kew.stringmod.matchconf;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -11,8 +14,7 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.kew.stringmod.matchconf.Configuration;
-import org.kew.stringmod.matchconf.ConfigurationEngine;
+import org.springframework.test.context.ContextConfiguration;
 
 import cucumber.api.DataTable;
 import cucumber.api.Scenario;
@@ -21,9 +23,8 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 
+@ContextConfiguration(locations="classpath:/META-INF/spring/applicationContext.xml")
 public class RunSimpleDedupConfig {
 
     File tempDir;

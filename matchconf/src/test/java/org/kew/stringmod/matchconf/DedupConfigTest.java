@@ -19,8 +19,7 @@ import org.kew.stringmod.matchconf.WiredTransformer;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
-
-@ContextConfiguration(locations = { "/META-INF/spring/applicationContext.xml" })
+@ContextConfiguration(locations="classpath:/META-INF/spring/applicationContext.xml")
 public class DedupConfigTest extends AbstractJUnit4SpringContextTests {
 
     // the entities in our test-config-environment
