@@ -65,3 +65,41 @@ Feature: Functionality not particular to a specific match configuration is teste
 				}
 			]
 			"""
+
+	Scenario: Ensure a single reconciliation query gives the correct response
+		When I make the reconciliation query:
+			"""
+			{
+				"query" : "q1",
+				"properties" : [
+					{
+						"pid" : "genus",
+						"v" : "Congea"
+					},
+					{
+						"pid" : "species",
+						"v" : "chinensis"
+					},
+					{
+						"pid" : "authors",
+						"v" : "Moldenke"
+					}
+				]
+			}
+			"""
+		Then I receive the following reconciliation response:
+			"""
+			{
+				"result" : [
+					{
+						"match" : true,
+						"name" : "Congea chinensis Moldenke",
+						"score" : 100,
+						"type" : [
+							"name"
+						],
+						"id" : "kew-46537"
+					}
+				]
+			}
+			"""

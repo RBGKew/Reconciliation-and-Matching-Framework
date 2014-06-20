@@ -7,8 +7,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Query {
 	private String query;
-	private Object type;
-	private int limit;
+	private String type;
+	private Integer limit;
 	private String type_strict;
 	private Property[] properties;
 
@@ -27,17 +27,17 @@ public class Query {
 		this.query = query;
 	}
 
-	public Object getType() {
+	public String getType() {
 		return type;
 	}
-	public void setType(Object type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 
-	public int getLimit() {
+	public Integer getLimit() {
 		return limit;
 	}
-	public void setLimit(int limit) {
+	public void setLimit(Integer limit) {
 		this.limit = limit;
 	}
 
