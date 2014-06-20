@@ -3,8 +3,11 @@ package org.kew.reconciliation.ws;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.Map;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import org.codehaus.jackson.type.TypeReference;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.kew.reconciliation.refine.domain.metadata.Metadata;
@@ -118,5 +121,31 @@ public class GeneralReconciliationServiceStepdefs extends WebMvcConfigurationSup
 
 		QueryResponse expectedResponse = mapper.readValue(expectedResponseString, QueryResponse.class);
 		Assert.assertThat("QueryResponse response correct", actualResponse, Matchers.equalTo(expectedResponse));
+	}
+
+	@When("^I make the reconciliation queries:$")
+	public void i_make_the_reconciliation_queries(String queriesJson) throws Throwable {
+		Map<String,Query> queries = mapper.readValue(queriesJson, new TypeReference<Map<String,Query>>() {});
+
+		log.debug("Query is {}", "/reconcile/generalTest?queries="+mapper.writeValueAsString(queries));
+
+		result = mockMvc.perform(post("/reconcile/generalTest?queries={queries}", mapper.writeValueAsString(queries)).accept(JSON_UTF8))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(JSON_UTF8_S))
+				.andReturn();
+
+		responseJson = result.getResponse().getContentAsString();
+		log.debug("Response as string was {}", responseJson);
+	}
+
+	@Then("^I receive the following reconciliation multiple response:$")
+	public void i_receive_the_following_reconciliation_multiple_response(String expectedResponseString) throws Throwable {
+		Map<String,QueryResponse> actualResponse = mapper.readValue(responseJson, new TypeReference<Map<String,QueryResponse>>() {});
+
+		// Check response
+		log.info("Received response {}", actualResponse);
+
+		Map<String,QueryResponse> expectedResponse = mapper.readValue(expectedResponseString, new TypeReference<Map<String,QueryResponse>>() {});
+		Assert.assertThat("QueryResponse multiple response correct", actualResponse, Matchers.equalTo(expectedResponse));
 	}
 }

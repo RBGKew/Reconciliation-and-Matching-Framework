@@ -70,7 +70,7 @@ Feature: Functionality not particular to a specific match configuration is teste
 		When I make the reconciliation query:
 			"""
 			{
-				"query" : "q1",
+				"query" : "Ignored Congea chinensis",
 				"properties" : [
 					{
 						"pid" : "genus",
@@ -101,5 +101,77 @@ Feature: Functionality not particular to a specific match configuration is teste
 						"id" : "kew-46537"
 					}
 				]
+			}
+			"""
+
+	Scenario: Ensure a multiple reconciliation query gives the correct response
+		When I make the reconciliation queries:
+			"""
+			{
+				"q1" : {
+					"query" : "Ignored Congea chinensis",
+					"properties" : [
+						{
+							"pid" : "genus",
+							"v" : "Congea"
+						},
+						{
+							"pid" : "species",
+							"v" : "chinensis"
+						},
+						{
+							"pid" : "authors",
+							"v" : "Moldenke"
+						}
+					]
+				},
+				"q2" : {
+					"query" : "Ignored Congea munirii",
+					"properties" : [
+						{
+							"pid" : "genus",
+							"v" : "Congea"
+						},
+						{
+							"pid" : "species",
+							"v" : "munirii"
+						},
+						{
+							"pid" : "authors",
+							"v" : "Moldenke"
+						}
+					]
+				}
+			}
+			"""
+		Then I receive the following reconciliation multiple response:
+			"""
+			{
+				"q1" : {
+					"result" : [
+						{
+							"match" : true,
+							"name" : "Congea chinensis Moldenke",
+							"score" : 100,
+							"type" : [
+								"name"
+							],
+							"id" : "kew-46537"
+						}
+					]
+				},
+				"q2" : {
+					"result" : [
+						{
+							"match" : true,
+							"name" : "Congea munirii Moldenke",
+							"score" : 100,
+							"type" : [
+								"name"
+							],
+							"id" : "kew-46548"
+						}
+					]
+				}
 			}
 			"""
