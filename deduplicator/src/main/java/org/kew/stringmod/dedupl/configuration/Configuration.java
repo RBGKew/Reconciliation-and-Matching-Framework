@@ -93,7 +93,11 @@ public abstract class Configuration implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
-        for (LuceneReporter reporter:this.reporters) reporter.close();
+        if (this.reporters != null) {
+            for (LuceneReporter reporter : this.reporters) {
+                reporter.close();
+            }
+        }
     }
 
     // Getters and Setters

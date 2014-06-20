@@ -43,7 +43,9 @@ public class ReconciliationService {
 			if (configFiles != null) {
 				for (String configFile : configFiles) {
 					logger.debug("Processing configFile {}", configFile);
+					@SuppressWarnings("resource")
 					ConfigurableApplicationContext context = new GenericXmlApplicationContext(configFile);
+					context.registerShutdownHook();
 					LuceneMatcher matcher = (LuceneMatcher) context.getBean("engine");
 					try {
 						matcher.loadData(); 

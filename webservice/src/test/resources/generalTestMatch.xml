@@ -9,11 +9,9 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
-	<!-- • GENERAL TEST MATCH •
-		Used for general tests.
-	-->
+	<!-- • TEST CONFIGURATION • Used for cucumber tests • -->
 
-	<context:property-placeholder location="classpath:/match-webservice.properties"/>
+	<context:property-placeholder location="classpath:/cucumber.properties"/>
 
 	<bean id="lucene_directory" class="java.lang.String">
 		<constructor-arg value="target/lucene_directory_tplstandard/" />
