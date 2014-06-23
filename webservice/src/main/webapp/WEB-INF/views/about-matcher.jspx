@@ -4,7 +4,11 @@
 		<h3>
 			<span class="glyphicon glyphicon-list-alt"></span> ${configName} configuration
 		</h3>
-		Contains <span class="badge">${total}</span> records.
+
+		<c:if test="${total != null}">
+			Contains <span class="badge">${total}</span> records.
+		</c:if>
+
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -25,30 +29,48 @@
 										<br />
 									</c:forEach>
 								</c:if>
-							</c:forEach>							
+							</c:forEach>
 						</td>
-						<td><c:forEach var="entry" items="${matchers}">
+						<td>
+							<c:forEach var="entry" items="${matchers}">
 								<c:if test="${entry.key == property}">
-								<c:out value="${entry.value}" />
+									<c:out value="${entry.value}" />
 								</c:if>
-							</c:forEach></td>
+							</c:forEach>
+						</td>
 					</tr>
 				</c:forEach>
 			</tbody>
 		</table>
+
+		<c:set var="req" value="${pageContext.request}" />
+		<c:set var="baseURL" value="${fn:replace(req.requestURL, fn:substring(req.requestURI, 1, fn:length(req.requestURI)), req.contextPath)}" />
+		<c:set var="serverAndPort" value="${req.serverName}"/>
+		<c:if test="${req.localPort != 80}">
+			<c:set var="serverAndPort" value="${req.serverName}:${req.localPort}"/>
+		</c:if>
+
+		<div>
+			<h3>
+				<span class="glyphicon glyphicon-cog"></span> Open Refine reconciliation service
+			</h3>
+			<c:url value="http://${serverAndPort}${baseUrl}/reconcile/${configName}" var="url" />
+			Endpoint: <span class="badge">${url}</span><br/>
+			Provide (some of) the following properties:
+			<ul>
+				<c:forEach var="property" items="${properties}">
+					<li>${property}</li>
+				</c:forEach>
+			</ul>
+		</div>
+
 		<div>
 			<h3>
 				<span class="glyphicon glyphicon-cog"></span> JSON web service
 			</h3>
-			<c:set var="req" value="${pageContext.request}" />
-			<c:set var="baseURL" value="${fn:replace(req.requestURL, fn:substring(req.requestURI, 1, fn:length(req.requestURI)), req.contextPath)}" />
-			<c:set var="serverAndPort" value="${req.serverName}"/>
-			<c:if test="${req.localPort != 80}">
-				<c:set var="serverAndPort" value="${req.serverName}:${req.localPort}"/>
-			</c:if>
 			<c:url value="http://${serverAndPort}${baseUrl}/match/${configName}" var="url" />
 			Endpoint: <span class="badge">${url}</span><br/> 
-			Provide the following data as URL-encoded HTTP GET parameters:
+			Provide (some of) the following data as URL-encoded HTTP GET parameters:
 			<ul>
 				<li>id</li>
 				<c:forEach var="property" items="${properties}">
@@ -56,6 +78,7 @@
 				</c:forEach>
 			</ul>
 		</div>
+
 		<div>
 			<h3>
 				<span class="glyphicon glyphicon-file"></span> File upload
@@ -66,10 +89,10 @@
 				<c:forEach var="property" items="${properties}">
 					<li>${property}</li>
 				</c:forEach>
-			</ul>			
-			<form method="post" action="/filematch/${configName}"
-				enctype="multipart/form-data">
-				<input type="text" name="name" /> <input type="file" name="file" />
+			</ul>
+			<form method="post" action="/filematch/${configName}" enctype="multipart/form-data">
+				<input type="text" name="name" />
+				<input type="file" name="file" />
 				<input type="submit" />
 			</form>
 		</div>
