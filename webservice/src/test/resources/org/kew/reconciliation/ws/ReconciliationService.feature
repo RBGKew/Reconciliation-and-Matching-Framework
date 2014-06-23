@@ -1,4 +1,4 @@
-Feature: Functionality not particular to a specific match configuration is tested here.  For example, the JSON response, Reconciliation service API.
+Feature: The application exposes reconciliation (matching) functionality as an Open Refine Reconciliation Service.
 
 	Scenario: Ensure appropriate reconciliation metadata is returned
 		When I query for metadata of the "generalTest" reconciliation service
@@ -40,35 +40,6 @@ Feature: Functionality not particular to a specific match configuration is teste
 	Scenario: Ensure appropriate reconciliation metadata is returned (error check).
 		When I query for metadata of the "nonExistent" reconciliation service
 		Then I receive an HTTP 404 result.
-
-	Scenario: Ensure a standard (non-reconciliation API) query returns a suitable JSON response
-		When I make a match query for "genus=Congea&species=chinensis&authors=Moldenke"
-		Then I receive the following match response:
-			"""
-			[
-				{
-					"taxonomicStatus_transf" : "Accepted",
-					"taxonomicStatus" : "Accepted",
-					"id" : "kew-46537",
-					"source_authors_transf" : "mol",
-					"authors" : "Moldenke",
-					"genus_transf" : "Congea",
-					"species_transf" : "chinensis",
-					"source_acceptedNameID_transf" : "",
-					"authors_transf" : "mol",
-					"genus" : "Congea",
-					"infraspecies" : "",
-					"species" : "chinensis",
-					"acceptedNameID" : "kew-46537",
-					"source_species_transf" : "chinensis",
-					"source_genus_transf" : "Congea",
-					"infraspecies_transf" : "",
-					"source_infraspecies_transf" : "",
-					"acceptedNameID_transf" : "kew-46537",
-					"source_taxonomicStatus_transf" : ""
-				}
-			]
-			"""
 
 	Scenario: Ensure a single reconciliation query gives the correct response
 		When I make the reconciliation query:

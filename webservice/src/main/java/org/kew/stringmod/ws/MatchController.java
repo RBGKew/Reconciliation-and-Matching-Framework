@@ -95,7 +95,7 @@ public class MatchController {
 	 * Performs a single match query.
 	 */
 	@RequestMapping(value = "/match/{configName}", method = RequestMethod.GET)
-	public synchronized ResponseEntity<List<Map<String,String>>> doMatch (@PathVariable String configName, @RequestParam Map<String,String> requestParams, Model model) {
+	public ResponseEntity<List<Map<String,String>>> doMatch (@PathVariable String configName, @RequestParam Map<String,String> requestParams, Model model) {
 		logger.info("Match query for {}?{}", configName, requestParams);
 
 		// Build a map by looping over each property in the config, reading its value from the

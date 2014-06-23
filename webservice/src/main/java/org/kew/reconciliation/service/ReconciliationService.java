@@ -99,7 +99,7 @@ public class ReconciliationService {
 	 * @throws MatchExecutionException 
 	 * @throws TooManyMatchesException 
 	 */
-	public List<Map<String,String>> doQuery(String configName, Map<String, String> userSuppliedRecord) throws TooManyMatchesException, MatchExecutionException {
+	public synchronized List<Map<String,String>> doQuery(String configName, Map<String, String> userSuppliedRecord) throws TooManyMatchesException, MatchExecutionException {
 		List<Map<String,String>> matches = null;
 
 		LuceneMatcher matcher = getMatcher(configName);
