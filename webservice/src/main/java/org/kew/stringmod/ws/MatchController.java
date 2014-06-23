@@ -11,6 +11,7 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.kew.reconciliation.queryextractor.QueryStringToPropertiesExtractor;
 import org.kew.reconciliation.refine.domain.metadata.Metadata;
 import org.kew.reconciliation.refine.domain.query.Query;
 import org.kew.reconciliation.refine.domain.response.QueryResponse;
@@ -47,21 +48,28 @@ public class MatchController {
 	/* Added for recon service */
 	@Autowired
 	protected ObjectMapper jsonMapper;
-	private String[] types;
 
-    @RequestMapping(produces="text/html", value = "/about", method = RequestMethod.GET)
-    public String doWelcome(Model model) {
+	@RequestMapping(produces="text/html", value={"/","/about"}, method = RequestMethod.GET)
+	public String doWelcome(Model model) {
 		model.addAttribute("availableMatchers", reconciliationService.getMatchers().keySet());
-    	return "about-general";
-    }
+		return "about-general";
+	}
 
     @RequestMapping(produces="text/html", value = "/about/{configName}", method = RequestMethod.GET)
     public String doAbout(@PathVariable String configName, Model model) {
     	List<String> properties = new ArrayList<String>();
     	Map<String,String> p_matchers = new HashMap<String,String>();
     	Map<String,List<String>> p_transformers = new HashMap<String,List<String>>();
-		logger.debug("Looking for : " + configName);
-		LuceneMatcher matcher = reconciliationService.getMatcher(configName);
+
+		LuceneMatcher matcher;
+		try {
+			matcher = reconciliationService.getMatcher(configName);
+		}
+		catch (MatchExecutionException e) {
+			// TODO: Make a 404.
+			return "about-matcher";
+		}
+
 		if (matcher != null){
 			model.addAttribute("matchConfig", matcher.getConfig());
 			for (Property p : matcher.getConfig().getProperties()){
@@ -83,46 +91,39 @@ public class MatchController {
     	return "about-matcher";
     }
 
-    /**
-     * Performs a single match query.
-     */
-    @RequestMapping(value = "/match/{configName}", method = RequestMethod.GET)
-    public synchronized ResponseEntity<List<Map<String,String>>> doMatch (@PathVariable String configName
-    														, @RequestParam Map<String,String> requestParams
-    														, Model model) {
-    	logger.info("Match query for {}?{}", configName, requestParams);
-    	List<Map<String,String>> matches = null;
-    	// Assuming that multiple configurations may be accessed from a single webapp, 
-    	// look for the one with the specified name (keyed to this in a map as explained above)
-		LuceneMatcher matcher = reconciliationService.getMatcher(configName);
-		if (matcher != null) {
-			// Build a map by looping over each property in the config, reading its value from the
-			// request object, and applying any transformations specified in the config
-			Map<String, String> userSuppliedRecord = new HashMap<String, String>();
-			for(String key : requestParams.keySet()){
-				userSuppliedRecord.put(key, requestParams.get(key));
-				logger.debug(key + ":" + requestParams.get(key));
-			}
-			// We are now at the same point as if we had read the map from a file
-			// Pass this map to the new method in the LuceneMatcher -
-			// getMatches(Map<String,String> record) to get a DocList of matches:
-			try{
-				matches = matcher.getMatches(userSuppliedRecord,50000);
-				logger.debug("Found some matches: {}", matches.size());
-				if (matches.size() < 4) {
-					logger.debug("Matches for {} are {}", requestParams, matches);
-				}
-			}
-			catch (TooManyMatchesException | MatchExecutionException e) {
-				logger.error("problem handling match", e);
-				return new ResponseEntity<List<Map<String,String>>>(HttpStatus.INTERNAL_SERVER_ERROR);
-			}
+	/**
+	 * Performs a single match query.
+	 */
+	@RequestMapping(value = "/match/{configName}", method = RequestMethod.GET)
+	public synchronized ResponseEntity<List<Map<String,String>>> doMatch (@PathVariable String configName, @RequestParam Map<String,String> requestParams, Model model) {
+		logger.info("Match query for {}?{}", configName, requestParams);
 
-		// Reporter is needed to cause only configured properties to be returned in the JSON.
+		// Build a map by looping over each property in the config, reading its value from the
+		// request object, and applying any transformations specified in the config
+		Map<String, String> userSuppliedRecord = new HashMap<String, String>();
+		for (String key : requestParams.keySet()) {
+			userSuppliedRecord.put(key, requestParams.get(key));
+			if (logger.isTraceEnabled()) { logger.trace("Setting: {} to {}", key, requestParams.get(key)); }
 		}
-    	// matches will be returned as JSON
-    	return new ResponseEntity<List<Map<String,String>>>(matches, HttpStatus.OK);
-    }
+
+		List<Map<String, String>> matches = null;
+		try {
+			matches = reconciliationService.doQuery(configName, userSuppliedRecord);
+			logger.debug("Found {} matches", matches.size());
+			if (matches.size() < 4) {
+				logger.debug("Matches for {} are {}", requestParams, matches);
+			}
+		}
+		catch (TooManyMatchesException | MatchExecutionException e) {
+			logger.error("Problem handling match", e);
+			return new ResponseEntity<List<Map<String,String>>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		// TODO: Reporter is needed to cause only configured properties to be returned in the JSON.
+
+		// matches will be returned as JSON
+		return new ResponseEntity<List<Map<String,String>>>(matches, HttpStatus.OK);
+	}
 
     @RequestMapping(value = "/filematch/{configName}", method = RequestMethod.POST)
     public String doFileMatch (@PathVariable String configName
@@ -182,53 +183,56 @@ public class MatchController {
        return "file-matcher-results";
     }    
 
-	//
-	// Following stuff added for GR recon service
-	//
+	/* • Open Refine / Google Refine reconciliation service • */
+
 	/**
 	 * Retrieve reconciliation service metadata.
 	 */
 	@RequestMapping(value = "/reconcile/{configName}",
 			method={RequestMethod.GET,RequestMethod.POST},
 			produces="application/json; charset=UTF-8")
-	public @ResponseBody String getMetadata(@PathVariable String configName, @RequestParam(value="callback",required=false) String callback, Model model) throws JsonGenerationException, JsonMappingException, IOException {
+	public ResponseEntity<String> getMetadata(@PathVariable String configName, @RequestParam(value="callback",required=false) String callback, Model model) throws JsonGenerationException, JsonMappingException, IOException {
 		logger.debug("Get Metadata for config {}, callback {}", configName, callback);
-		Metadata metadata = reconciliationService.getMetadata(configName);
+
+		Metadata metadata;
+		try {
+			metadata = reconciliationService.getMetadata(configName);
+		}
+		catch (MatchExecutionException e) {
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+
 		if (metadata != null) {
 			String metadataJson = jsonMapper.writeValueAsString(metadata);
 			// Work out if the response needs to be JSONP wrapped in a callback
 			if (callback != null) {
-				return callback + "(" + metadataJson + ")";
+				return new ResponseEntity<String>(callback + "(" + metadataJson + ")", HttpStatus.OK);
 			}
 			else {
-				return metadataJson;
+				return new ResponseEntity<String>(metadataJson, HttpStatus.OK);
 			}
 		}
 		return null;
 	}
 
-    @RequestMapping(value = "/reconcile/{configName}"
-	, method={RequestMethod.GET,RequestMethod.POST}
-    , params={"queries"}
-	, produces="application/json; charset=UTF-8")
-    public @ResponseBody String doMultipleQueries(@PathVariable String configName
-    		, @RequestParam("queries") String queries) {
-    	logger.debug("In multiple query, queries:" + queries);
+	/**
+	 * Perform multiple reconciliation queries (no callback)
+	 */
+	@RequestMapping(value = "/reconcile/{configName}", method={RequestMethod.GET,RequestMethod.POST}, params={"queries"}, produces="application/json; charset=UTF-8")
+	public @ResponseBody String doMultipleQueries(@PathVariable String configName, @RequestParam("queries") String queries) {
+		logger.debug("In multiple query, queries:" + queries);
 		return doMultipleQueries(configName, queries, null);
 	}
-	
 
-    @RequestMapping(value = "/reconcile/{configName}"
-	, method={RequestMethod.GET,RequestMethod.POST}
-    , params={"queries","callback"}
-	, produces="application/json; charset=UTF-8")
-    public @ResponseBody String doMultipleQueries(@PathVariable String configName
-    						, @RequestParam("queries") String queries
-							, @RequestParam(value="callback",required=false) String callback) {
-    	logger.debug("In multi query w callback, query: {}", queries);
-    	String jsonres = null;
+	/**
+	 * Perform multiple reconciliation queries (no callback)
+	 */
+	@RequestMapping(value = "/reconcile/{configName}", method={RequestMethod.GET,RequestMethod.POST}, params={"queries","callback"}, produces="application/json; charset=UTF-8")
+	public @ResponseBody String doMultipleQueries(@PathVariable String configName, @RequestParam("queries") String queries, @RequestParam(value="callback",required=false) String callback) {
+		logger.debug("In multi query w callback, query: {}", queries);
+		String jsonres = null;
 		Map<String,QueryResponse> res = new HashMap<String,QueryResponse>();
-		try{
+		try {
 			// Convert JSON to map of queries
 			Map<String,Query> qs = jsonMapper.readValue(queries, new TypeReference<Map<String,Query>>() { });
 			for (String key : qs.keySet()){
@@ -240,29 +244,28 @@ public class MatchController {
 			}
 			jsonres = jsonMapper.writeValueAsString(res);
 		}
-		catch(Exception e){
-			e.printStackTrace();
+		catch (Exception e) {
+			logger.error("Error with multiple query call", e);
 		}
 		return wrapResponse(callback, jsonres);
 	}
-		   
-    @RequestMapping(value = "/reconcile/{configName}"
-    	, method={RequestMethod.GET,RequestMethod.POST}
-		, params={"query"}
-		,produces="application/json; charset=UTF-8")
+
+	/**
+	 * Single reconciliation query, no callback.
+	 */
+	@RequestMapping(value = "/reconcile/{configName}", method={RequestMethod.GET,RequestMethod.POST}, params={"query"}, produces="application/json; charset=UTF-8")
 	public ResponseEntity<String> doSingleQuery(@PathVariable String configName, @RequestParam("query") String query) {
-    	logger.debug("In single query, query:{}", query);
+		logger.debug("In single query, query:{}", query);
 		return doSingleQuery(configName, query, null);
 	}
-		
-    @RequestMapping(value = "/reconcile/{configName}"
-    	, method={RequestMethod.GET,RequestMethod.POST}
-		, params={"query","callback"}
-		,produces="application/json; charset=UTF-8")
-	public ResponseEntity<String> doSingleQuery(@PathVariable String configName, @RequestParam("query") String query
-							, @RequestParam(value="callback",required=false) String callback) {
+
+	/**
+	 * Single reconciliation query.
+	 */
+	@RequestMapping(value = "/reconcile/{configName}", method={RequestMethod.GET,RequestMethod.POST}, params={"query","callback"}, produces="application/json; charset=UTF-8")
+	public ResponseEntity<String> doSingleQuery(@PathVariable String configName, @RequestParam("query") String query, @RequestParam(value="callback",required=false) String callback) {
 		String jsonres = null;
-		logger.debug("In single query w callback, query: {}", query);
+		logger.debug("In single query with callback, query: {}", query);
 		try {
 			Query q = jsonMapper.readValue(query, Query.class);
 			QueryResult[] qres = doQuery(q, configName);
@@ -271,71 +274,81 @@ public class MatchController {
 			jsonres = jsonMapper.writeValueAsString(response);
 		}
 		catch (JsonMappingException | JsonGenerationException e) {
-			logger.error("Error parsing JSON", e);
+			logger.warn("Error parsing JSON query", e);
 			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		catch (MatchExecutionException e) {
+			return new ResponseEntity<String>(e.toString(), HttpStatus.NOT_FOUND);
+		}
+		catch (TooManyMatchesException e) {
+			return new ResponseEntity<String>(e.toString(), HttpStatus.CONFLICT);
+		}
+
 		return new ResponseEntity<String>(wrapResponse(callback, jsonres), HttpStatus.OK);
 	}
 
 	private String wrapResponse(String callback, String jsonres){
-		if (callback != null)
+		if (callback != null) {
 			return callback + "(" + jsonres + ")";
-		else
+		}
+		else {
 			return jsonres;
+		}
 	}
 
-	public String[] getTypes() {
-		return types;
-	}
+	/**
+	 * Perform match query against specified configuration.
+	 * @throws MatchExecutionException 
+	 * @throws TooManyMatchesException 
+	 */
+	private QueryResult[] doQuery(Query q, String configName) throws TooManyMatchesException, MatchExecutionException {
+		ArrayList<QueryResult> qr = new ArrayList<QueryResult>();
 
-	public void setTypes(String[] types) {
-		this.types = types;
-	}	
+		org.kew.reconciliation.refine.domain.query.Property[] properties = q.getProperties();
+		// If user didn't supply any properties, try converting the query string into properties.
+		if (properties == null || properties.length == 0) {
+			QueryStringToPropertiesExtractor propertiesExtractor = reconciliationService.getPropertiesExtractor(configName);
 
-	private QueryResult[] doQuery(Query q, String configName){
-		List<QueryResult> qr = new ArrayList<QueryResult>();
-		//
-		List<Map<String,String>> matches = null;
-    	// Assuming that multiple configurations may be accessed from a single webapp, 
-    	// look for the one with the specified name (keyed to this in a map as explained above)
-		logger.debug("Looking for : {}", configName);
-		LuceneMatcher matcher = reconciliationService.getMatcher(configName);
-		if (matcher != null){
-			// Build a map by looping over each property in the config, reading its value from the
-			// request object, and applying any transformations specified in the config
-			Map<String, String> userSuppliedRecord = new HashMap<String, String>();
-			for (org.kew.reconciliation.refine.domain.query.Property p : q.getProperties()){
-				logger.debug("Setting: {} to {}", p.getPid(), p.getV());
-				userSuppliedRecord.put(p.getPid(), p.getV());
+			if (propertiesExtractor != null) {
+				properties = propertiesExtractor.extractProperties(q.getQuery());
+				logger.debug("No properties provided, parsing query «{}» into properties {}", q.getQuery(), properties);
 			}
-
-			try{
-				matches = matcher.getMatches(userSuppliedRecord, 5);
-				// Just write out some matches to std out:
-				logger.debug("GR Found some matches: {}", matches.size());
-				if (matches.size() < 4) {
-					logger.debug("GR Matches for {} are {}", q, matches);
-				}
-			}
-			catch(Exception e){
-				logger.error("problem handling match", e);
+			else {
+				logger.info("No properties provided, no properties resulted from parsing query string «{}»", q.getQuery());
 			}
 		}
-    	for (Map<String,String> match : matches){
-    		QueryResult res = new QueryResult();
-    		res.setId(match.get("id"));
-    		res.setMatch(true);
-    		res.setScore(100);
-    		res.setName(match.get("genus") + " " + match.get("species") + " " + match.get("authors"));
-    		String[] types = {"name"};
-    		res.setType(types);
-    		qr.add(res);
-    	}
-		//
-		return qr.toArray(new QueryResult[0]);
+
+		if (properties == null || properties.length == 0) {
+			logger.info("No properties provided for query «{}», query fails", q.getQuery());
+			// no query
+			return null;
+		}
+
+		// Build a map by looping over each property in the config, reading its value from the
+		// request object, and applying any transformations specified in the config
+		Map<String, String> userSuppliedRecord = new HashMap<String, String>();
+		for (org.kew.reconciliation.refine.domain.query.Property p : properties) {
+			if (logger.isTraceEnabled()) { logger.trace("Setting: {} to {}", p.getPid(), p.getV()); }
+			userSuppliedRecord.put(p.getPid(), p.getV());
+		}
+
+		List<Map<String,String>> matches = reconciliationService.doQuery(configName, userSuppliedRecord);
+		logger.debug("Found {} matches", matches.size());
+
+		for (Map<String,String> match : matches) {
+			QueryResult res = new QueryResult();
+			res.setId(match.get("id"));
+			res.setMatch(true);
+			res.setScore(100);
+			res.setName(match.get("genus") + " " + match.get("species") + " " + match.get("authors")); // TODO: customise
+			String[] types = {"default"};
+			res.setType(types); // TODO: customize
+			qr.add(res);
+		}
+
+		return qr.toArray(new QueryResult[qr.size()]);
 	}
 }

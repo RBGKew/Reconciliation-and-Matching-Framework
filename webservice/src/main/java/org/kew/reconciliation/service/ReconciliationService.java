@@ -6,9 +6,12 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.kew.reconciliation.queryextractor.QueryStringToPropertiesExtractor;
 import org.kew.reconciliation.refine.domain.metadata.Metadata;
 import org.kew.stringmod.dedupl.configuration.MatchConfiguration;
 import org.kew.stringmod.dedupl.configuration.ReconciliationServiceConfiguration;
+import org.kew.stringmod.dedupl.exception.MatchExecutionException;
+import org.kew.stringmod.dedupl.exception.TooManyMatchesException;
 import org.kew.stringmod.dedupl.lucene.LuceneMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,12 +72,63 @@ public class ReconciliationService {
 
 	/**
 	 * Retrieve reconciliation service metadata.
+	 * @throws MatchExecutionException if the requested matcher doesn't exist.
 	 */
-	public Metadata getMetadata(String configName) {
+	public Metadata getMetadata(String configName) throws MatchExecutionException {
+		ReconciliationServiceConfiguration reconcilationConfig = getReconciliationServiceConfiguration(configName);
+		if (reconcilationConfig != null) {
+			return reconcilationConfig.getReconciliationServiceMetadata();
+		}
+		return null;
+	}
+
+	/**
+	 * Convert single query string into query properties.
+	 * @throws MatchExecutionException if the requested matcher doesn't exist.
+	 */
+	public QueryStringToPropertiesExtractor getPropertiesExtractor(String configName) throws MatchExecutionException {
+		ReconciliationServiceConfiguration reconcilationConfig = getReconciliationServiceConfiguration(configName);
+		if (reconcilationConfig != null) {
+			return reconcilationConfig.getQueryStringToPropertiesExtractor();
+		}
+		return null;
+	}
+
+	/**
+	 * Perform match query against specified configuration.
+	 * @throws MatchExecutionException 
+	 * @throws TooManyMatchesException 
+	 */
+	public List<Map<String,String>> doQuery(String configName, Map<String, String> userSuppliedRecord) throws TooManyMatchesException, MatchExecutionException {
+		List<Map<String,String>> matches = null;
+
+		LuceneMatcher matcher = getMatcher(configName);
+
+		if (matcher == null) {
+			// When no matcher specified with that configuration
+			logger.warn("Invalid match configuration «{}» requested", configName);
+			return null;
+		}
+
+		matches = matcher.getMatches(userSuppliedRecord, 5);
+		// Just write out some matches to std out:
+		logger.debug("Found some matches: {}", matches.size());
+		if (matches.size() < 4) {
+			logger.debug("Matches for {} are {}", userSuppliedRecord, matches);
+		}
+
+		return matches;
+	}
+
+	/**
+	 * Retrieve reconciliation service configuration.
+	 * @throws MatchExecutionException if the requested configuration doesn't exist.
+	 */
+	public ReconciliationServiceConfiguration getReconciliationServiceConfiguration(String configName) throws MatchExecutionException {
 		MatchConfiguration matchConfig = getMatcher(configName).getConfig();
 		if (matchConfig instanceof ReconciliationServiceConfiguration) {
 			ReconciliationServiceConfiguration reconcilationConfig = (ReconciliationServiceConfiguration) matchConfig;
-			return reconcilationConfig.getReconciliationServiceMetadata();
+			return reconcilationConfig;
 		}
 		return null;
 	}
@@ -83,7 +137,10 @@ public class ReconciliationService {
 	public Map<String, LuceneMatcher> getMatchers() {
 		return matchers;
 	}
-	public LuceneMatcher getMatcher(String matcher) {
+	public LuceneMatcher getMatcher(String matcher) throws MatchExecutionException {
+		if (matchers.get(matcher) == null) {
+			throw new MatchExecutionException("No matcher called '"+matcher+"' exists.");
+		}
 		return matchers.get(matcher);
 	}
 

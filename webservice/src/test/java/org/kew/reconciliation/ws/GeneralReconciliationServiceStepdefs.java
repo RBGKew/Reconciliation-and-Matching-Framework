@@ -17,6 +17,7 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -57,16 +58,24 @@ public class GeneralReconciliationServiceStepdefs extends WebMvcConfigurationSup
 		mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
 	}
 
-	@When("^I query for reconciliation service metadata$")
-	public void I_query_for_reconciliation_service_metadata() throws Throwable {
+	@When("^I query for metadata of the \"(.*?)\" reconciliation service$")
+	public void i_query_for_metadata_of_the_reconciliation_service(String configName) throws Throwable {
 		// Call
-		result = mockMvc.perform(get("/reconcile/generalTest").accept(JSON_UTF8))
-				.andExpect(status().isOk())
+		result = mockMvc.perform(get("/reconcile/"+configName).accept(JSON_UTF8))
+//				.andExpect(status().isOk())
 				.andExpect(content().contentType(JSON_UTF8_S))
 				.andReturn();
 
-		responseJson = result.getResponse().getContentAsString();
-		log.debug("Response as string was {}", responseJson);
+		if (result.getResponse().getStatus() == HttpStatus.OK.value()) {
+			responseJson = result.getResponse().getContentAsString();
+			log.debug("Response as string was {}", responseJson);
+		}
+	}
+
+	@Then("^I receive an HTTP (\\d+) result\\.$")
+	public void i_receive_an_HTTP_result(int expectedStatus) throws Throwable {
+		log.error("expected {} actual {}", expectedStatus, result.getResponse().getStatus());
+		Assert.assertThat("Expected HTTP Status "+expectedStatus, result.getResponse().getStatus(), Matchers.equalTo(expectedStatus));
 	}
 
 	@Then("^I receive the following metadata response:$")

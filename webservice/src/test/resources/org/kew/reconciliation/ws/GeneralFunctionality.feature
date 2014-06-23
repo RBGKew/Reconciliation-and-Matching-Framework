@@ -1,7 +1,7 @@
 Feature: Functionality not particular to a specific match configuration is tested here.  For example, the JSON response, Reconciliation service API.
 
 	Scenario: Ensure appropriate reconciliation metadata is returned
-		When I query for reconciliation service metadata
+		When I query for metadata of the "generalTest" reconciliation service
 		Then I receive the following metadata response:
 			"""
 			{
@@ -36,6 +36,10 @@ Feature: Functionality not particular to a specific match configuration is teste
 				"defaultTypes" : null
 			}
 			"""
+
+	Scenario: Ensure appropriate reconciliation metadata is returned (error check).
+		When I query for metadata of the "nonExistent" reconciliation service
+		Then I receive an HTTP 404 result.
 
 	Scenario: Ensure a standard (non-reconciliation API) query returns a suitable JSON response
 		When I make a match query for "genus=Congea&species=chinensis&authors=Moldenke"
@@ -96,7 +100,7 @@ Feature: Functionality not particular to a specific match configuration is teste
 						"name" : "Congea chinensis Moldenke",
 						"score" : 100,
 						"type" : [
-							"name"
+							"default"
 						],
 						"id" : "kew-46537"
 					}
@@ -154,7 +158,7 @@ Feature: Functionality not particular to a specific match configuration is teste
 							"name" : "Congea chinensis Moldenke",
 							"score" : 100,
 							"type" : [
-								"name"
+								"default"
 							],
 							"id" : "kew-46537"
 						}
@@ -167,11 +171,36 @@ Feature: Functionality not particular to a specific match configuration is teste
 							"name" : "Congea munirii Moldenke",
 							"score" : 100,
 							"type" : [
-								"name"
+								"default"
 							],
 							"id" : "kew-46548"
 						}
 					]
 				}
+			}
+			"""
+
+	Scenario: Provide a "best effort" match when queried with only a single string, without
+		genus, species etc parameters.
+		When I make the reconciliation query:
+			"""
+			{
+				"query" : "Congea chinensis Moldenke"
+			}
+			"""
+		Then I receive the following reconciliation response:
+			"""
+			{
+				"result" : [
+					{
+						"match" : true,
+						"name" : "Congea chinensis Moldenke",
+						"score" : 100,
+						"type" : [
+							"default"
+						],
+						"id" : "kew-46537"
+					}
+				]
 			}
 			"""

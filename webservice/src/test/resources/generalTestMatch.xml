@@ -14,13 +14,13 @@
 	<context:property-placeholder location="classpath:/cucumber.properties"/>
 
 	<bean id="lucene_directory" class="java.lang.String">
-		<constructor-arg value="target/lucene_directory_tplstandard/" />
+		<constructor-arg value="target/lucene_directory_cucumber_test/" />
 	</bean>
 	<bean id="sourcefile" class="java.io.File">
 		<constructor-arg value="target/sourcefile.csv" />
 	</bean>
 
-	<!-- IPNI Flat datasource for lookup data -->
+	<!-- TPL datasource for lookup data -->
 	<bean id="tplDatabase" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="${tpl.database.driverClassName}" />
 		<property name="url" value="${tpl.database.url}" />
