@@ -13,6 +13,7 @@ import org.kew.stringmod.dedupl.DataHandler;
 import org.kew.stringmod.dedupl.configuration.Configuration;
 import org.kew.stringmod.dedupl.configuration.DeduplicationConfiguration;
 import org.kew.stringmod.dedupl.configuration.Property;
+import org.kew.stringmod.dedupl.exception.DataLoadException;
 import org.kew.stringmod.dedupl.reporters.LuceneReporter;
 import org.kew.stringmod.dedupl.reporters.Piper;
 
@@ -29,7 +30,7 @@ public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration
      * Uses the {@link DataLoader} in a dedup specific way
      */
     @Override
-    public void loadData() throws Exception {
+    public void loadData() throws DataLoadException {
         if (!getConfig().isReuseIndex()){
             dataLoader.setConfig(this.getConfig());
             dataLoader.load();

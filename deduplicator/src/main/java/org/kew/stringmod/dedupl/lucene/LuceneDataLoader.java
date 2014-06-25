@@ -20,6 +20,7 @@ import org.kew.stringmod.dedupl.DataLoader;
 import org.kew.stringmod.dedupl.DatabaseRecordSource;
 import org.kew.stringmod.dedupl.configuration.Configuration;
 import org.kew.stringmod.dedupl.configuration.Property;
+import org.kew.stringmod.dedupl.exception.DataLoadException;
 import org.kew.stringmod.lib.transformers.Transformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +49,7 @@ public class LuceneDataLoader implements DataLoader {
      * Load the lookup data into Lucene.
      */
     @Override
-    public void load() throws Exception {
+    public void load() throws DataLoadException {
         Configuration config = this.getConfig();
 
         /*
@@ -77,10 +78,16 @@ public class LuceneDataLoader implements DataLoader {
         }
     }
 
-    private void load(DatabaseRecordSource recordSource) throws Exception {
+    private void load(DatabaseRecordSource recordSource) throws DataLoadException {
         int i = 0;
 
-        ResultSet resultSet = recordSource.getResultSet();
+        ResultSet resultSet;
+        try {
+            resultSet = recordSource.getResultSet();
+        }
+        catch (SQLException e) {
+            throw new DataLoadException("Problem reading data from database "+recordSource, e);
+        }
 
         try (IndexWriter indexWriter = this.getIndexWriter()) {
             // check whether the necessary column names are present in the ResultSet
@@ -89,7 +96,7 @@ public class LuceneDataLoader implements DataLoader {
                     resultSet.findColumn(headerName);
                 }
                 catch (SQLException se) {
-                    throw new Exception(String.format("%s: Database result doesn't contain field name «%s» as defined in config.", this.config.getName(), headerName));
+                    throw new DataLoadException(String.format("%s: Database result doesn't contain field name «%s» as defined in config.", this.config.getName(), headerName));
                 }
             }
             // same for the id-field
@@ -97,78 +104,103 @@ public class LuceneDataLoader implements DataLoader {
                 resultSet.findColumn(Configuration.ID_FIELD_NAME);
             }
             catch (SQLException se) {
-                throw new Exception(String.format("%s: Database result doesn't contain field name «%s» as defined in config.", this.config.getName(), Configuration.ID_FIELD_NAME));
+                throw new DataLoadException(String.format("%s: Database result doesn't contain field name «%s» as defined in config.", this.config.getName(), Configuration.ID_FIELD_NAME));
             }
 
             Document doc = null;
             while (resultSet.next()) {
+                // Index record
                 try{
                     doc = this.indexRecord(resultSet);
                 }
                 catch (Exception e) {
-                    if (config.isContinueOnError()){
-                        logger.warn("Problem indexing record " + i, e);
+                    String message = "Problem indexing record " + i + ", " + resultSet;
+                    if (config.isContinueOnError()) {
+                        logger.warn(message, e);
                     }
-                    else{
-                        throw new Exception("Problem indexing record " + i, e);
+                    else {
+                        throw new DataLoadException(message, e);
                     }
                 }
-                if (i++ % this.config.getLoadReportFrequency() == 0){
+
+                // Log progress
+                if (i++ % this.config.getLoadReportFrequency() == 0) {
                     logger.info("Indexed {} documents", i);
                     logger.debug("Most recent indexed document was {}", doc);
                 }
             }
+
             indexWriter.commit();
         }
-        catch(Exception e){
-            throw e;
+        catch (Exception e) {
+            throw new DataLoadException("Error loading records at row " + i, e);
         }
-        logger.info("Indexed " + i + " documents");
+        logger.info("Indexed {} records", i);
     }
 
-    private void load(File file) throws Exception {
+    private void load(File file) throws DataLoadException {
         int i = 0;
         // TODO: either make quote characters and line break characters configurable or simplify even more?
         CsvPreference customCsvPref = new CsvPreference.Builder('"', this.config.getLookupFileDelimiter().charAt(0), "\n").build();
+
         try (CsvMapReader mr = new CsvMapReader(new FileReader(file), customCsvPref);
              IndexWriter indexWriter = this.getIndexWriter()) {
+
             final String[] header = mr.getHeader(true);
             // check whether the header column names fit to the ones specified in the configuration
             List<String> headerList = Arrays.asList(header);
             for (String name:this.config.getPropertyLookupColumnNames()) {
-                if (!headerList.contains(name)) throw new Exception(String.format("%s: Header doesn't contain field name < %s > as defined in config.", this.config.getLookupFile().getPath(), name));
+                if (!headerList.contains(name)) throw new DataLoadException(String.format("%s: Header doesn't contain field name < %s > as defined in config.", this.config.getLookupFile().getPath(), name));
             }
             // same for the id-field
             String idFieldName = Configuration.ID_FIELD_NAME;
-            if (!headerList.contains(idFieldName)) throw new Exception(String.format("%s: Id field name not found in header, should be %s!", this.config.getLookupFile().getPath(), idFieldName));
+            if (!headerList.contains(idFieldName)) throw new DataLoadException(String.format("%s: Id field name not found in header, should be %s!", this.config.getLookupFile().getPath(), idFieldName));
             Map<String, String> record;
             record = mr.read(header);
 
             Document doc = null;
-            while(record != null) {
-                try{
+            while (record != null) {
+                // Index record
+                try {
                     doc = this.indexRecord(record);
                 }
                 catch (Exception e) {
-                	if (config.isContinueOnError()){
-                		logger.warn("Problem indexing record " + i + ", " + record, e);
-                	}
-                	else{
-                		throw new Exception("Problem indexing record " + i + ", " + record, e);
-                	}
-				}
+                    String message = "Problem indexing record " + i + ", " + record;
+                    if (config.isContinueOnError()) {
+                        logger.warn(message, e);
+                    }
+                    else{
+                        throw new DataLoadException(message, e);
+                    }
+                }
+
+                // Log process
                 if (i++ % this.config.getLoadReportFrequency() == 0){
                     logger.info("Indexed {} documents", i);
                     logger.debug("Most recent indexed document was {}", doc);
                 }
-            	record = mr.read(header);
+
+                // Read next record from CSV/datasource
+                try {
+                    record = mr.read(header);
+                }
+                catch (Exception e) {
+                    String message = "Problem reading record " + i + " «" + mr.getUntokenizedRow() + "»";
+                    if (config.isContinueOnError()) {
+                        logger.warn(message, e);
+                    }
+                    else{
+                        throw new DataLoadException(message, e);
+                    }
+                }
             }
+
             indexWriter.commit();
         }
-        catch(Exception e){
-        	throw e;
+        catch (Exception e) {
+            throw new DataLoadException("Error loading records at line " + i, e);
         }
-        logger.info("Indexed " + i + " documents");
+        logger.info("Indexed {} records", i);
     }
 
     /**

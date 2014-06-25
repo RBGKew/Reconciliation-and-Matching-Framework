@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +22,7 @@ import org.kew.stringmod.dedupl.DataHandler;
 import org.kew.stringmod.dedupl.configuration.Configuration;
 import org.kew.stringmod.dedupl.configuration.MatchConfiguration;
 import org.kew.stringmod.dedupl.configuration.Property;
+import org.kew.stringmod.dedupl.exception.DataLoadException;
 import org.kew.stringmod.dedupl.exception.MatchExecutionException;
 import org.kew.stringmod.dedupl.exception.TooManyMatchesException;
 import org.kew.stringmod.dedupl.matchers.MatchException;
@@ -43,7 +43,7 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
     protected MatchConfiguration matchConfig;
 
     @Override
-    public void loadData() throws Exception{ // from DataMatcher
+    public void loadData() throws DataLoadException { // from DataMatcher
         if (!getConfig().isReuseIndex()){
             this.dataLoader.setConfig(this.getConfig());
             this.dataLoader.load();
