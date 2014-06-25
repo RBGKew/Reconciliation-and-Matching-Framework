@@ -45,7 +45,9 @@ public class LuceneHandler<Config extends Configuration> {
 	}
 
 	public IndexReader getIndexReader() throws CorruptIndexException, IOException {
-		if (this.indexReader == null) this.indexReader = DirectoryReader.open(this.directory);
+		if (this.indexReader == null) {
+			this.indexReader = DirectoryReader.open(this.directory);
+		}
 		return this.indexReader;
 	}
 
@@ -87,42 +89,49 @@ public class LuceneHandler<Config extends Configuration> {
 	public void setConfig(Config config) {
 		this.config = config;
 	}
+
 	public DataLoader getDataLoader() {
 		return dataLoader;
 	}
 	public void setDataLoader(DataLoader dataLoader) {
 		this.dataLoader = dataLoader;
 	}
+
 	public org.apache.lucene.util.Version getLuceneVersion() {
 		return luceneVersion;
 	}
 	public void setLuceneVersion(org.apache.lucene.util.Version luceneVersion) {
 		this.luceneVersion = luceneVersion;
 	}
+
 	public FSDirectory getDirectory() {
 		return directory;
 	}
 	public void setDirectory(FSDirectory directory) {
 		this.directory = directory;
 	}
+
 	public IndexWriter getIndexWriter() {
 		return indexWriter;
 	}
 	public void setIndexWriter(IndexWriter indexWriter) {
 		this.indexWriter = indexWriter;
 	}
+
 	public Analyzer getAnalyzer() {
 		return analyzer;
 	}
 	public void setAnalyzer(Analyzer analyzer) {
 		this.analyzer = analyzer;
 	}
+
 	public QueryParser getQueryParser() {
 		return queryParser;
 	}
 	public void setQueryParser(QueryParser queryParser) {
 		this.queryParser = queryParser;
 	}
+
 	public Reporter[] getReporters() {
 		return (LuceneReporter[]) reporters;
 	}

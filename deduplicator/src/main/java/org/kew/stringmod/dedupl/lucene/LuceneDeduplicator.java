@@ -1,15 +1,18 @@
 package org.kew.stringmod.dedupl.lucene;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.kew.stringmod.dedupl.DataHandler;
+import org.kew.stringmod.dedupl.DataLoader;
 import org.kew.stringmod.dedupl.configuration.Configuration;
 import org.kew.stringmod.dedupl.configuration.DeduplicationConfiguration;
 import org.kew.stringmod.dedupl.configuration.Property;
@@ -31,9 +34,17 @@ public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration
      */
     @Override
     public void loadData() throws DataLoadException {
-        if (!getConfig().isReuseIndex()){
-            dataLoader.setConfig(this.getConfig());
-            dataLoader.load();
+        try {
+            if (getConfig().isReuseIndex() & DirectoryReader.indexExists(this.directory)) {
+                this.logger.info("Reusing existing index");
+            }
+            else {
+                this.dataLoader.setConfig(this.getConfig());
+                this.dataLoader.load();
+            }
+        }
+        catch (IOException e) {
+            throw new DataLoadException("Problem checking if index already exists", e);
         }
     }
 

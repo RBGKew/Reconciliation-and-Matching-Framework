@@ -107,126 +107,150 @@ public abstract class Configuration implements AutoCloseable {
     public void setOutputAllMatches(boolean outputAllMatches) {
         this.outputAllMatches = outputAllMatches;
     }
+
     public String getScoreFieldName() {
         return scoreFieldName;
     }
     public void setScoreFieldName(String scoreFieldName) {
         this.scoreFieldName = scoreFieldName;
     }
-     public File getLookupFile() {
+
+    public File getLookupFile() {
         return lookupFile;
     }
     public void setLookupFile(File lookupFile) {
         this.lookupFile = lookupFile;
     }
+
     public String getLookupFileEncoding() {
         return lookupFileEncoding;
     }
     public void setLookupFileEncoding(String lookupFileEncoding) {
         this.lookupFileEncoding = lookupFileEncoding;
     }
+
     public String getLookupFileDelimiter() {
         return lookupFileDelimiter;
     }
     public void setLookupFileDelimiter(String lookupFileDelimiter) {
         this.lookupFileDelimiter = lookupFileDelimiter;
     }
+
     public List<Property> getProperties() {
         return properties;
     }
     public void setProperties(List<Property> properties) {
         this.properties = properties;
     }
+
     public File getSourceFile() {
         return sourceFile;
     }
     public String getSourceFileEncoding() {
         return sourceFileEncoding;
     }
+
     public void setSourceFile(File sourceFile) {
         this.sourceFile = sourceFile;
     }
     public void setSourceFileEncoding(String sourceFileEncoding) {
         this.sourceFileEncoding = sourceFileEncoding;
     }
+
     public int getLoadReportFrequency() {
         return loadReportFrequency;
     }
     public void setLoadReportFrequency(int loadReportFrequency) {
         this.loadReportFrequency = loadReportFrequency;
     }
+
     public int getAssessReportFrequency() {
         return assessReportFrequency;
     }
     public void setAssessReportFrequency(int assessReportFrequency) {
         this.assessReportFrequency = assessReportFrequency;
     }
+
     public boolean isWriteComparisonReport() {
         return writeComparisonReport;
     }
     public void setWriteComparisonReport(boolean writeComparisonReport) {
         this.writeComparisonReport = writeComparisonReport;
     }
+
     public String getSourceFileDelimiter() {
         return sourceFileDelimiter;
     }
     public void setSourceFileDelimiter(String sourceFileDelimiter) {
         this.sourceFileDelimiter = sourceFileDelimiter;
     }
+
     public boolean isWriteDelimitedReport() {
         return writeDelimitedReport;
     }
     public void setWriteDelimitedReport(boolean writeDelimitedReport) {
         this.writeDelimitedReport = writeDelimitedReport;
     }
+
     public boolean isIncludeNonMatchesInDelimitedReport() {
         return includeNonMatchesInDelimitedReport;
     }
     public void setIncludeNonMatchesInDelimitedReport(boolean includeNonMatchesInDelimitedReport) {
         this.includeNonMatchesInDelimitedReport = includeNonMatchesInDelimitedReport;
     }
+
     public boolean isReuseIndex() {
         return reuseIndex;
     }
+    /**
+     * Whether to reuse an index, if it already exists.
+     */
     public void setReuseIndex(boolean reuseIndex) {
         this.reuseIndex = reuseIndex;
     }
+
     public List<? extends LuceneReporter> getReporters() {
         return reporters;
     }
     public void setReporters(List<? extends LuceneReporter> reporters) {
         this.reporters = reporters;
     }
+
     public String getRecordFilter() {
         return recordFilter;
     }
     public void setRecordFilter(String recordFilter) {
         this.recordFilter = recordFilter;
     }
+
     public List<Piper> getPipers() {
         return pipers;
     }
     public void setPipers(List<Piper> pipers) {
         this.pipers = pipers;
     }
+
     public int getMaxSearchResults() {
         return maxSearchResults;
     }
     public void setMaxSearchResults(int maxSearchResults) {
         this.maxSearchResults = maxSearchResults;
     }
+
 	public boolean isContinueOnError() {
 		return continueOnError;
 	}
 	public void setContinueOnError(boolean continueOnError) {
 		this.continueOnError = continueOnError;
 	}
+
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public DatabaseRecordSource getLookupRecords() {
 		return lookupRecords;
 	}

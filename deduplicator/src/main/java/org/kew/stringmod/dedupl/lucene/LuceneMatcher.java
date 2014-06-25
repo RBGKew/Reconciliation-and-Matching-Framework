@@ -13,6 +13,7 @@ import javax.script.ScriptException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.queryparser.classic.ParseException;
@@ -44,12 +45,17 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
 
     @Override
     public void loadData() throws DataLoadException { // from DataMatcher
-        if (!getConfig().isReuseIndex()){
-            this.dataLoader.setConfig(this.getConfig());
-            this.dataLoader.load();
+        try {
+            if (getConfig().isReuseIndex() & DirectoryReader.indexExists(this.directory)) {
+                this.logger.info("Reusing existing index");
+            }
+            else {
+                this.dataLoader.setConfig(this.getConfig());
+                this.dataLoader.load();
+            }
         }
-        else {
-            this.logger.info("Reusing existing index");
+        catch (IOException e) {
+            throw new DataLoadException("Problem checking if index already exists", e);
         }
     }
 

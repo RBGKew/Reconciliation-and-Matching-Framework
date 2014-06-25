@@ -49,7 +49,7 @@ public class ReconciliationService {
 					@SuppressWarnings("resource")
 					ConfigurableApplicationContext context = new GenericXmlApplicationContext(configFile);
 					context.registerShutdownHook();
-					LuceneMatcher matcher = (LuceneMatcher) context.getBean("engine");
+					LuceneMatcher matcher = context.getBean("engine", LuceneMatcher.class);
 					try {
 						matcher.loadData(); 
 						logger.debug("Loaded data for configFile {}", configFile);
