@@ -23,5 +23,19 @@ Feature: Basic functionality of the application: responding to a match query.
 			]
 			"""
 
+#	Scenario: Reconcile records by file upload
+#		When I make a bulk match query with a file containing these rows:
+#			"""
+#			id,genus,species,infraspecies,authors
+#			1,Quercus,alba,,L.
+#			2,Ilex,,,L.
+#			"""
+#		Then I receive the following result file:
+#			"""
+#			id,genus,species,infraspecies,authors,result
+#			1,Quercus,alba,,L.,kew-171499,Quercus alba L.
+#			2,Ilex,,,L.,,
+#			"""
+
 #	Scenario: Ensure many simultaneous / rapid queries give the correct responses
 #		It's not clear how to test this.
