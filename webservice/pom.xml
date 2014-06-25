@@ -63,6 +63,7 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- file upload -->
@@ -201,12 +202,12 @@
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
+				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
-					<excludes>
-						<exclude>logback.xml</exclude>
-						<exclude>reconciliation-service.properties</exclude>
-					</excludes>
+					<packagingExcludes>
+						WEB-INF/classes/logback.xml,
+						WEB-INF/classes/reconciliation-service.properties
+					</packagingExcludes>
 				</configuration>
 			</plugin>
 		</plugins>
