@@ -16,7 +16,7 @@
 	<context:property-placeholder location="classpath:/match-webservice.properties"/>
 
 	<bean id="lucene_directory" class="java.lang.String">
-		<constructor-arg value="#{systemProperties['datadir']}/lucene_directory_tplstandard/" />
+		<constructor-arg value="#{systemProperties['datadir']}/lucene_directory_tpl_careless/" />
 	</bean>
 	<bean id="sourcefile" class="java.io.File">
 		<constructor-arg value="#{systemProperties['datadir']}/sourcefile.csv" />
