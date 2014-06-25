@@ -12,7 +12,7 @@
 	-->
 
 	<bean id="lookupfile" class="java.io.File">
-		<constructor-arg value="/home/matt/TPL-Recon-500.tsv" />
+		<constructor-arg value="${dataDir}/TPL-Recon.tsv" />
 	</bean>
 
 	<!-- IPNI Flat datasource for lookup data -->
@@ -62,12 +62,12 @@
 
 	<bean id="author_dictionary" class="org.kew.stringmod.utils.Dictionary"
 		p:fileDelimiter="&#09;"
-		p:filePath="/vol/Departmental/Development/SHS Project/Data Improvement/MatchConf/Dictionaries/author_dictionary.csv" />
+		p:filePath="${dataDir}/author_dictionary.csv" />
 	<bean id="authordictionary" class="org.kew.stringmod.lib.transformers.DictionaryTransformer" p:dict-ref="author_dictionary"/>
 
 	<bean id="doubleLettersDictionary" class="org.kew.stringmod.utils.Dictionary"
 		p:fileDelimiter="&#09;"
-		p:filePath="/vol/Departmental/Development/SHS Project/Data Improvement/MatchConf/Dictionaries/double_letters_dictionary.csv" />
+		p:filePath="${dataDir}/double_letters_dictionary.csv" />
 	<bean id="doubleLettersTransformer" class="org.kew.stringmod.lib.transformers.DictionaryTransformer"
 		p:dict-ref="doubleLettersDictionary"/>
 
@@ -200,7 +200,7 @@
 		p:assessReportFrequency="500"
 		p:maxSearchResults="10000"
 		p:recordFilter=""
-		p:continueOnError="true"
+		p:maximumLoadErrors="0"
 		p:reuseIndex="true"/>
 
 	<!-- import the generic application-context (equal for dedup/match configurations) -->

@@ -32,7 +32,7 @@ public abstract class Configuration implements AutoCloseable {
     private boolean writeComparisonReport=false;
     private boolean writeDelimitedReport=false;
     private boolean includeNonMatchesInDelimitedReport=false;
-    private boolean continueOnError=false;
+    private int maximumLoadErrors = 0;
     
     private int loadReportFrequency=50000;
     private int assessReportFrequency=100;
@@ -237,11 +237,14 @@ public abstract class Configuration implements AutoCloseable {
         this.maxSearchResults = maxSearchResults;
     }
 
-	public boolean isContinueOnError() {
-		return continueOnError;
+	public int getMaximumLoadErrors() {
+		return maximumLoadErrors;
 	}
-	public void setContinueOnError(boolean continueOnError) {
-		this.continueOnError = continueOnError;
+	/**
+	 * The limit of data errors before loading the configuration is aborted.
+	 */
+	public void setMaximumLoadErrors(int maximumLoadErrors) {
+		this.maximumLoadErrors = maximumLoadErrors;
 	}
 
 	public String getName() {

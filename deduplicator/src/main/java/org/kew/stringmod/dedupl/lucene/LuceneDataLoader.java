@@ -80,6 +80,7 @@ public class LuceneDataLoader implements DataLoader {
 
     private void load(DatabaseRecordSource recordSource) throws DataLoadException {
         int i = 0;
+        int errors = 0;
 
         ResultSet resultSet;
         try {
@@ -114,8 +115,9 @@ public class LuceneDataLoader implements DataLoader {
                     doc = this.indexRecord(resultSet);
                 }
                 catch (Exception e) {
+                    errors++;
                     String message = "Problem indexing record " + i + ", " + resultSet;
-                    if (config.isContinueOnError()) {
+                    if (errors < config.getMaximumLoadErrors()) {
                         logger.warn(message, e);
                     }
                     else {
@@ -140,6 +142,8 @@ public class LuceneDataLoader implements DataLoader {
 
     private void load(File file) throws DataLoadException {
         int i = 0;
+        int errors = 0;
+
         // TODO: either make quote characters and line break characters configurable or simplify even more?
         CsvPreference customCsvPref = new CsvPreference.Builder('"', this.config.getLookupFileDelimiter().charAt(0), "\n").build();
 
@@ -165,8 +169,9 @@ public class LuceneDataLoader implements DataLoader {
                     doc = this.indexRecord(record);
                 }
                 catch (Exception e) {
+                    errors++;
                     String message = "Problem indexing record " + i + ", " + record;
-                    if (config.isContinueOnError()) {
+                    if (errors < config.getMaximumLoadErrors()) {
                         logger.warn(message, e);
                     }
                     else{
@@ -185,8 +190,9 @@ public class LuceneDataLoader implements DataLoader {
                     record = mr.read(header);
                 }
                 catch (Exception e) {
+                    errors++;
                     String message = "Problem reading record " + i + " «" + mr.getUntokenizedRow() + "»";
-                    if (config.isContinueOnError()) {
+                    if (errors < config.getMaximumLoadErrors()) {
                         logger.warn(message, e);
                     }
                     else{

@@ -145,7 +145,7 @@
 		p:assessReportFrequency="100"
 		p:maxSearchResults="10000"
 		p:recordFilter=""
-		p:continueOnError="true"
+		p:maximumLoadErrors="100"
 		p:reuseIndex="false"/>
 
 	<!-- import the generic application-context (equal for dedup/match configurations) -->

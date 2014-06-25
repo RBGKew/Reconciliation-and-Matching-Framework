@@ -117,7 +117,7 @@
 		p:maxSearchResults="10000"
 		p:recordFilter=""
 		p:reporters-ref="reporters"
-		p:continueOnError="true"
+		p:maximumLoadErrors="100"
 		p:reuseIndex="false"/>
 
 	<!-- import the generic application-context (equal for dedup/match configurations) -->
