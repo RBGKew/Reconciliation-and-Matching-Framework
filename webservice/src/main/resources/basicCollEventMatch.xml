@@ -12,12 +12,7 @@
 			</list>
 		</property>
 	</bean>
-	<bean id="lucene_directory" class="java.lang.String">
-		<constructor-arg value="#{ systemProperties['datadir']}/lucene_directory_basic/" />
-	</bean>
-	<bean id="sourcefile" class="java.io.File">
-		<constructor-arg value="#{ systemProperties['datadir']}/sourcefile.csv" />
-	</bean>
+
 	<bean id="lookupfile" class="java.io.File">
 		<constructor-arg value="#{ systemProperties['datadir']}/all-collectors.csv" />
 	</bean>
@@ -140,15 +135,18 @@
 	</util:list>
 	
 	<bean id="config" class="org.kew.stringmod.dedupl.configuration.MatchConfiguration"
-		p:sourceFile-ref="sourcefile" p:sourceFileEncoding="UTF8"
-		p:sourceFileDelimiter="&#09;" p:lookupFile-ref="lookupfile"
-		p:lookupFileEncoding="UTF8" p:lookupFileDelimiter=","
-		p:properties-ref="columnProperties" p:scoreFieldName="id"
-		p:loadReportFrequency="50000" p:assessReportFrequency="100"
-		p:maxSearchResults="10000" p:recordFilter="" 
-		p:continueOnError="true" p:reuseIndex="false"
-		p:name="basicCollEventMatch"/>
-
+		p:name="basicCollEventMatch"
+		p:lookupFile-ref="lookupfile"
+		p:lookupFileEncoding="UTF8"
+		p:lookupFileDelimiter=","
+		p:properties-ref="columnProperties"
+		p:scoreFieldName="id"
+		p:loadReportFrequency="50000"
+		p:assessReportFrequency="100"
+		p:maxSearchResults="10000"
+		p:recordFilter=""
+		p:continueOnError="true"
+		p:reuseIndex="false"/>
 
 	<!-- import the generic application-context (equal for dedup/match configurations) -->
 	<import resource="classpath*:generic.xml" />

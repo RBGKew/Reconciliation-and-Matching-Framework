@@ -11,13 +11,6 @@
 
 	<!-- • TEST CONFIGURATION • Used for cucumber tests • -->
 
-	<bean id="lucene_directory" class="java.lang.String">
-		<constructor-arg value="target/lucene_directory_cucumber_test/" />
-	</bean>
-	<bean id="sourcefile" class="java.io.File">
-		<constructor-arg value="target/sourcefile.csv" />
-	</bean>
-
 	<bean id="lookupfile" class="java.io.File">
 		<constructor-arg value="src/test/resources/TPL-Congea.tsv" />
 	</bean>
@@ -169,9 +162,6 @@
 
 	<bean id="config" class="org.kew.stringmod.dedupl.configuration.ReconciliationServiceConfiguration"
 		p:name="generalTest"
-		p:sourceFile-ref="sourcefile"
-		p:sourceFileEncoding="UTF8"
-		p:sourceFileDelimiter="&#09;"
 		p:lookupFile-ref="lookupfile"
 		p:lookupFileEncoding="UTF8"
 		p:lookupFileDelimiter="&#09;"
@@ -181,7 +171,7 @@
 		p:assessReportFrequency="500"
 		p:maxSearchResults="10000"
 		p:recordFilter=""
-		p:continueOnError="true"
+		p:continueOnError="false"
 		p:reuseIndex="false"
 		p:reconciliationServiceMetadata-ref="metadata"/>
 

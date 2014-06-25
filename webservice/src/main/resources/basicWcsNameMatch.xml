@@ -10,17 +10,6 @@
 			\copy (select plant_name_id as id, ipni_id, rank, family, full_name_without_family, b_authors, genus_hybrid_marker, genus, species_hybrid_marker, species, infraspecific_rank, infraspecific_epithet, parenthetical_author, primary_author, place_of_publication, volume_and_page, first_published, nomenclatural_remarks from checklist_flat_plant) to 'wcs-names.csv' with CSV header;
 	 -->
 
-	<bean id="preferencePlaceHolder" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
-		<property name="locations">
-			<list/>
-		</property>
-	</bean>
-	<bean id="lucene_directory" class="java.lang.String">
-		<constructor-arg value="#{ systemProperties['datadir']}/lucene_directory_wcsbasic/" />
-	</bean>
-	<bean id="sourcefile" class="java.io.File">
-		<constructor-arg value="#{ systemProperties['datadir']}/sourcefile.csv" />
-	</bean>
 	<bean id="lookupfile" class="java.io.File">
 		<!--constructor-arg value="#{ systemProperties['datadir']}/wcs-genus-species.csv" /-->
 		<constructor-arg value="#{ systemProperties['datadir']}/wcs-gs-and-ildis-gs-and-solanaceae-gs.csv" />
@@ -106,14 +95,18 @@
 	</util:list>
 
 	<bean id="config" class="org.kew.stringmod.dedupl.configuration.MatchConfiguration"
-		p:sourceFile-ref="sourcefile" p:sourceFileEncoding="UTF8"
-		p:sourceFileDelimiter="&#09;" p:lookupFile-ref="lookupfile"
-		p:lookupFileEncoding="UTF8" p:lookupFileDelimiter=","
-		p:properties-ref="columnProperties" p:scoreFieldName="id"
-		p:loadReportFrequency="50000" p:assessReportFrequency="100"
-		p:maxSearchResults="10000" p:recordFilter=""
-		p:continueOnError="true" p:reuseIndex="false"
-		p:name="basicWcsNameMatch"/>
+		p:name="basicWcsNameMatch"
+		p:lookupFile-ref="lookupfile"
+		p:lookupFileEncoding="UTF8"
+		p:lookupFileDelimiter=","
+		p:properties-ref="columnProperties"
+		p:scoreFieldName="id"
+		p:loadReportFrequency="50000"
+		p:assessReportFrequency="100"
+		p:maxSearchResults="10000"
+		p:recordFilter=""
+		p:continueOnError="true"
+		p:reuseIndex="false"/>
 
 	<!-- import the generic application-context (equal for dedup/match configurations) -->
 	<import resource="classpath*:generic.xml" />

@@ -24,7 +24,7 @@ public class MvcConfig {
 	static @Bean public PropertySourcesPlaceholderConfigurer myPropertySourcesPlaceholderConfigurer() {
 		PropertySourcesPlaceholderConfigurer p = new PropertySourcesPlaceholderConfigurer();
 		Resource[] resourceLocations = new Resource[] {
-				new ClassPathResource("match-webservice.properties")
+				new ClassPathResource("reconciliation-service.properties")
 		};
 		p.setLocations(resourceLocations);
 		return p;

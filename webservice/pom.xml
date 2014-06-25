@@ -198,6 +198,17 @@
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>8.1.14.v20131031</version>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>logback.xml</exclude>
+						<exclude>reconciliation-service.properties</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 </project>

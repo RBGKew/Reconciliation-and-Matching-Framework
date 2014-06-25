@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
 @Configuration
-//@PropertySource("classpath:${environment:cucumber}-reconciliation-service.properties")
 //@EnableCaching
 public class CoreConfig {
 
