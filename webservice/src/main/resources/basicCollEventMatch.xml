@@ -14,7 +14,7 @@
 	</bean>
 
 	<bean id="lookupfile" class="java.io.File">
-		<constructor-arg value="#{ systemProperties['datadir']}/all-collectors.csv" />
+		<constructor-arg value="${dataDir}/all-collectors.csv" />
 	</bean>
 	
 	<bean id="stripNonAlphaNumerics"

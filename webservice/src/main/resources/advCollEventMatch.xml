@@ -7,7 +7,7 @@
                     http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
 	<bean id="lookupfile" class="java.io.File">
-		<constructor-arg value="#{ systemProperties['datadir']}/E-darwin_core.csv" />
+		<constructor-arg value="${dataDir}/E-darwin_core.csv" />
 	</bean>
 	
 	<bean id="stripNonAlphaNumerics"
@@ -36,7 +36,7 @@
 			<property name="file">
 				<bean class="java.io.File">
 					<constructor-arg
-						value="#{ systemProperties['datadir']}/paris-herbcat_output-as.tsv" />
+						value="${dataDir}/paris-herbcat_output-as.tsv" />
 				</bean>
 			</property>
 		</bean>
@@ -46,7 +46,7 @@
 			<property name="file">
 				<bean class="java.io.File">
 					<constructor-arg
-						value="${datadir}/simple-match-config_output_multiline.tsv" />
+						value="${dataDir}/simple-match-config_output_multiline.tsv" />
 				</bean>
 			</property>
 		</bean-->

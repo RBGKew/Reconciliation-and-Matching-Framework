@@ -11,8 +11,8 @@
 	 -->
 
 	<bean id="lookupfile" class="java.io.File">
-		<!--constructor-arg value="#{ systemProperties['datadir']}/wcs-genus-species.csv" /-->
-		<constructor-arg value="#{ systemProperties['datadir']}/wcs-gs-and-ildis-gs-and-solanaceae-gs.csv" />
+		<!--constructor-arg value="${dataDir}/wcs-genus-species.csv" /-->
+		<constructor-arg value="${dataDir}/wcs-gs-and-ildis-gs-and-solanaceae-gs.csv" />
 	</bean>
 
 	<bean id="epithetTransformer" class="org.kew.stringmod.lib.transformers.EpithetTransformer"/>
