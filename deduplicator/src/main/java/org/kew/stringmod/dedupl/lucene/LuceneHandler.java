@@ -3,7 +3,6 @@ package org.kew.stringmod.dedupl.lucene;
 import java.io.IOException;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.DirectoryReader;
@@ -23,26 +22,20 @@ import org.kew.stringmod.dedupl.script.JavaScriptEnv;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-public class LuceneHandler<Config extends Configuration> {
+public class LuceneHandler<C extends Configuration> {
+	private static final Logger logger = LoggerFactory.getLogger(LuceneHandler.class);
 
 	private org.apache.lucene.util.Version luceneVersion;
 
 	protected FSDirectory directory;
 	private IndexSearcher indexSearcher;
 	protected IndexWriter indexWriter;
-	private Analyzer analyzer;
 	private IndexReader indexReader;
 	private QueryParser queryParser;
 	protected DataLoader dataLoader;
-	protected Config config;
-	protected Logger logger;
+	protected C config;
 	protected LuceneReporter[] reporters;
 	protected JavaScriptEnv jsEnv = null;
-	
-	public LuceneHandler() {
-		this.logger = LoggerFactory.getLogger(LuceneHandler.class);
-	}
 
 	public IndexReader getIndexReader() throws CorruptIndexException, IOException {
 		if (this.indexReader == null) {
@@ -78,15 +71,15 @@ public class LuceneHandler<Config extends Configuration> {
         // the recordFilter (excludes records from processing if condition fulfilled) needs a JavaScript environment set up
         if (!StringUtils.isBlank(config.getRecordFilter())) {
             this.jsEnv = new JavaScriptEnv();
-            this.logger.debug("Record filter activated, javascript rock'n roll!");
+            logger.debug("Record filter activated, javascript rock'n roll!");
         }
     }
 
 	// Getters and Setters
-	public Config getConfig() {
+	public C getConfig() {
 		return this.config;
 	}
-	public void setConfig(Config config) {
+	public void setConfig(C config) {
 		this.config = config;
 	}
 
@@ -116,13 +109,6 @@ public class LuceneHandler<Config extends Configuration> {
 	}
 	public void setIndexWriter(IndexWriter indexWriter) {
 		this.indexWriter = indexWriter;
-	}
-
-	public Analyzer getAnalyzer() {
-		return analyzer;
-	}
-	public void setAnalyzer(Analyzer analyzer) {
-		this.analyzer = analyzer;
 	}
 
 	public QueryParser getQueryParser() {

@@ -2,6 +2,7 @@ package org.kew.stringmod.dedupl.lucene;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -9,11 +10,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.FSDirectory;
 import org.kew.stringmod.dedupl.DataLoader;
@@ -39,44 +40,72 @@ public class LuceneDataLoader implements DataLoader {
     private IndexWriter indexWriter;
     private FSDirectory directory;
 
-    private Analyzer analyzer;
-
     private Configuration config;
 
     private static Logger logger = LoggerFactory.getLogger(LuceneDataLoader.class);
 
-    /**
-     * Load the lookup data into Lucene.
-     */
-    @Override
-    public void load() throws DataLoadException {
-        Configuration config = this.getConfig();
+	/**
+	 * Load the lookup data into Lucene.
+	 */
+	@Override
+	public void load() throws DataLoadException {
+		Configuration config = this.getConfig();
+		String configName = config.getName();
 
-        /*
-         * In case no file is specified we (assuming a de-duplication task) use the
-         * sourceFile also for index creation.
-         *
-         * This is why we copy over the source-related properties to the
-         * lookup-related ones
-         */
-        if (config.getLookupRecords() == null) {
-            if (config.getLookupFile() == null) {
-                for (Property p : config.getProperties()) {
-                    p.setLookupTransformers(p.getSourceTransformers());
-                    p.setAddOriginalLookupValue(p.isAddOriginalSourceValue());
-                    p.setAddTransformedLookupValue(p.isAddTransformedSourceValue());
-                    p.setLookupColumnName(p.getSourceColumnName());
-                }
-                config.setLookupFile(config.getSourceFile());
-                config.setLookupFileEncoding(config.getSourceFileEncoding());
-                config.setLookupFileDelimiter(config.getSourceFileDelimiter());
-            }
-            this.load(config.getLookupFile());
-        }
-        else {
-            this.load(config.getLookupRecords());
-        }
-    }
+		try {
+			if (DirectoryReader.indexExists(this.directory) && indexWriter.maxDoc() > 0) {
+				if (getConfig().isReuseIndex()) {
+					logger.info("{}: Reusing existing index (contains {} records)", configName, indexWriter.maxDoc());
+					return;
+				}
+				else {
+					logger.info("{}: Existing index {} exists with {} records, reuseIndex not set, clearing everything", configName, directory, indexWriter.maxDoc());
+					indexWriter.deleteAll();
+				}
+			}
+		}
+		catch (IOException e) {
+			throw new DataLoadException("Problem checking if index already exists", e);
+		}
+
+		/*
+		 * In case no file is specified we (assuming a de-duplication task) use the
+		 * sourceFile also for index creation.
+		 *
+		 * This is why we copy over the source-related properties to the
+		 * lookup-related ones
+		 */
+		try {
+			if (config.getLookupRecords() == null) {
+				if (config.getLookupFile() == null) {
+					for (Property p : config.getProperties()) {
+						p.setLookupTransformers(p.getSourceTransformers());
+						p.setAddOriginalLookupValue(p.isAddOriginalSourceValue());
+						p.setAddTransformedLookupValue(p.isAddTransformedSourceValue());
+						p.setLookupColumnName(p.getSourceColumnName());
+					}
+					config.setLookupFile(config.getSourceFile());
+					config.setLookupFileEncoding(config.getSourceFileEncoding());
+					config.setLookupFileDelimiter(config.getSourceFileDelimiter());
+				}
+				this.load(config.getLookupFile());
+			}
+			else {
+				logger.info("{}: Starting data load into {}", configName, getIndexWriter().getDirectory());
+				this.load(config.getLookupRecords());
+			}
+		}
+		finally {
+			// Close the index, no matter what happened.
+			try {
+				this.getIndexWriter().close();
+				logger.info("{}: IndexWriter {} closed", configName, getIndexWriter().getDirectory());
+			}
+			catch (IOException e) {
+				throw new DataLoadException("Error closing Lucene index for "+configName, e);
+			}
+		}
+	}
 
     private void load(DatabaseRecordSource recordSource) throws DataLoadException {
         int i = 0;
@@ -317,13 +346,6 @@ public class LuceneDataLoader implements DataLoader {
     }
     public void setDirectory(FSDirectory directory) {
         this.directory = directory;
-    }
-
-    public Analyzer getAnalyzer() {
-        return analyzer;
-    }
-    public void setAnalyzer(Analyzer analyzer) {
-        this.analyzer = analyzer;
     }
 
     public Configuration getConfig() {

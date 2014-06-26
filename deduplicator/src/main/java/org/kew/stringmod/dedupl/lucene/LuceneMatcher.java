@@ -13,7 +13,6 @@ import javax.script.ScriptException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.queryparser.classic.ParseException;
@@ -31,6 +30,8 @@ import org.kew.stringmod.dedupl.reporters.LuceneReporter;
 import org.kew.stringmod.dedupl.reporters.Piper;
 import org.kew.stringmod.lib.transformers.TransformationException;
 import org.kew.stringmod.lib.transformers.Transformer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.supercsv.io.CsvMapReader;
 import org.supercsv.prefs.CsvPreference;
 
@@ -40,24 +41,15 @@ import org.supercsv.prefs.CsvPreference;
  * {@link #getMatches(Map, int)} returns a list of matches.
  */
 public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements DataHandler<MatchConfiguration> {
+	private static final Logger logger = LoggerFactory.getLogger(LuceneMatcher.class);
 
     protected MatchConfiguration matchConfig;
 
-    @Override
-    public void loadData() throws DataLoadException { // from DataMatcher
-        try {
-            if (getConfig().isReuseIndex() & DirectoryReader.indexExists(this.directory)) {
-                this.logger.info("Reusing existing index");
-            }
-            else {
-                this.dataLoader.setConfig(this.getConfig());
-                this.dataLoader.load();
-            }
-        }
-        catch (IOException e) {
-            throw new DataLoadException("Problem checking if index already exists", e);
-        }
-    }
+	@Override // from DataHandler
+	public void loadData() throws DataLoadException {
+		this.dataLoader.setConfig(this.getConfig());
+		this.dataLoader.load();
+	}
 
     /**
      * Performs a match against the Lucene index, and returns a list of matches.
@@ -111,10 +103,10 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
         try {
             td = queryLucene(querystr, this.getIndexSearcher(), config.getMaxSearchResults());
             if (td.totalHits >= config.getMaxSearchResults()) {
-                this.logger.info("Error matching {}", "query");
+                logger.info("Error matching {}", "query");
                 throw new TooManyMatchesException(String.format("Number of max search results exceeded for record %s! You should either tweak your config to bring back less possible results making better use of the \"useInSelect\" switch (recommended) or raise the \"maxSearchResults\" number.", record));
             }
-            this.logger.debug("Found {} possibles to assess against {}", td.totalHits, fromId);
+            logger.debug("Found {} possibles to assess against {}", td.totalHits, fromId);
         }
         catch (ParseException | IOException e) {
             throw new MatchExecutionException("Error querying Lucene on query "+record, e);
@@ -210,14 +202,14 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
                     for (Piper piper:config.getPipers()) piper.pipe(record);
                     continue;
                 }
-                if (i++ % config.getAssessReportFrequency() == 0) this.logger.info("Assessed " + i + " records, found " + numMatches + " matches");
+                if (i++ % config.getAssessReportFrequency() == 0) logger.info("Assessed " + i + " records, found " + numMatches + " matches");
                 // call each reporter that has a say; all they get is a complete list of duplicates for this record.
                 for (LuceneReporter reporter : config.getReporters()) {
                     // TODO: make idFieldName configurable, but not on reporter level
                     reporter.report(record, matches);
                 }
             }
-            this.logger.info("Assessed " + i + " records, found " + numMatches + " matches");
+            logger.info("Assessed " + i + " records, found " + numMatches + " matches");
         }
     }
 }

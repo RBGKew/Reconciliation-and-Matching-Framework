@@ -61,7 +61,6 @@
 	<bean id="dataLoader" class="org.kew.stringmod.dedupl.lucene.LuceneDataLoader"
 		p:luceneVersion-ref="LUCENE_VERSION"
 		p:indexWriter-ref="indexWriter"
-		p:analyzer-ref="luceneAnalyzer"
 		p:directory-ref="luceneFileSystemStore"
 		p:config-ref="config"/>
 

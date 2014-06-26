@@ -8,7 +8,6 @@
 		p:dataLoader-ref="dataLoader"
 		p:luceneVersion-ref="LUCENE_VERSION"
 		p:indexWriter-ref="indexWriter"
-		p:analyzer-ref="luceneAnalyzer"
 		p:directory-ref="luceneFileSystemStore"
 		p:queryParser-ref="queryParser"
 		p:config-ref="config"/>
