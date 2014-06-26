@@ -64,9 +64,9 @@
 	<inceptionYear>2012</inceptionYear>
 
 	<scm>
-		<connection>scm:git:git://git.ad.kew.org/shs/deduplicator-framework.git</connection>
-		<developerConnection>scm:git:ssh://gerrit.ad.kew.org:29418/shs/deduplicator-framework.git</developerConnection>
-		<url>http://git.ad.kew.org/git/?p=shs/deduplicator-framework.git</url>
+		<connection>scm:git:git://git.ad.kew.org/utilities/deduplicator-framework.git</connection>
+		<developerConnection>scm:git:ssh://gerrit.ad.kew.org:29418/utilities/deduplicator-framework.git</developerConnection>
+		<url>http://git.ad.kew.org/git/?p=utilities/deduplicator-framework.git</url>
 	</scm>
 
     <dependencyManagement>
