@@ -76,7 +76,7 @@ public class MatchConfigurationTestingStepdefs {
 
 		Assert.assertNotNull("No result found for query "+targetId, actualResult);
 
-		Assert.assertThat("Match results not correct", expectedResult.get("results"), Matchers.equalTo(actualResult.get("results")));
+		Assert.assertThat("Match results not correct for query "+expectedResult.get("queryId"), actualResult.get("results"), Matchers.equalTo(expectedResult.get("results")));
 	}
 
 	private Map<String,String> doSingleTestQuery(Map<String,String> origQuery) throws Exception {

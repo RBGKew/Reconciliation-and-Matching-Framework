@@ -39,16 +39,21 @@
 	<bean id="shrunkAuthor" class="org.kew.stringmod.lib.transformers.authors.ShrunkAuthors" p:shrinkTo="3"/>
 
 	<!-- Dictionary transformers -->
-	<bean id="author_dictionary" class="org.kew.stringmod.utils.Dictionary"
-		p:fileDelimiter="&#09;"
-		p:filePath="${dataDir}/author_dictionary.csv" />
-	<bean id="authordictionary" class="org.kew.stringmod.lib.transformers.DictionaryTransformer" p:dict-ref="author_dictionary"/>
+	<bean id="authorDictionaryTransformer" class="org.kew.stringmod.lib.transformers.DictionaryTransformer">
+		<property name="dict">
+			<bean class="org.kew.stringmod.utils.Dictionary"
+				p:fileDelimiter="&#09;"
+				p:filePath="${dataDir}/author_dictionary.csv" />
+		</property>
+	</bean>
 
-	<bean id="doubleLettersDictionary" class="org.kew.stringmod.utils.Dictionary"
-		p:fileDelimiter="&#09;"
-		p:filePath="${dataDir}/double_letters_dictionary.csv" />
-	<bean id="doubleLettersTransformer" class="org.kew.stringmod.lib.transformers.DictionaryTransformer"
-		p:dict-ref="doubleLettersDictionary"/>
+	<bean id="doubleLettersTransformer" class="org.kew.stringmod.lib.transformers.DictionaryRegexTransformer">
+		<property name="dict">
+			<bean class="org.kew.stringmod.utils.Dictionary"
+				p:fileDelimiter="&#09;"
+				p:filePath="${dataDir}/double_letters_dictionary.csv" />
+		</property>
+	</bean>
 
 	<!-- Matchers -->
 	<bean id="exactMatch" class="org.kew.stringmod.dedupl.matchers.ExactMatcher" p:blanksMatch="false" />
@@ -147,14 +152,14 @@
 			p:addTransformedLookupValue="true">
 			<property name="sourceTransformers">
 				<util:list id="1">
-					<ref bean="authordictionary" />
+					<ref bean="authorDictionaryTransformer" />
 					<ref bean="stripBasionymAuthor" />
 					<ref bean="shrunkAuthor" />
 				</util:list>
 			</property>
 			<property name="lookupTransformers">
 				<util:list id="1">
-					<ref bean="authordictionary" />
+					<ref bean="authorDictionaryTransformer" />
 					<ref bean="stripBasionymAuthor" />
 					<ref bean="shrunkAuthor" />
 				</util:list>
