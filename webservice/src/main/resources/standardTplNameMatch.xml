@@ -178,7 +178,7 @@
 		</bean>
 	</util:list>
 
-	<bean id="config" class="org.kew.stringmod.dedupl.configuration.MatchConfiguration"
+	<bean id="config" class="org.kew.stringmod.dedupl.configuration.ReconciliationServiceConfiguration"
 		p:name="standardTplNameMatch"
 		p:lookupRecords-ref="lookupFromTplDatabase"
 		p:properties-ref="columnProperties"
@@ -188,7 +188,17 @@
 		p:maxSearchResults="10000"
 		p:recordFilter=""
 		p:maximumLoadErrors="0"
-		p:reuseIndex="true"/>
+		p:reuseIndex="false"
+		p:reconciliationServiceMetadata-ref="metadata"/>
+
+	<bean id="metadata" class="org.kew.reconciliation.refine.domain.metadata.Metadata"
+		p:name="The Plant List (Standard) Reconciliation Service">
+		<property name="view">
+			<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataView"
+				p:url="http://www.theplantlist.org/tpl1.1/record/{{id}}"/>
+		</property>
+		<property name="defaultTypes" value="name" />
+	</bean>
 
 	<!-- import the generic application-context (equal for dedup/match configurations) -->
 	<import resource="classpath*:generic.xml" />
