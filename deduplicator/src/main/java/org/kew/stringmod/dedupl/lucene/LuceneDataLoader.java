@@ -10,12 +10,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
-import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.FSDirectory;
 import org.kew.stringmod.dedupl.DataLoader;
 import org.kew.stringmod.dedupl.DatabaseRecordSource;
@@ -36,11 +37,24 @@ import com.google.common.base.Strings;
  */
 public class LuceneDataLoader implements DataLoader {
 
-    private org.apache.lucene.util.Version luceneVersion;
-    private IndexWriter indexWriter;
+	/**
+	 * RAM buffer to use for loading data into Lucene.
+	 */
+	private static final double RAM_BUFFER_SIZE = 64;
+
+	private org.apache.lucene.util.Version luceneVersion;
+
+	/**
+	 * The IndexWriter is set in {@link #openIndex()}, and closed at the end of {@link #load()}.
+	 */
+	private IndexWriter indexWriter;
+
     private FSDirectory directory;
 
+	private Analyzer luceneAnalyzer;
+
     private Configuration config;
+	private String configName;
 
     private static Logger logger = LoggerFactory.getLogger(LuceneDataLoader.class);
 
@@ -49,33 +63,20 @@ public class LuceneDataLoader implements DataLoader {
 	 */
 	@Override
 	public void load() throws DataLoadException {
-		Configuration config = this.getConfig();
-		String configName = config.getName();
-
 		try {
-			if (DirectoryReader.indexExists(this.directory) && indexWriter.maxDoc() > 0) {
-				if (getConfig().isReuseIndex()) {
-					logger.info("{}: Reusing existing index (contains {} records)", configName, indexWriter.maxDoc());
-					return;
-				}
-				else {
-					logger.info("{}: Existing index {} exists with {} records, reuseIndex not set, clearing everything", configName, directory, indexWriter.maxDoc());
-					indexWriter.deleteAll();
-				}
+			indexWriter = openIndex();
+
+			if (getConfig().isReuseIndex()) {
+				logger.warn("{}: Reuse index not yet implemented, rereading", configName);
 			}
-		}
-		catch (IOException e) {
-			throw new DataLoadException("Problem checking if index already exists", e);
-		}
 
-		/*
-		 * In case no file is specified we (assuming a de-duplication task) use the
-		 * sourceFile also for index creation.
-		 *
-		 * This is why we copy over the source-related properties to the
-		 * lookup-related ones
-		 */
-		try {
+			/*
+			 * In case no file is specified we (assuming a de-duplication task) use the
+			 * sourceFile also for index creation.
+			 *
+			 * This is why we copy over the source-related properties to the
+			 * lookup-related ones
+			 */
 			if (config.getLookupRecords() == null) {
 				if (config.getLookupFile() == null) {
 					for (Property p : config.getProperties()) {
@@ -91,15 +92,18 @@ public class LuceneDataLoader implements DataLoader {
 				this.load(config.getLookupFile());
 			}
 			else {
-				logger.info("{}: Starting data load into {}", configName, getIndexWriter().getDirectory());
+				logger.info("{}: Starting data load", configName);
 				this.load(config.getLookupRecords());
 			}
+		}
+		catch (IOException e) {
+			throw new DataLoadException("Problem creating/opening Lucene index", e);
 		}
 		finally {
 			// Close the index, no matter what happened.
 			try {
-				this.getIndexWriter().close();
-				logger.info("{}: IndexWriter {} closed", configName, getIndexWriter().getDirectory());
+				indexWriter.close();
+				logger.info("{}: IndexWriter {} closed", configName, indexWriter.getDirectory());
 			}
 			catch (IOException e) {
 				throw new DataLoadException("Error closing Lucene index for "+configName, e);
@@ -107,7 +111,28 @@ public class LuceneDataLoader implements DataLoader {
 		}
 	}
 
-    private void load(DatabaseRecordSource recordSource) throws DataLoadException {
+	/**
+	 * Opens an IndexWriter, reusing or wiping an existing index according to the configuration.
+	 */
+	private IndexWriter openIndex() throws IOException {
+		IndexWriterConfig indexWriterConfig = new IndexWriterConfig(getLuceneVersion(), luceneAnalyzer);
+		indexWriterConfig.setRAMBufferSizeMB(RAM_BUFFER_SIZE);
+
+		if (getConfig().isReuseIndex()) {
+			// Reuse the index if it exists, otherwise create a new one.
+			logger.debug("{}: Reusing existing index, if it exists", configName);
+			indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+		}
+		else {
+			// Create a new index, overwriting any that already exists.
+			logger.debug("{}: Wiping existing index, if it exists", configName);
+			indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
+		}
+
+		return new IndexWriter(directory, indexWriterConfig);
+	}
+
+	private void load(DatabaseRecordSource recordSource) throws DataLoadException {
         int i = 0;
         int errors = 0;
 
@@ -119,7 +144,7 @@ public class LuceneDataLoader implements DataLoader {
             throw new DataLoadException("Problem reading data from database "+recordSource, e);
         }
 
-        try (IndexWriter indexWriter = this.getIndexWriter()) {
+        try {
             // check whether the necessary column names are present in the ResultSet
             for (String headerName : this.config.getPropertyLookupColumnNames()) {
                 try {
@@ -176,8 +201,7 @@ public class LuceneDataLoader implements DataLoader {
         // TODO: either make quote characters and line break characters configurable or simplify even more?
         CsvPreference customCsvPref = new CsvPreference.Builder('"', this.config.getLookupFileDelimiter().charAt(0), "\n").build();
 
-        try (CsvMapReader mr = new CsvMapReader(new FileReader(file), customCsvPref);
-             IndexWriter indexWriter = this.getIndexWriter()) {
+        try (CsvMapReader mr = new CsvMapReader(new FileReader(file), customCsvPref)) {
 
             final String[] header = mr.getHeader(true);
             // check whether the header column names fit to the ones specified in the configuration
@@ -334,13 +358,6 @@ public class LuceneDataLoader implements DataLoader {
         this.luceneVersion = luceneVersion;
     }
 
-    public IndexWriter getIndexWriter() {
-        return indexWriter;
-    }
-    public void setIndexWriter(IndexWriter indexWriter) {
-        this.indexWriter = indexWriter;
-    }
-
     public FSDirectory getDirectory() {
         return directory;
     }
@@ -348,11 +365,19 @@ public class LuceneDataLoader implements DataLoader {
         this.directory = directory;
     }
 
+	public Analyzer getLuceneAnalyzer() {
+		return luceneAnalyzer;
+	}
+	public void setLuceneAnalyzer(Analyzer luceneAnalyzer) {
+		this.luceneAnalyzer = luceneAnalyzer;
+	}
+
     public Configuration getConfig() {
         return this.config;
     }
     @Override
     public void setConfig(Configuration config) {
         this.config = config;
+		this.configName = config.getName();
     }
 }

@@ -7,7 +7,6 @@
 	<bean id="engine" class="org.kew.stringmod.dedupl.lucene.LuceneDeduplicator"
 		p:dataLoader-ref="dataLoader"
 		p:luceneVersion-ref="LUCENE_VERSION"
-		p:indexWriter-ref="indexWriter"
 		p:directory-ref="luceneFileSystemStore"
 		p:queryParser-ref="queryParser"
 		p:config-ref="config"/>

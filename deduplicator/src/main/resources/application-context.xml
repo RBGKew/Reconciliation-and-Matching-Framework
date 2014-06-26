@@ -45,22 +45,11 @@
 		</constructor-arg>
 	</bean>
 
-	<!-- Define the IndexWriter -->
-	<bean id="indexWriter" class="org.apache.lucene.index.IndexWriter" depends-on="engine">
-		<constructor-arg ref="luceneFileSystemStore" />
-		<constructor-arg>
-			<bean class="org.apache.lucene.index.IndexWriterConfig">
-				<constructor-arg ref="LUCENE_VERSION" />
-				<constructor-arg ref="luceneAnalyzer" />
-			</bean>
-		</constructor-arg>
-	</bean>
-
 	<!-- This defines a LuceneDataLoader, and passes in some Lucene-specific object
 	references (defined above) and the dedup/match configuration ("config") -->
 	<bean id="dataLoader" class="org.kew.stringmod.dedupl.lucene.LuceneDataLoader"
 		p:luceneVersion-ref="LUCENE_VERSION"
-		p:indexWriter-ref="indexWriter"
+		p:luceneAnalyzer-ref="luceneAnalyzer"
 		p:directory-ref="luceneFileSystemStore"
 		p:config-ref="config"/>
 

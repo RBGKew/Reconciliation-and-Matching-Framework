@@ -7,7 +7,6 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
@@ -29,7 +28,6 @@ public class LuceneHandler<C extends Configuration> {
 
 	protected FSDirectory directory;
 	private IndexSearcher indexSearcher;
-	protected IndexWriter indexWriter;
 	private IndexReader indexReader;
 	private QueryParser queryParser;
 	protected DataLoader dataLoader;
@@ -102,13 +100,6 @@ public class LuceneHandler<C extends Configuration> {
 	}
 	public void setDirectory(FSDirectory directory) {
 		this.directory = directory;
-	}
-
-	public IndexWriter getIndexWriter() {
-		return indexWriter;
-	}
-	public void setIndexWriter(IndexWriter indexWriter) {
-		this.indexWriter = indexWriter;
 	}
 
 	public QueryParser getQueryParser() {

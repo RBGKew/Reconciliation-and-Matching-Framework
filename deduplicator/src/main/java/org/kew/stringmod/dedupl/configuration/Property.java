@@ -53,60 +53,70 @@ public class Property {
 	public void setMatcher(Matcher matcher) {
 		this.matcher = matcher;
 	}
+
 	public boolean isUseInSelect() {
 		return useInSelect;
 	}
 	public void setUseInSelect(boolean useInSelect) {
 		this.useInSelect = useInSelect;
 	}
+
 	public void setIndexLength(boolean indexLength) {
 		this.indexLength = indexLength;
 	}
 	public boolean isIndexLength() {
 		return indexLength;
 	}
+
 	public boolean isBlanksMatch() {
 		return blanksMatch;
 	}
 	public void setBlanksMatch(boolean blanksMatch) {
 		this.blanksMatch = blanksMatch;
 	}
+
 	public boolean isIndexInitial() {
 		return indexInitial;
 	}
 	public void setIndexInitial(boolean indexInitial) {
 		this.indexInitial = indexInitial;
 	}
+
 	public boolean isUseInNegativeSelect() {
 		return useInNegativeSelect;
 	}
 	public void setUseInNegativeSelect(boolean useInNegativeSelect) {
 		this.useInNegativeSelect = useInNegativeSelect;
 	}
+
 	public boolean isUseWildcard() {
 		return useWildcard;
 	}
 	public void setUseWildcard(boolean useWildcard) {
 		this.useWildcard = useWildcard;
 	}
+
 	public List<Transformer> getSourceTransformers() {
 		return sourceTransformers;
 	}
 	public void setSourceTransformers(List<Transformer> sourceTransformers) {
 		this.sourceTransformers = sourceTransformers;
 	}
+
 	public List<Transformer> getLookupTransformers() {
 		return lookupTransformers;
 	}
 	public void setLookupTransformers(List<Transformer> lookupTransformers) {
 		this.lookupTransformers = lookupTransformers;
 	}
+
 	public boolean isAddOriginalLookupValue() {
 		return addOriginalLookupValue;
 	}
 	public void setAddOriginalLookupValue(boolean addOriginalLookupValue) {
 		this.addOriginalLookupValue = addOriginalLookupValue;
 	}
+
 	public boolean isAddTransformedLookupValue() {
 		return addTransformedLookupValue;
 	}
@@ -117,7 +127,6 @@ public class Property {
 	public boolean isAddOriginalSourceValue() {
 		return addOriginalSourceValue;
 	}
-
 	public void setAddOriginalSourceValue(boolean addOriginalSourceValue) {
 		this.addOriginalSourceValue = addOriginalSourceValue;
 	}
@@ -125,7 +134,6 @@ public class Property {
 	public boolean isAddTransformedSourceValue() {
 		return addTransformedSourceValue;
 	}
-
 	public void setAddTransformedSourceValue(boolean addTransformedSourceValue) {
 		this.addTransformedSourceValue = addTransformedSourceValue;
 	}
@@ -133,7 +141,6 @@ public class Property {
 	public String getSourceColumnName() {
 		return sourceColumnName;
 	}
-
 	public void setSourceColumnName(String sourceColumnName) {
 		this.sourceColumnName = sourceColumnName;
 	}
@@ -141,7 +148,6 @@ public class Property {
 	public String getLookupColumnName() {
 		return lookupColumnName;
 	}
-
 	public void setLookupColumnName(String lookupColumnName) {
 		this.lookupColumnName = lookupColumnName;
 	}

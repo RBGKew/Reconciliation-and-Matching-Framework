@@ -14,7 +14,6 @@ import javax.script.ScriptException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
@@ -179,7 +178,6 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
         int i = 0;
         try (MatchConfiguration config = this.getConfig();
              IndexReader indexReader= this.getIndexReader();
-             IndexWriter indexWriter = this.indexWriter;
              CsvMapReader mr = new CsvMapReader(new FileReader(this.getConfig().getSourceFile()), csvPref)) {
 
             this.prepareEnvs();
