@@ -118,16 +118,16 @@ public class LuceneDataLoader implements DataLoader {
 		IndexWriterConfig indexWriterConfig = new IndexWriterConfig(getLuceneVersion(), luceneAnalyzer);
 		indexWriterConfig.setRAMBufferSizeMB(RAM_BUFFER_SIZE);
 
-		if (getConfig().isReuseIndex()) {
-			// Reuse the index if it exists, otherwise create a new one.
-			logger.debug("{}: Reusing existing index, if it exists", configName);
-			indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-		}
-		else {
+//		if (getConfig().isReuseIndex()) {
+//			// Reuse the index if it exists, otherwise create a new one.
+//			logger.debug("{}: Reusing existing index, if it exists", configName);
+//			indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+//		}
+//		else {
 			// Create a new index, overwriting any that already exists.
 			logger.debug("{}: Wiping existing index, if it exists", configName);
 			indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
-		}
+//		}
 
 		return new IndexWriter(directory, indexWriterConfig);
 	}
