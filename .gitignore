@@ -6,3 +6,4 @@ data/
 .project
 logs/
 .springBeans
+pom.xml.versionsBackup
