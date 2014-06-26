@@ -1,5 +1,7 @@
-<div xmlns:c="http://java.sun.com/jsp/jstl/core" 
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<div xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:spring="http://www.springframework.org/tags" version="2.0">
 	<div>
 		<h3>
 			<span class="glyphicon glyphicon-list-alt"></span> ${configName} configuration
@@ -13,7 +15,7 @@
 			<thead>
 				<tr>
 					<th>Property</th>
-					<th>Transformer(s)</th>
+					<th>Transformers</th>
 					<th>Matcher</th>
 				</tr>
 			</thead>
@@ -44,18 +46,20 @@
 		</table>
 
 		<c:set var="req" value="${pageContext.request}" />
-		<c:set var="baseURL" value="${fn:replace(req.requestURL, fn:substring(req.requestURI, 1, fn:length(req.requestURI)), req.contextPath)}" />
 		<c:set var="serverAndPort" value="${req.serverName}"/>
 		<c:if test="${req.localPort != 80}">
 			<c:set var="serverAndPort" value="${req.serverName}:${req.localPort}"/>
 		</c:if>
 
+		<spring:url var="reconciliationServiceUrl" value="/reconcile/${configName}" />
+		<spring:url var="matchServiceUrl" value="/match/${configName}" />
+		<spring:url var="fileMatchUrl" value="/filematch/${configName}" />
+
 		<div>
 			<h3>
 				<span class="glyphicon glyphicon-cog"></span> Open Refine reconciliation service
 			</h3>
-			<c:url value="http://${serverAndPort}${baseUrl}/reconcile/${configName}" var="url" />
-			Endpoint: <span class="badge">${url}</span><br/>
+			Endpoint: <span class="badge">http://${serverAndPort}${reconciliationServiceUrl}</span><br />
 			Provide (some of) the following properties:
 			<ul>
 				<c:forEach var="property" items="${properties}">
@@ -68,8 +72,7 @@
 			<h3>
 				<span class="glyphicon glyphicon-cog"></span> JSON web service
 			</h3>
-			<c:url value="http://${serverAndPort}${baseUrl}/match/${configName}" var="url" />
-			Endpoint: <span class="badge">${url}</span><br/> 
+			Endpoint: <span class="badge">http://${serverAndPort}${matchServiceUrl}</span><br />
 			Provide (some of) the following data as URL-encoded HTTP GET parameters:
 			<ul>
 				<li>id</li>
@@ -90,11 +93,19 @@
 					<li>${property}</li>
 				</c:forEach>
 			</ul>
-			<form method="post" action="/filematch/${configName}" enctype="multipart/form-data">
-				<input type="text" name="name" />
-				<input type="file" name="file" />
-				<input type="submit" />
+
+			<form class="form-inline" method="post" action="${fileMatchUrl}" enctype="multipart/form-data">
+				<!-- CSV file Button -->
+				<div class="form-group">
+					<label class="sr-only" for="file">CSV file</label>
+					<input id="file" name="file" class="form-controlx" type="file" />
+				</div>
+				<span> </span>
+				<!-- Submit button -->
+				<button type="submit" class="btn btn-primary">Upload</button>
 			</form>
+
+			<p> </p>
 		</div>
 	</div>
 </div>

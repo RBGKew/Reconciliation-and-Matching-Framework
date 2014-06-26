@@ -1,12 +1,11 @@
-<!-- html>
-<body-->
-<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:jsp="http://java.sun.com/JSP/Page">
-	<jsp:output omit-xml-declaration="yes"/>
+<div xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:spring="http://www.springframework.org/tags" version="2.0">
 	<ul>
-   <c:forEach var="availableMatcher" items="${availableMatchers}">
-      <li><a href="/about/${availableMatcher}">${availableMatcher}</a></li>
-   </c:forEach>
-   </ul>
+		<c:forEach var="availableMatcher" items="${availableMatchers}">
+			<spring:url var="availableMatcherLink" value="/about/${availableMatcher}" />
+			<li><a href="${availableMatcherLink}">${availableMatcher}</a></li>
+		</c:forEach>
+	</ul>
 </div>
-<!--/body>
-</html-->

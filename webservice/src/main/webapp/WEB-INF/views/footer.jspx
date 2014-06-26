@@ -1,4 +1,8 @@
-<jsp:output omit-xml-declaration="yes"/>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:spring="http://www.springframework.org/tags" version="2.0">
 <!--div xmlns:c="http://java.sun.com/jsp/jstl/core" >
 	this is the footer
 </div-->
+</jsp:root>

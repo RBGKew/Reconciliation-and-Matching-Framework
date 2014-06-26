@@ -5,6 +5,7 @@
 	xmlns:spring="http://www.springframework.org/tags" 
 	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" >
 
+	<jsp:output omit-xml-declaration="yes"/>
     <jsp:output doctype-root-element="HTML" doctype-system="about:legacy-compat" />
 
     <jsp:directive.page contentType="text/html;charset=UTF-8" />
@@ -12,7 +13,7 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=8" />
+        <meta http-equiv="X-UA-Compatible" content="edge" />
 
         <!-- try to assure no proxy caching (needs to be done by server to be sure) -->
         <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
@@ -45,17 +46,17 @@
 	           	<div id="header">
 	            	<tiles:insertAttribute name="header" ignore="true"  />
 	            </div>
-	            <div id="sidebar">
+	            <!--div id="sidebar">
 	                <tiles:insertAttribute name="custom_menu" ignore="true" />
 	                <tiles:insertAttribute name="library" ignore="true" />
-	            </div>
+	            </div-->
 	            <div id="main">
 	                <tiles:insertAttribute name="body"/>
 	                <tiles:insertAttribute name="footer" ignore="true"/>
 	            </div>
         	</div>
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script>window.jQuery || document.write('&lt;script src="js/jquery-1.7.2.min.js"&gt;&lt;\/script&gt;')</script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
