@@ -5,6 +5,17 @@
     <artifactId>deduplicator-framework</artifactId>
     <version>0.2.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+	<name>String Matching and Entity Reconciliation Service</name>
+	<url>http://www.kew.org</url>
+	<description>
+		The String Matching and Entity Reconciliation Service contains string transformations and matchers, both general and specific to taxonomy,
+		a framework to link these together to find matches between strings, a tool to produce configurations
+		and a webservice for reconciling against configured datasources.
+	</description>
+	<organization>
+		<name>Royal Botanic Gardens, Kew</name>
+		<url>http://www.kew.org/</url>
+	</organization>
 
     <modules>
         <module>deduplicator</module>
@@ -17,7 +28,6 @@
 
     <properties>
         <project.build.timestamp>${maven.build.timestamp}</project.build.timestamp>
-        <!-- project-wide encoding -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- versions -->
         <aspectj.version>1.7.0</aspectj.version>
@@ -29,12 +39,14 @@
         <gson.version>2.2.4</gson.version>
         <hamcrest-all.version>1.3</hamcrest-all.version>
         <java.version>7</java.version>
+        <javax.mail.version>1.4</javax.mail.version>
         <javax.servlet.version>3.0.1</javax.servlet.version>
         <jsp.api.version>2.1</jsp.api.version>
         <jstl.api.version>1.2</jstl.api.version>
         <junit.version>4.11</junit.version>
         <liquibase.version>3.0.1</liquibase.version>
         <logback.version>1.0.13</logback.version>
+        <logback-evaluators.version>1.0.3</logback-evaluators.version>
         <lucene.version>4.4.0</lucene.version>
         <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
         <reflections.version>0.9.9-RC1</reflections.version>
@@ -44,6 +56,19 @@
         <super-csv.version>2.1.0</super-csv.version>
     </properties>
 
+	<ciManagement>
+		<system>jenkins</system>
+		<url>http://jenkins.ad.kew.org/</url>
+	</ciManagement>
+
+	<inceptionYear>2012</inceptionYear>
+
+	<scm>
+		<connection>scm:git:git://git.ad.kew.org/shs/deduplicator-framework.git</connection>
+		<developerConnection>scm:git:ssh://gerrit.ad.kew.org:29418/shs/deduplicator-framework.git</developerConnection>
+		<url>http://git.ad.kew.org/git/?p=shs/deduplicator-framework.git</url>
+	</scm>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -51,6 +76,7 @@
                 <artifactId>reflections</artifactId>
                 <version>${reflections.version}</version>
             </dependency>
+
             <!-- json serialisation -->
             <dependency>
                 <groupId>com.google.code.gson</groupId>
@@ -67,11 +93,13 @@
                 <artifactId>liquibase-maven-plugin</artifactId>
                 <version>${liquibase.version}</version>
             </dependency>
+
             <!-- for testing -->
             <dependency>
                 <groupId>org.hamcrest</groupId>
                 <artifactId>hamcrest-all</artifactId>
                 <version>${hamcrest-all.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>info.cukes</groupId>
@@ -95,6 +123,7 @@
                 <groupId>info.cukes</groupId>
                 <artifactId>gherkin</artifactId>
                 <version>${gherkin.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>info.cukes</groupId>
@@ -188,6 +217,7 @@
                 <artifactId>ehcache-spring-annotations</artifactId>
                 <version>1.2.0</version>
             </dependency>
+
             <!-- lucene related -->
             <dependency>
                 <groupId>org.apache.lucene</groupId>
@@ -220,6 +250,7 @@
                 <artifactId>commons-lang</artifactId>
                 <version>${commons-lang.version}</version>
             </dependency>
+
             <!-- logging stuff -->
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -243,6 +274,20 @@
                 <type>jar</type>
                 <scope>compile</scope>
             </dependency>
+
+			<dependency>
+				<groupId>org.kew.logback</groupId>
+				<artifactId>logback-evaluators</artifactId>
+				<version>${logback-evaluators.version}</version>
+				<scope>runtime</scope>
+			</dependency>
+			<dependency>
+				<groupId>javax.mail</groupId>
+				<artifactId>mail</artifactId>
+				<version>${javax.mail.version}</version>
+				<scope>runtime</scope>
+			</dependency>
+
             <!-- command line parser -->
             <dependency>
                 <groupId>commons-cli</groupId>
@@ -309,6 +354,7 @@
                 <artifactId>super-csv</artifactId>
                 <version>${super-csv.version}</version>
             </dependency>
+
             <!-- ROO dependencies -->
             <dependency>
                 <groupId>org.springframework.roo</groupId>
@@ -318,32 +364,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <repositories>
-        <repository>
-            <id>spring-maven-release</id>
-            <name>Spring Maven Release Repository</name>
-            <url>http://maven.springframework.org/release</url>
-        </repository>
-        <repository>
-            <id>spring-roo-repository</id>
-            <name>Spring Roo Repository</name>
-            <url>http://spring-roo-repository.springsource.org/release</url>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>spring-maven-release</id>
-            <name>Spring Maven Release Repository</name>
-            <url>http://maven.springframework.org/release</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>spring-roo-repository</id>
-            <name>Spring Roo Repository</name>
-            <url>http://spring-roo-repository.springsource.org/release</url>
-        </pluginRepository>
-    </pluginRepositories>
 
 	<build>
 		<pluginManagement>
@@ -409,4 +429,30 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+
+	<repositories>
+		<repository>
+			<id>version99</id>
+			<url>http://version99.qos.ch/</url>
+			<snapshots><enabled>false</enabled></snapshots>
+		</repository>
+		<repository>
+			<id>kew.server</id>
+			<url>http://kptman01.ad.kew.org/repository</url>
+			<snapshots><enabled>false</enabled></snapshots>
+		</repository>
+		<repository>
+			<id>spring-roo-repository</id>
+			<name>Spring Roo Repository</name>
+			<url>http://spring-roo-repository.springsource.org/release</url>
+			<snapshots><enabled>false</enabled></snapshots>
+		</repository>
+	</repositories>
+
+	<distributionManagement>
+		<repository>
+			<id>kew.server</id>
+			<url>file:/var/lib/jenkins/repository/</url>
+		</repository>
+	</distributionManagement>
 </project>
