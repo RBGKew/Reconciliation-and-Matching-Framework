@@ -24,7 +24,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
 @WebAppConfiguration
-@ContextConfiguration("classpath:cucumber.xml")
+@ContextConfiguration("classpath:/META-INF/spring/cucumber.xml")
 public class MatchConfigurationTestingStepdefs {
 	private final static Logger logger = LoggerFactory.getLogger(MatchConfigurationTestingStepdefs.class);
 
@@ -104,20 +104,21 @@ public class MatchConfigurationTestingStepdefs {
 
 	private static final Map<String, LuceneMatcher> matchers = new HashMap<String, LuceneMatcher>();
 
-	private LuceneMatcher getConfiguration(String configFile) throws Throwable {
-		logger.debug("Considering initialising match controller with configuration {}", configFile);
+	private LuceneMatcher getConfiguration(String config) throws Throwable {
+		logger.debug("Considering initialising match controller with configuration {}", config);
 
 		// Load up the matchers from the specified files
-		if (!matchers.containsKey(configFile)){
-			logger.debug("Loading configuration {}", configFile);
-			ConfigurableApplicationContext context = new GenericXmlApplicationContext(configFile);
+		if (!matchers.containsKey(config)){
+			String configurationFile = "/META-INF/spring/reconciliation-service/" + config + ".xml";
+			logger.debug("Loading configuration {} from {}", config, configurationFile);
+			ConfigurableApplicationContext context = new GenericXmlApplicationContext(configurationFile);
 			LuceneMatcher matcher = context.getBean("engine", LuceneMatcher.class);
 			matcher.loadData();
-			logger.debug("Loaded data for configuration {}", configFile);
-			matchers.put(configFile, matcher);
-			logger.debug("Stored matcher with name {} from file {}", matcher.getConfig().getName(), configFile);
+			logger.debug("Loaded data for configuration {}", config);
+			matchers.put(config, matcher);
+			logger.debug("Stored matcher with name {} from configuration {}", matcher.getConfig().getName(), config);
 		}
 
-		return matchers.get(configFile);
+		return matchers.get(config);
 	}
 }

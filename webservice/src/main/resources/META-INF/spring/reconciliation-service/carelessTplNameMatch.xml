@@ -61,7 +61,7 @@
 		<property name="dict">
 			<bean class="org.kew.stringmod.utils.Dictionary"
 				p:fileDelimiter="&#09;"
-				p:filePath="${dataDir}/author_dictionary.csv" />
+				p:filePath="${dataDir}/dictionaries/authorDictionary.csv" />
 		</property>
 	</bean>
 
@@ -69,7 +69,7 @@
 		<property name="dict">
 			<bean class="org.kew.stringmod.utils.Dictionary"
 				p:fileDelimiter="&#09;"
-				p:filePath="${dataDir}/double_letters_dictionary.csv" />
+				p:filePath="${dataDir}/dictionaries/doubleLettersDictionary.csv" />
 		</property>
 	</bean>
 
@@ -216,7 +216,7 @@
 	</bean>
 
 	<!-- import the generic application-context (equal for dedup/match configurations) -->
-	<import resource="classpath*:generic.xml" />
+	<import resource="classpath:/META-INF/spring/reconciliation-service/generic.xml" />
 	<!-- add the matching-specific bit -->
-	<import resource="classpath*:match.xml" />
+	<import resource="classpath:/META-INF/spring/reconciliation-service/match.xml" />
 </beans>

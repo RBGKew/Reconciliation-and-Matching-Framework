@@ -27,13 +27,6 @@
 	<bean id="stripExAuthor" class="org.kew.stringmod.lib.transformers.authors.StripExAuthorTransformer"/>
 	<bean id="shrunkAuthor" class="org.kew.stringmod.lib.transformers.authors.ShrunkAuthors" p:shrinkTo="3"/>
 
-	<!-- Dictionary transformers -->
-	<bean id="doubleLettersDictionary" class="org.kew.stringmod.utils.Dictionary"
-		p:fileDelimiter="&#09;"
-		p:filePath="src/test/resources/double_letters_dictionary.tsv" />
-	<bean id="doubleLettersTransformer" class="org.kew.stringmod.lib.transformers.DictionaryTransformer"
-		p:dict-ref="doubleLettersDictionary"/>
-
 	<!-- Matchers -->
 	<bean id="exactMatch" class="org.kew.stringmod.dedupl.matchers.ExactMatcher" p:blanksMatch="false" />
 	<bean id="commonTokensMatcher" class="org.kew.stringmod.dedupl.matchers.CommonTokensMatcher" p:minRatio="0.5"/>
@@ -57,14 +50,12 @@
 				<util:list id="1">
 					<ref bean="fakeHybridSignCleaner" />
 					<ref bean="safeStripNonAlphas" />
-					<ref bean="doubleLettersTransformer" />
 					<ref bean="epithetTransformer" />
 				</util:list>
 			</property>
 			<property name="lookupTransformers">
 				<util:list id="1">
 					<ref bean="safeStripNonAlphas" />
-					<ref bean="doubleLettersTransformer" />
 					<ref bean="epithetTransformer" />
 				</util:list>
 			</property>
@@ -82,14 +73,12 @@
 				<util:list id="1">
 					<ref bean="fakeHybridSignCleaner" />
 					<ref bean="safeStripNonAlphas" />
-					<ref bean="doubleLettersTransformer" />
 					<ref bean="epithetTransformer" />
 				</util:list>
 			</property>
 			<property name="lookupTransformers">
 				<util:list id="1">
 					<ref bean="safeStripNonAlphas"/>
-					<ref bean="doubleLettersTransformer"/>
 					<ref bean="epithetTransformer" />
 				</util:list>
 			</property>
@@ -106,14 +95,12 @@
 			<property name="sourceTransformers">
 				<util:list id="1">
 					<ref bean="safeStripNonAlphas"/>
-					<ref bean="doubleLettersTransformer"/>
 					<ref bean="epithetTransformer" />
 				</util:list>
 			</property>
 			<property name="lookupTransformers">
 				<util:list id="1">
 					<ref bean="safeStripNonAlphas"/>
-					<ref bean="doubleLettersTransformer"/>
 					<ref bean="epithetTransformer" />
 				</util:list>
 			</property>
@@ -214,7 +201,7 @@
 	</bean>
 
 	<!-- import the generic application-context (equal for dedup/match configurations) -->
-	<import resource="classpath*:generic.xml" />
+	<import resource="classpath:/META-INF/spring/reconciliation-service/generic.xml" />
 	<!-- add the matching-specific bit -->
-	<import resource="classpath*:match.xml" />
+	<import resource="classpath:/META-INF/spring/reconciliation-service/match.xml" />
 </beans>

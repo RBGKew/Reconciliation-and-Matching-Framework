@@ -1,7 +1,7 @@
 Feature: Reconcile against TPL, using a standard configuration (not to lax, not too rigid).
 
 	Background:
-		Given I have loaded the "standardTplNameMatch.xml" configuration
+		Given I have loaded the "standardTplNameMatch" configuration
 
 	Scenario: Exact match
 		When I query for

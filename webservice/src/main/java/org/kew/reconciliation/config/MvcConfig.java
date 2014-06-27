@@ -24,7 +24,7 @@ public class MvcConfig {
 	static @Bean public PropertySourcesPlaceholderConfigurer myPropertySourcesPlaceholderConfigurer() {
 		PropertySourcesPlaceholderConfigurer p = new PropertySourcesPlaceholderConfigurer();
 		Resource[] resourceLocations = new Resource[] {
-				new ClassPathResource("reconciliation-service.properties")
+				new ClassPathResource("/META-INF/spring/reconciliation-service.properties")
 		};
 		p.setLocations(resourceLocations);
 		return p;

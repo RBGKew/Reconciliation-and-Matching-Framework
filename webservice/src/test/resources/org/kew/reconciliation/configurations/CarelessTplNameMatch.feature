@@ -1,7 +1,7 @@
 Feature: Reconcile against TPL, using a careless configuration (optimistic matching).
 
 	Background:
-		Given I have loaded the "carelessTplNameMatch.xml" configuration
+		Given I have loaded the "carelessTplNameMatch" configuration
 
 	Scenario: Exact match
 		When I query for

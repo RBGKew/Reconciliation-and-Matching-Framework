@@ -27,8 +27,11 @@ import org.springframework.stereotype.Service;
 public class ReconciliationService {
 	private static Logger logger = LoggerFactory.getLogger(ReconciliationService.class);
 
-	@Value("#{'${configFiles}'.split(',')}")
-	private List<String> configFiles;
+	@Value("#{'${configurations}'.split(',')}")
+	private List<String> configurations;
+
+	private final String CONFIG_BASE = "/META-INF/spring/reconciliation-service/";
+	private final String CONFIG_EXTENSION = ".xml";
 
 	private Map<String, LuceneMatcher> matchers = new HashMap<String, LuceneMatcher>();
 	private Map<String, Integer> totals = new HashMap<String, Integer>();
@@ -43,23 +46,25 @@ public class ReconciliationService {
 		logger.debug("Initialising reconciliation service");
 		if (!initialised) {
 			// Load up the matchers from the specified files
-			if (configFiles != null) {
-				for (String configFile : configFiles) {
-					logger.debug("Processing configFile {}", configFile);
+			if (configurations != null) {
+				for (String config : configurations) {
+					String configurationFile = CONFIG_BASE + config + CONFIG_EXTENSION;
+					logger.debug("Processing configuration {} from {}", config, configurationFile);
+
 					@SuppressWarnings("resource")
-					ConfigurableApplicationContext context = new GenericXmlApplicationContext(configFile);
+					ConfigurableApplicationContext context = new GenericXmlApplicationContext(configurationFile);
 					context.registerShutdownHook();
 					LuceneMatcher matcher = context.getBean("engine", LuceneMatcher.class);
 					try {
 						matcher.loadData(); 
-						logger.debug("Loaded data for configFile {}", configFile);
+						logger.debug("Loaded data for configuration {}", config);
 						String configName = matcher.getConfig().getName(); 
 						matchers.put(configName, matcher);
 						totals.put(configName, matcher.getIndexReader().numDocs());
-						logger.debug("Stored matcher from configFile {} with name {}", configFile, configName);
+						logger.debug("Stored matcher from config {} with name {}", config, configName);
 					}
 					catch (Exception e) {
-						logger.error("Problem initialising handler from configFile " + configFile, e);
+						logger.error("Problem initialising handler from configuration " + config, e);
 					}
 				}
 			}
@@ -145,9 +150,9 @@ public class ReconciliationService {
 	}
 
 	public List<String> getConfigFiles() {
-		return configFiles;
+		return configurations;
 	}
 	public void setConfigFiles(List<String> configFiles) {
-		this.configFiles = configFiles;
+		this.configurations = configFiles;
 	}
 }

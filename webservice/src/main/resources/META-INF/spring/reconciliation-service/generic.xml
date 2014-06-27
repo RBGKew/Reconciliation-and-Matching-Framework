@@ -17,7 +17,7 @@
         <ehcache:evict-expired-elements interval="60" />
     </ehcache:config-->
 
-	<context:property-placeholder location="classpath:/reconciliation-service.properties" />
+	<context:property-placeholder location="classpath:/META-INF/spring/reconciliation-service.properties" />
 
 	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
 		p:configLocation="ehcache.xml"/>

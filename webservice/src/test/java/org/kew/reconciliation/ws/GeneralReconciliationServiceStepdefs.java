@@ -32,7 +32,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
 @WebAppConfiguration
-@ContextConfiguration("classpath:cucumber.xml")
+@ContextConfiguration("classpath:/META-INF/spring/cucumber.xml")
 public class GeneralReconciliationServiceStepdefs extends WebMvcConfigurationSupport {
 	private static Logger log = LoggerFactory.getLogger(GeneralReconciliationServiceStepdefs.class);
 

@@ -220,7 +220,7 @@
 				<configuration>
 					<packagingExcludes>
 						WEB-INF/classes/logback.xml,
-						WEB-INF/classes/reconciliation-service.properties
+						WEB-INF/classes/META-INF/spring/reconciliation-service.properties
 					</packagingExcludes>
 				</configuration>
 			</plugin>
