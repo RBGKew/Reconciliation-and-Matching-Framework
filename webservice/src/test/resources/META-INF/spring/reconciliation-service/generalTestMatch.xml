@@ -29,9 +29,19 @@
 
 	<!-- Matchers -->
 	<bean id="exactMatch" class="org.kew.stringmod.dedupl.matchers.ExactMatcher" p:blanksMatch="false" />
+	<bean id="exactMatchBlanksOk" class="org.kew.stringmod.dedupl.matchers.ExactMatcher" p:blanksMatch="true" />
 	<bean id="commonTokensMatcher" class="org.kew.stringmod.dedupl.matchers.CommonTokensMatcher" p:minRatio="0.5"/>
 	<bean id="alwaysMatch" class="org.kew.stringmod.dedupl.matchers.AlwaysMatchingMatcher"/>
 	<bean id="ld1Match" class="org.kew.stringmod.dedupl.matchers.LevenshteinMatcher" p:maxDistance="1"/>
+
+	<bean id="commonTokensOrBlankMatcher" class="org.kew.stringmod.dedupl.matchers.CompositeAnyMatcher">
+		<property name="matchers">
+			<util:list>
+				<ref bean="commonTokensMatcher"/>
+				<ref bean="exactMatchBlanksOk"/>
+			</util:list>
+		</property>
+	</bean>
 
 	<!-- Reporters -->
 	<util:list id="reporters"/>
@@ -111,7 +121,7 @@
 			p:sourceColumnName="authors"
 			p:lookupColumnName="authors"
 			p:useInSelect="false"
-			p:matcher-ref="commonTokensMatcher"
+			p:matcher-ref="commonTokensOrBlankMatcher"
 			p:addOriginalLookupValue="true"
 			p:addOriginalSourceValue="true"
 			p:addTransformedSourceValue="true"

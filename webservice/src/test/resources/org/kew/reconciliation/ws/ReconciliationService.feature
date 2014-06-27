@@ -175,3 +175,36 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 				]
 			}
 			"""
+
+	Scenario: Match score should be 100/(number of results), and match result false if there's more than one.
+		When I make the reconciliation query:
+			"""
+			{
+				"query" : "Congea villosa"
+			}
+			"""
+		Then I receive the following reconciliation response:
+			"""
+			{
+				"result" : [
+					{
+						"match" : false,
+						"name" : "Congea villosa Voigt",
+						"score" : 50.0,
+						"type" : [
+							"default"
+						],
+						"id" : "tro-50269022"
+					},
+					{
+						"match" : false,
+						"name" : "Congea villosa Wight",
+						"score" : 50.0,
+						"type" : [
+							"default"
+						],
+						"id" : "kew-46562"
+					}
+				]
+			}
+			"""

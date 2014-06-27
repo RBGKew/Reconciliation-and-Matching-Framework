@@ -38,6 +38,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.supercsv.io.CsvMapReader;
 import org.supercsv.prefs.CsvPreference;
 
+import com.google.common.base.Strings;
+
 @Controller
 public class MatchController {
 	private static Logger logger = LoggerFactory.getLogger(MatchController.class);
@@ -341,9 +343,11 @@ public class MatchController {
 		for (Map<String,String> match : matches) {
 			QueryResult res = new QueryResult();
 			res.setId(match.get("id"));
-			res.setMatch(true);
-			res.setScore(100);
-			res.setName(match.get("genus") + " " + match.get("species") + " " + match.get("authors")); // TODO: customise
+			// Set match to true if there's only one (which allows Open Refine to autoselect it), false otherwise
+			res.setMatch(matches.size() == 1);
+			// Set score to 100/(number of matches)
+			res.setScore(100/matches.size());
+			res.setName(match.get("genus") + " " + match.get("species") + " " + (Strings.isNullOrEmpty(match.get("infraspecies")) ? "" : match.get("infraspecies") + " ") + match.get("authors")); // TODO: customise
 			String[] types = {"default"};
 			res.setType(types); // TODO: customize
 			qr.add(res);
