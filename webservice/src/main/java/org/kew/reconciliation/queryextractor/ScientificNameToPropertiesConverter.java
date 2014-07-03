@@ -25,6 +25,7 @@ public class ScientificNameToPropertiesConverter implements QueryStringToPropert
 		 * For the moment, this is just a very basic implementation to satisfy the requirements of the
 		 * Reconciliation Service "suggest" and "preview" queries.
 		 */
+		queryString.replace("  ", " ");
 		String[] parts = queryString.split(" ");
 		String genus = null, species = null, infraspecies = null, authors = null;
 
