@@ -22,7 +22,7 @@
 	</bean>
 	<bean id="lookupFromIpniDatabase" class="org.kew.stringmod.ws.DatabaseCursorRecordReader">
 		<property name="dataSource" ref="ipniFlatDatabase"/>
-		<property name="sql" value="SELECT id,genus,species,infraspecies,authors FROM ipni_flat WHERE genus IS NOT NULL"/>
+		<property name="sql" value="SELECT id,genus,species,infraspecies,authors FROM ipni_flat_topcopy_notsuppressed WHERE genus IS NOT NULL"/>
 	</bean>
 
 	<bean id="epithetTransformer"
@@ -137,17 +137,64 @@
 		</bean>
 	</util:list>
 
-	<bean id="config" class="org.kew.stringmod.dedupl.configuration.MatchConfiguration"
+	<bean id="config" class="org.kew.stringmod.dedupl.configuration.ReconciliationServiceConfiguration"
 		p:name="standardIpniNameMatch"
 		p:lookupRecords-ref="lookupFromIpniDatabase"
 		p:properties-ref="columnProperties"
 		p:scoreFieldName="id"
-		p:loadReportFrequency="500"
-		p:assessReportFrequency="100"
+		p:loadReportFrequency="5000"
+		p:assessReportFrequency="500"
 		p:maxSearchResults="10000"
 		p:recordFilter=""
 		p:maximumLoadErrors="0"
-		p:reuseIndex="false"/>
+		p:reuseIndex="false"
+		p:reconciliationServiceMetadata-ref="metadata"/>
+
+	<bean id="metadata" class="org.kew.reconciliation.refine.domain.metadata.Metadata"
+		p:name="IPNI (Standard) Reconciliation Service"
+		p:identifierSpace="http://ipni.org/urn:lsid:ipni.org:names:"
+		p:schemaSpace="http://rdf.freebase.com/ns/type.object.id">
+		<property name="view">
+			<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataView"
+				p:url="http://ipni.org/urn:lsid:ipni.org:names:{{id}}?reconcileView"/>
+		</property>
+		<property name="preview">
+			<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataPreview"
+				p:url="http://ipni.org/urn:lsid:ipni.org:names:{{id}}?reconcilePreview"
+				p:width="400"
+				p:height="400"/>
+		</property>
+		<property name="suggest">
+			<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataSuggest">
+				<property name="type">
+					<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataSuggestDetails"
+						p:service_url="LOCAL"
+						p:service_path="/reconcile/generalTest/suggestType"
+						p:flyout_service_url="http://www.kew.test"/>
+				</property>
+				<property name="property">
+					<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataSuggestDetails"
+						p:service_url="LOCAL"
+						p:service_path="/reconcile/generalTest/suggestProperty"
+						p:flyout_service_url="http://www.kew.test"/>
+				</property>
+				<property name="entity">
+					<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataSuggestDetails"
+						p:service_url="LOCAL"
+						p:service_path="/reconcile/generalTest"
+						p:flyout_service_url="http://ipni.org"
+						p:flyout_service_path="/urn:lsid:ipni.org:names:#{'$'}{id}?reconcileSuggest"/>
+				</property>
+			</bean>
+		</property>
+		<property name="defaultTypes">
+			<util:list id="2">
+				<bean class="org.kew.reconciliation.refine.domain.metadata.Type"
+					p:id="/biology/organism_classification/scientific_name"
+					p:name="Scientific name"/>
+			</util:list>
+		</property>
+	</bean>
 
 	<!-- import the generic application-context (equal for dedup/match configurations) -->
 	<import resource="classpath:/META-INF/spring/reconciliation-service/generic.xml" />

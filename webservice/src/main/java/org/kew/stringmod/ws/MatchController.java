@@ -7,12 +7,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.kew.reconciliation.queryextractor.QueryStringToPropertiesExtractor;
 import org.kew.reconciliation.refine.domain.metadata.Metadata;
+import org.kew.reconciliation.refine.domain.metadata.MetadataSuggest;
 import org.kew.reconciliation.refine.domain.metadata.Type;
 import org.kew.reconciliation.refine.domain.query.Query;
 import org.kew.reconciliation.refine.domain.response.QueryResponse;
@@ -194,9 +197,10 @@ public class MatchController {
 	@RequestMapping(value = "/reconcile/{configName}",
 			method={RequestMethod.GET,RequestMethod.POST},
 			produces="application/json; charset=UTF-8")
-	public ResponseEntity<String> getMetadata(@PathVariable String configName, @RequestParam(value="callback",required=false) String callback, Model model) throws JsonGenerationException, JsonMappingException, IOException {
+	public ResponseEntity<String> getMetadata(HttpServletRequest request, @PathVariable String configName, @RequestParam(value="callback",required=false) String callback, Model model) throws JsonGenerationException, JsonMappingException, IOException {
 		logger.debug("Get Metadata for config {}, callback {}", configName, callback);
 
+		String myUrl = request.getScheme() + "://" + request.getServerName() + (request.getServerPort() == 80 ? "" : (":" + request.getServerPort()));
 		Metadata metadata;
 		try {
 			metadata = reconciliationService.getMetadata(configName);
@@ -206,7 +210,7 @@ public class MatchController {
 		}
 
 		if (metadata != null) {
-			String metadataJson = jsonMapper.writeValueAsString(metadata);
+			String metadataJson = jsonMapper.writeValueAsString(metadata).replace("LOCAL", myUrl);
 			// Work out if the response needs to be JSONP wrapped in a callback
 			if (callback != null) {
 				return new ResponseEntity<String>(callback + "(" + metadataJson + ")", HttpStatus.OK);
