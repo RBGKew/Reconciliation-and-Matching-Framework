@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.codehaus.jackson.JsonGenerationException;
@@ -50,6 +51,9 @@ public class MatchController {
 
 	@Autowired
 	ReconciliationService reconciliationService;
+
+	@Autowired
+	ServletContext servletContext;
 
 	/* Added for recon service */
 	@Autowired
@@ -201,6 +205,8 @@ public class MatchController {
 		logger.debug("Get Metadata for config {}, callback {}", configName, callback);
 
 		String myUrl = request.getScheme() + "://" + request.getServerName() + (request.getServerPort() == 80 ? "" : (":" + request.getServerPort()));
+		String basePath = servletContext.getContextPath() + "/reconcile/" + configName;
+
 		Metadata metadata;
 		try {
 			metadata = reconciliationService.getMetadata(configName);
@@ -210,7 +216,7 @@ public class MatchController {
 		}
 
 		if (metadata != null) {
-			String metadataJson = jsonMapper.writeValueAsString(metadata).replace("LOCAL", myUrl);
+			String metadataJson = jsonMapper.writeValueAsString(metadata).replace("LOCAL", myUrl).replace("BASE", basePath);
 			// Work out if the response needs to be JSONP wrapped in a callback
 			if (callback != null) {
 				return new ResponseEntity<String>(callback + "(" + metadataJson + ")", HttpStatus.OK);

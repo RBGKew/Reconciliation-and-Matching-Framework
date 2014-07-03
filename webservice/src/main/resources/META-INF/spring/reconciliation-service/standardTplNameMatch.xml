@@ -95,6 +95,7 @@
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
 			p:sourceColumnName="species"
 			p:lookupColumnName="species"
+			p:indexInitial="true"
 			p:useInSelect="true"
 			p:addOriginalLookupValue="true"
 			p:addOriginalSourceValue="true"
@@ -120,6 +121,7 @@
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
 			p:sourceColumnName="infraspecies"
 			p:lookupColumnName="infraspecies"
+			p:indexInitial="true"
 			p:useInSelect="true"
 			p:addOriginalLookupValue="true"
 			p:addOriginalSourceValue="true"
@@ -215,19 +217,19 @@
 				<property name="type">
 					<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataSuggestDetails"
 						p:service_url="LOCAL"
-						p:service_path="/reconcile/generalTest/suggestType"
+						p:service_path="BASE/suggestType"
 						p:flyout_service_url="http://www.kew.test"/>
 				</property>
 				<property name="property">
 					<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataSuggestDetails"
 						p:service_url="LOCAL"
-						p:service_path="/reconcile/generalTest/suggestProperty"
+						p:service_path="BASE/suggestProperty"
 						p:flyout_service_url="http://www.kew.test"/>
 				</property>
 				<property name="entity">
 					<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataSuggestDetails"
 						p:service_url="LOCAL"
-						p:service_path="/reconcile/generalTest"
+						p:service_path="BASE"
 						p:flyout_service_url="http://www.theplantlist.org"
 						p:flyout_service_path="/tpl1.1/record/#{'$'}{id}?reconcileSuggest"/>
 				</property>
