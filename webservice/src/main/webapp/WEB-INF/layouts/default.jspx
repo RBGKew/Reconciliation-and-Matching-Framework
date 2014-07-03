@@ -31,7 +31,8 @@
 		        
         <!--spring:message code="application_name" var="app_name" htmlEscape="false"/>
         <title><spring:message code="welcome_h3" arguments="${app_name}" /></title-->
-        
+		<title><tiles:insertAttribute name="title"/></title>
+
 		<style>
 		        .table tbody tr > td {
   					&amp; .supplied { background-color: lightgreen; }

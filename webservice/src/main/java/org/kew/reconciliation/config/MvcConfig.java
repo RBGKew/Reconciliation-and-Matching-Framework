@@ -9,7 +9,10 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import org.springframework.web.servlet.view.tiles2.TilesConfigurer;
 import org.springframework.web.servlet.view.tiles2.TilesView;
@@ -20,7 +23,7 @@ import org.springframework.web.servlet.view.tiles2.TilesView;
 		org.kew.reconciliation.service.ReconciliationService.class,
 		org.kew.stringmod.ws.MatchController.class
 })
-public class MvcConfig {
+public class MvcConfig extends WebMvcConfigurerAdapter {
 	static @Bean public PropertySourcesPlaceholderConfigurer myPropertySourcesPlaceholderConfigurer() {
 		PropertySourcesPlaceholderConfigurer p = new PropertySourcesPlaceholderConfigurer();
 		Resource[] resourceLocations = new Resource[] {
@@ -44,6 +47,24 @@ public class MvcConfig {
 		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
 		multipartResolver.setMaxUploadSize(100 * 1024 * 1024);
 		return multipartResolver;
+	}
+
+	/**
+	 * Static resources configuration
+	 */
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/css/**").addResourceLocations("/css/").setCachePeriod(3600 * 30);
+		registry.addResourceHandler("/img/**").addResourceLocations("/img/").setCachePeriod(3600 * 30);
+		registry.addResourceHandler("/js/**").addResourceLocations("/js/").setCachePeriod(3600 * 30);
+	}
+
+	/**
+	 * Default servlet handler for resources
+	 */
+	@Override
+	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+		configurer.enable();
 	}
 
 	/**

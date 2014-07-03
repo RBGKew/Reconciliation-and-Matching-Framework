@@ -16,7 +16,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.kew.reconciliation.queryextractor.QueryStringToPropertiesExtractor;
 import org.kew.reconciliation.refine.domain.metadata.Metadata;
-import org.kew.reconciliation.refine.domain.metadata.MetadataSuggest;
 import org.kew.reconciliation.refine.domain.metadata.Type;
 import org.kew.reconciliation.refine.domain.query.Query;
 import org.kew.reconciliation.refine.domain.response.QueryResponse;
@@ -422,6 +421,11 @@ public class MatchController {
 		}
 
 		return new ResponseEntity<String>(wrapResponse(callback, jsonres), HttpStatus.OK);
+	}
+
+	@RequestMapping(produces="text/html", value={"/help"}, method = RequestMethod.GET)
+	public String doHelp(Model model) {
+		return "help";
 	}
 
 	private String wrapResponse(String callback, String jsonres){
