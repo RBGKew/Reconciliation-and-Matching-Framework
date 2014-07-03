@@ -5,8 +5,8 @@ import java.util.Arrays;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class QueryResponse {
-	private QueryResult[] result;
+public class QueryResponse<T> {
+	private T[] result;
 
 	@Override
 	public String toString() {
@@ -24,7 +24,7 @@ public class QueryResponse {
 		if (getClass() != obj.getClass())
 			return false;
 
-		QueryResponse other = (QueryResponse) obj;
+		QueryResponse<?> other = (QueryResponse<?>) obj;
 
 		if (!Arrays.equals(result, other.result))
 			return false;
@@ -33,10 +33,10 @@ public class QueryResponse {
 	}
 
 	/* • Getters and setters • */
-	public QueryResult[] getResult() {
+	public T[] getResult() {
 		return result;
 	}
-	public void setResult(QueryResult[] result) {
+	public void setResult(T[] result) {
 		this.result = result;
 	}
 }

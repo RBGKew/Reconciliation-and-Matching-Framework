@@ -17,7 +17,7 @@ public class Metadata {
 	private MetadataView view;
 	private MetadataPreview preview;
 	private MetadataSuggest suggest;
-	private String[] defaultTypes;
+	private Type[] defaultTypes;
 
 	@Override
 	public String toString() {
@@ -106,6 +106,6 @@ public class Metadata {
 	public void setPreview(MetadataPreview preview) { this.preview = preview; }
 	public MetadataSuggest getSuggest() { return suggest; }
 	public void setSuggest(MetadataSuggest suggest) { this.suggest = suggest; }
-	public String[] getDefaultTypes() { return defaultTypes; }
-	public void setDefaultTypes(String[] defaultTypes) { this.defaultTypes = defaultTypes; }
+	public Type[] getDefaultTypes() { return defaultTypes; }
+	public void setDefaultTypes(Type[] defaultTypes) { this.defaultTypes = defaultTypes; }
 }

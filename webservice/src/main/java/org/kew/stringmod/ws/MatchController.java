@@ -13,6 +13,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.kew.reconciliation.queryextractor.QueryStringToPropertiesExtractor;
 import org.kew.reconciliation.refine.domain.metadata.Metadata;
+import org.kew.reconciliation.refine.domain.metadata.Type;
 import org.kew.reconciliation.refine.domain.query.Query;
 import org.kew.reconciliation.refine.domain.response.QueryResponse;
 import org.kew.reconciliation.refine.domain.response.QueryResult;
@@ -233,14 +234,14 @@ public class MatchController {
 	public @ResponseBody String doMultipleQueries(@PathVariable String configName, @RequestParam("queries") String queries, @RequestParam(value="callback",required=false) String callback) {
 		logger.debug("In multi query w callback, query: {}", queries);
 		String jsonres = null;
-		Map<String,QueryResponse> res = new HashMap<String,QueryResponse>();
+		Map<String,QueryResponse<QueryResult>> res = new HashMap<>();
 		try {
 			// Convert JSON to map of queries
 			Map<String,Query> qs = jsonMapper.readValue(queries, new TypeReference<Map<String,Query>>() { });
 			for (String key : qs.keySet()){
 				Query q = qs.get(key);
 				QueryResult[] qres = doQuery(q, configName);
-				QueryResponse response = new QueryResponse();
+				QueryResponse<QueryResult> response = new QueryResponse<>();
 				response.setResult(qres);
 				res.put(key,response);
 			}
@@ -271,7 +272,7 @@ public class MatchController {
 		try {
 			Query q = jsonMapper.readValue(query, Query.class);
 			QueryResult[] qres = doQuery(q, configName);
-			QueryResponse response = new QueryResponse();
+			QueryResponse<QueryResult> response = new QueryResponse<>();
 			response.setResult(qres);
 			jsonres = jsonMapper.writeValueAsString(response);
 		}
@@ -287,6 +288,127 @@ public class MatchController {
 		}
 		catch (TooManyMatchesException e) {
 			return new ResponseEntity<String>(e.toString(), HttpStatus.CONFLICT);
+		}
+
+		return new ResponseEntity<String>(wrapResponse(callback, jsonres), HttpStatus.OK);
+	}
+
+	/**
+	 * Single suggest query, no callback.
+	 */
+	@RequestMapping(value = "/reconcile/{configName}", method={RequestMethod.GET,RequestMethod.POST}, params={"prefix"}, produces="application/json; charset=UTF-8")
+	public ResponseEntity<String> doSuggest(@PathVariable String configName, @RequestParam("prefix") String prefix) {
+		return doSuggest(configName, prefix, null);
+	}
+
+	/**
+	 * Single suggest query.
+	 */
+	@RequestMapping(value = "/reconcile/{configName}", method={RequestMethod.GET,RequestMethod.POST}, params={"prefix","callback"}, produces="application/json; charset=UTF-8")
+	public ResponseEntity<String> doSuggest(@PathVariable String configName, @RequestParam("prefix") String prefix, @RequestParam(value="callback",required=false) String callback) {
+		logger.debug("In prefix query with callback, prefix: {}", prefix);
+		Query q = new Query();
+		q.setQuery(prefix);
+
+		try {
+			return doSingleQuery(configName, jsonMapper.writeValueAsString(q), callback);
+		}
+		catch (IOException e) {
+			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	/**
+	 * Type suggest, no callback.
+	 */
+	@RequestMapping(value = "/reconcile/{configName}/suggestType", method={RequestMethod.GET,RequestMethod.POST}, params={"prefix"}, produces="application/json; charset=UTF-8")
+	public ResponseEntity<String> doSuggestType(@PathVariable String configName, @RequestParam("prefix") String prefix) {
+		return doSuggestType(configName, prefix, null);
+	}
+
+	/**
+	 * Type suggest.
+	 */
+	@RequestMapping(value = "/reconcile/{configName}/suggestType", method={RequestMethod.GET,RequestMethod.POST}, params={"prefix","callback"}, produces="application/json; charset=UTF-8")
+	public ResponseEntity<String> doSuggestType(@PathVariable String configName, @RequestParam("prefix") String prefix, @RequestParam(value="callback",required=false) String callback) {
+		String jsonres = null;
+		logger.debug("In prefix query with callback, query: {}", prefix);
+		try {
+			Type[] defaultTypes = reconciliationService.getMetadata(configName).getDefaultTypes();
+			QueryResponse<Type> response = new QueryResponse<>();
+			response.setResult(defaultTypes);
+			jsonres = jsonMapper.writeValueAsString(response);
+		}
+		catch (JsonMappingException | JsonGenerationException e) {
+			logger.warn("Error parsing JSON query", e);
+			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch (IOException e) {
+			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch (MatchExecutionException e) {
+			return new ResponseEntity<String>(e.toString(), HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<String>(wrapResponse(callback, jsonres), HttpStatus.OK);
+	}
+
+	/**
+	 * Properties suggest, no callback.
+	 */
+	@RequestMapping(value = "/reconcile/{configName}/suggestProperty", method={RequestMethod.GET,RequestMethod.POST}, params={"prefix"}, produces="application/json; charset=UTF-8")
+	public ResponseEntity<String> doSuggestProperty(@PathVariable String configName, @RequestParam("prefix") String prefix) {
+		return doSuggestProperty(configName, prefix, null);
+	}
+
+	/**
+	 * Properties suggest.
+	 */
+	@RequestMapping(value = "/reconcile/{configName}/suggestProperty", method={RequestMethod.GET,RequestMethod.POST}, params={"prefix","callback"}, produces="application/json; charset=UTF-8")
+	public ResponseEntity<String> doSuggestProperty(@PathVariable String configName, @RequestParam("prefix") String prefix, @RequestParam(value="callback",required=false) String callback) {
+		String jsonres = null;
+		logger.debug("In prefix query with callback, query: {}", prefix);
+		try {
+			Type genus = new Type();
+			genus.setId("genus");
+			genus.setName("genus");
+
+			Type species = new Type();
+			species.setId("species");
+			species.setName("species");
+
+			Type infraspecies = new Type();
+			infraspecies.setId("infraspecies");
+			infraspecies.setName("infraspecies");
+
+			Type authors = new Type();
+			authors.setId("authors");
+			authors.setName("authors");
+
+			Type[] properties = new Type[4];
+			properties[0] = genus;
+			properties[1] = species;
+			properties[2] = infraspecies;
+			properties[3] = authors;
+
+			// Filter by prefix
+			List<Type> props = new ArrayList<>();
+			for (Type t : properties) {
+				if (t.getName().toUpperCase().startsWith(prefix.toUpperCase())) {
+					props.add(t);
+				}
+			}
+
+			QueryResponse<Type> response = new QueryResponse<>();
+			response.setResult(props.toArray(new Type[1]));
+			jsonres = jsonMapper.writeValueAsString(response);
+		}
+		catch (JsonMappingException | JsonGenerationException e) {
+			logger.warn("Error parsing JSON query", e);
+			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch (IOException e) {
+			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 		return new ResponseEntity<String>(wrapResponse(callback, jsonres), HttpStatus.OK);
@@ -348,8 +470,7 @@ public class MatchController {
 			// Set score to 100/(number of matches)
 			res.setScore(100/matches.size());
 			res.setName(match.get("genus") + " " + match.get("species") + " " + (Strings.isNullOrEmpty(match.get("infraspecies")) ? "" : match.get("infraspecies") + " ") + match.get("authors")); // TODO: customise
-			String[] types = {"default"};
-			res.setType(types); // TODO: customize
+			res.setType(reconciliationService.getMetadata(configName).getDefaultTypes());
 			qr.add(res);
 		}
 

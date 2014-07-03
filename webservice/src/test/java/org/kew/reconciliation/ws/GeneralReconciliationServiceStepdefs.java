@@ -13,6 +13,7 @@ import org.junit.Assert;
 import org.kew.reconciliation.refine.domain.metadata.Metadata;
 import org.kew.reconciliation.refine.domain.query.Query;
 import org.kew.reconciliation.refine.domain.response.QueryResponse;
+import org.kew.reconciliation.refine.domain.response.QueryResult;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,13 +124,13 @@ public class GeneralReconciliationServiceStepdefs extends WebMvcConfigurationSup
 
 	@Then("^I receive the following reconciliation response:$")
 	public void i_receive_the_following_reconciliation_response(String expectedResponseString) throws Throwable {
-		QueryResponse actualResponse = mapper.readValue(responseJson, QueryResponse.class);
+		QueryResponse<QueryResult> actualResponse = mapper.readValue(responseJson, new TypeReference<QueryResponse<QueryResult>>(){});
 
 		// Check response
 		log.info("Received response {}", actualResponse);
 
-		QueryResponse expectedResponse = mapper.readValue(expectedResponseString, QueryResponse.class);
-		Assert.assertThat("QueryResponse response correct", actualResponse, Matchers.equalTo(expectedResponse));
+		QueryResponse<QueryResult> expectedResponse = mapper.readValue(expectedResponseString, new TypeReference<QueryResponse<QueryResult>>(){});
+		Assert.assertThat("QueryResponse<QueryResult> response correct", actualResponse, Matchers.equalTo(expectedResponse));
 	}
 
 	@When("^I make the reconciliation queries:$")
@@ -149,12 +150,45 @@ public class GeneralReconciliationServiceStepdefs extends WebMvcConfigurationSup
 
 	@Then("^I receive the following reconciliation multiple response:$")
 	public void i_receive_the_following_reconciliation_multiple_response(String expectedResponseString) throws Throwable {
-		Map<String,QueryResponse> actualResponse = mapper.readValue(responseJson, new TypeReference<Map<String,QueryResponse>>() {});
+		Map<String,QueryResponse<QueryResult>> actualResponse = mapper.readValue(responseJson, new TypeReference<Map<String,QueryResponse<QueryResult>>>() {});
 
 		// Check response
 		log.info("Received response {}", actualResponse);
 
-		Map<String,QueryResponse> expectedResponse = mapper.readValue(expectedResponseString, new TypeReference<Map<String,QueryResponse>>() {});
-		Assert.assertThat("QueryResponse multiple response correct", actualResponse, Matchers.equalTo(expectedResponse));
+		Map<String,QueryResponse<QueryResult>> expectedResponse = mapper.readValue(expectedResponseString, new TypeReference<Map<String,QueryResponse<QueryResult>>>() {});
+		Assert.assertThat("QueryResponse<QueryResult> multiple response correct", actualResponse, Matchers.equalTo(expectedResponse));
+	}
+
+	@When("^I make the reconciliation suggest query with prefix \"(.*?)\"$")
+	public void i_make_the_reconciliation_suggest_query_with_prefix(String prefix) throws Throwable {
+		result = mockMvc.perform(get("/reconcile/generalTest?prefix="+prefix).accept(JSON_UTF8))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(JSON_UTF8_S))
+				.andReturn();
+
+		responseJson = result.getResponse().getContentAsString();
+		log.debug("Response as string was {}", responseJson);
+	}
+
+	@When("^I make the reconciliation suggest property query with prefix \"(.*?)\"$")
+	public void i_make_the_reconciliation_suggest_property_query_with_prefix(String prefix) throws Throwable {
+		result = mockMvc.perform(get("/reconcile/generalTest/suggestProperty?prefix="+prefix).accept(JSON_UTF8))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(JSON_UTF8_S))
+				.andReturn();
+
+		responseJson = result.getResponse().getContentAsString();
+		log.debug("Response as string was {}", responseJson);
+	}
+
+	@When("^I make the reconciliation suggest type query with prefix \"(.*?)\"$")
+	public void i_make_the_reconciliation_suggest_type_query_with_prefix(String prefix) throws Throwable {
+		result = mockMvc.perform(get("/reconcile/generalTest/suggestType?prefix="+prefix).accept(JSON_UTF8))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(JSON_UTF8_S))
+				.andReturn();
+
+		responseJson = result.getResponse().getContentAsString();
+		log.debug("Response as string was {}", responseJson);
 	}
 }

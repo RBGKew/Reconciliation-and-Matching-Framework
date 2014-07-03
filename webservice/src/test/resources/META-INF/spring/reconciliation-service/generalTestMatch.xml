@@ -174,15 +174,15 @@
 
 	<bean id="metadata" class="org.kew.reconciliation.refine.domain.metadata.Metadata"
 		p:name="General Test Match Reconciliation Service"
-		p:identifierSpace="http://kew.test/identifierSpace"
-		p:schemaSpace="http://kew.test/schemaSpace">
+		p:identifierSpace="http://www.theplantlist.org/tpl1.1/record/"
+		p:schemaSpace="http://rdf.freebase.com/ns/type.object.id">
 		<property name="view">
 			<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataView"
-				p:url="http://kew.test/{{id}}"/>
+				p:url="http://www.theplantlist.org/tpl1.1/record/{{id}}?reconcileView"/>
 		</property>
 		<property name="preview">
 			<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataPreview"
-				p:url="http://kew.test/preview/{{id}}"
+				p:url="http://www.theplantlist.org/tpl1.1/record/{{id}}?reconcilePreview"
 				p:width="400"
 				p:height="400"/>
 		</property>
@@ -190,23 +190,31 @@
 			<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataSuggest">
 				<property name="type">
 					<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataSuggestDetails"
-						p:service_url="http://kew.test"
-						p:service_path="/suggestType"
+						p:service_url="http://localhost:8080"
+						p:service_path="/reconcile/generalTest/suggestType"
 						p:flyout_service_url="http://www.kew.test"/>
 				</property>
 				<property name="property">
 					<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataSuggestDetails"
-						p:service_url="http://kew.test"
-						p:service_path="/suggestProperty"
+						p:service_url="http://localhost:8080"
+						p:service_path="/reconcile/generalTest/suggestProperty"
 						p:flyout_service_url="http://www.kew.test"/>
 				</property>
 				<property name="entity">
 					<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataSuggestDetails"
-						p:service_url="http://kew.test"
-						p:service_path="/suggest"
-						p:flyout_service_path="/flyout"/>
+						p:service_url="http://localhost:8080"
+						p:service_path="/reconcile/generalTest"
+						p:flyout_service_url="http://www.theplantlist.org"
+						p:flyout_service_path="/tpl1.1/record/#{'$'}{id}?reconcileSuggest"/>
 				</property>
 			</bean>
+		</property>
+		<property name="defaultTypes">
+			<util:list id="2">
+				<bean class="org.kew.reconciliation.refine.domain.metadata.Type"
+					p:id="/biology/organism_classification/scientific_name"
+					p:name="Scientific name"/>
+			</util:list>
 		</property>
 	</bean>
 

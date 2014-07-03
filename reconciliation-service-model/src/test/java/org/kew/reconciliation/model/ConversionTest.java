@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.kew.reconciliation.refine.domain.metadata.Metadata;
 import org.kew.reconciliation.refine.domain.metadata.MetadataView;
+import org.kew.reconciliation.refine.domain.metadata.Type;
 import org.kew.reconciliation.refine.domain.query.Property;
 import org.kew.reconciliation.refine.domain.query.Query;
 import org.kew.reconciliation.refine.domain.response.QueryResponse;
@@ -79,16 +80,16 @@ public class ConversionTest {
 		/*
 		 * Create a query response object and set some values:
 		 */
-		QueryResponse queryResponse = new QueryResponse();
+		QueryResponse<QueryResult> queryResponse = new QueryResponse<>();
 		// A response can contain multiple queryresults
 		List<QueryResult> queryResults = new ArrayList<QueryResult>();
 		// Build one queryresult
 		QueryResult queryResult = new QueryResult();
 		queryResult.setId("12345");
 		queryResult.setName("Poa annua");
-		List<String> types = new ArrayList<String>();
-		types.add("/scientific_name");
-		queryResult.setType(types.toArray(new String[0]));
+		List<Type> types = new ArrayList<>();
+		types.add(new Type("/scientific_name", "Scientific name"));
+		queryResult.setType(types.toArray(new Type[0]));
 		queryResult.setScore(100);
 		queryResult.setMatch(true);
 		// Add to list
@@ -101,7 +102,7 @@ public class ConversionTest {
 			String json = jsonMapper.writeValueAsString(queryResponse);
 			System.out.println(json);
 			// Now "round trip" it - i.e. use this JSON to build a new Java object representation:
-			QueryResponse queryResponse_roundtripped = jsonMapper.readValue(json, QueryResponse.class);
+			QueryResponse<QueryResult> queryResponse_roundtripped = jsonMapper.readValue(json, QueryResponse.class);
 			System.out.println(queryResponse_roundtripped.toString());
 		}
 		catch (Exception e) {

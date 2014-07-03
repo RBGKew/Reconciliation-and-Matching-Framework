@@ -6,34 +6,40 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 			"""
 			{
 				"name" : "General Test Match Reconciliation Service",
-				"identifierSpace" : "http://kew.test/identifierSpace",
-				"schemaSpace" : "http://kew.test/schemaSpace",
+				"identifierSpace" : "http://www.theplantlist.org/tpl1.1/record/",
+				"schemaSpace" : "http://rdf.freebase.com/ns/type.object.id",
 				"view" : {
-					"url" : "http://kew.test/{{id}}"
+					"url" : "http://www.theplantlist.org/tpl1.1/record/{{id}}?reconcileView"
 				},
 				"preview" : {
-					"url" : "http://kew.test/preview/{{id}}",
+					"url" : "http://www.theplantlist.org/tpl1.1/record/{{id}}?reconcilePreview",
 					"width" : 400,
 					"height" : 400
 				},
 				"suggest" : {
 					"type" : {
-						"service_url" : "http://kew.test",
-						"service_path" : "/suggestType",
+						"service_url" : "http://localhost:8080",
+						"service_path" : "/reconcile/generalTest/suggestType",
 						"flyout_service_url" : "http://www.kew.test"
 					},
 					"property" : {
-						"service_url" : "http://kew.test",
-						"service_path" : "/suggestProperty",
+						"service_url" : "http://localhost:8080",
+						"service_path" : "/reconcile/generalTest/suggestProperty",
 						"flyout_service_url" : "http://www.kew.test"
 					},
 					"entity" : {
-						"service_url" : "http://kew.test",
-						"service_path" : "/suggest",
-						"flyout_service_path" : "/flyout"
+						"service_url" : "http://localhost:8080",
+						"service_path" : "/reconcile/generalTest",
+						"flyout_service_url" : "http://www.theplantlist.org",
+						"flyout_service_path" : "/tpl1.1/record/${id}?reconcileSuggest"
 					}
 				},
-				"defaultTypes" : null
+				"defaultTypes" : [
+					{
+						"id" : "/biology/organism_classification/scientific_name",
+						"name" : "Scientific name"
+					}
+				]
 			}
 			"""
 
@@ -71,7 +77,10 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 						"name" : "Congea chinensis Moldenke",
 						"score" : 100,
 						"type" : [
-							"default"
+							{
+								"id" : "/biology/organism_classification/scientific_name",
+								"name" : "Scientific name"
+							}
 						],
 						"id" : "kew-46537"
 					}
@@ -129,7 +138,10 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 							"name" : "Congea chinensis Moldenke",
 							"score" : 100,
 							"type" : [
-								"default"
+								{
+									"id" : "/biology/organism_classification/scientific_name",
+									"name" : "Scientific name"
+								}
 							],
 							"id" : "kew-46537"
 						}
@@ -142,7 +154,10 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 							"name" : "Congea munirii Moldenke",
 							"score" : 100,
 							"type" : [
-								"default"
+								{
+									"id" : "/biology/organism_classification/scientific_name",
+									"name" : "Scientific name"
+								}
 							],
 							"id" : "kew-46548"
 						}
@@ -168,7 +183,10 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 						"name" : "Congea chinensis Moldenke",
 						"score" : 100,
 						"type" : [
-							"default"
+							{
+								"id" : "/biology/organism_classification/scientific_name",
+								"name" : "Scientific name"
+							}
 						],
 						"id" : "kew-46537"
 					}
@@ -192,7 +210,10 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 						"name" : "Congea villosa Voigt",
 						"score" : 50.0,
 						"type" : [
-							"default"
+							{
+								"id" : "/biology/organism_classification/scientific_name",
+								"name" : "Scientific name"
+							}
 						],
 						"id" : "tro-50269022"
 					},
@@ -201,9 +222,65 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 						"name" : "Congea villosa Wight",
 						"score" : 50.0,
 						"type" : [
-							"default"
+							{
+								"id" : "/biology/organism_classification/scientific_name",
+								"name" : "Scientific name"
+							}
 						],
 						"id" : "kew-46562"
+					}
+				]
+			}
+			"""
+
+	Scenario: The Suggest call returns possible reconciliation matches when queried with a prefix.
+		In Open Refine, the result is shown when the user uses the "Search for match" function.
+		When I make the reconciliation suggest query with prefix "Congea villosa Voigt"
+		Then I receive the following match response:
+			"""
+			{
+				"result" : [
+					{
+						"match" : true,
+						"name" : "Congea villosa Voigt",
+						"score" : 100.0,
+						"type" : [
+							{
+								"id" : "/biology/organism_classification/scientific_name",
+								"name" : "Scientific name"
+							}
+						],
+						"id" : "tro-50269022"
+					}
+				]
+			}
+			"""
+
+	Scenario: The Suggest Type call returns possible types when queried with a prefix.
+		In Open Refine, the result is shown when the user begins typing in the "Reconcile against type" box.
+		When I make the reconciliation suggest type query with prefix "x"
+		Then I receive the following match response:
+			"""
+			{
+				"result": [
+					{
+						"id" : "/biology/organism_classification/scientific_name",
+						"name" : "Scientific name"
+					}
+				]
+			}
+			"""
+
+	Scenario: The Suggest Property call returns possible properties when queried with a prefix.
+		In Open Refine, the result is shown when the user begins typing in the "As Property" boxes.
+		When I make the reconciliation suggest property query with prefix "s"
+		Then I receive the following match response:
+			"""
+			{
+				"result": [
+					{
+						"id" : "species",
+						"name" : "species"
 					}
 				]
 			}

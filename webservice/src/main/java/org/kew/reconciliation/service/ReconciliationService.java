@@ -82,7 +82,11 @@ public class ReconciliationService {
 	public Metadata getMetadata(String configName) throws MatchExecutionException {
 		ReconciliationServiceConfiguration reconcilationConfig = getReconciliationServiceConfiguration(configName);
 		if (reconcilationConfig != null) {
-			return reconcilationConfig.getReconciliationServiceMetadata();
+			Metadata metadata = reconcilationConfig.getReconciliationServiceMetadata();
+			if (metadata.getDefaultTypes() == null || metadata.getDefaultTypes().length == 0) {
+				throw new MatchExecutionException("No default type specified, Open Refine 2.6 would fail");
+			}
+			return metadata;
 		}
 		return null;
 	}

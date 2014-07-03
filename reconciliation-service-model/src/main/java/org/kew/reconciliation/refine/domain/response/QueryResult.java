@@ -4,11 +4,13 @@ import java.util.Arrays;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.kew.reconciliation.refine.domain.metadata.Type;
+
 @XmlRootElement
 public class QueryResult {
 	private String id;
 	private String name;
-	private String[] type;
+	private Type[] type;
 	private double score;
 	private boolean match;
 
@@ -73,10 +75,10 @@ public class QueryResult {
 		this.name = name;
 	}
 
-	public String[] getType() {
+	public Type[] getType() {
 		return type;
 	}
-	public void setType(String[] type) {
+	public void setType(Type[] type) {
 		this.type = type;
 	}
 
