@@ -1,6 +1,8 @@
 package org.kew.stringmod.matchconf;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 import java.io.BufferedReader;
@@ -11,6 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -72,22 +75,23 @@ public class RunSimpleDedupConfig {
 
 	@When("^asking MatchConf to run this configuration$")
 	public void asking_MatchConf_to_run_this_configuration() throws Throwable {
-		new ConfigurationEngine(Configuration.findConfiguration(this.configId)).runConfiguration(false);
+		ConfigurationEngine engine = new ConfigurationEngine(Configuration.findConfiguration(this.configId));
+		Map<String, List<String>> infoMap = engine.runConfiguration(false);
+		assertThat("No exceptions from configuration", infoMap.get("exception"), is(empty()));
 	}
 
 	@Then("^the deduplication program should run smoothly and produce the following file \"([^\"]*)\" in the same directory:$")
 	public void the_deduplication_program_should_run_smoothly_and_produce_the_following_file_at_REPLACE_WITH_TMPDIR_some_path_output_csv_(String outputFileName, DataTable outputFileContent) throws Throwable {
 		File outputFile = new File(this.workDir, outputFileName);
-		assert outputFile.exists();
+		assertThat("File "+outputFile+"exists", outputFile.exists());
 		int index = 0;
 		try (BufferedReader br = new BufferedReader(new FileReader(outputFile))) {
 			String line;
 			while ((line = br.readLine()) != null) {
 				List<String> compareLine = outputFileContent.raw().get(index);
-				assertThat(line, is(StringUtils.join(compareLine, "\t")));
+				assertThat(line, equalTo(StringUtils.join(compareLine, "\t")));
 				index += 1;
 			}
 		}
-
 	}
 }

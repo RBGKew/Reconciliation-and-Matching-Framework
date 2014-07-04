@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -190,11 +191,8 @@ public class ConfigurationEngine {
      *
      * @param writeBefore
      * @return
-     * @throws Exception
      */
-    @SuppressWarnings("finally")
-    public Map<String, List<String>> runConfiguration (boolean writeBefore) throws Exception {
-        // TODO: is there an internal messaging system in spring mvc?
+    public Map<String, List<String>> runConfiguration (boolean writeBefore) {
         @SuppressWarnings("serial")
         Map<String, List<String>> infoMap = new HashMap<String, List<String>>() {{
             put("messages", new ArrayList<String>());
@@ -220,17 +218,18 @@ public class ConfigurationEngine {
                 infoMap.get("stackTrace").addAll(nextInfoMap.get("stackTrace"));
                 infoMap.get("messages").addAll(nextInfoMap.get("messages"));
             }
-        } catch (Exception e) {
-            infoMap.get("exception").add(e.toString());
-            for (StackTraceElement ste:e.getStackTrace()) infoMap.get("stackTrace").add(ste.toString());
-        } catch (Error e) {
-            infoMap.get("exception").add(e.toString());
-            for (StackTraceElement ste:e.getStackTrace()) infoMap.get("stackTrace").add(ste.toString());
-        } finally {
-            File luceneDir = new File(this.luceneDirectory);
-            if (luceneDir.exists()) FileUtils.deleteDirectory(luceneDir);
-            return infoMap;
         }
+        catch (Exception e) {
+            infoMap.get("exception").add(e.toString());
+            for (StackTraceElement ste:e.getStackTrace()) infoMap.get("stackTrace").add(ste.toString());
+        }
+        File luceneDir = new File(this.luceneDirectory);
+        try {
+            if (luceneDir.exists()) FileUtils.deleteDirectory(luceneDir);
+        }
+        catch (IOException e) {
+            System.err.println("Error deleting lucine directory "+luceneDir);
+        }
+        return infoMap;
     }
-
 }
