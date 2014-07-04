@@ -1,8 +1,9 @@
 package org.kew.stringmod.dedupl.reporters;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,7 +124,7 @@ public abstract class Reporter implements AutoCloseable {
     public void setWriter() throws IOException {
         // TODO: either make quote characters and line break characters configurable or simplify even more?
         CsvPreference customCsvPref = new CsvPreference.Builder('"', this.getDelimiter().charAt(0), "\n").build();
-        this.writer = new CsvMapWriter(new FileWriter(this.file), customCsvPref);
+        this.writer = new CsvMapWriter(new OutputStreamWriter(new FileOutputStream(this.file), "UTF-8"), customCsvPref);
     }
 
     public String getDelimiter() {

@@ -1,7 +1,8 @@
 package org.kew.stringmod.dedupl.lucene;
 
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -178,7 +179,7 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
         int i = 0;
         try (MatchConfiguration config = this.getConfig();
              IndexReader indexReader= this.getIndexReader();
-             CsvMapReader mr = new CsvMapReader(new FileReader(this.getConfig().getSourceFile()), csvPref)) {
+             CsvMapReader mr = new CsvMapReader(new InputStreamReader(new FileInputStream(this.getConfig().getSourceFile()), "UTF-8"), csvPref)) {
 
             this.prepareEnvs();
 

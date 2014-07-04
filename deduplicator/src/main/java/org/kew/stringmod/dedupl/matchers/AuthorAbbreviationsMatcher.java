@@ -1,17 +1,11 @@
 package org.kew.stringmod.dedupl.matchers;
 
 import java.io.BufferedReader;
-//import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-//import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-//import java.util.Iterator;
-//import java.util.Set;
 import java.text.Normalizer;
-//import java.text.Normalizer.Form;
-//import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.List;
 
@@ -373,7 +367,7 @@ public class AuthorAbbreviationsMatcher extends AuthorCommonTokensMatcher{
 		HashMap<String, String> map = new HashMap<String, String>();
 		try {
 			
-			InputStreamReader streamReader = new InputStreamReader(abbreviationsFile);
+			InputStreamReader streamReader = new InputStreamReader(abbreviationsFile, "UTF-8");
 			BufferedReader br = new BufferedReader(streamReader);
 			String line = null;
 			String sKey;
@@ -427,7 +421,7 @@ public class AuthorAbbreviationsMatcher extends AuthorCommonTokensMatcher{
 		FileOutputStream out = new FileOutputStream("data/author-abbreviations-matcher-test-output.txt");
 		OutputStreamWriter streamWriter = new OutputStreamWriter(out,"UTF-8");
 		FileInputStream authTestFile = new FileInputStream("T:/Development/Medicinal Plants/name-matching/JavaApp/data/author-abbreviations-matcher-test-file.txt");
-		InputStreamReader streamReader = new InputStreamReader(authTestFile);
+		InputStreamReader streamReader = new InputStreamReader(authTestFile,"UTF-8");
 		BufferedReader br = new BufferedReader(streamReader);
 		
 		

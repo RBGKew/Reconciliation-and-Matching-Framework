@@ -4,8 +4,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +30,7 @@ public class LevenshteinMatcherTest {
         tempDir.createNewFile();
         this.dictFile = new File(tempDir, "dictFile.txt");
         CsvPreference customCsvPref = new CsvPreference.Builder('"', "&#09;".charAt(0), "\n").build();
-        try (CsvListWriter writer = new CsvListWriter(new FileWriter(this.dictFile.toString()), customCsvPref)) {
+        try (CsvListWriter writer = new CsvListWriter(new OutputStreamWriter(new FileOutputStream(this.dictFile.toString()), "UTF-8"), customCsvPref)) {
             writer.write(new String[] {"hinz", "kunz"});
         }
     }

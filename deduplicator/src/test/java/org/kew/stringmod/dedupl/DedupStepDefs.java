@@ -1,7 +1,8 @@
 package org.kew.stringmod.dedupl;
 
 import java.io.File;
-import java.io.PrintWriter;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,8 +11,6 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
-
-import com.google.common.base.Charsets;
 
 import cucumber.api.DataTable;
 import cucumber.api.java.After;
@@ -52,7 +51,7 @@ public class DedupStepDefs {
 	}
 
 	private void writeDataTableToFile(DataTable dataTable, Path path) throws Exception {
-		Writer w = new PrintWriter(path.toFile());
+		Writer w = new OutputStreamWriter(new FileOutputStream(path.toFile()), "UTF-8");
 		for (List<String> rows : dataTable.cells(0)) {
 			for (String cell : rows) {
 				w.write(cell);
@@ -81,7 +80,7 @@ public class DedupStepDefs {
 	@Given("^Alecs has set up a (?:.*)configuration file(?:.*)$")
 	public void alecs_has_set_up_a_configuration_file(String configXML) throws Exception {
 		String escapedTempPath = tempDir.toString().replace("\\", "\\\\");
-		Writer w = new PrintWriter(tempConfigFile.toFile());
+		Writer w = new OutputStreamWriter(new FileOutputStream(tempConfigFile.toFile()), "UTF-8");
 		w.write(configXML.replaceAll("REPLACE_WITH_TMPDIR", escapedTempPath));
 		w.close();
 	}
@@ -95,7 +94,7 @@ public class DedupStepDefs {
 	private void checkDataInFile(DataTable expectedOutput, Path path) throws Exception {
 		List<List<String>> expectedOutputList = expectedOutput.cells(0);
 		@SuppressWarnings("unchecked")
-		List<String> lines = FileUtils.readLines(path.toFile(), Charsets.UTF_8.name());
+		List<String> lines = FileUtils.readLines(path.toFile(), "UTF-8");
 
 		for (int i = 0; i < lines.size(); i++) {
 			String line = lines.get(i);

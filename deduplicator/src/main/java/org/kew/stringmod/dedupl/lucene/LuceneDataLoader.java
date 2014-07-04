@@ -1,8 +1,9 @@
 package org.kew.stringmod.dedupl.lucene;
 
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -201,7 +202,7 @@ public class LuceneDataLoader implements DataLoader {
         // TODO: either make quote characters and line break characters configurable or simplify even more?
         CsvPreference customCsvPref = new CsvPreference.Builder('"', this.config.getLookupFileDelimiter().charAt(0), "\n").build();
 
-        try (CsvMapReader mr = new CsvMapReader(new FileReader(file), customCsvPref)) {
+        try (CsvMapReader mr = new CsvMapReader(new InputStreamReader(new FileInputStream(file), "UTF-8"), customCsvPref)) {
 
             final String[] header = mr.getHeader(true);
             // check whether the header column names fit to the ones specified in the configuration
