@@ -22,7 +22,12 @@ public class DatabaseCursorRecordReader implements DatabaseRecordSource {
 
 	private void openCursor() throws SQLException {
 		preparedStatement = dataSource.getConnection().prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-		preparedStatement.setFetchSize(fetchSize);
+		if (dataSource.getConnection().getMetaData().getDatabaseProductName().equals("MySQL")) {
+			preparedStatement.setFetchSize(Integer.MIN_VALUE);
+		}
+		else {
+			preparedStatement.setFetchSize(fetchSize);
+		}
 		preparedStatement.setFetchDirection(ResultSet.FETCH_FORWARD);
 
 		this.rs = preparedStatement.executeQuery();
