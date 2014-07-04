@@ -17,6 +17,8 @@ import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 
 import cucumber.api.DataTable;
@@ -29,6 +31,7 @@ import cucumber.api.java.en.When;
 
 @ContextConfiguration(locations="classpath:/META-INF/spring/applicationContext.xml")
 public class RunSimpleDedupConfig {
+    private static final Logger logger = LoggerFactory.getLogger(RunSimpleDedupConfig.class);
 
     File tempDir;
     File workDir;
@@ -57,7 +60,7 @@ public class RunSimpleDedupConfig {
 		this.workDir.mkdirs();
 		File configFile = new File(workDir, configFileName);
 		configFile.createNewFile();
-		String correctedConfigXML = configXML.replaceAll("REPLACE_WITH_TMPDIR", workDir.toString());
+		String correctedConfigXML = configXML.replace("REPLACE_WITH_TMPDIR", workDir.toString().replace("\\", "/"));
 		try (BufferedWriter br = new BufferedWriter(new FileWriter(configFile))) {
 			br.write(correctedConfigXML);
 		}
@@ -77,6 +80,12 @@ public class RunSimpleDedupConfig {
 	public void asking_MatchConf_to_run_this_configuration() throws Throwable {
 		ConfigurationEngine engine = new ConfigurationEngine(Configuration.findConfiguration(this.configId));
 		Map<String, List<String>> infoMap = engine.runConfiguration(false);
+		for (String x : infoMap.get("exception")) {
+			logger.warn("Exception from running configuration: {}", x);
+		}
+		for (String x : infoMap.get("stackTrace")) {
+			logger.warn("Stack trace from running configuration: {}", x);
+		}
 		assertThat("No exceptions from configuration", infoMap.get("exception"), is(empty()));
 	}
 

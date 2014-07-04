@@ -190,7 +190,7 @@ public class LuceneDataLoader implements DataLoader {
             indexWriter.commit();
         }
         catch (Exception e) {
-            throw new DataLoadException("Error loading records at row " + i, e);
+            throw new DataLoadException("Error "+e.getMessage()+" loading records at row " + i, e);
         }
         logger.info("Indexed {} records", i);
     }
@@ -258,7 +258,7 @@ public class LuceneDataLoader implements DataLoader {
             indexWriter.commit();
         }
         catch (Exception e) {
-            throw new DataLoadException("Error loading records at line " + i, e);
+            throw new DataLoadException("Error "+e.getMessage()+" loading records at line " + i, e);
         }
         logger.info("Indexed {} records", i);
     }
