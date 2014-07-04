@@ -1,8 +1,5 @@
 package org.kew.stringmod.matchconf;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-
 import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -10,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
@@ -174,22 +170,6 @@ public class CreateSimpleMatchConfig {
     @Then("^the following match-config will be written to \"([^\"]*)\":$")
     public void the_following_content_will_be_written_to_(String configFilePath, String configXML) throws Throwable {
         File configFile = new File(this.tempDir, configFilePath);
-        assert configFile.exists();
-        @SuppressWarnings("unchecked")
-        List<String> configFileLines = FileUtils.readLines(configFile);
-        String[] configXMLLines =configXML.split("\r?\n|\r");
-        for (int i=0;i<configXMLLines.length;i++) {
-            String expectedLine = configXMLLines[i];
-            if (expectedLine.contains("REPLACE_WITH_TMPDIR")) {
-                String sep = File.separator;
-                expectedLine = expectedLine.replaceAll("REPLACE_WITH_TMPDIR", this.tempDir.toString().replace("\\", sep)).replaceAll("/(?=[^>])", sep);
-            }
-            try {
-                assertThat(configFileLines.get(i), is(expectedLine));
-            } catch (IndexOutOfBoundsException e) {
-                throw new IndexOutOfBoundsException(String.format("\n--> line %s not found in calculated output.", expectedLine));
-            }
-        }
-        assertThat(configFileLines.size(), is(configXMLLines.length));
+        FileContentsChecker.checkFilesSame(configFile, configXML, tempDir.toString());
     }
 }
