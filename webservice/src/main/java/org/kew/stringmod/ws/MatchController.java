@@ -1,7 +1,10 @@
 package org.kew.stringmod.ws;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +12,9 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -47,16 +52,17 @@ import com.google.common.base.Strings;
 @Controller
 public class MatchController {
 	private static Logger logger = LoggerFactory.getLogger(MatchController.class);
+	private static String tmpDir = System.getProperty("java.io.tmpdir");
 
 	@Autowired
-	ReconciliationService reconciliationService;
+	private ReconciliationService reconciliationService;
 
 	@Autowired
-	ServletContext servletContext;
+	private ServletContext servletContext;
 
-	/* Added for recon service */
 	@Autowired
-	protected ObjectMapper jsonMapper;
+	private ObjectMapper jsonMapper;
+
 
 	@RequestMapping(produces="text/html", value={"/","/about"}, method = RequestMethod.GET)
 	public String doWelcome(Model model) {
@@ -134,33 +140,47 @@ public class MatchController {
 		return new ResponseEntity<List<Map<String,String>>>(matches, HttpStatus.OK);
 	}
 
-    @RequestMapping(value = "/filematch/{configName}", method = RequestMethod.POST)
-    public String doFileMatch (@PathVariable String configName
-    							, @RequestParam("file") MultipartFile file
-    							, Model model) {
-    	// Map of matches
-    	// Key is the ID of supplied records
-    	// Entries are a List of Map<String,String>
-    	Map<String,List<Map<String,String>>> matches = new HashMap<String,List<Map<String,String>>>();
-    	// Map of supplied data (useful for display)
-    	List<Map<String,String>> suppliedData = new ArrayList<Map<String,String>>();
-        List<String> properties = new ArrayList<String>();
-    	if (!file.isEmpty()) {
+	/**
+	 * Matches the records in the uploaded file.
+	 *
+	 * Results are put into a temporary file (available for download) and also shown in the web page.
+	 */
+	@RequestMapping(value = "/filematch/{configName}", method = RequestMethod.POST)
+	public String doFileMatch (@PathVariable String configName, @RequestParam("file") MultipartFile file, HttpServletResponse response, Model model) {
+		// Map of matches
+		// Key is the ID of supplied records
+		// Entries are a List of Map<String,String>
+		Map<String,List<Map<String,String>>> matches = new HashMap<String,List<Map<String,String>>>();
+
+		// Map of supplied data (useful for display)
+		List<Map<String,String>> suppliedData = new ArrayList<Map<String,String>>();
+
+		// Temporary file for results
+		File resultsFile;
+
+		List<String> properties = new ArrayList<String>();
+		if (!file.isEmpty()) {
 			try {
 				logger.debug("Looking for : " + configName);
 				LuceneMatcher matcher = reconciliationService.getMatcher(configName);
-				if (matcher != null){
+				if (matcher != null) {
+					resultsFile = File.createTempFile("match-results-", ".csv");
+					OutputStreamWriter resultsFileWriter = new OutputStreamWriter(new FileOutputStream(resultsFile), "UTF-8");
+					resultsFileWriter.write("queryId,matchId\n"); // TODO: attempt to use same line ending as input file
+
 					// Save the property names:
-					for (Property p : matcher.getConfig().getProperties())
+					for (Property p : matcher.getConfig().getProperties()) {
 						properties.add(p.getSourceColumnName());
+					}
+
 					CsvPreference customCsvPref = new CsvPreference.Builder('"', ',', "\n").build();
-					CsvMapReader mr = new CsvMapReader(new InputStreamReader(file.getInputStream()), customCsvPref);
+					CsvMapReader mr = new CsvMapReader(new InputStreamReader(file.getInputStream(), "UTF-8"), customCsvPref);
 					final String[] header = mr.getHeader(true);
 					Map<String, String> record = null;
-					while ((record = mr.read(header)) != null){
+					while ((record = mr.read(header)) != null) {
 						logger.debug("Next record is {}", record);
 						suppliedData.add(record);
-						try{
+						try {
 							List<Map<String,String>> theseMatches = matcher.getMatches(record, 5);
 							// Just write out some matches to std out:
 							if (theseMatches != null) {
@@ -170,27 +190,67 @@ public class MatchController {
 								logger.debug("Record ID {}, matched: null", record.get("id"));
 							}
 							matches.put(record.get("id"), theseMatches);
+
+							// Append matche results to file
+							StringBuilder sb = new StringBuilder();
+							for (Map<String,String> result : theseMatches) {
+								if (sb.length() > 0) sb.append('|');
+								sb.append(result.get("id"));
+							}
+							sb.insert(0, ',').insert(0, record.get("id")).append("\n");
+							resultsFileWriter.write(sb.toString());
 						}
-						catch(Exception e){
-							// swallow inner exception
-							logger.error("Exception processing record", e);
+						catch (TooManyMatchesException | MatchExecutionException e) {
+							logger.error("Problem handling match", e);
 						}
 					}
 					mr.close();
+					resultsFileWriter.close();
 					logger.debug("got file's bytes");
+					model.addAttribute("resultsFile", resultsFile.getName());
+					response.setHeader("X-File-Download", resultsFile.getName()); // Putting this in a header saves the unit tests from needing to parse the HTML.
 				}
 				model.addAttribute("suppliedData", suppliedData);
 				model.addAttribute("matches", matches);
 				model.addAttribute("properties", properties);
 			}
-			catch(Exception e){
+			catch (Exception e) {
 				logger.error("Problem reading file", e);
 			}
-            // store the bytes somewhere
-           //return "redirect:uploadSuccess";
-       } 
-       return "file-matcher-results";
-    }    
+		}
+		return "file-matcher-results";
+	}
+
+	/**
+	 * Downloads a match result file.
+	 */
+	@RequestMapping(value = "/download/{fileName}", method = RequestMethod.GET)
+	public ResponseEntity<String> doDownload(@PathVariable String fileName, Model model) {
+		logger.info("User attempting to download file named «{}»", fileName);
+
+		// Check for the user trying to do something suspicious
+		if (fileName.contains(File.separator)) {
+			logger.error("User attempting to download file named «{}»", fileName);
+			return new ResponseEntity<String>("Looks dodgy.", HttpStatus.FORBIDDEN);
+		}
+
+		// Put back the .csv, as Spring has chopped it off.
+		File downloadFile = new File(tmpDir, fileName + ".csv");
+
+		try {
+			if (downloadFile.canRead()) {
+				return new ResponseEntity<String>(FileUtils.readFileToString(downloadFile, "UTF-8"), HttpStatus.OK);
+			}
+			else {
+				logger.warn("User attempted to download file «{}» but it doesn't exist", fileName);
+				return new ResponseEntity<String>("This download does not exist", HttpStatus.NOT_FOUND);
+			}
+		}
+		catch (IOException e) {
+			logger.error("Exception when user attempted to download file «{}»", fileName);
+			return new ResponseEntity<String>("Error retrieving download: "+e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
 	/* • Open Refine / Google Refine reconciliation service • */
 

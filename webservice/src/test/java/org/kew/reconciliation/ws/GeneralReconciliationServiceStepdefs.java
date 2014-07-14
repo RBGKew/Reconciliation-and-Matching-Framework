@@ -1,5 +1,7 @@
 package org.kew.reconciliation.ws;
 
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -20,10 +22,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
@@ -75,7 +79,6 @@ public class GeneralReconciliationServiceStepdefs extends WebMvcConfigurationSup
 
 	@Then("^I receive an HTTP (\\d+) result\\.$")
 	public void i_receive_an_HTTP_result(int expectedStatus) throws Throwable {
-		log.error("expected {} actual {}", expectedStatus, result.getResponse().getStatus());
 		Assert.assertThat("Expected HTTP Status "+expectedStatus, result.getResponse().getStatus(), Matchers.equalTo(expectedStatus));
 	}
 
@@ -190,5 +193,43 @@ public class GeneralReconciliationServiceStepdefs extends WebMvcConfigurationSup
 
 		responseJson = result.getResponse().getContentAsString();
 		log.debug("Response as string was {}", responseJson);
+	}
+
+	@When("^I make a bulk match query with a file containing these rows:$")
+	public void i_make_a_bulk_match_query_with_a_file_containing_these_rows(String allRows) throws Throwable {
+		MockMultipartFile multipartFile = new MockMultipartFile("file", allRows.getBytes());
+
+		result = mockMvc.perform(MockMvcRequestBuilders.fileUpload("/filematch/generalTest/")
+				.file(multipartFile))
+				.andExpect(status().is(200))
+				.andReturn();
+	}
+
+	@Then("^I receive the following result file:$")
+	public void i_receive_the_following_result_file(String expectedFile) throws Throwable {
+		String fileName = result.getResponse().getHeader("X-File-Download");
+
+		result = mockMvc.perform(get("/download/"+fileName))
+				.andExpect(status().is(200))
+				.andReturn();
+
+		String actualFile = result.getResponse().getContentAsString();
+		log.info("File received is\n{}", actualFile);
+
+		String[] expectedFileLines = expectedFile.split("\r?\n|\r");
+		String[] actualFileLines = actualFile.split("\r?\n|\r");
+
+		for (int i=0; i < expectedFileLines.length; i++) {
+			String expectedLine = expectedFileLines[i];
+			String actualLine = actualFileLines[i];
+			try {
+				log.debug("Expecting line «{}», got «{}»", expectedLine, actualLine);
+				assertThat(actualLine, is(expectedLine));
+			}
+			catch (IndexOutOfBoundsException e) {
+				throw new IndexOutOfBoundsException(String.format("→ line %s not found in match output.", expectedLine));
+			}
+		}
+		assertThat(actualFileLines.length, is(expectedFileLines.length));
 	}
 }
