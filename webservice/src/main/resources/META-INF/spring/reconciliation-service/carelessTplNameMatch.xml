@@ -105,6 +105,7 @@
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
 			p:sourceColumnName="species"
 			p:lookupColumnName="species"
+			p:indexInitial="true"
 			p:useInSelect="true"
 			p:addOriginalLookupValue="true"
 			p:addOriginalSourceValue="true"
@@ -164,6 +165,7 @@
 				<util:list id="1">
 					<ref bean="authorDictionaryTransformer" />
 					<ref bean="stripBasionymAuthor" />
+					<ref bean="safeStripNonAlphasTransformerNothing"/>
 					<ref bean="shrunkAuthor" />
 				</util:list>
 			</property>
@@ -171,6 +173,7 @@
 				<util:list id="1">
 					<ref bean="authorDictionaryTransformer" />
 					<ref bean="stripBasionymAuthor" />
+					<ref bean="safeStripNonAlphasTransformerNothing"/>
 					<ref bean="shrunkAuthor" />
 				</util:list>
 			</property>
