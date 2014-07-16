@@ -17,7 +17,6 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.kew.stringmod.dedupl.CoreApp;
 
-
 /**
  * Creates the xml for the whole configuration, and runs the CoreApp of the deduplicator with
  * this config file.
