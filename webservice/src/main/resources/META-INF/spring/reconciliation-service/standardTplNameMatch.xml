@@ -12,18 +12,23 @@
 	-->
 
 	<!-- TPL datasource for lookup data -->
-	<bean id="tplDatabase" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	<bean id="tplDatabase" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="${tpl.database.driverClassName}" />
 		<property name="url" value="${tpl.database.url}" />
 		<property name="username" value="${tpl.database.username}" />
 		<property name="password" value="${tpl.database.password}" />
-		<property name="defaultAutoCommit" value="false" />
 		<property name="defaultReadOnly" value="true" />
+		<property name="maxIdle" value="0" />
+		<property name="maxWaitMillis" value="10000" />
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+		<property name="timeBetweenEvictionRunsMillis" value="300000" />
+		<property name="minIdle" value="0" />
+		<property name="removeAbandonedTimeout" value="1200" />
+		<property name="removeAbandonedOnMaintenance" value="true" />
 	</bean>
 	<bean id="lookupFromTplDatabase" class="org.kew.stringmod.ws.DatabaseCursorRecordReader">
 		<property name="dataSource" ref="tplDatabase"/>
 		<property name="sql" value="SELECT t1ID AS id, genus, species, infraspecificEpithet AS infraspecies, primaryAuthors AS authors, taxonomicStatus, acceptedNameID FROM tpl2_final"/>
-		<property name="fetchSize" value="150000"/>
 	</bean>
 
 	<!-- Transformers -->

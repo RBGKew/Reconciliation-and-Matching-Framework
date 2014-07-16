@@ -12,13 +12,20 @@
 	-->
 
 	<!-- IPNI Flat datasource for lookup data -->
-	<bean id="ipniFlatDatabase" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	<bean id="ipniFlatDatabase" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="${ipniflat.database.driverClassName}" />
 		<property name="url" value="${ipniflat.database.url}" />
 		<property name="username" value="${ipniflat.database.username}" />
 		<property name="password" value="${ipniflat.database.password}" />
 		<property name="defaultAutoCommit" value="false" />
 		<property name="defaultReadOnly" value="true" />
+		<property name="maxIdle" value="0" />
+		<property name="maxWaitMillis" value="10000" />
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+		<property name="timeBetweenEvictionRunsMillis" value="300000" />
+		<property name="minIdle" value="0" />
+		<property name="removeAbandonedTimeout" value="1200" />
+		<property name="removeAbandonedOnMaintenance" value="true" />
 	</bean>
 	<bean id="lookupFromIpniDatabase" class="org.kew.stringmod.ws.DatabaseCursorRecordReader">
 		<property name="dataSource" ref="ipniFlatDatabase"/>

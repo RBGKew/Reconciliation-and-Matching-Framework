@@ -8,4 +8,5 @@ import java.sql.SQLException;
  */
 public interface DatabaseRecordSource {
 	public ResultSet getResultSet() throws SQLException;
+	public void close() throws SQLException;
 }

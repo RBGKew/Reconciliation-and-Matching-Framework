@@ -103,8 +103,10 @@ public class LuceneDataLoader implements DataLoader {
 		finally {
 			// Close the index, no matter what happened.
 			try {
-				indexWriter.close();
-				logger.info("{}: IndexWriter {} closed", configName, indexWriter.getDirectory());
+				if (indexWriter != null) {
+					indexWriter.close();
+					logger.info("{}: IndexWriter {} closed", configName, indexWriter.getDirectory());
+				}
 			}
 			catch (IOException e) {
 				throw new DataLoadException("Error closing Lucene index for "+configName, e);
@@ -186,6 +188,7 @@ public class LuceneDataLoader implements DataLoader {
                     logger.debug("Most recent indexed document was {}", doc);
                 }
             }
+            recordSource.close();
 
             indexWriter.commit();
         }

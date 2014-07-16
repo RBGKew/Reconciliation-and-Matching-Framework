@@ -1,5 +1,6 @@
 package org.kew.stringmod.ws;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,7 +13,7 @@ import org.kew.stringmod.dedupl.DatabaseRecordSource;
  * Reads records from a database using a cursor.
  */
 public class DatabaseCursorRecordReader implements DatabaseRecordSource {
-
+	private Connection connection;
 	private DataSource dataSource;
 	private String sql;
 	private int fetchSize = 5000;
@@ -21,7 +22,9 @@ public class DatabaseCursorRecordReader implements DatabaseRecordSource {
 	private ResultSet rs;
 
 	private void openCursor() throws SQLException {
-		preparedStatement = dataSource.getConnection().prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+		connection = dataSource.getConnection();
+		connection.setAutoCommit(false); // Cursors in PostgreSQL (at least) don't work in autocommit mode.
+		preparedStatement = connection.prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
 		if (dataSource.getConnection().getMetaData().getDatabaseProductName().equals("MySQL")) {
 			preparedStatement.setFetchSize(Integer.MIN_VALUE);
 		}
@@ -41,6 +44,19 @@ public class DatabaseCursorRecordReader implements DatabaseRecordSource {
 		}
 
 		return rs;
+	}
+
+	@Override
+	public void close() throws SQLException {
+		if (rs != null) {
+			rs.close();
+		}
+		if (preparedStatement != null) {
+			preparedStatement.close();
+		}
+		if (connection != null) {
+			connection.close();
+		}
 	}
 
 	public DataSource getDataSource() {
