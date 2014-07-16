@@ -39,8 +39,7 @@ public class WebAppInitializer implements WebApplicationInitializer {
 		mvcContext.register(MvcConfig.class);
 
 		mvcContext.setParent(rootContext);
-		ServletRegistration.Dynamic appServlet = servletContext.addServlet(
-				"webservice", new DispatcherServlet(mvcContext));
+		ServletRegistration.Dynamic appServlet = servletContext.addServlet("reconciliation-service", new DispatcherServlet(mvcContext));
 		appServlet.setLoadOnStartup(1);
 		Set<String> mappingConflicts = appServlet.addMapping("/");
 
