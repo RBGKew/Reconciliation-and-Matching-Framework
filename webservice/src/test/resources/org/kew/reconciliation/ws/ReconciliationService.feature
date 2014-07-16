@@ -5,7 +5,7 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 		Then I receive the following metadata response:
 			"""
 			{
-				"name" : "General Test Match Reconciliation Service",
+				"name" : "General Test Match Reconciliation Service (unknown)",
 				"identifierSpace" : "http://www.theplantlist.org/tpl1.1/record/",
 				"schemaSpace" : "http://rdf.freebase.com/ns/type.object.id",
 				"view" : {

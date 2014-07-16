@@ -62,6 +62,15 @@ public class ReconciliationService {
 						matchers.put(configName, matcher);
 						totals.put(configName, matcher.getIndexReader().numDocs());
 						logger.debug("Stored matcher from config {} with name {}", config, configName);
+
+						// Append " (environment)" to Metadata name, to help with interactive testing
+						Metadata metadata = getMetadata(configName);
+						if (metadata != null) {
+							String env = System.getProperty("environment", "unknown");
+							if (!"prod".equals(env)) {
+								metadata.setName(metadata.getName() + " (" + env + ")");
+							}
+						}
 					}
 					catch (Exception e) {
 						logger.error("Problem initialising handler from configuration " + config, e);
