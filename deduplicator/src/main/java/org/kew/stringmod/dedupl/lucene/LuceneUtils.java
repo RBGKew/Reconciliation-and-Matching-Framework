@@ -127,7 +127,7 @@ public class LuceneUtils {
 
     public static boolean recordsMatch(Map<String,String> from, Document to, List<Property> properties) throws MatchException {
         boolean recordMatch = false;
-        logger.debug("Comparing records: " + from.get(Configuration.ID_FIELD_NAME) + " " + to.get(Configuration.ID_FIELD_NAME));
+        logger.trace("Comparing records: {} {}", from.get(Configuration.ID_FIELD_NAME), to.get(Configuration.ID_FIELD_NAME));
         for (Property p : properties){
             String sourceName = p.getSourceColumnName() + Configuration.TRANSFORMED_SUFFIX;
             String lookupName = p.getLookupColumnName() + Configuration.TRANSFORMED_SUFFIX;
@@ -139,7 +139,7 @@ public class LuceneUtils {
             if (p.isBlanksMatch()){
                 fieldMatch = (StringUtils.isBlank(s1) || StringUtils.isBlank(s2));
                 if (fieldMatch){
-                    logger.debug(sourceName);
+                    logger.trace(sourceName);
                 }
             }
             if (!fieldMatch){
@@ -148,11 +148,11 @@ public class LuceneUtils {
                 s[1] = s2;
                 Arrays.sort(s);
                 fieldMatch = p.getMatcher().matches(s[0], s[1]);
-                logger.debug(s[0] + " : " + s[1] + " : " + fieldMatch);
+                logger.trace("{} : {} : {}", s[0], s[1], fieldMatch);
             }
             recordMatch = fieldMatch;
             if (!recordMatch) {
-                logger.debug("failed on " + sourceName);
+                logger.trace("failed on {}", sourceName);
                 break;
             }
         }

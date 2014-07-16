@@ -33,13 +33,13 @@ public class CommonTokensMatcher extends TokeniserMatcher {
     /*@Cacheable(cacheName="ctMatchCache")*/
     @Override
     public boolean matches(String s1, String s2) {
-        logger.debug("s1: " + s1);
-        logger.debug("s2: " + s2);
+        logger.trace("s1: {}", s1);
+        logger.trace("s2: {}", s2);
         if (s1 == null && s2 == null) return true;
         String[] a1 = convToArray(s1);
-        logger.debug(Arrays.toString(a1));
+        logger.trace("{}", (Object[]) a1);
         String[] a2 = convToArray(s2);
-        logger.debug(Arrays.toString(a2));
+        logger.trace("{}", (Object[]) a2);
         return calculateTokensInCommon(a1,a2);
     }
 
@@ -48,10 +48,10 @@ public class CommonTokensMatcher extends TokeniserMatcher {
         common.retainAll(Arrays.asList(s2));
         if (this.isUniqueCommonTokens()) common = new HashSet<String>(common);
         int numCommon = common.size();
-        logger.debug("Number of tokens in common: " + numCommon);
+        logger.trace("Number of tokens in common: {}", numCommon);
 
         double ratio = (Double.valueOf(numCommon) / Double.valueOf((numCommon + (s1.length - numCommon) + (s2.length - numCommon))));
-        logger.debug("ratio = " + ratio);
+        logger.trace("ratio = {}", ratio);
 
         return ratio >= this.minRatio;
     }

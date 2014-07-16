@@ -54,7 +54,7 @@ public class LevenshteinMatcher implements Matcher {
         if (StringUtils.isNotEmpty(s1) && StringUtils.isNotEmpty(s2)) {
             matches = s1.equals(s2);
             if (!matches){
-                logger.debug("Testing ld(" + s1 + ", " + s2 + ")");
+                logger.trace("Testing ld({}, {})", s1, s2);
                 int shorter = Math.min(s1.length(), s2.length());
                 int longer = Math.max(s1.length(), s2.length());
                 if ((longer - shorter) > maxDistance)
