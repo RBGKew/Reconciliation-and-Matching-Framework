@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>org.kew.rmf</groupId>
 		<artifactId>reconciliation-and-matching-framework</artifactId>
-		<version>0.2.0-SNAPSHOT</version>
+		<version>0.2.0-rc1</version>
 	</parent>
 
     <properties>
