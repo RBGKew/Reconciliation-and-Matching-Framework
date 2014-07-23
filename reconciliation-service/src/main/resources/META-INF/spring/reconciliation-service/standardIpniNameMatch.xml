@@ -171,6 +171,8 @@
 		</bean>
 	</util:list>
 
+	<bean id="scientificNameToPropertiesConverter" class="org.kew.reconciliation.queryextractor.ScientificNameToPropertiesConverter" />
+
 	<bean id="reconciliationResultFormat" class="org.kew.reconciliation.service.resultformatter.ReconciliationResultPropertyFormatter"
 		p:format="%s %s %s %s"
 		p:stripRepeats=" ">
@@ -195,6 +197,7 @@
 		p:recordFilter=""
 		p:maximumLoadErrors="0"
 		p:reuseIndex="false"
+		p:queryStringToPropertiesExtractor-ref="scientificNameToPropertiesConverter"
 		p:reconciliationResultFormatter-ref="reconciliationResultFormat"
 		p:reconciliationServiceMetadata-ref="metadata"/>
 

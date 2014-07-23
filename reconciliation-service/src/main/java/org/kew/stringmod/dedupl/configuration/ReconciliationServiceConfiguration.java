@@ -1,7 +1,6 @@
 package org.kew.stringmod.dedupl.configuration;
 
 import org.kew.reconciliation.queryextractor.QueryStringToPropertiesExtractor;
-import org.kew.reconciliation.queryextractor.ScientificNameToPropertiesConverter;
 import org.kew.reconciliation.refine.domain.metadata.Metadata;
 import org.kew.reconciliation.service.resultformatter.ReconciliationResultFormatter;
 
@@ -9,7 +8,7 @@ public class ReconciliationServiceConfiguration extends MatchConfiguration {
 
 	private Metadata reconciliationServiceMetadata;
 
-	private QueryStringToPropertiesExtractor queryStringToPropertiesExtractor = new ScientificNameToPropertiesConverter();
+	private QueryStringToPropertiesExtractor queryStringToPropertiesExtractor;
 
 	private ReconciliationResultFormatter reconciliationResultFormatter;
 
