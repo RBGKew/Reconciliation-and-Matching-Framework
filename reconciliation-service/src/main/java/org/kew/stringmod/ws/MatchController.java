@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -504,6 +505,21 @@ public class MatchController {
 				logger.info("No properties provided, no properties resulted from parsing query string «{}»", q.getQuery());
 			}
 		}
+		else {
+			// If the user supplied some properties, but didn't supply the key property, then it comes from the query
+			String keyColumnName = reconciliationService.getReconciliationServiceConfiguration(configName).getProperties().get(0).getSourceColumnName();
+			if (!containsProperty(properties, keyColumnName)) {
+				properties = Arrays.copyOf(properties, properties.length + 1);
+
+				org.kew.reconciliation.refine.domain.query.Property keyProperty = new org.kew.reconciliation.refine.domain.query.Property();
+				keyProperty.setP(keyColumnName);
+				keyProperty.setPid(keyColumnName);
+				keyProperty.setV(q.getQuery());
+				logger.debug("Key property {} taken from query {}", keyColumnName, q.getQuery());
+
+				properties[properties.length-1] = keyProperty;
+			}
+		}
 
 		if (properties == null || properties.length == 0) {
 			logger.info("No properties provided for query «{}», query fails", q.getQuery());
@@ -537,5 +553,13 @@ public class MatchController {
 		}
 
 		return qr.toArray(new QueryResult[qr.size()]);
+	}
+
+	private boolean containsProperty(org.kew.reconciliation.refine.domain.query.Property[] properties, String property) {
+		if (property == null) return false;
+		for (org.kew.reconciliation.refine.domain.query.Property p : properties) {
+			if (property.equals(p.getPid())) return true;
+		}
+		return false;
 	}
 }

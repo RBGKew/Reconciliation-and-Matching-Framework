@@ -166,6 +166,66 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 			}
 			"""
 
+	Scenario: When queried without the key property (first property, here genus) the query
+		is taken to be the key property.
+		When I make the reconciliation query:
+			"""
+			{
+				"query" : "Congea",
+				"properties" : [
+					{
+						"pid" : "species",
+						"v" : "chinensis"
+					},
+					{
+						"pid" : "authors",
+						"v" : "Moldenke"
+					}
+				]
+			}
+			"""
+		Then I receive the following reconciliation response:
+			"""
+			{
+				"result" : [
+					{
+						"match" : true,
+						"name" : "Congea chinensis Moldenke (Accepted)",
+						"score" : 100,
+						"type" : [
+							{
+								"id" : "/biology/organism_classification/scientific_name",
+								"name" : "Scientific name"
+							}
+						],
+						"id" : "kew-46537"
+					}
+				]
+			}
+			"""
+		When I make the reconciliation query:
+			"""
+			{
+				"query" : "X",
+				"properties" : [
+					{
+						"pid" : "species",
+						"v" : "chinensis"
+					},
+					{
+						"pid" : "authors",
+						"v" : "Moldenke"
+					}
+				]
+			}
+			"""
+		Then I receive the following reconciliation response:
+			"""
+			{
+				"result" : []
+			}
+			"""
+
 	Scenario: Provide a "best effort" match when queried with only a single string, without
 		genus, species etc parameters.
 		When I make the reconciliation query:
