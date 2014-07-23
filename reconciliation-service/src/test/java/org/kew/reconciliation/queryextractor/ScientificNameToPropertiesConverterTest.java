@@ -30,9 +30,6 @@ public class ScientificNameToPropertiesConverterTest {
 
 		// Fagaceae
 		expectedGenus.setV("Fagaceae");
-		expectedSpecies.setV("");
-		expectedInfraspecies.setV("");
-		expectedAuthors.setV("");
 		assertThat(asList(extractor.extractProperties("Fagaceae")), hasItems(expectedGenus));
 		assertThat(asList(extractor.extractProperties("Fagaceae")).size(), equalTo(1));
 
