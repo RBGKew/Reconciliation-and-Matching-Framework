@@ -47,8 +47,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.supercsv.io.CsvMapReader;
 import org.supercsv.prefs.CsvPreference;
 
-import com.google.common.base.Strings;
-
 @Controller
 public class MatchController {
 	private static Logger logger = LoggerFactory.getLogger(MatchController.class);
@@ -375,7 +373,7 @@ public class MatchController {
 	 */
 	@RequestMapping(value = "/reconcile/{configName}", method={RequestMethod.GET,RequestMethod.POST}, params={"prefix","callback"}, produces="application/json; charset=UTF-8")
 	public ResponseEntity<String> doSuggest(@PathVariable String configName, @RequestParam("prefix") String prefix, @RequestParam(value="callback",required=false) String callback) {
-		logger.debug("In prefix query with callback, prefix: {}", prefix);
+		logger.debug("In suggest query with callback, prefix: {}", prefix);
 		Query q = new Query();
 		q.setQuery(prefix);
 
@@ -401,7 +399,7 @@ public class MatchController {
 	@RequestMapping(value = "/reconcile/{configName}/suggestType", method={RequestMethod.GET,RequestMethod.POST}, params={"prefix","callback"}, produces="application/json; charset=UTF-8")
 	public ResponseEntity<String> doSuggestType(@PathVariable String configName, @RequestParam("prefix") String prefix, @RequestParam(value="callback",required=false) String callback) {
 		String jsonres = null;
-		logger.debug("In prefix query with callback, query: {}", prefix);
+		logger.debug("In suggest type query with callback, query: {}", prefix);
 		try {
 			Type[] defaultTypes = reconciliationService.getMetadata(configName).getDefaultTypes();
 			QueryResponse<Type> response = new QueryResponse<>();
@@ -436,40 +434,25 @@ public class MatchController {
 	@RequestMapping(value = "/reconcile/{configName}/suggestProperty", method={RequestMethod.GET,RequestMethod.POST}, params={"prefix","callback"}, produces="application/json; charset=UTF-8")
 	public ResponseEntity<String> doSuggestProperty(@PathVariable String configName, @RequestParam("prefix") String prefix, @RequestParam(value="callback",required=false) String callback) {
 		String jsonres = null;
-		logger.debug("In prefix query with callback, query: {}", prefix);
+		logger.debug("In suggest property query with callback, query: {}", prefix);
 		try {
-			Type genus = new Type();
-			genus.setId("genus");
-			genus.setName("genus");
+			List<Type> filteredProperties = new ArrayList<>();
+			List<Property> properties = reconciliationService.getReconciliationServiceConfiguration(configName).getProperties();
+			for (Property p : properties) {
+				String name = p.getSourceColumnName();
 
-			Type species = new Type();
-			species.setId("species");
-			species.setName("species");
-
-			Type infraspecies = new Type();
-			infraspecies.setId("infraspecies");
-			infraspecies.setName("infraspecies");
-
-			Type authors = new Type();
-			authors.setId("authors");
-			authors.setName("authors");
-
-			Type[] properties = new Type[4];
-			properties[0] = genus;
-			properties[1] = species;
-			properties[2] = infraspecies;
-			properties[3] = authors;
-
-			// Filter by prefix
-			List<Type> props = new ArrayList<>();
-			for (Type t : properties) {
-				if (t.getName().toUpperCase().startsWith(prefix.toUpperCase())) {
-					props.add(t);
+				// Filter by prefix
+				if (name != null && name.toUpperCase().startsWith(prefix.toUpperCase())) {
+					Type t = new Type();
+					t.setId(name);
+					t.setName(name);
+					filteredProperties.add(t);
 				}
 			}
+			logger.debug("Suggest Property query for {} filtered {} properties to {}", prefix, properties.size(), filteredProperties);
 
 			QueryResponse<Type> response = new QueryResponse<>();
-			response.setResult(props.toArray(new Type[1]));
+			response.setResult(filteredProperties.toArray(new Type[1]));
 			jsonres = jsonMapper.writeValueAsString(response);
 		}
 		catch (JsonMappingException | JsonGenerationException e) {
@@ -477,6 +460,9 @@ public class MatchController {
 			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		catch (IOException e) {
+			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch (MatchExecutionException e) {
 			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
@@ -545,6 +531,7 @@ public class MatchController {
 			res.setScore(100/matches.size());
 			// Set name according to format
 			res.setName(reconciliationService.getReconciliationResultFormatter(configName).formatResult(match));
+			// Set type to default type
 			res.setType(reconciliationService.getMetadata(configName).getDefaultTypes());
 			qr.add(res);
 		}
