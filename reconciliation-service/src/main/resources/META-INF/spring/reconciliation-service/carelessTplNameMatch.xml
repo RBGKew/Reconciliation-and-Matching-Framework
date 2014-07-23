@@ -66,7 +66,7 @@
 		<property name="dict">
 			<bean class="org.kew.stringmod.utils.Dictionary"
 				p:fileDelimiter="&#09;"
-				p:filePath="${dataDir}/dictionaries/authorDictionary.csv" />
+				p:filePath="${dataDir}/dictionaries/authorDictionary.tsv" />
 		</property>
 	</bean>
 
@@ -74,7 +74,7 @@
 		<property name="dict">
 			<bean class="org.kew.stringmod.utils.Dictionary"
 				p:fileDelimiter="&#09;"
-				p:filePath="${dataDir}/dictionaries/doubleLettersDictionary.csv" />
+				p:filePath="${dataDir}/dictionaries/doubleLettersDictionary.tsv" />
 		</property>
 	</bean>
 
