@@ -190,6 +190,20 @@
 		</bean>
 	</util:list>
 
+	<bean id="reconciliationResultFormat" class="org.kew.reconciliation.service.resultformatter.ReconciliationResultPropertyFormatter"
+		p:format="%s %s %s %s (%s)"
+		p:stripRepeats=" ">
+		<property name="properties">
+			<util:list id="1">
+				<value>genus</value>
+				<value>species</value>
+				<value>infraspecies</value>
+				<value>authors</value>
+				<value>taxonomicStatus</value>
+			</util:list>
+		</property>
+	</bean>
+
 	<bean id="config" class="org.kew.stringmod.dedupl.configuration.ReconciliationServiceConfiguration"
 		p:name="standardTplNameMatch"
 		p:lookupRecords-ref="lookupFromTplDatabase"
@@ -201,6 +215,7 @@
 		p:recordFilter=""
 		p:maximumLoadErrors="0"
 		p:reuseIndex="false"
+		p:reconciliationResultFormatter-ref="reconciliationResultFormat"
 		p:reconciliationServiceMetadata-ref="metadata"/>
 
 	<bean id="metadata" class="org.kew.reconciliation.refine.domain.metadata.Metadata"

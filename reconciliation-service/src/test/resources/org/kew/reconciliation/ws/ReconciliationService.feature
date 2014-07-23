@@ -74,7 +74,7 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 				"result" : [
 					{
 						"match" : true,
-						"name" : "Congea chinensis Moldenke",
+						"name" : "Congea chinensis Moldenke (Accepted)",
 						"score" : 100,
 						"type" : [
 							{
@@ -135,7 +135,7 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 					"result" : [
 						{
 							"match" : true,
-							"name" : "Congea chinensis Moldenke",
+							"name" : "Congea chinensis Moldenke (Accepted)",
 							"score" : 100,
 							"type" : [
 								{
@@ -151,7 +151,7 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 					"result" : [
 						{
 							"match" : true,
-							"name" : "Congea munirii Moldenke",
+							"name" : "Congea munirii Moldenke (Accepted)",
 							"score" : 100,
 							"type" : [
 								{
@@ -180,7 +180,7 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 				"result" : [
 					{
 						"match" : true,
-						"name" : "Congea chinensis Moldenke",
+						"name" : "Congea chinensis Moldenke (Accepted)",
 						"score" : 100,
 						"type" : [
 							{
@@ -207,7 +207,7 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 				"result" : [
 					{
 						"match" : false,
-						"name" : "Congea villosa Voigt",
+						"name" : "Congea villosa Voigt (Synonym)",
 						"score" : 50.0,
 						"type" : [
 							{
@@ -219,7 +219,7 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 					},
 					{
 						"match" : false,
-						"name" : "Congea villosa Wight",
+						"name" : "Congea villosa Wight (Synonym)",
 						"score" : 50.0,
 						"type" : [
 							{
@@ -242,7 +242,7 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 				"result" : [
 					{
 						"match" : true,
-						"name" : "Congea villosa Voigt",
+						"name" : "Congea villosa Voigt (Synonym)",
 						"score" : 100.0,
 						"type" : [
 							{

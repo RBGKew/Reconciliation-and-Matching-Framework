@@ -8,6 +8,8 @@ import javax.annotation.PostConstruct;
 
 import org.kew.reconciliation.queryextractor.QueryStringToPropertiesExtractor;
 import org.kew.reconciliation.refine.domain.metadata.Metadata;
+import org.kew.reconciliation.service.resultformatter.ReconciliationResultFormatter;
+import org.kew.reconciliation.service.resultformatter.ReconciliationResultPropertyFormatter;
 import org.kew.stringmod.dedupl.configuration.MatchConfiguration;
 import org.kew.stringmod.dedupl.configuration.ReconciliationServiceConfiguration;
 import org.kew.stringmod.dedupl.exception.MatchExecutionException;
@@ -108,6 +110,27 @@ public class ReconciliationService {
 		ReconciliationServiceConfiguration reconcilationConfig = getReconciliationServiceConfiguration(configName);
 		if (reconcilationConfig != null) {
 			return reconcilationConfig.getQueryStringToPropertiesExtractor();
+		}
+		return null;
+	}
+
+	/**
+	 * Formatter to convert result into single string.
+	 * @throws MatchExecutionException if the requested matcher doesn't exist.
+	 */
+	public ReconciliationResultFormatter getReconciliationResultFormatter(String configName) throws MatchExecutionException {
+		ReconciliationServiceConfiguration reconcilationConfig = getReconciliationServiceConfiguration(configName);
+		if (reconcilationConfig != null) {
+			ReconciliationResultFormatter reconciliationResultFormatter = reconcilationConfig.getReconciliationResultFormatter();
+			if (reconciliationResultFormatter != null) {
+				return reconciliationResultFormatter;
+			}
+			else {
+				// Set it to the default one
+				ReconciliationResultPropertyFormatter formatter = new ReconciliationResultPropertyFormatter(reconcilationConfig);
+				reconcilationConfig.setReconciliationResultFormatter(formatter);
+				return formatter;
+			}
 		}
 		return null;
 	}

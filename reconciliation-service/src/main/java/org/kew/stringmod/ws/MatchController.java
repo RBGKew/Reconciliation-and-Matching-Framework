@@ -543,7 +543,8 @@ public class MatchController {
 			res.setMatch(matches.size() == 1);
 			// Set score to 100/(number of matches)
 			res.setScore(100/matches.size());
-			res.setName(match.get("genus") + " " + match.get("species") + " " + (Strings.isNullOrEmpty(match.get("infraspecies")) ? "" : match.get("infraspecies") + " ") + match.get("authors")); // TODO: customise
+			// Set name according to format
+			res.setName(reconciliationService.getReconciliationResultFormatter(configName).formatResult(match));
 			res.setType(reconciliationService.getMetadata(configName).getDefaultTypes());
 			qr.add(res);
 		}
