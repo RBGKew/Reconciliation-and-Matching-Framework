@@ -1,6 +1,5 @@
 package org.kew.stringmod.dedupl.lucene;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,11 +96,12 @@ public class LuceneUtils {
                             int low = Math.max(0, value.length()-2);
                             int high = value.length()+2;
                             if (sb.length() > 0) sb.append(" AND ");
-                            sb.append(" ").append(lookupName + Configuration.LENGTH_SUFFIX + ":[").append(String.format("%02d", low)).append(" TO ").append(String.format("%02d", high)).append("]");
+                            sb.append(lookupName).append(Configuration.LENGTH_SUFFIX);
+                            sb.append(String.format(":[%02d TO %02d]", low, high));
                         }
                         if (p.isIndexInitial()){
                             if (sb.length() > 0) sb.append(" AND ");
-                            sb.append(lookupName + Configuration.INITIAL_SUFFIX).append(":").append(quotedValue.substring(0, 2) + "\"");
+                            sb.append(lookupName).append(Configuration.INITIAL_SUFFIX).append(':').append(quotedValue.substring(0, 2)).append('"');
                         }
                         if (p.isUseWildcard()){
                             if (sb.length() > 0) sb.append(" AND ");
@@ -143,12 +143,8 @@ public class LuceneUtils {
                 }
             }
             if (!fieldMatch){
-                String[] s = new String[2];
-                s[0] = s1;
-                s[1] = s2;
-                Arrays.sort(s);
-                fieldMatch = p.getMatcher().matches(s[0], s[1]);
-                logger.trace("{} : {} : {}", s[0], s[1], fieldMatch);
+                fieldMatch = p.getMatcher().matches(s1, s2);
+                logger.trace("{} : {} : {}", s1, s2, fieldMatch);
             }
             recordMatch = fieldMatch;
             if (!recordMatch) {
