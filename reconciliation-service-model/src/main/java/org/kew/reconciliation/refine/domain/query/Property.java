@@ -13,6 +13,31 @@ public class Property {
 		return "Property [p=" + p + ", pid=" + pid + ", v=" + v + "]";
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+
+		Property other = (Property) obj;
+		if (p == null) {
+			if (other.p != null) return false;
+		}
+		else if (!p.equals(other.p)) return false;
+
+		if (pid == null) {
+			if (other.pid != null) return false;
+		}
+		else if (!pid.equals(other.pid)) return false;
+
+		if (v == null) {
+			if (other.v != null) return false;
+		}
+		else if (!v.equals(other.v)) return false;
+
+		return true;
+	}
+
 	/* • Getters and setters • */
 	public String getP() {
 		return p;
