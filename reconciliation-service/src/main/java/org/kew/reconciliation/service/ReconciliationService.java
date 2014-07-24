@@ -1,5 +1,7 @@
 package org.kew.reconciliation.service;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
 
 /**
@@ -30,52 +35,38 @@ public class ReconciliationService {
 	private static Logger logger = LoggerFactory.getLogger(ReconciliationService.class);
 
 	@Value("#{'${configurations}'.split(',')}")
-	private List<String> configurations;
+	private List<String> initialConfigurations;
+
+	private final List<String> loadedConfigurationFilenames = new ArrayList<String>();
 
 	private final String CONFIG_BASE = "/META-INF/spring/reconciliation-service/";
 	private final String CONFIG_EXTENSION = ".xml";
+	private final String ENV = System.getProperty("environment", "unknown");
 
+	private Map<String, ConfigurableApplicationContext> contexts = new HashMap<String, ConfigurableApplicationContext>();
 	private Map<String, LuceneMatcher> matchers = new HashMap<String, LuceneMatcher>();
 	private Map<String, Integer> totals = new HashMap<String, Integer>();
 
 	private boolean initialised = false;
 
 	/**
-	 * Loads the configured match configurations.
+	 * Loads the initial configurations.
 	 */
 	@PostConstruct
 	public void init() {
 		logger.debug("Initialising reconciliation service");
+
+		int exceptionCount = 0;
+
 		if (!initialised) {
 			// Load up the matchers from the specified files
-			if (configurations != null) {
-				for (String config : configurations) {
-					String configurationFile = CONFIG_BASE + config + CONFIG_EXTENSION;
-					logger.debug("Processing configuration {} from {}", config, configurationFile);
-
-					@SuppressWarnings("resource")
-					ConfigurableApplicationContext context = new GenericXmlApplicationContext(configurationFile);
-					context.registerShutdownHook();
-					LuceneMatcher matcher = context.getBean("engine", LuceneMatcher.class);
+			if (initialConfigurations != null) {
+				for (String config : initialConfigurations) {
 					try {
-						matcher.loadData(); 
-						logger.debug("Loaded data for configuration {}", config);
-						String configName = matcher.getConfig().getName(); 
-						matchers.put(configName, matcher);
-						totals.put(configName, matcher.getIndexReader().numDocs());
-						logger.debug("Stored matcher from config {} with name {}", config, configName);
-
-						// Append " (environment)" to Metadata name, to help with interactive testing
-						Metadata metadata = getMetadata(configName);
-						if (metadata != null) {
-							String env = System.getProperty("environment", "unknown");
-							if (!"prod".equals(env)) {
-								metadata.setName(metadata.getName() + " (" + env + ")");
-							}
-						}
+						loadConfiguration(config + CONFIG_EXTENSION);
 					}
-					catch (Exception e) {
-						logger.error("Problem initialising handler from configuration " + config, e);
+					catch (ReconciliationServiceException e) {
+						exceptionCount++;
 					}
 				}
 			}
@@ -83,6 +74,106 @@ public class ReconciliationService {
 		}
 		else {
 			logger.warn("Reconciliation service was already initialised");
+		}
+
+		if (exceptionCount > 0 && exceptionCount >= initialConfigurations.size()) {
+			throw new RuntimeException("Failed to load all initial configurations, see log for details.");
+		}
+	}
+
+	public List<String> listAvailableConfigurationFiles() throws ReconciliationServiceException {
+		List<String> availableConfigurations = new ArrayList<>();
+		ResourcePatternResolver pmrpr = new PathMatchingResourcePatternResolver();
+		try {
+			Resource[] configurationResources = pmrpr.getResources("classpath*:"+CONFIG_BASE+"*Match.xml");
+			logger.debug("Found {} configuration file resources", configurationResources.length);
+
+			for (Resource resource : configurationResources) {
+				availableConfigurations.add(resource.getFilename());
+			}
+		}
+		catch (IOException e) {
+			throw new ReconciliationServiceException("Unable to list available configurations", e);
+		}
+
+		return availableConfigurations;
+	}
+
+	/**
+	 * Loads a single configuration.
+	 */
+	public void loadConfiguration(String configFileName) throws ReconciliationServiceException {
+		synchronized (loadedConfigurationFilenames) {
+			if (loadedConfigurationFilenames.contains(configFileName)) {
+				throw new ReconciliationServiceException("Match configuration "+configFileName+" is already loaded.");
+			}
+			else {
+				loadedConfigurationFilenames.add(configFileName);
+			}
+		}
+
+		String configurationFile = CONFIG_BASE + configFileName;
+		logger.info("{}: Loading configuration from file", configFileName, configurationFile);
+
+		ConfigurableApplicationContext context = new GenericXmlApplicationContext(configurationFile);
+		context.registerShutdownHook();
+
+		LuceneMatcher matcher = context.getBean("engine", LuceneMatcher.class);
+		String configName = matcher.getConfig().getName();
+
+		contexts.put(configFileName, context);
+		matchers.put(configName, matcher);
+
+		try {
+			matcher.loadData();
+			totals.put(configName, matcher.getIndexReader().numDocs());
+			logger.debug("{}: Loaded data", configName);
+
+			// Append " (environment)" to Metadata name, to help with interactive testing
+			Metadata metadata = getMetadata(configName);
+			if (metadata != null) {
+				if (!"prod".equals(ENV)) {
+					metadata.setName(metadata.getName() + " (" + ENV + ")");
+				}
+			}
+		}
+		catch (Exception e) {
+			logger.error("Problem loading configuration "+configFileName, e);
+
+			context.close();
+			totals.remove(configName);
+			matchers.remove(configName);
+			contexts.remove(configFileName);
+
+			synchronized (loadedConfigurationFilenames) {
+				loadedConfigurationFilenames.remove(configFileName);
+			}
+
+			throw new ReconciliationServiceException("Problem loading configuration "+configFileName, e);
+		}
+	}
+
+	/**
+	 * Unloads a single configuration.
+	 */
+	public void unloadConfiguration(String configFileName) throws ReconciliationServiceException {
+		synchronized (loadedConfigurationFilenames) {
+			if (!loadedConfigurationFilenames.contains(configFileName)) {
+				throw new ReconciliationServiceException("Match configuration "+configFileName+" is not loaded.");
+			}
+
+			logger.info("{}: Unloading configuration", configFileName);
+
+			ConfigurableApplicationContext context = contexts.get(configFileName);
+
+			String configName = configFileName.substring(0, configFileName.length() - 4);
+			totals.remove(configName);
+			matchers.remove(configName);
+			contexts.remove(configName);
+
+			context.close();
+
+			loadedConfigurationFilenames.remove(configFileName);
 		}
 	}
 
@@ -185,10 +276,14 @@ public class ReconciliationService {
 		return matchers.get(matcher);
 	}
 
-	public List<String> getConfigFiles() {
-		return configurations;
+	public List<String> getInitialConfigurations() {
+		return initialConfigurations;
 	}
-	public void setConfigFiles(List<String> configFiles) {
-		this.configurations = configFiles;
+	public void setInitialConfigurations(List<String> initialConfigurations) {
+		this.initialConfigurations = initialConfigurations;
+	}
+
+	public List<String> getLoadedConfigurationFilenames() {
+		return loadedConfigurationFilenames;
 	}
 }

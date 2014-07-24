@@ -98,7 +98,7 @@ public class LuceneDataLoader implements DataLoader {
 			}
 		}
 		catch (IOException e) {
-			throw new DataLoadException("Problem creating/opening Lucene index", e);
+			throw new DataLoadException(configName + ": Problem creating/opening Lucene index", e);
 		}
 		finally {
 			// Close the index, no matter what happened.
@@ -109,7 +109,7 @@ public class LuceneDataLoader implements DataLoader {
 				}
 			}
 			catch (IOException e) {
-				throw new DataLoadException("Error closing Lucene index for "+configName, e);
+				throw new DataLoadException(configName + ": Error closing Lucene index for "+configName, e);
 			}
 		}
 	}
@@ -144,7 +144,7 @@ public class LuceneDataLoader implements DataLoader {
             resultSet = recordSource.getResultSet();
         }
         catch (SQLException e) {
-            throw new DataLoadException("Problem reading data from database "+recordSource, e);
+            throw new DataLoadException(configName + ": Problem reading data from database "+recordSource, e);
         }
 
         try {
@@ -173,7 +173,7 @@ public class LuceneDataLoader implements DataLoader {
                 }
                 catch (Exception e) {
                     errors++;
-                    String message = "Problem indexing record " + i + ", " + resultSet;
+                    String message = configName + ": Problem indexing record " + i + ", " + resultSet;
                     if (errors < config.getMaximumLoadErrors()) {
                         logger.warn(message, e);
                     }
@@ -184,8 +184,8 @@ public class LuceneDataLoader implements DataLoader {
 
                 // Log progress
                 if (i++ % this.config.getLoadReportFrequency() == 0) {
-                    logger.info("Indexed {} documents", i);
-                    logger.debug("Most recent indexed document was {}", doc);
+                    logger.info("{}: Indexed {} documents", configName, i);
+                    logger.debug("{}: Most recent indexed document was {}", configName, doc);
                 }
             }
             recordSource.close();
@@ -193,9 +193,9 @@ public class LuceneDataLoader implements DataLoader {
             indexWriter.commit();
         }
         catch (Exception e) {
-            throw new DataLoadException("Error "+e.getMessage()+" loading records at row " + i, e);
+            throw new DataLoadException(configName + ": Error "+e.getMessage()+" loading records at row " + i, e);
         }
-        logger.info("Indexed {} records", i);
+        logger.info("{}: Indexed {} records", configName, i);
     }
 
     private void load(File file) throws DataLoadException {
@@ -227,7 +227,7 @@ public class LuceneDataLoader implements DataLoader {
                 }
                 catch (Exception e) {
                     errors++;
-                    String message = "Problem indexing record " + i + ", " + record;
+                    String message = configName + ": Problem indexing record " + i + ", " + record;
                     if (errors < config.getMaximumLoadErrors()) {
                         logger.warn(message, e);
                     }
@@ -238,8 +238,8 @@ public class LuceneDataLoader implements DataLoader {
 
                 // Log process
                 if (i++ % this.config.getLoadReportFrequency() == 0){
-                    logger.info("Indexed {} documents", i);
-                    logger.debug("Most recent indexed document was {}", doc);
+                    logger.info("{}: Indexed {} documents", configName, i);
+                    logger.debug("{}: Most recent indexed document was {}", configName, doc);
                 }
 
                 // Read next record from CSV/datasource
@@ -248,7 +248,7 @@ public class LuceneDataLoader implements DataLoader {
                 }
                 catch (Exception e) {
                     errors++;
-                    String message = "Problem reading record " + i + " «" + mr.getUntokenizedRow() + "»";
+                    String message = configName + ": Problem reading record " + i + " «" + mr.getUntokenizedRow() + "»";
                     if (errors < config.getMaximumLoadErrors()) {
                         logger.warn(message, e);
                     }
@@ -261,9 +261,9 @@ public class LuceneDataLoader implements DataLoader {
             indexWriter.commit();
         }
         catch (Exception e) {
-            throw new DataLoadException("Error "+e.getMessage()+" loading records at line " + i, e);
+            throw new DataLoadException(configName + ": Error "+e.getMessage()+" loading records at line " + i, e);
         }
-        logger.info("Indexed {} records", i);
+        logger.info("{}: Indexed {} records", configName, i);
     }
 
     /**

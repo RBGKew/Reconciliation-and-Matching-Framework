@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,7 @@ import org.kew.reconciliation.refine.domain.query.Query;
 import org.kew.reconciliation.refine.domain.response.QueryResponse;
 import org.kew.reconciliation.refine.domain.response.QueryResult;
 import org.kew.reconciliation.service.ReconciliationService;
+import org.kew.reconciliation.service.ReconciliationServiceException;
 import org.kew.stringmod.dedupl.configuration.Property;
 import org.kew.stringmod.dedupl.exception.MatchExecutionException;
 import org.kew.stringmod.dedupl.exception.TooManyMatchesException;
@@ -67,6 +69,61 @@ public class MatchController {
 	public String doWelcome(Model model) {
 		model.addAttribute("availableMatchers", reconciliationService.getMatchers().keySet());
 		return "about-general";
+	}
+
+	@RequestMapping(produces="text/html", value = "/admin", method = RequestMethod.GET)
+	public String doConfigurationAdmin(Model model) throws ReconciliationServiceException {
+		logger.info("Request for configuration admin page");
+
+		List<String> loadedConfigFiles = reconciliationService.getLoadedConfigurationFilenames();
+		logger.debug("Loaded config files: {}", loadedConfigFiles);
+
+		Map<String, Boolean> configurations = new TreeMap<>();
+
+		for (String configurationFileName : reconciliationService.listAvailableConfigurationFiles()) {
+			configurations.put(configurationFileName, loadedConfigFiles.contains(configurationFileName));
+		}
+
+		model.addAttribute("configurations", configurations);
+
+		return "configuration-admin";
+	}
+
+	@RequestMapping(produces="text/html", value = "/admin", method = RequestMethod.POST)
+	public String doConfigurationAdmin(
+			HttpServletRequest request,
+			@RequestParam(required=false) String load,
+			@RequestParam(required=false) String reload,
+			@RequestParam(required=false) String unload,
+			Model model) throws JsonGenerationException, JsonMappingException, IOException, ReconciliationServiceException {
+		logger.info("Request for configuration loading L:{} R:{} U:{}", load, reload, unload);
+
+		if (reload != null) {
+			// TODO ••• Check user input! •••
+			String configName = reload;
+			logger.info("Request to reload {}", configName);
+
+			reconciliationService.unloadConfiguration(configName);
+			reconciliationService.loadConfiguration(configName);
+		}
+
+		if (unload != null) {
+			// TODO ••• Check user input! •••
+			String configName = unload;
+			logger.info("Request to unload {}", configName);
+
+			reconciliationService.unloadConfiguration(configName);
+		}
+
+		if (load != null) {
+			// TODO ••• Check user input! •••
+			String configName = load;
+			logger.info("Request to load {}", configName);
+
+			reconciliationService.loadConfiguration(configName);
+		}
+
+		return "redirect:/admin";
 	}
 
     @RequestMapping(produces="text/html", value = "/about/{configName}", method = RequestMethod.GET)

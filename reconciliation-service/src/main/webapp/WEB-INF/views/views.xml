@@ -15,6 +15,11 @@
 		<put-attribute name="body" value="/WEB-INF/views/about-matcher.jspx" />
 	</definition>
 
+	<definition name="configuration-admin" extends="default">
+		<put-attribute name="title" value="Configuration admininstration" />
+		<put-attribute name="body" value="/WEB-INF/views/configuration-admin.jspx" />
+	</definition>
+
 	<definition name="file-matcher-results" extends="default">
 		<put-attribute name="title" value="Match results" />
 		<put-attribute name="body" value="/WEB-INF/views/file-matcher-results.jspx" />

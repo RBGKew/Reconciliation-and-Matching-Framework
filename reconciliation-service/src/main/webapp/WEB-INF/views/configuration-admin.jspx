@@ -1,0 +1,46 @@
+<div xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:spring="http://www.springframework.org/tags" version="2.0">
+	<jsp:output omit-xml-declaration="yes"/>
+	<div>
+		<h3>
+			<span class="glyphicon glyphicon-list-alt"> </span> Configuration administration
+		</h3>
+
+		<c:if test="${total != null}">
+			Contains <span class="badge">${total}</span> records.
+		</c:if>
+
+		<spring:url var="loadConfigUrl" value="/admin" />
+		<form id="loading" class="form-horizontal" method="post" action="${loadConfigUrl}" enctype="application/x-www-form-urlencoded">
+			<table class="table table-bordered table-striped table-condensed">
+				<thead>
+					<tr>
+						<th>Available configuration files</th>
+						<th>Loaded</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach var="c" items="${configurations}">
+						<spring:url var="availableMatcherLink" value="/about/${availableMatcher}" />
+						<tr>
+							<td>${c.key}</td>
+							<td>
+								<div class="controls">
+									<c:if test="${c.value}">
+										<button name="reload" value="${c.key}" type="submit" class="btn btn-warning">Reload</button> 
+										<button name="unload" value="${c.key}" type="submit" class="btn btn-danger">Unload</button>
+									</c:if>
+									<c:if test="${!c.value}">
+										<button name="load" value="${c.key}" type="submit" class="btn btn-success">Load</button>
+									</c:if>
+								</div>
+							</td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</form>
+	</div>
+</div>
