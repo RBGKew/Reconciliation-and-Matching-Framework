@@ -152,8 +152,7 @@ public class MatchController {
 				}
 				p_transformers.put(p.getSourceColumnName(), p_t);
 			}
-			//if (totals.containsKey(configName))
-			//	model.addAttribute("total", totals.get(configName));
+			model.addAttribute("total", reconciliationService.getTotals().get(configName));
 			model.addAttribute("configName", configName);
 			model.addAttribute("properties", properties);
 			model.addAttribute("matchers", p_matchers);

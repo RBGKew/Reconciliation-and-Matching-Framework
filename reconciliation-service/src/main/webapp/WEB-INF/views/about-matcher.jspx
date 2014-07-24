@@ -5,11 +5,11 @@
 	<jsp:output omit-xml-declaration="yes"/>
 	<div>
 		<h3>
-			<span class="glyphicon glyphicon-list-alt"> </span> ${configName} configuration
+			<span class="glyphicon glyphicon-list-alt"> </span> <strong>${configName}</strong> configuration
 		</h3>
 
 		<c:if test="${total != null}">
-			Contains <span class="badge">${total}</span> records.
+			<p>Contains <span class="badge">${total}</span> records.</p>
 		</c:if>
 
 		<table class="table table-bordered table-striped table-condensed">

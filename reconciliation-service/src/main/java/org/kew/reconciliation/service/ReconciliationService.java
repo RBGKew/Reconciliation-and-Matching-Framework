@@ -48,9 +48,9 @@ public class ReconciliationService {
 	private final String CONFIG_EXTENSION = ".xml";
 	private final String ENV = System.getProperty("environment", "unknown");
 
-	private Map<String, ConfigurableApplicationContext> contexts = new HashMap<String, ConfigurableApplicationContext>();
-	private Map<String, LuceneMatcher> matchers = new HashMap<String, LuceneMatcher>();
-	private Map<String, Integer> totals = new HashMap<String, Integer>();
+	private final Map<String, ConfigurableApplicationContext> contexts = new HashMap<String, ConfigurableApplicationContext>();
+	private final Map<String, LuceneMatcher> matchers = new HashMap<String, LuceneMatcher>();
+	private final Map<String, Integer> totals = new HashMap<String, Integer>();
 
 
 	/**
@@ -296,5 +296,9 @@ public class ReconciliationService {
 
 	public List<String> getLoadedConfigurationFilenames() {
 		return loadedConfigurationFilenames;
+	}
+
+	public Map<String, Integer> getTotals() {
+		return totals;
 	}
 }
