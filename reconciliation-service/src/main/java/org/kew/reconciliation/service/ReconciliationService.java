@@ -19,12 +19,14 @@ import org.kew.stringmod.dedupl.exception.TooManyMatchesException;
 import org.kew.stringmod.dedupl.lucene.LuceneMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 
 /**
@@ -37,6 +39,9 @@ public class ReconciliationService {
 	@Value("#{'${configurations}'.split(',')}")
 	private List<String> initialConfigurations;
 
+	@Autowired
+	private TaskExecutor taskExecutor;
+
 	private final List<String> loadedConfigurationFilenames = new ArrayList<String>();
 
 	private final String CONFIG_BASE = "/META-INF/spring/reconciliation-service/";
@@ -47,40 +52,46 @@ public class ReconciliationService {
 	private Map<String, LuceneMatcher> matchers = new HashMap<String, LuceneMatcher>();
 	private Map<String, Integer> totals = new HashMap<String, Integer>();
 
-	private boolean initialised = false;
 
 	/**
-	 * Loads the initial configurations.
+	 * Kicks off tasks (threads) to load the initial configurations.
 	 */
 	@PostConstruct
 	public void init() {
 		logger.debug("Initialising reconciliation service");
 
-		int exceptionCount = 0;
-
-		if (!initialised) {
-			// Load up the matchers from the specified files
-			if (initialConfigurations != null) {
-				for (String config : initialConfigurations) {
-					try {
-						loadConfiguration(config + CONFIG_EXTENSION);
-					}
-					catch (ReconciliationServiceException e) {
-						exceptionCount++;
-					}
-				}
+		// Load up the matchers from the specified files
+		if (initialConfigurations != null) {
+			for (String config : initialConfigurations) {
+				taskExecutor.execute(new BackgroundConfigurationLoaderTask(config + CONFIG_EXTENSION));
 			}
-			initialised = true;
-		}
-		else {
-			logger.warn("Reconciliation service was already initialised");
-		}
-
-		if (exceptionCount > 0 && exceptionCount >= initialConfigurations.size()) {
-			throw new RuntimeException("Failed to load all initial configurations, see log for details.");
 		}
 	}
 
+	/**
+	 * For loading a configuration in the background (i.e. in a thread).
+	 */
+	private class BackgroundConfigurationLoaderTask implements Runnable {
+		private String configFileName;
+
+		public BackgroundConfigurationLoaderTask(String configFileName) {
+			this.configFileName = configFileName;
+		}
+
+		@Override
+		public void run() {
+			try {
+				loadConfiguration(configFileName);
+			}
+			catch (ReconciliationServiceException e) {
+				logger.error(configFileName + ": Error while loading", e);
+			}
+		}
+	}
+
+	/**
+	 * Lists the available configuration files from the classpath.
+	 */
 	public List<String> listAvailableConfigurationFiles() throws ReconciliationServiceException {
 		List<String> availableConfigurations = new ArrayList<>();
 		ResourcePatternResolver pmrpr = new PathMatchingResourcePatternResolver();

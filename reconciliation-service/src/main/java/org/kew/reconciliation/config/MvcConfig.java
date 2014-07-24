@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
@@ -89,5 +91,17 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 		UrlBasedViewResolver viewResolver = new UrlBasedViewResolver();
 		viewResolver.setViewClass(TilesView.class);
 		return viewResolver;
+	}
+
+	/**
+	 * TaskExecutor for asynchronous pooled tasks
+	 */
+	@Bean
+	public TaskExecutor taskExecutor() {
+		ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+		taskExecutor.setCorePoolSize(2);
+		taskExecutor.setMaxPoolSize(2);
+		taskExecutor.initialize();
+		return taskExecutor;
 	}
 }
