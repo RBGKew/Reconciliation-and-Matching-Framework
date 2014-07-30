@@ -5,7 +5,7 @@
 	<c:set var="req" value="${pageContext.request}" />
 	<c:set var="serverAndPort" value="${req.serverName}"/>
 	<c:if test="${req.localPort != 80}">
-		<c:set var="serverAndPort" value="http://${req.serverName}:${req.localPort}"/>
+		<c:set var="serverAndPort" value="${req.serverName}:${req.localPort}"/>
 	</c:if>
 	<spring:url var="base" value="/"/>
 
@@ -112,7 +112,7 @@
 				<li>If this is the first time you’ve reconciled against a
 					particular service, you will need to click <em>Add Standard
 					Service</em>. Enter the URL from the Reconciliation Service website,
-					for example <code>${serverAndPort}${base}reconcile/standardTplNameMatch</code>,
+					for example <code>http://${serverAndPort}${base}reconcile/standardTplNameMatch</code>,
 					and click OK.
 				</li>
 				<li>Select the service from the list on the left. After a
@@ -161,7 +161,7 @@
 				</li>
 			</ol>
 			<pre>
-<code>"${serverAndPort}${base}match/standardTplNameMatch?genus="+row.cells["Genus"].value.escape('url')
+<code>"http://${serverAndPort}${base}match/standardTplNameMatch?genus="+row.cells["Genus"].value.escape('url')
 +forNonBlank(row.cells["Species"].value, v, "&amp;species="+v.escape('url'), "")
 +forNonBlank(row.cells["InfraSpecies"].value, v, "&amp;infraspecies="+v.escape('url'), "")
 +forNonBlank(row.cells["InfraAuthor"].value, v, "&amp;authors="+v.escape('url'),
