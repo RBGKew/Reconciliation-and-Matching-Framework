@@ -25,7 +25,7 @@
 		<property name="removeAbandonedTimeout" value="1200" />
 		<property name="removeAbandonedOnMaintenance" value="true" />
 	</bean>
-	<bean id="lookupFromIpniDatabase" class="org.kew.stringmod.ws.DatabaseCursorRecordReader">
+	<bean id="lookupFromIpniDatabase" class="org.kew.reconciliation.service.DatabaseCursorRecordReader">
 		<property name="dataSource" ref="ipniDatabase"/>
 		<property name="sql" value="SELECT publication_id AS id, abbrev AS publication, publication_date AS date, tl2_author AS author FROM publication"/>
 		<property name="fetchSize" value="5000"/>

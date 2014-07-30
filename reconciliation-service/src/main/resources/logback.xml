@@ -20,10 +20,12 @@
     </encoder>
   </appender>
 
-  <logger name="org.kew.stringmod.ws" level="info"/>
+  <logger name="org.kew.reconciliation" level="debug"/>
   <logger name="org.kew.stringmod.dedupl.lucene.LuceneDataLoader" level="debug"/>
   <logger name="com.mysql" level="warn"/>
   <logger name="MySQL" level="warn"/>
+
+  <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="debug" />
 
   <root level="info">
     <appender-ref ref="STDOUT" />

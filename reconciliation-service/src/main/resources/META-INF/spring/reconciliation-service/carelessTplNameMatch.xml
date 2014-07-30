@@ -26,7 +26,7 @@
 		<property name="removeAbandonedTimeout" value="1200" />
 		<property name="removeAbandonedOnMaintenance" value="true" />
 	</bean>
-	<bean id="lookupFromTplDatabase" class="org.kew.stringmod.ws.DatabaseCursorRecordReader">
+	<bean id="lookupFromTplDatabase" class="org.kew.reconciliation.service.DatabaseCursorRecordReader">
 		<property name="dataSource" ref="tplDatabase"/>
 		<property name="sql" value="SELECT t1ID AS id, genus, species, infraspecificEpithet AS infraspecies, primaryAuthors AS authors, taxonomicStatus, acceptedNameID FROM tpl2_final"/>
 	</bean>

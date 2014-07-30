@@ -27,7 +27,7 @@
 		<property name="removeAbandonedTimeout" value="1200" />
 		<property name="removeAbandonedOnMaintenance" value="true" />
 	</bean>
-	<bean id="lookupFromIpniDatabase" class="org.kew.stringmod.ws.DatabaseCursorRecordReader">
+	<bean id="lookupFromIpniDatabase" class="org.kew.reconciliation.service.DatabaseCursorRecordReader">
 		<property name="dataSource" ref="ipniFlatDatabase"/>
 		<property name="sql" value="SELECT id,genus,species,infraspecies,authors FROM ipni_flat_topcopy_notsuppressed WHERE genus IS NOT NULL"/>
 		<property name="fetchSize" value="150000"/>

@@ -23,7 +23,7 @@ import org.springframework.web.servlet.view.tiles2.TilesView;
 @EnableWebMvc
 @ComponentScan(basePackageClasses = {
 		org.kew.reconciliation.service.ReconciliationService.class,
-		org.kew.stringmod.ws.MatchController.class
+		org.kew.reconciliation.ws.MatchController.class
 })
 public class MvcConfig extends WebMvcConfigurerAdapter {
 	static @Bean public PropertySourcesPlaceholderConfigurer myPropertySourcesPlaceholderConfigurer() {
