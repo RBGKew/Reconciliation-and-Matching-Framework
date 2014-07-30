@@ -18,20 +18,22 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 				},
 				"suggest" : {
 					"type" : {
-						"service_url" : "http://localhost:8080",
+						"service_url" : "http://localhost",
 						"service_path" : "/reconcile/generalTest/suggestType",
-						"flyout_service_url" : "http://www.kew.test"
+						"flyout_service_path" : "/reconcile/generalTest/flyoutType/${id}",
+						"flyout_service_url" : "http://localhost"
 					},
 					"property" : {
-						"service_url" : "http://localhost:8080",
+						"service_url" : "http://localhost",
 						"service_path" : "/reconcile/generalTest/suggestProperty",
-						"flyout_service_url" : "http://www.kew.test"
+						"flyout_service_path" : "/reconcile/generalTest/flyoutProperty/${id}",
+						"flyout_service_url" : "http://localhost"
 					},
 					"entity" : {
-						"service_url" : "http://localhost:8080",
+						"service_url" : "http://localhost",
 						"service_path" : "/reconcile/generalTest",
-						"flyout_service_url" : "http://www.theplantlist.org",
-						"flyout_service_path" : "/tpl1.1/record/${id}?reconcileSuggest"
+						"flyout_service_url" : "http://localhost",
+						"flyout_service_path" : "/reconcile/generalTest/flyout/${id}"
 					}
 				},
 				"defaultTypes" : [
@@ -313,6 +315,16 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 						"id" : "tro-50269022"
 					}
 				]
+			}
+			"""
+
+	Scenario: The Suggest Flyout returns HTML wrapped in a JSON object when queried with an id.
+		In Open Refine, the HTML is shown when the user "Search for match" function and highlights a result.
+		When I make the reconciliation suggest flyout request with id "tro-50269022"
+		Then I receive the following flyout response:
+			"""
+			{
+				"html" : "<html><body>tro-50269022</body></html>"
 			}
 			"""
 

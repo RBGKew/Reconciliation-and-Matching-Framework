@@ -188,45 +188,15 @@
 		p:reuseIndex="false"
 		p:queryStringToPropertiesExtractor-ref="scientificNameToPropertiesConverter"
 		p:reconciliationResultFormatter-ref="reconciliationResultFormat"
-		p:reconciliationServiceMetadata-ref="metadata"/>
 
-	<bean id="metadata" class="org.kew.reconciliation.refine.domain.metadata.Metadata"
-		p:name="General Test Match Reconciliation Service"
+		p:title="General Test Match Reconciliation Service"
 		p:identifierSpace="http://www.theplantlist.org/tpl1.1/record/"
-		p:schemaSpace="http://rdf.freebase.com/ns/type.object.id">
-		<property name="view">
-			<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataView"
-				p:url="http://www.theplantlist.org/tpl1.1/record/{{id}}?reconcileView"/>
-		</property>
-		<property name="preview">
-			<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataPreview"
-				p:url="http://www.theplantlist.org/tpl1.1/record/{{id}}?reconcilePreview"
-				p:width="400"
-				p:height="400"/>
-		</property>
-		<property name="suggest">
-			<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataSuggest">
-				<property name="type">
-					<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataSuggestDetails"
-						p:service_url="http://localhost:8080"
-						p:service_path="BASE/suggestType"
-						p:flyout_service_url="http://www.kew.test"/>
-				</property>
-				<property name="property">
-					<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataSuggestDetails"
-						p:service_url="http://localhost:8080"
-						p:service_path="BASE/suggestProperty"
-						p:flyout_service_url="http://www.kew.test"/>
-				</property>
-				<property name="entity">
-					<bean class="org.kew.reconciliation.refine.domain.metadata.MetadataSuggestDetails"
-						p:service_url="http://localhost:8080"
-						p:service_path="BASE"
-						p:flyout_service_url="http://www.theplantlist.org"
-						p:flyout_service_path="/tpl1.1/record/#{'$'}{id}?reconcileSuggest"/>
-				</property>
-			</bean>
-		</property>
+		p:schemaSpace="http://rdf.freebase.com/ns/type.object.id"
+		p:viewUrl="http://www.theplantlist.org/tpl1.1/record/{{id}}?reconcileView"
+		p:previewUrl="http://www.theplantlist.org/tpl1.1/record/{{id}}?reconcilePreview"
+		p:previewWidth="400"
+		p:previewHeight="400"
+		p:suggestFlyoutUrl="http://www.theplantlist.org/tpl1.1/record/{id}?reconcileSuggest">
 		<property name="defaultTypes">
 			<util:list id="2">
 				<bean class="org.kew.reconciliation.refine.domain.metadata.Type"

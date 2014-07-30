@@ -32,6 +32,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
+import cucumber.api.PendingException;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -231,5 +232,22 @@ public class GeneralReconciliationServiceStepdefs extends WebMvcConfigurationSup
 			}
 		}
 		assertThat(actualFileLines.length, is(expectedFileLines.length));
+	}
+
+	@When("^I make the reconciliation suggest flyout request with id \"(.*?)\"$")
+	public void i_make_the_reconciliation_suggest_flyout_request_with_id(String id) throws Throwable {
+		throw new PendingException("Not bothering to add WireMock or similar to test something so simple.");
+		//result = mockMvc.perform(get("/reconcile/generalTest/flyout/"+id).accept(JSON_UTF8))
+		//		.andExpect(status().isOk())
+		//		.andExpect(content().contentType(JSON_UTF8_S))
+		//		.andReturn();
+
+		//responseJson = result.getResponse().getContentAsString();
+		//log.debug("Response as string was {}", responseJson);
+	}
+
+	@Then("^I receive the following flyout response:$")
+	public void i_receive_the_following_flyout_response(String expectedJson) throws Throwable {
+		JSONAssert.assertEquals(expectedJson, responseJson, true);
 	}
 }

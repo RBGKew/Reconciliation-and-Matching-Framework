@@ -25,6 +25,7 @@ import org.kew.reconciliation.queryextractor.QueryStringToPropertiesExtractor;
 import org.kew.reconciliation.refine.domain.metadata.Metadata;
 import org.kew.reconciliation.refine.domain.metadata.Type;
 import org.kew.reconciliation.refine.domain.query.Query;
+import org.kew.reconciliation.refine.domain.response.FlyoutResponse;
 import org.kew.reconciliation.refine.domain.response.QueryResponse;
 import org.kew.reconciliation.refine.domain.response.QueryResult;
 import org.kew.reconciliation.service.ReconciliationService;
@@ -46,6 +47,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.supercsv.io.CsvMapReader;
 import org.supercsv.prefs.CsvPreference;
@@ -64,6 +66,7 @@ public class MatchController {
 	@Autowired
 	private ObjectMapper jsonMapper;
 
+	private RestTemplate template = new RestTemplate();
 
 	@RequestMapping(produces="text/html", value={"/","/about"}, method = RequestMethod.GET)
 	public String doWelcome(Model model) {
@@ -478,6 +481,37 @@ public class MatchController {
 	}
 
 	/**
+	 * Type suggest flyout
+	 */
+	@RequestMapping(value = "/reconcile/{configName}/flyoutType/{id:.+}", method={RequestMethod.GET,RequestMethod.POST}, produces="application/json; charset=UTF-8")
+	public ResponseEntity<String> doTypeFlyout(@PathVariable String configName, @PathVariable String id, @RequestParam(value="callback",required=false) String callback) {
+		logger.debug("{}: In type flyout for id {}", configName, id);
+
+		try {
+			Type[] defaultTypes = reconciliationService.getMetadata(configName).getDefaultTypes();
+			Type type = null;
+
+			for (Type t : defaultTypes) {
+				if (t.getId().equals(id)) {
+					type = t;
+				}
+			}
+
+			String html = "<html><body><ul><li>"+type.getName()+" ("+type.getId()+")</li></ul></body></html>\n";
+			FlyoutResponse jsonWrappedHtml = new FlyoutResponse(html);
+
+			return new ResponseEntity<String>(wrapResponse(callback, jsonMapper.writeValueAsString(jsonWrappedHtml)), HttpStatus.OK);
+		}
+		catch (IOException e) {
+			logger.warn(configName + ": Error in type flyout for id "+id, e);
+			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		catch (MatchExecutionException | NullPointerException e) {
+			return new ResponseEntity<String>(e.toString(), HttpStatus.NOT_FOUND);
+		}
+	}
+
+	/**
 	 * Properties suggest, no callback.
 	 */
 	@RequestMapping(value = "/reconcile/{configName}/suggestProperty", method={RequestMethod.GET,RequestMethod.POST}, params={"prefix"}, produces="application/json; charset=UTF-8")
@@ -524,6 +558,53 @@ public class MatchController {
 		}
 
 		return new ResponseEntity<String>(wrapResponse(callback, jsonres), HttpStatus.OK);
+	}
+
+	/**
+	 * Properties suggest flyout
+	 */
+	@RequestMapping(value = "/reconcile/{configName}/flyoutProperty/{id:.+}", method={RequestMethod.GET,RequestMethod.POST}, produces="application/json; charset=UTF-8")
+	public ResponseEntity<String> doPropertiesFlyout(@PathVariable String configName, @PathVariable String id, @RequestParam(value="callback",required=false) String callback) {
+		logger.debug("{}: In property flyout for id {}", configName, id);
+
+		try {
+			String html = "<html><body><ul><li>"+id+"</li></ul></body></html>\n";
+			FlyoutResponse jsonWrappedHtml = new FlyoutResponse(html);
+
+			return new ResponseEntity<String>(wrapResponse(callback, jsonMapper.writeValueAsString(jsonWrappedHtml)), HttpStatus.OK);
+		}
+		catch (IOException e) {
+			logger.warn(configName + ": Error in properties flyout for id "+id, e);
+			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	/**
+	 * Entity suggest flyout
+	 */
+	@RequestMapping(value = "/reconcile/{configName}/flyout/{id:.+}", method={RequestMethod.GET,RequestMethod.POST}, produces="application/json; charset=UTF-8")
+	public ResponseEntity<String> doSuggestFlyout(@PathVariable String configName, @PathVariable String id, @RequestParam(value="callback",required=false) String callback) {
+		logger.info("{}: Suggest flyout request for {}", configName, id);
+
+		try {
+			String targetUrl = reconciliationService.getReconciliationServiceConfiguration(configName).getSuggestFlyoutUrl();
+
+			ResponseEntity<String> httpResponse = template.getForEntity(targetUrl, String.class, id);
+
+			if (httpResponse.getStatusCode() != HttpStatus.OK) {
+				logger.debug("{}: Received HTTP {} from URL {} with id {}", configName, httpResponse.getStatusCode(), targetUrl, id);
+			}
+
+			FlyoutResponse jsonWrappedHtml = new FlyoutResponse(httpResponse.getBody());
+			return new ResponseEntity<String>(wrapResponse(callback, jsonMapper.writeValueAsString(jsonWrappedHtml)), httpResponse.getStatusCode());
+		}
+		catch (MatchExecutionException | NullPointerException e) {
+			return new ResponseEntity<String>(e.toString(), HttpStatus.NOT_FOUND);
+		}
+		catch (IOException e) {
+			logger.warn(configName + ": Exception retrieving URL for id "+id, e);
+			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@RequestMapping(produces="text/html", value={"/help"}, method = RequestMethod.GET)
