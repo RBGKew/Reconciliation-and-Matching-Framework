@@ -137,6 +137,8 @@
 			<pre id="singleQueryResult"> </pre>
 
 			<script>
+				var reconciliationServiceUrl = "${reconciliationServiceUrl}";
+
 				$("#singleQuery").submit(function(event) {
 
 					var properties = 	$("#singleQuery input").map(function() {
@@ -145,7 +147,7 @@
 
 					var queryData = {"query":"q1", "properties":properties};
 
-					$.post( "http://localhost:8080/reconcile/standardIpniPublicationMatch", { query: JSON.stringify(queryData) }, function( data ) {
+					$.post(reconciliationServiceUrl, { query: JSON.stringify(queryData) }, function( data ) {
 						$( "#singleQueryResult" ).html( JSON.stringify(data, null, 4) );
 
 						var headers = "<thead><tr><th>id</th><th>name</th></tr></thead>";
