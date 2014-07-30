@@ -8,6 +8,10 @@
 			<span class="glyphicon glyphicon-list-alt"> </span> <strong>${configName}</strong> configuration
 		</h3>
 
+		<c:if test="${reconciliationConfiguration.description != null}">
+			<p>${reconciliationConfiguration.description}</p>
+		</c:if>
+
 		<c:if test="${total != null}">
 			<p>Contains <span class="badge">${total}</span> records.</p>
 		</c:if>

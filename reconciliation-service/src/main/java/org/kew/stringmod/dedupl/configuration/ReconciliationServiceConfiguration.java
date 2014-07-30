@@ -16,11 +16,12 @@ import org.springframework.context.ApplicationContext;
 public class ReconciliationServiceConfiguration extends MatchConfiguration implements InitializingBean {
 
 	private ApplicationContext context;
-
 	private Metadata reconciliationServiceMetadata;
 
 	private QueryStringToPropertiesExtractor queryStringToPropertiesExtractor;
 	private ReconciliationResultFormatter reconciliationResultFormatter;
+
+	private String description;
 
 	// Metadata values
 	private String title;
@@ -112,6 +113,16 @@ public class ReconciliationServiceConfiguration extends MatchConfiguration imple
 	 */
 	public void setReconciliationResultFormatter(ReconciliationResultFormatter reconciliationResultFormatter) {
 		this.reconciliationResultFormatter = reconciliationResultFormatter;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+	/**
+	 * Longer description of the purpose of the service, for display etc.
+	 */
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getTitle() {

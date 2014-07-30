@@ -31,6 +31,7 @@ import org.kew.reconciliation.refine.domain.response.QueryResult;
 import org.kew.reconciliation.service.ReconciliationService;
 import org.kew.reconciliation.service.ReconciliationServiceException;
 import org.kew.stringmod.dedupl.configuration.Property;
+import org.kew.stringmod.dedupl.configuration.ReconciliationServiceConfiguration;
 import org.kew.stringmod.dedupl.exception.MatchExecutionException;
 import org.kew.stringmod.dedupl.exception.TooManyMatchesException;
 import org.kew.stringmod.dedupl.lucene.LuceneMatcher;
@@ -136,8 +137,10 @@ public class MatchController {
     	Map<String,List<String>> p_transformers = new HashMap<String,List<String>>();
 
 		LuceneMatcher matcher;
+		ReconciliationServiceConfiguration configuration;
 		try {
 			matcher = reconciliationService.getMatcher(configName);
+			configuration = reconciliationService.getReconciliationServiceConfiguration(configName);
 		}
 		catch (MatchExecutionException e) {
 			// TODO: Make a 404.
@@ -145,7 +148,7 @@ public class MatchController {
 		}
 
 		if (matcher != null){
-			model.addAttribute("matchConfig", matcher.getConfig());
+			model.addAttribute("reconciliationConfiguration", configuration);
 			for (Property p : matcher.getConfig().getProperties()){
 				properties.add(p.getSourceColumnName());
 				p_matchers.put(p.getSourceColumnName(), p.getMatcher().getClass().getCanonicalName());

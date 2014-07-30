@@ -219,6 +219,7 @@
 
 	<bean id="config" class="org.kew.stringmod.dedupl.configuration.ReconciliationServiceConfiguration"
 		p:name="carelessTplNameMatch"
+		p:description="Lax reconciliation configuration matching against names stored in The Plant List (TPL)."
 		p:lookupRecords-ref="lookupFromTplDatabase"
 		p:properties-ref="columnProperties"
 		p:scoreFieldName="id"

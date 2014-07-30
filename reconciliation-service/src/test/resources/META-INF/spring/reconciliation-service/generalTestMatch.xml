@@ -175,6 +175,7 @@
 
 	<bean id="config" class="org.kew.stringmod.dedupl.configuration.ReconciliationServiceConfiguration"
 		p:name="generalTest"
+		p:description="Configuration for testing during development."
 		p:lookupFile-ref="lookupfile"
 		p:lookupFileEncoding="UTF8"
 		p:lookupFileDelimiter="&#09;"
