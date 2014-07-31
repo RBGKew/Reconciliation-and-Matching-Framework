@@ -36,6 +36,9 @@ import org.springframework.stereotype.Service;
 public class ReconciliationService {
 	private static Logger logger = LoggerFactory.getLogger(ReconciliationService.class);
 
+	@Value("${environment:unknown}")
+	private String environment;
+
 	@Value("#{'${configurations}'.split(',')}")
 	private List<String> initialConfigurations;
 
@@ -46,7 +49,6 @@ public class ReconciliationService {
 
 	private final String CONFIG_BASE = "/META-INF/spring/reconciliation-service/";
 	private final String CONFIG_EXTENSION = ".xml";
-	private final String ENV = System.getProperty("environment", "unknown");
 
 	private final Map<String, ConfigurableApplicationContext> contexts = new HashMap<String, ConfigurableApplicationContext>();
 	private final Map<String, LuceneMatcher> matchers = new HashMap<String, LuceneMatcher>();
@@ -143,8 +145,8 @@ public class ReconciliationService {
 			// Append " (environment)" to Metadata name, to help with interactive testing
 			Metadata metadata = getMetadata(configName);
 			if (metadata != null) {
-				if (!"prod".equals(ENV)) {
-					metadata.setName(metadata.getName() + " (" + ENV + ")");
+				if (!"prod".equals(environment)) {
+					metadata.setName(metadata.getName() + " (" + environment + ")");
 				}
 			}
 		}
