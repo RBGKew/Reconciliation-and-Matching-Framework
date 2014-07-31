@@ -62,6 +62,13 @@ public class GeneralReconciliationServiceStepdefs extends WebMvcConfigurationSup
 	@Before
 	public void setup() {
 		mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+
+		// TODO: Temporary fix to allow test configuration to have loaded.
+		// Once the ReconciliatioService allows querying for this, this should be replaced.
+		try {
+			Thread.sleep(5L * 1000L);
+		}
+		catch (InterruptedException e) {}
 	}
 
 	@When("^I query for metadata of the \"(.*?)\" reconciliation service$")
