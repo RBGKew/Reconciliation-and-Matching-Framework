@@ -11,20 +11,20 @@ import org.kew.stringmod.matchconf.WiredTransformer;
 
 privileged aspect Wire_Roo_JavaBean {
     
-    public String Wire.getSourceColumnName() {
-        return this.sourceColumnName;
+    public String Wire.getQueryColumnName() {
+        return this.queryColumnName;
     }
     
-    public void Wire.setSourceColumnName(String sourceColumnName) {
-        this.sourceColumnName = sourceColumnName;
+    public void Wire.setQueryColumnName(String queryColumnName) {
+        this.queryColumnName = queryColumnName;
     }
     
-    public String Wire.getLookupColumnName() {
-        return this.lookupColumnName;
+    public String Wire.getAuthorityColumnName() {
+        return this.authorityColumnName;
     }
     
-    public void Wire.setLookupColumnName(String lookupColumnName) {
-        this.lookupColumnName = lookupColumnName;
+    public void Wire.setAuthorityColumnName(String authorityColumnName) {
+        this.authorityColumnName = authorityColumnName;
     }
     
     public Boolean Wire.getUseInSelect() {
@@ -59,36 +59,36 @@ privileged aspect Wire_Roo_JavaBean {
         this.blanksMatch = blanksMatch;
     }
     
-    public Boolean Wire.getAddOriginalSourceValue() {
-        return this.addOriginalSourceValue;
+    public Boolean Wire.getAddOriginalQueryValue() {
+        return this.addOriginalQueryValue;
     }
     
-    public void Wire.setAddOriginalSourceValue(Boolean addOriginalSourceValue) {
-        this.addOriginalSourceValue = addOriginalSourceValue;
+    public void Wire.setAddOriginalQueryValue(Boolean addOriginalQueryValue) {
+        this.addOriginalQueryValue = addOriginalQueryValue;
     }
     
-    public Boolean Wire.getAddOriginalLookupValue() {
-        return this.addOriginalLookupValue;
+    public Boolean Wire.getAddOriginalAuthorityValue() {
+        return this.addOriginalAuthorityValue;
     }
     
-    public void Wire.setAddOriginalLookupValue(Boolean addOriginalLookupValue) {
-        this.addOriginalLookupValue = addOriginalLookupValue;
+    public void Wire.setAddOriginalAuthorityValue(Boolean addOriginalAuthorityValue) {
+        this.addOriginalAuthorityValue = addOriginalAuthorityValue;
     }
     
-    public Boolean Wire.getAddTransformedSourceValue() {
-        return this.addTransformedSourceValue;
+    public Boolean Wire.getAddTransformedQueryValue() {
+        return this.addTransformedQueryValue;
     }
     
-    public void Wire.setAddTransformedSourceValue(Boolean addTransformedSourceValue) {
-        this.addTransformedSourceValue = addTransformedSourceValue;
+    public void Wire.setAddTransformedQueryValue(Boolean addTransformedQueryValue) {
+        this.addTransformedQueryValue = addTransformedQueryValue;
     }
     
-    public Boolean Wire.getAddTransformedLookupValue() {
-        return this.addTransformedLookupValue;
+    public Boolean Wire.getAddTransformedAuthorityValue() {
+        return this.addTransformedAuthorityValue;
     }
     
-    public void Wire.setAddTransformedLookupValue(Boolean addTransformedLookupValue) {
-        this.addTransformedLookupValue = addTransformedLookupValue;
+    public void Wire.setAddTransformedAuthorityValue(Boolean addTransformedAuthorityValue) {
+        this.addTransformedAuthorityValue = addTransformedAuthorityValue;
     }
     
     public Boolean Wire.getIndexInitial() {
@@ -123,20 +123,20 @@ privileged aspect Wire_Roo_JavaBean {
         this.configuration = configuration;
     }
     
-    public List<WiredTransformer> Wire.getSourceTransformers() {
-        return this.sourceTransformers;
+    public List<WiredTransformer> Wire.getQueryTransformers() {
+        return this.queryTransformers;
     }
     
-    public void Wire.setSourceTransformers(List<WiredTransformer> sourceTransformers) {
-        this.sourceTransformers = sourceTransformers;
+    public void Wire.setQueryTransformers(List<WiredTransformer> queryTransformers) {
+        this.queryTransformers = queryTransformers;
     }
     
-    public List<WiredTransformer> Wire.getLookupTransformers() {
-        return this.lookupTransformers;
+    public List<WiredTransformer> Wire.getAuthorityTransformers() {
+        return this.authorityTransformers;
     }
     
-    public void Wire.setLookupTransformers(List<WiredTransformer> lookupTransformers) {
-        this.lookupTransformers = lookupTransformers;
+    public void Wire.setAuthorityTransformers(List<WiredTransformer> authorityTransformers) {
+        this.authorityTransformers = authorityTransformers;
     }
     
 }

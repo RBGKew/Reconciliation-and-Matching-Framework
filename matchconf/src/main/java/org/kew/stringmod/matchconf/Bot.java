@@ -26,6 +26,7 @@ public abstract class Bot extends CloneMe<Bot> implements Comparable<Bot> {
 		"params",
 	};
 
+    @Override
     public int compareTo(Bot o) {
         return this.getName().compareTo(o.getName());
     }
@@ -39,8 +40,8 @@ public abstract class Bot extends CloneMe<Bot> implements Comparable<Bot> {
 
     public abstract String getGroup();
 
+    @Override
     public String toString () {
         return this.getName();
     }
-
 }

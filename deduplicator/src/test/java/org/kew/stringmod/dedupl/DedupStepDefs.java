@@ -26,8 +26,8 @@ public class DedupStepDefs {
 	// of all steps in the scenario, but we actually create and delete them in a controlled way
 	Path tempDir;
 	Path tempConfigFile;
-	Path tempSourceFile;
-	Path tempLookupFile;
+	Path tempQueryFile;
+	Path tempAuthorityFile;
 	Path tempOutputFile;
 	Path tempOutputMultilineFile;
 	Path dictFile;
@@ -36,9 +36,9 @@ public class DedupStepDefs {
 	public void before() throws Exception {
 		tempDir = Files.createTempDirectory("dedup-dir");
 		tempConfigFile = new File(tempDir + File.separator + "config.xml").toPath();
-		tempSourceFile = new File(tempDir + File.separator + "source.txt").toPath();
-		// tempLookupFile shall be used additionally for matching tasks..
-		tempLookupFile = new File(tempDir + File.separator + "lookup.txt").toPath();
+		tempQueryFile = new File(tempDir + File.separator + "query.txt").toPath();
+		// tempAuthorityFile shall be used additionally for matching tasks..
+		tempAuthorityFile = new File(tempDir + File.separator + "authority.txt").toPath();
 		tempOutputFile = new File(tempDir + File.separator + "output.txt").toPath();
 		tempOutputMultilineFile = new File(tempDir + File.separator + "output_multiline.txt").toPath();
 		dictFile = new File(tempDir + File.separator + "funkyDict.txt").toPath();
@@ -62,14 +62,14 @@ public class DedupStepDefs {
 		w.close();
 	}
 
-	@Given("^(?:.*) has created an (?:.*)file(?:.*)$")
+	@Given("^(?:.*) has created an? (?:input|query)-file(?:.*)$")
 	public void x_has_created_an_y_file(DataTable fileContent) throws Exception {
-		writeDataTableToFile(fileContent, tempSourceFile);
+		writeDataTableToFile(fileContent, tempQueryFile);
 	}
 
-	@Given("^(?:he|she) has created a lookup-file to match against$")
-	public void has_created_a_lookupfile_to_match_against(DataTable fileContent) throws Exception {
-		writeDataTableToFile(fileContent, tempLookupFile);
+	@Given("^(?:he|she) has created an authority-file to match against$")
+	public void has_created_a_authorityfile_to_match_against(DataTable fileContent) throws Exception {
+		writeDataTableToFile(fileContent, tempAuthorityFile);
 	}
 
 	@Given("^(?:he|she) has access to a tab-separated dictionary$")

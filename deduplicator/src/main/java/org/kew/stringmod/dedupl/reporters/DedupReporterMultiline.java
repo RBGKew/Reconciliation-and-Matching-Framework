@@ -17,6 +17,7 @@ public class DedupReporterMultiline extends LuceneReporter {
 				this.getAvailableFieldsAsString());
 	}
 
+	@Override
 	protected String[] getAvailableFields () {
 		return (String[]) ArrayUtils.addAll(super.getAvailableFields(), DedupReporterMultiline.AVAILABLE_FIELDS);
 	}

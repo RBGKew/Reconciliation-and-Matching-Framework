@@ -161,9 +161,9 @@ public class CustomConfigController {
         if (!FieldValidator.validSlug(config.getName())) {
             br.addError(new ObjectError("config.name", "The name has to be set and can only contain ASCII letters and/or '-' and/or '_'"));
         }
-        // MatchConfig specific: has to specify a lookupFileName
-        if (config.getClassName().equals("MatchConfiguration") && config.getLookupFileName().equals("")) {
-            br.addError(new ObjectError("configuration.lookupFileName", "A Match Configuration needs to specify a Lookup File"));
+        // MatchConfig specific: has to specify a authorityFileName
+        if (config.getClassName().equals("MatchConfiguration") && config.getAuthorityFileName().equals("")) {
+            br.addError(new ObjectError("configuration.authorityFileName", "A Match Configuration needs to specify an authority File"));
         }
     }
     @RequestMapping(value = "/{configType}_configs/{configName}/clone", produces = "text/html")

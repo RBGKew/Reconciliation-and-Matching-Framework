@@ -20,8 +20,8 @@ Feature: run a simple configuration
                 <bean id="lucene_directory" class="java.lang.String">
                     <constructor-arg value="target/deduplicator"/>
                 </bean>
-                <bean id="sourcefile" class="java.io.File">
-                    <constructor-arg value="REPLACE_WITH_TMPDIR/source.tsv" />
+                <bean id="queryfile" class="java.io.File">
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/query.tsv" />
                 </bean>
                 <bean id="matchExactly" class="org.kew.stringmod.dedupl.matchers.ExactMatcher"
                     p:blanksMatch="false"/>
@@ -54,11 +54,11 @@ Feature: run a simple configuration
                 </util:list>
                 <util:list id="columnProperties">
                     <bean class="org.kew.stringmod.dedupl.configuration.Property"
-                        p:sourceColumnName="data_col"
+                        p:queryColumnName="data_col"
                         p:useInSelect="true"
-                        p:addOriginalSourceValue="true"
+                        p:addOriginalQueryValue="true"
                         p:matcher-ref="matchExactly">
-                        <property name="sourceTransformers">
+                        <property name="queryTransformers">
                             <util:list id="1">
                                 <ref bean="a2BTransformer"/>
                                 <ref bean="anotherTransformer"/>
@@ -67,11 +67,11 @@ Feature: run a simple configuration
                     </bean>
                 </util:list>
                 <bean id="config" class="org.kew.stringmod.dedupl.configuration.DeduplicationConfiguration"
-                    p:sourceFile-ref="sourcefile"
+                    p:queryFile-ref="queryfile"
                     p:properties-ref="columnProperties"
-                    p:scoreFieldName="id"
-                    p:sourceFileEncoding="UTF8"
-                    p:sourceFileDelimiter="&#09;"
+                    p:sortFieldName="id"
+                    p:queryFileEncoding="UTF-8"
+                    p:queryFileDelimiter="&#09;"
                     p:loadReportFrequency="50000"
                     p:assessReportFrequency="100"
                     p:reporters-ref="reporters"/>
@@ -83,7 +83,7 @@ Feature: run a simple configuration
 
             </beans>
             """
-        And some mysterious data-improver has put a file "source.tsv" in the same directory containing the following data:
+        And some mysterious data-improver has put a file "query.tsv" in the same directory containing the following data:
             | id      | data_col  | transformer_comments                               | matcher_comments |
             | 1       | 0         | zero should be replaced with blank                 | stays alone      |
             | 2       | some-name | hyphen should be replaced with white space         | 3 cluster items  |

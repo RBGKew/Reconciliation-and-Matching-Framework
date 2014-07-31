@@ -119,13 +119,13 @@ public class ConfigurationController {
 		if (matcher != null){
 			model.addAttribute("reconciliationConfiguration", configuration);
 			for (Property p : matcher.getConfig().getProperties()){
-				properties.add(p.getSourceColumnName());
-				p_matchers.put(p.getSourceColumnName(), p.getMatcher().getClass().getCanonicalName());
+				properties.add(p.getQueryColumnName());
+				p_matchers.put(p.getQueryColumnName(), p.getMatcher().getClass().getCanonicalName());
 				List<String> p_t = new ArrayList<String>();
-				for (Transformer t : p.getSourceTransformers()){
+				for (Transformer t : p.getQueryTransformers()){
 					p_t.add(t.getClass().getCanonicalName());
 				}
-				p_transformers.put(p.getSourceColumnName(), p_t);
+				p_transformers.put(p.getQueryColumnName(), p_t);
 			}
 			model.addAttribute("total", reconciliationService.getTotals().get(configName));
 			model.addAttribute("configName", configName);

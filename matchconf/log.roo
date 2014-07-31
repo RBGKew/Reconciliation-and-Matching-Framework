@@ -32,7 +32,7 @@ field boolean inputFileIgnoreHeader=false
 field string outputFileDelimiter
 field number loadReportFrequency=50000 --type java.lang.Number
 field number assessReportFrequency=100 --type java.lang.Number
-field string scoreFieldName="id"
+field string sortFieldName="id"
 field reference --class Wire --fieldName configuration --type Configuration --cardinality MANY_TO_ONE
 web mvc setup 
 web mvc all --package org.kew.stringmod.matchconf.web

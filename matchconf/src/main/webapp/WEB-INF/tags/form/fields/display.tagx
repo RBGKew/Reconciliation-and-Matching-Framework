@@ -61,9 +61,9 @@
           <c:when test='${ field.equals("reporters") }'>
             <a href='/MatchConf/${ configType }/${ object.getName() }/reporters'>${ object[field] } </a>
           </c:when>
-          <c:when test='${ field.equals("sourceTransformers") || field.equals("lookupTransformers") }'>
-            <c:if test='${ field.equals("sourceTransformers") }'><c:set var="transformerType" value="source"/></c:if>
-            <c:if test='${ field.equals("lookupTransformers") }'><c:set var="transformerType" value="lookup"/></c:if>
+          <c:when test='${ field.equals("queryTransformers") || field.equals("authorityTransformers") }'>
+            <c:if test='${ field.equals("queryTransformers") }'><c:set var="transformerType" value="query"/></c:if>
+            <c:if test='${ field.equals("authorityTransformers") }'><c:set var="transformerType" value="authority"/></c:if>
             <ul>
               <c:forEach items="${ object[field] }" var="wiredTransformer">
 	            <li> <a href='/MatchConf/${ configType }_configs/${ configName }/wires/${ object.getName() }/${ transformerType }_transformers/${ wiredTransformer.getRank() }_${ wiredTransformer.getTransformer().getName() }?form'>${ wiredTransformer }</a></li>

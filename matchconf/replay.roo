@@ -34,7 +34,7 @@ field boolean inputFileIgnoreHeader=false
 field string outputFileDelimiter
 field number loadReportFrequency=50000 --type java.lang.Number
 field number assessReportFrequency=100 --type java.lang.Number
-field string scoreFieldName="id"
+field string sortFieldName="id"
 // add the config reference to wire
 field reference --class Wire --fieldName configuration --type Configuration --cardinality MANY_TO_ONE
 // set up the web part

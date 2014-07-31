@@ -38,7 +38,7 @@ public abstract class Reporter implements AutoCloseable {
     protected File file;
     protected CsvMapWriter writer;
 
-    protected String scoreFieldName;
+    protected String sortFieldName;
     protected String idFieldName;
     protected Logger logger;
     protected boolean wantHeader = true; // TODO: make configurable
@@ -99,6 +99,7 @@ public abstract class Reporter implements AutoCloseable {
         return copy;
     }
 
+    @Override
     public void close() throws IOException {
         this.writer.flush();
         this.writer.close();
@@ -143,12 +144,12 @@ public abstract class Reporter implements AutoCloseable {
         this.idDelimiter = idDelimiter;
     }
 
-    public String getScoreFieldName() {
-        return scoreFieldName;
+    public String getSortFieldName() {
+        return sortFieldName;
     }
 
-    public void setScoreFieldName(String scoreFieldName) {
-        this.scoreFieldName = scoreFieldName;
+    public void setSortFieldName(String sortFieldName) {
+        this.sortFieldName = sortFieldName;
     }
 
     public String getIdFieldName() {

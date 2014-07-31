@@ -6,7 +6,7 @@
     <br/> <div id="config-link">for configuration: <a href="/MatchConf/dedup_configs/${ configName }">${ configName }</a></div> <br/>
 
     <page:show id="ps_org_kew_stringmod_matchconf_Wire" object="${wire}" path="/dedup_configs/${configName}/wires" z="wPM2z0vZzvoUxt5ig5gnHIJxV1Y=">
-        <field:display field="sourceColumnName" id="s_org_kew_stringmod_matchconf_Wire_sourceColumnName" object="${wire}" z="HKBdq/G/SKatOc8AkWPUUk0KTkA="/>
+        <field:display field="queryColumnName" id="s_org_kew_stringmod_matchconf_Wire_queryColumnName" object="${wire}" z="HKBdq/G/SKatOc8AkWPUUk0KTkA="/>
 
         <field:display field="useInSelect" id="s_org_kew_stringmod_matchconf_Wire_useInSelect" object="${wire}" z="QH+/PNxnNT9KeYOkFilJrnIxklQ="/>
         <field:display field="useInNegativeSelect" id="s_org_kew_stringmod_matchconf_Wire_useInNegativeSelect" object="${wire}" z="2G8VyleON7DaZ9oGgR6ZXWnl5WI="/>
@@ -15,10 +15,10 @@
         <field:display field="indexInitial" id="s_org_kew_stringmod_matchconf_Wire_indexInitial" object="${wire}" z="5+3Yne/ww2WSvtjXxb05pJV5VDY="/>
         <field:display field="useWildcard" id="s_org_kew_stringmod_matchconf_Wire_useWildcard" object="${wire}" z="dBlTpNI6eKdFXn1gBDxc8NDRfwY="/>
 
-        <field:display field="addOriginalSourceValue" id="s_org_kew_stringmod_matchconf_Wire_addOriginalSourceValue" object="${wire}" z="wk9RiIiz0r+xmpuedmuWZ4nDqoY="/>
-        <field:display field="addTransformedSourceValue" id="s_org_kew_stringmod_matchconf_Wire_addTransformedSourceValue" object="${wire}" z="41JsGovhZx9ZqTzVlt1bvwJAmtw="/>
+        <field:display field="addOriginalQueryValue" id="s_org_kew_stringmod_matchconf_Wire_addOriginalQueryValue" object="${wire}" z="wk9RiIiz0r+xmpuedmuWZ4nDqoY="/>
+        <field:display field="addTransformedQueryValue" id="s_org_kew_stringmod_matchconf_Wire_addTransformedQueryValue" object="${wire}" z="41JsGovhZx9ZqTzVlt1bvwJAmtw="/>
 
-        <field:display field="sourceTransformers" id="s_org_kew_stringmod_matchconf_Wire_sourceTransformers" object="${wire}" z="SpBa5kQrilbTcclnoEJjiSoDHEc="/>
+        <field:display field="queryTransformers" id="s_org_kew_stringmod_matchconf_Wire_queryTransformers" object="${wire}" z="SpBa5kQrilbTcclnoEJjiSoDHEc="/>
 
         <field:display field="matcher" id="s_org_kew_stringmod_matchconf_Wire_matcher" object="${wire}" z="oTIDlesPA+JhqAeVKu73P6cNXYI="/>
     </page:show>

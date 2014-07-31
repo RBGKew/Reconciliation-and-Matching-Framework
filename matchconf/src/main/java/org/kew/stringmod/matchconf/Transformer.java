@@ -87,12 +87,12 @@ public class Transformer extends Bot {
      */
     public Wire hasWiredTransformers() {
         for (Wire wire:this.getConfiguration().getWiring()) {
-            for (WiredTransformer wt:wire.getSourceTransformers()) {
+            for (WiredTransformer wt:wire.getQueryTransformers()) {
                 if (wt.getTransformer().getName().equals(this.getName())) {
                     return wire;
                 }
             }
-            for (WiredTransformer wt:wire.getLookupTransformers()) {
+            for (WiredTransformer wt:wire.getAuthorityTransformers()) {
                 if (wt.getTransformer().getName().equals(this.getName())) {
                     return wire;
                 }
@@ -133,13 +133,13 @@ public class Transformer extends Bot {
     public void removeWiredTransformersLongWay() {
         List<WiredTransformer> wts;
         for (Wire wire:this.getConfiguration().getWiring()) {
-            wts = wire.getSourceTransformers();
+            wts = wire.getQueryTransformers();
             for (WiredTransformer wt:new ArrayList<WiredTransformer>(wts)) {
                 if (wt.getTransformer().getName().equals(this.getName())) {
                     wts.remove(wt);
                 }
             }
-            wts = wire.getLookupTransformers();
+            wts = wire.getAuthorityTransformers();
             for (WiredTransformer wt:new ArrayList<WiredTransformer>(wts)) {
                 if (wt.getTransformer().getName().equals(this.getName())) wts.remove(wt);
             }

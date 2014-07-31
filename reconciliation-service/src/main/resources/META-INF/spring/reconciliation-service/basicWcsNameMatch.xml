@@ -10,7 +10,7 @@
 			\copy (select plant_name_id as id, ipni_id, rank, family, full_name_without_family, b_authors, genus_hybrid_marker, genus, species_hybrid_marker, species, infraspecific_rank, infraspecific_epithet, parenthetical_author, primary_author, place_of_publication, volume_and_page, first_published, nomenclatural_remarks from checklist_flat_plant) to 'wcs-names.csv' with CSV header;
 	 -->
 
-	<bean id="lookupfile" class="java.io.File">
+	<bean id="authorityfile" class="java.io.File">
 		<!--constructor-arg value="${dataDir}/wcs-genus-species.csv" /-->
 		<constructor-arg value="${dataDir}/wcs-gs-and-ildis-gs-and-solanaceae-gs.csv" />
 	</bean>
@@ -47,31 +47,31 @@
 
 	<util:list id="columnProperties">
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:sourceColumnName="genus" p:lookupColumnName="genus"
+			p:queryColumnName="genus" p:authorityColumnName="genus"
 			p:useInSelect="true" p:matcher-ref="exactMatch"
-			p:addOriginalLookupValue="true" p:addOriginalSourceValue="true">
+			p:addOriginalAuthorityValue="true" p:addOriginalQueryValue="true">
 		</bean>
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:sourceColumnName="species" p:lookupColumnName="species"
+			p:queryColumnName="species" p:authorityColumnName="species"
 			p:indexInitial="true"
 			p:useInSelect="true" p:matcher-ref="ldMatch"
-			p:addOriginalLookupValue="true" p:addOriginalSourceValue="true">
-			<property name="sourceTransformers">
+			p:addOriginalAuthorityValue="true" p:addOriginalQueryValue="true">
+			<property name="queryTransformers">
 				<util:list id="1">
 					<ref bean="epithetTransformer" />
 				</util:list>
 			</property>
-			<property name="lookupTransformers">
+			<property name="authorityTransformers">
 				<util:list id="1">
 					<ref bean="epithetTransformer" />
 				</util:list>
 			</property>
 		</bean>
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:sourceColumnName="authors" p:lookupColumnName="b_authors"
+			p:queryColumnName="authors" p:authorityColumnName="b_authors"
 			p:useInSelect="false" p:matcher-ref="authorCompositeMatcher"
-			p:addOriginalLookupValue="true" p:addOriginalSourceValue="true">
-			<property name="sourceTransformers">
+			p:addOriginalAuthorityValue="true" p:addOriginalQueryValue="true">
+			<property name="queryTransformers">
 				<util:list id="1">
 					<!--ref bean="stripNonAlphaNumerics" /-->
 					<ref bean="stripBasionymAuthor" />
@@ -81,7 +81,7 @@
 					<ref bean="shrunkAuthor"/>
 				</util:list>
 			</property>
-			<property name="lookupTransformers">
+			<property name="authorityTransformers">
 				<util:list id="1">
 					<!--ref bean="stripNonAlphaNumerics" /-->
 					<ref bean="stripBasionymAuthor" />
@@ -96,11 +96,11 @@
 
 	<bean id="config" class="org.kew.stringmod.dedupl.configuration.MatchConfiguration"
 		p:name="basicWcsNameMatch"
-		p:lookupFile-ref="lookupfile"
-		p:lookupFileEncoding="UTF8"
-		p:lookupFileDelimiter=","
+		p:authorityFile-ref="authorityfile"
+		p:authorityFileEncoding="UTF8"
+		p:authorityFileDelimiter=","
 		p:properties-ref="columnProperties"
-		p:scoreFieldName="id"
+		p:sortFieldName="id"
 		p:loadReportFrequency="50000"
 		p:assessReportFrequency="100"
 		p:maxSearchResults="10000"

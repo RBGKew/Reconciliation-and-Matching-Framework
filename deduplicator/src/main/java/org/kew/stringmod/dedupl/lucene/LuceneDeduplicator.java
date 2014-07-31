@@ -42,12 +42,12 @@ public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration
      *
      * The iterative flow is:
      * - load the data (== write the index)
-     * - iterate over the index, using it here as source data
-     * 	- for each record, look for matches in the same index, using it now as lookup data
+     * - iterate over the index, using it here as query data
+     * 	- for each record, look for matches in the same index, using it now as authority data
      *	- for each record, report into new fields of this record about matches via reporters
      *
      * The main difference to a matching task as defined by {@link LuceneMatcher} is that we use
-     * the lucene index not only as lookup but as well as source file iterating over each record.
+     * the lucene index not only as authority but as well as query file iterating over each record.
      */
     @Override
     public void run() throws Exception {
@@ -72,14 +72,14 @@ public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration
                 Document fromDoc = getFromLucene(i);
 
                 Map<String, String> docAsMap = LuceneUtils.doc2Map(fromDoc);
-                logger.debug("'Source'-Document from index: {}", docAsMap);
+                logger.debug("'Query'-Document from index: {}", docAsMap);
                 // pipe everything through to the output where an existing filter evals to false;
                 if (!StringUtils.isBlank(config.getRecordFilter()) && !jsEnv.evalFilter(config.getRecordFilter(), docAsMap)) {
                     for (Piper piper:config.getPipers()) piper.pipe(docAsMap);
                     continue;
                 }
 
-                dupls = new DocList(fromDoc, config.getScoreFieldName()); // each fromDoc has a duplicates cluster
+                dupls = new DocList(fromDoc, config.getSortFieldName()); // each fromDoc has a duplicates cluster
 
                 logger.debug(LuceneUtils.doc2String(fromDoc));
 

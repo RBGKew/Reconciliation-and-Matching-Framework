@@ -13,6 +13,7 @@ public abstract class LuceneReporter extends Reporter {
 
 	protected static String[] AVAILABLE_FIELDS = new String[] {};
 
+	@Override
 	protected String[] getAvailableFields () {
 		return (String[]) ArrayUtils.addAll(super.getAvailableFields(), LuceneReporter.AVAILABLE_FIELDS);
 	}

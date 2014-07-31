@@ -39,34 +39,34 @@ public class Configuration extends CloneMe<Configuration> {
 		"assessReportFrequency",
 		"className",
 		"loadReportFrequency",
-		"lookupFileDelimiter",
-		"lookupFileEncoding",
-		"lookupFileName",
+		"authorityFileDelimiter",
+		"authorityFileEncoding",
+		"authorityFileName",
 		"maxSearchResults",
 		"nextConfig",
 		"packageName",
 		"recordFilter",
-		"scoreFieldName",
-		"sourceFileDelimiter",
-		"sourceFileEncoding",
-		"sourceFileName",
+		"sortFieldName",
+		"queryFileDelimiter",
+		"queryFileEncoding",
+		"queryFileName",
 		"workDirPath",
 	};
 
 	private String name;
 	private String workDirPath;
-	private String sourceFileName = "source.tsv";
-	private String sourceFileEncoding = "UTF8";
-	private String sourceFileDelimiter = "&#09;";
+	private String queryFileName = "query.tsv";
+	private String queryFileEncoding = "UTF-8";
+	private String queryFileDelimiter = "&#09;";
 
 	private String recordFilter = "";
 
 	private String nextConfig = "";
 
-	// lookupFileName being populated decides over being a MatchConfig
-	private String lookupFileName = "";
-	private String lookupFileEncoding = "UTF8";
-	private String lookupFileDelimiter = "&#09;";
+	// authorityFileName being populated decides over being a MatchConfig
+	private String authorityFileName = "";
+	private String authorityFileEncoding = "UTF-8";
+	private String authorityFileDelimiter = "&#09;";
 
 	private String packageName = "org.kew.stringmod.dedupl.configuration";
 	private String className = "DeduplicationConfiguration";
@@ -74,7 +74,7 @@ public class Configuration extends CloneMe<Configuration> {
 	private String loadReportFrequency = "50000";
 	private String assessReportFrequency = "100";
 
-	private String scoreFieldName = "id";
+	private String sortFieldName = "id";
 
 	private String maxSearchResults = "10000";
 
@@ -134,58 +134,58 @@ public class Configuration extends CloneMe<Configuration> {
 	public static TypedQuery<Configuration> findDedupConfigsByNameEquals(String name) {
 		if (name == null || name.length() == 0) throw new IllegalArgumentException("The name argument is required");
 		EntityManager em = Configuration.entityManager();
-		TypedQuery<Configuration> q = em.createQuery("SELECT o FROM Configuration AS o WHERE o.name = :name AND o.lookupFileName = :lookupFileName", Configuration.class);
+		TypedQuery<Configuration> q = em.createQuery("SELECT o FROM Configuration AS o WHERE o.name = :name AND o.authorityFileName = :authorityFileName", Configuration.class);
 		q.setParameter("name", name);
-		q.setParameter("lookupFileName", "");
+		q.setParameter("authorityFileName", "");
 		return q;
 	}
 
 	public static TypedQuery<Configuration> findMatchConfigsByNameEquals(String name) {
 		if (name == null || name.length() == 0) throw new IllegalArgumentException("The name argument is required");
 		EntityManager em = Configuration.entityManager();
-		TypedQuery<Configuration> q = em.createQuery("SELECT o FROM Configuration AS o WHERE o.name = :name AND o.lookupFileName != :lookupFileName", Configuration.class);
+		TypedQuery<Configuration> q = em.createQuery("SELECT o FROM Configuration AS o WHERE o.name = :name AND o.authorityFileName != :authorityFileName", Configuration.class);
 		q.setParameter("name", name);
-		q.setParameter("lookupFileName", "");
+		q.setParameter("authorityFileName", "");
 		return q;
 	}
 
 	public static long countDedupConfigs() {
-		TypedQuery<Long> q = entityManager().createQuery("SELECT COUNT(o) FROM Configuration AS o WHERE o.lookupFileName = :lookupFileName", Long.class);
-		q.setParameter("lookupFileName", "");
+		TypedQuery<Long> q = entityManager().createQuery("SELECT COUNT(o) FROM Configuration AS o WHERE o.authorityFileName = :authorityFileName", Long.class);
+		q.setParameter("authorityFileName", "");
 		return q.getSingleResult();
 	}
 
 	public static long countMatchConfigs() {
-		TypedQuery<Long> q = entityManager().createQuery("SELECT COUNT(o) FROM Configuration AS o WHERE o.lookupFileName != :lookupFileName", Long.class);
-		q.setParameter("lookupFileName", "");
+		TypedQuery<Long> q = entityManager().createQuery("SELECT COUNT(o) FROM Configuration AS o WHERE o.authorityFileName != :authorityFileName", Long.class);
+		q.setParameter("authorityFileName", "");
 		return q.getSingleResult();
 	}
 
 	public static List<Configuration> findAllDedupConfigs() {
 		EntityManager em = Configuration.entityManager();
-		TypedQuery<Configuration> q = em.createQuery("SELECT o FROM Configuration AS o WHERE o.lookupFileName = :lookupFileName", Configuration.class);
-		q.setParameter("lookupFileName", "");
+		TypedQuery<Configuration> q = em.createQuery("SELECT o FROM Configuration AS o WHERE o.authorityFileName = :authorityFileName", Configuration.class);
+		q.setParameter("authorityFileName", "");
 		return q.getResultList();
 	}
 
 	public static List<Configuration> findAllMatchConfigs() {
 		EntityManager em = Configuration.entityManager();
-		TypedQuery<Configuration> q = em.createQuery("SELECT o FROM Configuration AS o WHERE o.lookupFileName != :lookupFileName", Configuration.class);
-		q.setParameter("lookupFileName", "");
+		TypedQuery<Configuration> q = em.createQuery("SELECT o FROM Configuration AS o WHERE o.authorityFileName != :authorityFileName", Configuration.class);
+		q.setParameter("authorityFileName", "");
 		return q.getResultList();
 	}
 
 	public static List<Configuration> findDedupConfigEntries(int firstResult, int maxResults) {
 		EntityManager em = Configuration.entityManager();
-		TypedQuery<Configuration> q = em.createQuery("SELECT o FROM Configuration AS o WHERE o.lookupFileName = :lookupFileName", Configuration.class);
-		q.setParameter("lookupFileName", "");
+		TypedQuery<Configuration> q = em.createQuery("SELECT o FROM Configuration AS o WHERE o.authorityFileName = :authorityFileName", Configuration.class);
+		q.setParameter("authorityFileName", "");
 		return q.setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
 	}
 
 	public static List<Configuration> findMatchConfigEntries(int firstResult, int maxResults) {
 		EntityManager em = Configuration.entityManager();
-		TypedQuery<Configuration> q = em.createQuery("SELECT o FROM Configuration AS o WHERE o.lookupFileName != :lookupFileName", Configuration.class);
-		q.setParameter("lookupFileName", "");
+		TypedQuery<Configuration> q = em.createQuery("SELECT o FROM Configuration AS o WHERE o.authorityFileName != :authorityFileName", Configuration.class);
+		q.setParameter("authorityFileName", "");
 		return q.setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
 	}
 

@@ -19,23 +19,23 @@ import org.springframework.roo.addon.tostring.RooToString;
  * {@link org.kew.stringmod.dedupl.configuration.Property}.
  *
  * It maps named columns to a {@link Matcher} per column and 0:n {@link Transformer}s per column.
- * It also takes care of dealing with the separation of source- and lookup- {@link Transformer}s.
+ * It also takes care of dealing with the separation of query- and authority- {@link Transformer}s.
  *
  * The link to the Transformers is via {@link WiredTransformer}s.
  */
 @RooJavaBean
 @RooToString
-@Table(uniqueConstraints = @javax.persistence.UniqueConstraint(columnNames = { "configuration", "sourceColumnName", "lookupColumnName" }))
+@Table(uniqueConstraints = @javax.persistence.UniqueConstraint(columnNames = { "configuration", "queryColumnName", "authorityColumnName" }))
 @RooJpaActiveRecord(finders = { "findWiresByMatcher" })
 public class Wire extends CloneMe<Wire> implements Comparable<Wire> {
 
-    static String[] CLONE_STRING_FIELDS = new String[] { "lookupColumnName", "sourceColumnName" };
+    static String[] CLONE_STRING_FIELDS = new String[] { "authorityColumnName", "queryColumnName" };
 
-    static String[] CLONE_BOOL_FIELDS = new String[] { "addOriginalSourceValue", "addOriginalLookupValue", "addTransformedLookupValue", "addTransformedSourceValue", "blanksMatch", "indexInitial", "indexLength", "useInNegativeSelect", "useInSelect", "useWildcard" };
+    static String[] CLONE_BOOL_FIELDS = new String[] { "addOriginalQueryValue", "addOriginalAuthorityValue", "addTransformedAuthorityValue", "addTransformedQueryValue", "blanksMatch", "indexInitial", "indexLength", "useInNegativeSelect", "useInSelect", "useWildcard" };
 
-    private String sourceColumnName;
+    private String queryColumnName;
 
-    private String lookupColumnName = "";
+    private String authorityColumnName = "";
 
     public Boolean useInSelect = false;
 
@@ -45,13 +45,13 @@ public class Wire extends CloneMe<Wire> implements Comparable<Wire> {
 
     public Boolean blanksMatch = false;
 
-    public Boolean addOriginalSourceValue = false;
+    public Boolean addOriginalQueryValue = false;
 
-    public Boolean addOriginalLookupValue = false;
+    public Boolean addOriginalAuthorityValue = false;
 
-    public Boolean addTransformedSourceValue = false;
+    public Boolean addTransformedQueryValue = false;
 
-    public Boolean addTransformedLookupValue = false;
+    public Boolean addTransformedAuthorityValue = false;
 
     public Boolean indexInitial = false;
 
@@ -65,13 +65,13 @@ public class Wire extends CloneMe<Wire> implements Comparable<Wire> {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @Sort(type = SortType.NATURAL)
-    private List<WiredTransformer> sourceTransformers = new ArrayList<WiredTransformer>();
+    private List<WiredTransformer> queryTransformers = new ArrayList<WiredTransformer>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<WiredTransformer> lookupTransformers = new ArrayList<WiredTransformer>();
+    private List<WiredTransformer> authorityTransformers = new ArrayList<WiredTransformer>();
 
     public String getName() {
-        return this.getSourceColumnName() + "_" + this.getLookupColumnName();
+        return this.getQueryColumnName() + "_" + this.getAuthorityColumnName();
     }
 
     @Override
@@ -79,6 +79,7 @@ public class Wire extends CloneMe<Wire> implements Comparable<Wire> {
         return this.getName().compareTo(w.getName());
     }
 
+    @Override
     public String toString() {
         return this.getName();
     }
@@ -95,11 +96,11 @@ public class Wire extends CloneMe<Wire> implements Comparable<Wire> {
         // then the relational attributes
         clone.setConfiguration(configClone);
         clone.setMatcher(this.matcher.cloneMe(configClone));
-        for (WiredTransformer trans : this.getSourceTransformers()) {
-            clone.getSourceTransformers().add(trans.cloneMe(configClone));
+        for (WiredTransformer trans : this.getQueryTransformers()) {
+            clone.getQueryTransformers().add(trans.cloneMe(configClone));
         }
-        for (WiredTransformer trans : this.getLookupTransformers()) {
-            clone.getLookupTransformers().add(trans.cloneMe(configClone));
+        for (WiredTransformer trans : this.getAuthorityTransformers()) {
+            clone.getAuthorityTransformers().add(trans.cloneMe(configClone));
         }
         return clone;
     }
@@ -112,15 +113,15 @@ public class Wire extends CloneMe<Wire> implements Comparable<Wire> {
         return null;
     }
 
-    public WiredTransformer getSourceTransformerForName(String wiredTransformerName) {
-        for (WiredTransformer wiredTransformer : this.getSourceTransformers()) {
+    public WiredTransformer getQueryTransformerForName(String wiredTransformerName) {
+        for (WiredTransformer wiredTransformer : this.getQueryTransformers()) {
             if (wiredTransformer.getName().equals(wiredTransformerName)) return wiredTransformer;
         }
         return null;
     }
 
-    public WiredTransformer getLookupTransformerForName(String wiredTransformerName) {
-        for (WiredTransformer wiredTransformer : this.getLookupTransformers()) {
+    public WiredTransformer getAuthorityTransformerForName(String wiredTransformerName) {
+        for (WiredTransformer wiredTransformer : this.getAuthorityTransformers()) {
             if (wiredTransformer.getName().equals(wiredTransformerName)) return wiredTransformer;
         }
         return null;

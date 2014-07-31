@@ -1,48 +1,22 @@
 package org.kew.stringmod.dedupl.configuration;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * The important aspect of a DeduplicationConfiguration is that for a
- * deduplication process there is no real differentiation between source and
- * lookup file as we only have one file that is matched to itself.
- *
+ * deduplication process there is no real differentiation between query and
+ * authority as we only have one file that is matched to itself.
  */
 public class DeduplicationConfiguration extends Configuration {
 
-    // TODO: rename, possibly move to reporters
-    private File topCopyFile;
-
-    // TODO: replace
-    private String scoreFieldName;
-
-    @Override
-    public String[] outputDefs() {
-        List<String> sourceOutputDefs = new ArrayList<>();
-        for (Property prop:this.getProperties()) {
-            if (prop.isAddOriginalSourceValue()) sourceOutputDefs.add(prop.getSourceColumnName());
-            if (prop.isAddTransformedSourceValue()) sourceOutputDefs.add(prop.getSourceColumnName() + "_transf");
-        }
-        return sourceOutputDefs.toArray(new String[sourceOutputDefs.size()]);
-    }
-
-
-    // Getters and Setters
-    public File getTopCopyFile() {
-        return topCopyFile;
-    }
-    public void setTopCopyFile(File topCopyFile) {
-        this.topCopyFile = topCopyFile;
-    }
-    @Override
-    public String getScoreFieldName() {
-        return scoreFieldName;
-    }
-    @Override
-    public void setScoreFieldName(String scoreFieldName) {
-        this.scoreFieldName = scoreFieldName;
-    }
-
+	@Override
+	public String[] outputDefs() {
+		List<String> queryOutputDefs = new ArrayList<>();
+		for (Property prop : this.getProperties()) {
+			if (prop.isAddOriginalQueryValue()) queryOutputDefs.add(prop.getQueryColumnName());
+			if (prop.isAddTransformedQueryValue()) queryOutputDefs.add(prop.getQueryColumnName() + "_transf");
+		}
+		return queryOutputDefs.toArray(new String[queryOutputDefs.size()]);
+	}
 }

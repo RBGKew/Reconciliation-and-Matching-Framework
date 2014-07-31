@@ -10,16 +10,17 @@ import org.kew.stringmod.utils.LibraryRegister;
 public class DedupReporter extends LuceneReporter {
 
 	protected static String[] AVAILABLE_FIELDS = new String[] {"cluster_size", "from_id", "ids_in_cluster"};
-	
+
 	public DedupReporter() {
 		logger.info("I will be creating an enhanced output file for you with additional fields: " +
 				this.getAvailableFieldsAsString());
 	}
 
+	@Override
 	protected String[] getAvailableFields () {
 		return (String[]) ArrayUtils.addAll(super.getAvailableFields(), DedupReporter.AVAILABLE_FIELDS);
 	}
-	
+
 	/*
 	 * Returns one line for one identified cluster containing the stored fields for
 	 * the 'best' record + additional info

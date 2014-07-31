@@ -11,7 +11,7 @@
 		Matches on genus, species and infraspecies epithets, plus author.
 	-->
 
-	<!-- IPNI Flat datasource for lookup data -->
+	<!-- IPNI Flat datasource for authority data -->
 	<bean id="ipniFlatDatabase" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="${ipniflat.database.driverClassName}" />
 		<property name="url" value="${ipniflat.database.url}" />
@@ -27,7 +27,7 @@
 		<property name="removeAbandonedTimeout" value="1200" />
 		<property name="removeAbandonedOnMaintenance" value="true" />
 	</bean>
-	<bean id="lookupFromIpniDatabase" class="org.kew.reconciliation.service.DatabaseCursorRecordReader">
+	<bean id="authorityFromIpniDatabase" class="org.kew.reconciliation.service.DatabaseCursorRecordReader">
 		<property name="dataSource" ref="ipniFlatDatabase"/>
 		<property name="sql" value="SELECT id,genus,species,infraspecies,authors FROM ipni_flat_topcopy_notsuppressed WHERE genus IS NOT NULL"/>
 		<property name="fetchSize" value="150000"/>
@@ -71,13 +71,13 @@
 	<util:list id="columnProperties">
 		<!-- Genus -->
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:sourceColumnName="genus"
-			p:lookupColumnName="genus"
+			p:queryColumnName="genus"
+			p:authorityColumnName="genus"
 			p:useInSelect="true"
 			p:matcher-ref="exactMatch"
-			p:addOriginalLookupValue="true"
-			p:addOriginalSourceValue="true">
-			<property name="sourceTransformers">
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
+			<property name="queryTransformers">
 				<util:list id="1">
 					<ref bean="fakeHybridSignCleaner" />
 					<ref bean="safeStripNonAlphas" />
@@ -85,7 +85,7 @@
 					<ref bean="epithetTransformer" />
 				</util:list>
 			</property>
-			<property name="lookupTransformers">
+			<property name="authorityTransformers">
 				<util:list id="1">
 					<ref bean="safeStripNonAlphas" />
 					<ref bean="doubleLettersTransformer" />
@@ -96,14 +96,14 @@
 
 		<!-- Species -->
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:sourceColumnName="species"
-			p:lookupColumnName="species"
+			p:queryColumnName="species"
+			p:authorityColumnName="species"
 			p:indexInitial="true"
 			p:useInSelect="true"
 			p:matcher-ref="ld1Match"
-			p:addOriginalLookupValue="true"
-			p:addOriginalSourceValue="true">
-			<property name="sourceTransformers">
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
+			<property name="queryTransformers">
 				<util:list id="1">
 					<ref bean="fakeHybridSignCleaner" />
 					<ref bean="safeStripNonAlphas" />
@@ -111,7 +111,7 @@
 					<ref bean="epithetTransformer" />
 				</util:list>
 			</property>
-			<property name="lookupTransformers">
+			<property name="authorityTransformers">
 				<util:list id="1">
 					<ref bean="safeStripNonAlphas"/>
 					<ref bean="doubleLettersTransformer"/>
@@ -122,20 +122,20 @@
 
 		<!-- Infraspecific epithet -->
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:sourceColumnName="infraspecies" p:lookupColumnName="infraspecies"
+			p:queryColumnName="infraspecies" p:authorityColumnName="infraspecies"
 			p:indexInitial="true"
 			p:useInSelect="true"
 			p:matcher-ref="ld1Match"
-			p:addOriginalLookupValue="true"
-			p:addOriginalSourceValue="true">
-			<property name="sourceTransformers">
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
+			<property name="queryTransformers">
 				<util:list id="1">
 					<ref bean="safeStripNonAlphas"/>
 					<ref bean="doubleLettersTransformer"/>
 					<ref bean="epithetTransformer" />
 				</util:list>
 			</property>
-			<property name="lookupTransformers">
+			<property name="authorityTransformers">
 				<util:list id="1">
 					<ref bean="safeStripNonAlphas"/>
 					<ref bean="doubleLettersTransformer"/>
@@ -146,13 +146,13 @@
 
 		<!-- Authors -->
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:sourceColumnName="authors"
-			p:lookupColumnName="authors"
+			p:queryColumnName="authors"
+			p:authorityColumnName="authors"
 			p:useInSelect="false"
 			p:matcher-ref="ld1Match"
-			p:addOriginalLookupValue="true"
-			p:addOriginalSourceValue="true">
-			<property name="sourceTransformers">
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
+			<property name="queryTransformers">
 				<util:list id="1">
 					<ref bean="authorDictionaryTransformer" />
 					<ref bean="stripExAuthor" />
@@ -160,7 +160,7 @@
 					<ref bean="shrunkAuthor"/>
 				</util:list>
 			</property>
-			<property name="lookupTransformers">
+			<property name="authorityTransformers">
 				<util:list id="1">
 					<ref bean="authorDictionaryTransformer" />
 					<ref bean="stripExAuthor" />
@@ -189,9 +189,9 @@
 	<bean id="config" class="org.kew.stringmod.dedupl.configuration.ReconciliationServiceConfiguration"
 		p:name="standardIpniNameMatch"
 		p:description="Moderately strict reconciliation configuration matching against names stored in the International Plant Name Index (IPNI)."
-		p:lookupRecords-ref="lookupFromIpniDatabase"
+		p:authorityRecords-ref="authorityFromIpniDatabase"
 		p:properties-ref="columnProperties"
-		p:scoreFieldName="id"
+		p:sortFieldName="id"
 		p:loadReportFrequency="25000"
 		p:assessReportFrequency="1000"
 		p:maxSearchResults="10000"

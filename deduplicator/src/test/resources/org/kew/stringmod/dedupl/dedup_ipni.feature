@@ -49,7 +49,7 @@ Feature: Deduplicate Ipni
                     <constructor-arg value="target/deduplicator"/>
                 </bean>
                 <bean id="inputfile" class="java.io.File">
-                    <constructor-arg value="REPLACE_WITH_TMPDIR/source.txt" />
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/query.txt" />
                 </bean>
                 <bean id="exactMatcher" class="org.kew.stringmod.dedupl.matchers.ExactMatcher" />
                 <bean id="authorCommonTokensMatcher" class="org.kew.stringmod.dedupl.matchers.AuthorCommonTokensMatcher"
@@ -104,14 +104,14 @@ Feature: Deduplicate Ipni
                 </util:list>
                 <util:list id="columnProperties">
                     <bean class="org.kew.stringmod.dedupl.configuration.Property">
-                        <property name="sourceColumnName" value="family"/>
+                        <property name="queryColumnName" value="family"/>
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
-                        <property name="addOriginalSourceValue" value="true"/>
+                        <property name="addOriginalQueryValue" value="true"/>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property">
-                        <property name="sourceColumnName" value="genus"/>
+                        <property name="queryColumnName" value="genus"/>
                         <property name="matcher" ref="exactMatcher"/>
-                        <property name="sourceTransformers">
+                        <property name="queryTransformers">
                             <util:list id="1">
                                 <ref bean="fakeHybridSignCleaner"/>
                                 <ref bean="safeStripNonAlphasTransformer"/>
@@ -120,13 +120,13 @@ Feature: Deduplicate Ipni
                         <property name="useInSelect" value="true"/>
                         <property name="indexInitial" value="true"/>
                         <property name="indexLength" value="true"/>
-                        <property name="addOriginalSourceValue" value="true"/>
-                        <property name="addTransformedSourceValue" value="true"/>
+                        <property name="addOriginalQueryValue" value="true"/>
+                        <property name="addTransformedQueryValue" value="true"/>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property">
-                        <property name="sourceColumnName" value="basionym_author"/>
+                        <property name="queryColumnName" value="basionym_author"/>
                         <property name="matcher" ref="authorCommonTokensMatcher"/>
-                        <property name="sourceTransformers">
+                        <property name="queryTransformers">
                             <util:list id="1">
                                 <ref bean="safeStripNonAlphasTransformer"/>
                             </util:list>
@@ -134,81 +134,81 @@ Feature: Deduplicate Ipni
                         <property name="blanksMatch" value="true"/>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property">
-                        <property name="sourceColumnName" value="publishing_author"/>
-                        <property name="sourceTransformers">
+                        <property name="queryColumnName" value="publishing_author"/>
+                        <property name="queryTransformers">
                             <util:list id="1">
                                 <ref bean="safeStripNonAlphasTransformer"/>
                             </util:list>
                         </property>
                         <property name="matcher" ref="authorCommonTokensMatcher"/>
-                        <property name="addOriginalSourceValue" value="true"/>
-                        <property name="addTransformedSourceValue" value="true"/>
+                        <property name="addOriginalQueryValue" value="true"/>
+                        <property name="addTransformedQueryValue" value="true"/>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property">
-                        <property name="sourceColumnName" value="full_name_without_family_and_authors"/>
+                        <property name="queryColumnName" value="full_name_without_family_and_authors"/>
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
-                        <property name="addOriginalSourceValue" value="true"/>
+                        <property name="addOriginalQueryValue" value="true"/>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property">
-                        <property name="sourceColumnName" value="publication"/>
+                        <property name="queryColumnName" value="publication"/>
                         <property name="matcher" ref="capitalLettersMatcher"/>
-                        <property name="sourceTransformers">
+                        <property name="queryTransformers">
                             <util:list id="1">
                                 <ref bean="safeStripNonAlphasTransformer"/>
                             </util:list>
                         </property>
                         <property name="blanksMatch" value="true"/>
-                        <property name="addTransformedSourceValue" value="true"/>
+                        <property name="addTransformedQueryValue" value="true"/>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property">
-                        <property name="sourceColumnName" value="collation"/>
-                        <property name="sourceTransformers">
+                        <property name="queryColumnName" value="collation"/>
+                        <property name="queryTransformers">
                             <util:list id="1">
                                 <ref bean="collationCleaner"/>
                             </util:list>
                         </property>
                         <property name="matcher" ref="numberMatcher"/>
-                        <property name="addOriginalSourceValue" value="true"/>
+                        <property name="addOriginalQueryValue" value="true"/>
                         <property name="blanksMatch" value="true"/>
-                        <property name="addTransformedSourceValue" value="true"/>
+                        <property name="addTransformedQueryValue" value="true"/>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property">
-                        <property name="sourceColumnName" value="publication_year"/>
+                        <property name="queryColumnName" value="publication_year"/>
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
                         <property name="blanksMatch" value="true"/>
-                        <property name="sourceTransformers">
+                        <property name="queryTransformers">
                             <util:list id="1">
                                 <ref bean="yearCleaner"/>
                             </util:list>
                         </property>
-                        <property name="addOriginalSourceValue" value="true"/>
+                        <property name="addOriginalQueryValue" value="true"/>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property">
-                        <property name="sourceColumnName" value="reference_remarks"/>
+                        <property name="queryColumnName" value="reference_remarks"/>
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property">
-                        <property name="sourceColumnName" value="remarks"/>
+                        <property name="queryColumnName" value="remarks"/>
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property">
-                        <property name="sourceColumnName" value="std_score"/>
+                        <property name="queryColumnName" value="std_score"/>
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
-                        <property name="addOriginalSourceValue" value="true"/>
+                        <property name="addOriginalQueryValue" value="true"/>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property">
-                        <property name="sourceColumnName" value="test_concern"/>
+                        <property name="queryColumnName" value="test_concern"/>
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
-                        <property name="addOriginalSourceValue" value="true"/>
+                        <property name="addOriginalQueryValue" value="true"/>
                     </bean>
                 </util:list>
                 <bean id="config" class="org.kew.stringmod.dedupl.configuration.DeduplicationConfiguration"
-                    p:sourceFile-ref="inputfile"
-                    p:sourceFileDelimiter="&#09;"
+                    p:queryFile-ref="inputfile"
+                    p:queryFileDelimiter="&#09;"
                     p:properties-ref="columnProperties"
                     p:loadReportFrequency="5000"
                     p:writeComparisonReport="true"
-                    p:scoreFieldName="std_score"
+                    p:sortFieldName="std_score"
                     p:reporters-ref="reporters"/>
                 <!-- import the generic application-context (equal for dedup/match configurations) -->
                 <import resource="classpath*:application-context.xml"/>
@@ -309,7 +309,7 @@ Feature: Deduplicate Ipni
                     <constructor-arg value="target/deduplicator"/>
                 </bean>
                 <bean id="inputfile" class="java.io.File">
-                    <constructor-arg value="REPLACE_WITH_TMPDIR/source.txt" />
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/query.txt" />
                 </bean>
                 <bean id="exactMatcher" class="org.kew.stringmod.dedupl.matchers.ExactMatcher" />
                 <bean id="authorCommonTokensMatcher" class="org.kew.stringmod.dedupl.matchers.AuthorCommonTokensMatcher"
@@ -352,15 +352,15 @@ Feature: Deduplicate Ipni
                 </util:list>
                 <util:list id="columnProperties">
                     <bean class="org.kew.stringmod.dedupl.configuration.Property">
-                        <property name="sourceColumnName" value="family" />
+                        <property name="queryColumnName" value="family" />
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
                         <property name="useInSelect" value="false"/>
-                        <property name="addOriginalSourceValue" value="true"/>
+                        <property name="addOriginalQueryValue" value="true"/>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property">
-                        <property name="sourceColumnName" value="genus"/>
+                        <property name="queryColumnName" value="genus"/>
                         <property name="matcher" ref="exactMatcher"/>
-                        <property name="sourceTransformers">
+                        <property name="queryTransformers">
                             <util:list id="1">
                                 <ref bean="fakeHybridSignCleaner"/>
                                 <ref bean="safeStripNonAlphasTransformer"/>
@@ -369,13 +369,13 @@ Feature: Deduplicate Ipni
                         <property name="useInSelect" value="true"/>
                         <property name="indexInitial" value="true"/>
                         <property name="indexLength" value="true"/>
-                        <property name="addOriginalSourceValue" value="true"/>
-                        <property name="addTransformedSourceValue" value="true"/>
+                        <property name="addOriginalQueryValue" value="true"/>
+                        <property name="addTransformedQueryValue" value="true"/>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property">
-                        <property name="sourceColumnName" value="basionym_author"/>
+                        <property name="queryColumnName" value="basionym_author"/>
                         <property name="matcher" ref="authorCommonTokensMatcher"/>
-                        <property name="sourceTransformers">
+                        <property name="queryTransformers">
                             <util:list id="1">
                                 <ref bean="safeStripNonAlphasTransformer"/>
                             </util:list>
@@ -383,96 +383,96 @@ Feature: Deduplicate Ipni
                         <property name="blanksMatch" value="true"/>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property">
-                        <property name="sourceColumnName" value="publishing_author"/>
-                        <property name="sourceTransformers">
+                        <property name="queryColumnName" value="publishing_author"/>
+                        <property name="queryTransformers">
                             <util:list id="1">
                                 <ref bean="safeStripNonAlphasTransformer"/>
                             </util:list>
                         </property>
                         <property name="matcher" ref="authorCommonTokensMatcher"/>
                         <property name="blanksMatch" value="true"/>
-                        <property name="addOriginalSourceValue" value="true"/>
-                        <property name="addTransformedSourceValue" value="true"/>
+                        <property name="addOriginalQueryValue" value="true"/>
+                        <property name="addTransformedQueryValue" value="true"/>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property">
-                        <property name="sourceColumnName" value="full_name_without_family_and_authors"/>
+                        <property name="queryColumnName" value="full_name_without_family_and_authors"/>
                         <property name="matcher" ref="exactMatcher"/>
-                        <property name="sourceTransformers">
+                        <property name="queryTransformers">
                             <util:list id="1">
                                 <ref bean="fakeHybridSignCleaner"/>
                                 <ref bean="safeStripNonAlphasTransformer"/>
                             </util:list>
                         </property>
-                        <property name="addOriginalSourceValue" value="true"/>
-                        <property name="addTransformedSourceValue" value="true"/>
+                        <property name="addOriginalQueryValue" value="true"/>
+                        <property name="addTransformedQueryValue" value="true"/>
                         <property name="useInSelect" value="true"/>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property">
-                        <property name="sourceColumnName" value="publication"/>
+                        <property name="queryColumnName" value="publication"/>
                         <property name="matcher" ref="capitalLettersMatcher"/>
-                        <property name="sourceTransformers">
+                        <property name="queryTransformers">
                             <util:list id="1">
                                 <ref bean="safeStripNonAlphaNumericsTransformer"/>
                             </util:list>
                         </property>
                         <property name="blanksMatch" value="true"/>
-                        <property name="addTransformedSourceValue" value="true"/>
+                        <property name="addTransformedQueryValue" value="true"/>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property">
-                        <property name="sourceColumnName" value="collation"/>
-                        <property name="sourceTransformers">
+                        <property name="queryColumnName" value="collation"/>
+                        <property name="queryTransformers">
                             <util:list id="1">
                                 <ref bean="collationCleaner"/>
                             </util:list>
                         </property>
                         <property name="matcher" ref="numberMatcher"/>
-                        <property name="addOriginalSourceValue" value="true"/>
-                        <property name="addTransformedSourceValue" value="true"/>
+                        <property name="addOriginalQueryValue" value="true"/>
+                        <property name="addTransformedQueryValue" value="true"/>
                         <property name="blanksMatch" value="true"/>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property">
-                        <property name="sourceColumnName" value="publication_year"/>
+                        <property name="queryColumnName" value="publication_year"/>
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
                         <property name="blanksMatch" value="true" />
-                        <property name="sourceTransformers">
+                        <property name="queryTransformers">
                             <util:list id="1">
                                 <ref bean="collationCleaner"/>
                             </util:list>
                         </property>
-                        <property name="addOriginalSourceValue" value="true"/>
+                        <property name="addOriginalQueryValue" value="true"/>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property">
-                        <property name="sourceColumnName" value="reference_remarks"/>
+                        <property name="queryColumnName" value="reference_remarks"/>
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
                         <property name="useInSelect" value="false"/>
-                        <property name="addOriginalSourceValue" value="true"/>
+                        <property name="addOriginalQueryValue" value="true"/>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property">
-                        <property name="sourceColumnName" value="remarks"/>
+                        <property name="queryColumnName" value="remarks"/>
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
                         <property name="useInSelect" value="false"/>
-                        <property name="addOriginalSourceValue" value="true"/>
+                        <property name="addOriginalQueryValue" value="true"/>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property">
-                        <property name="sourceColumnName" value="std_score"/>
+                        <property name="queryColumnName" value="std_score"/>
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
                         <property name="useInSelect" value="false"/>
-                        <property name="addOriginalSourceValue" value="true"/>
+                        <property name="addOriginalQueryValue" value="true"/>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property">
-                        <property name="sourceColumnName" value="dit_family"/>
+                        <property name="queryColumnName" value="dit_family"/>
                         <property name="matcher" ref="alwaysMatchingMatcher"/>
                         <property name="useInSelect" value="false"/>
-                        <property name="addOriginalSourceValue" value="true"/>
+                        <property name="addOriginalQueryValue" value="true"/>
                     </bean>
                 </util:list>
                 <bean id="config" class="org.kew.stringmod.dedupl.configuration.DeduplicationConfiguration"
-                    p:sourceFile-ref="inputfile"
-                    p:sourceFileDelimiter="&#09;"
+                    p:queryFile-ref="inputfile"
+                    p:queryFileDelimiter="&#09;"
                     p:properties-ref="columnProperties"
                     p:loadReportFrequency="5000"
                     p:writeComparisonReport="true"
-                    p:scoreFieldName="std_score"
+                    p:sortFieldName="std_score"
                     p:reporters-ref="reporters"/>
                 <!-- import the generic application-context (equal for dedup/match configurations) -->
                 <import resource="classpath*:application-context.xml"/>

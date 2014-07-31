@@ -111,7 +111,7 @@ public class MatchController {
 
 					// Save the property names:
 					for (Property p : matcher.getConfig().getProperties()) {
-						properties.add(p.getSourceColumnName());
+						properties.add(p.getQueryColumnName());
 					}
 
 					CsvPreference customCsvPref = new CsvPreference.Builder('"', ',', "\n").build();

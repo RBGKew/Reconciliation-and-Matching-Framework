@@ -17,14 +17,14 @@ public class MatchReporter extends LuceneReporter {
                 this.getAvailableFieldsAsString());
     }
 
+    @Override
     protected String[] getAvailableFields () {
         return (String[]) ArrayUtils.addAll(super.getAvailableFields(), MatchReporter.AVAILABLE_FIELDS);
     }
 
-    /*
+    /**
      * Returns one line for one identified cluster containing the stored fields for
      * the 'best' record + additional info
-     *
      */
     @Override
     public void reportResults (Map<String, String> fromRecord, List<Map<String, String>> matches) throws IOException {
@@ -32,9 +32,8 @@ public class MatchReporter extends LuceneReporter {
         fromRecord.put("configLog", this.getConfigLog());
         fromRecord.put(namespace + "total_matches", this.getClusterSize(fromRecord, matches));
         fromRecord.put(namespace + "matching_ids", this.getIDsInCluster(fromRecord, matches, this.getIdDelimiter()));
-        // add the lookup values of the best match
-        if (matches.size() > 0) fromRecord.putAll(Reporter.getNamespacedCopy(matches.get(0), namespace + "lookup_"));
+        // add the authority values of the best match
+        if (matches.size() > 0) fromRecord.putAll(Reporter.getNamespacedCopy(matches.get(0), namespace + "authority_"));
         this.writer.write(fromRecord, this.header);
     }
-
 }

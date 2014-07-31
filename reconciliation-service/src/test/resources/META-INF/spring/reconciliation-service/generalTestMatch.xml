@@ -11,7 +11,7 @@
 
 	<!-- • TEST CONFIGURATION • Used for cucumber tests • -->
 
-	<bean id="lookupfile" class="java.io.File">
+	<bean id="authorityfile" class="java.io.File">
 		<constructor-arg value="src/test/resources/TPL-Congea.tsv" />
 	</bean>
 
@@ -50,20 +50,20 @@
 	<util:list id="columnProperties">
 		<!-- Genus -->
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:sourceColumnName="genus"
-			p:lookupColumnName="genus"
+			p:queryColumnName="genus"
+			p:authorityColumnName="genus"
 			p:useInSelect="true"
-			p:addOriginalLookupValue="true"
-			p:addOriginalSourceValue="true"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true"
 			p:matcher-ref="exactMatch">
-			<property name="sourceTransformers">
+			<property name="queryTransformers">
 				<util:list id="1">
 					<ref bean="fakeHybridSignCleaner" />
 					<ref bean="safeStripNonAlphas" />
 					<ref bean="epithetTransformer" />
 				</util:list>
 			</property>
-			<property name="lookupTransformers">
+			<property name="authorityTransformers">
 				<util:list id="1">
 					<ref bean="safeStripNonAlphas" />
 					<ref bean="epithetTransformer" />
@@ -73,20 +73,20 @@
 
 		<!-- Species -->
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:sourceColumnName="species"
-			p:lookupColumnName="species"
+			p:queryColumnName="species"
+			p:authorityColumnName="species"
 			p:useInSelect="true"
-			p:addOriginalLookupValue="true"
-			p:addOriginalSourceValue="true"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true"
 			p:matcher-ref="ld1Match">
-			<property name="sourceTransformers">
+			<property name="queryTransformers">
 				<util:list id="1">
 					<ref bean="fakeHybridSignCleaner" />
 					<ref bean="safeStripNonAlphas" />
 					<ref bean="epithetTransformer" />
 				</util:list>
 			</property>
-			<property name="lookupTransformers">
+			<property name="authorityTransformers">
 				<util:list id="1">
 					<ref bean="safeStripNonAlphas"/>
 					<ref bean="epithetTransformer" />
@@ -96,19 +96,19 @@
 
 		<!-- Infraspecific epithet -->
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:sourceColumnName="infraspecies"
-			p:lookupColumnName="infraspecies"
+			p:queryColumnName="infraspecies"
+			p:authorityColumnName="infraspecies"
 			p:useInSelect="true"
-			p:addOriginalLookupValue="true"
-			p:addOriginalSourceValue="true"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true"
 			p:matcher-ref="ld1Match">
-			<property name="sourceTransformers">
+			<property name="queryTransformers">
 				<util:list id="1">
 					<ref bean="safeStripNonAlphas"/>
 					<ref bean="epithetTransformer" />
 				</util:list>
 			</property>
-			<property name="lookupTransformers">
+			<property name="authorityTransformers">
 				<util:list id="1">
 					<ref bean="safeStripNonAlphas"/>
 					<ref bean="epithetTransformer" />
@@ -118,21 +118,21 @@
 
 		<!-- Authors -->
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:sourceColumnName="authors"
-			p:lookupColumnName="authors"
+			p:queryColumnName="authors"
+			p:authorityColumnName="authors"
 			p:useInSelect="false"
 			p:matcher-ref="commonTokensOrBlankMatcher"
-			p:addOriginalLookupValue="true"
-			p:addOriginalSourceValue="true"
-			p:addTransformedSourceValue="true"
-			p:addTransformedLookupValue="true">
-			<property name="sourceTransformers">
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true"
+			p:addTransformedQueryValue="true"
+			p:addTransformedAuthorityValue="true">
+			<property name="queryTransformers">
 				<util:list id="1">
 					<ref bean="stripBasionymAuthor" />
 					<ref bean="shrunkAuthor" />
 				</util:list>
 			</property>
-			<property name="lookupTransformers">
+			<property name="authorityTransformers">
 				<util:list id="1">
 					<ref bean="stripBasionymAuthor" />
 					<ref bean="shrunkAuthor" />
@@ -142,17 +142,17 @@
 
 		<!-- TaxonomicStatus — just for output -->
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:sourceColumnName="taxonomicStatus"
-			p:lookupColumnName="taxonomicStatus"
-			p:addOriginalLookupValue="true"
+			p:queryColumnName="taxonomicStatus"
+			p:authorityColumnName="taxonomicStatus"
+			p:addOriginalAuthorityValue="true"
 			p:matcher-ref="alwaysMatch">
 		</bean>
 
 		<!-- AcceptedNameID — just for output -->
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:sourceColumnName="acceptedNameID"
-			p:lookupColumnName="acceptedNameID"
-			p:addOriginalLookupValue="true"
+			p:queryColumnName="acceptedNameID"
+			p:authorityColumnName="acceptedNameID"
+			p:addOriginalAuthorityValue="true"
 			p:matcher-ref="alwaysMatch">
 		</bean>
 	</util:list>
@@ -176,11 +176,11 @@
 	<bean id="config" class="org.kew.stringmod.dedupl.configuration.ReconciliationServiceConfiguration"
 		p:name="generalTest"
 		p:description="Configuration for testing during development."
-		p:lookupFile-ref="lookupfile"
-		p:lookupFileEncoding="UTF8"
-		p:lookupFileDelimiter="&#09;"
+		p:authorityFile-ref="authorityfile"
+		p:authorityFileEncoding="UTF8"
+		p:authorityFileDelimiter="&#09;"
 		p:properties-ref="columnProperties"
-		p:scoreFieldName="id"
+		p:sortFieldName="id"
 		p:loadReportFrequency="5000"
 		p:assessReportFrequency="500"
 		p:maxSearchResults="10000"

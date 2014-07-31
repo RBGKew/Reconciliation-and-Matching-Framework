@@ -20,6 +20,7 @@ public class WiredTransformer implements Comparable<WiredTransformer> {
     @ManyToOne
     private Transformer transformer;
 
+    @Override
     public int compareTo(WiredTransformer o) {
         return this.rank - o.rank;
     }
@@ -35,6 +36,7 @@ public class WiredTransformer implements Comparable<WiredTransformer> {
         return this.getRank() + "_" + this.getTransformer().getName();
     }
 
+    @Override
     public String toString() {
         return String.format("%s: %s", this.getRank(), this.getTransformer().getName());
     }
@@ -46,8 +48,8 @@ public class WiredTransformer implements Comparable<WiredTransformer> {
      */
     public boolean isWireOrphan() {
         for (Wire wire:this.transformer.getConfiguration().getWiring()) {
-            if (wire.getSourceTransformerForName(this.getName()) != null) return false;
-            if (wire.getLookupTransformerForName(this.getName()) != null) return false;
+            if (wire.getQueryTransformerForName(this.getName()) != null) return false;
+            if (wire.getAuthorityTransformerForName(this.getName()) != null) return false;
         }
         return true;
     }

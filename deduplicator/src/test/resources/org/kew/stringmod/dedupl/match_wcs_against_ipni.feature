@@ -6,7 +6,7 @@ Feature: Match WCS against Ipni
     I want the deduplicator framework to do the work for me, I just have to provide a decent configuration.
 
     Scenario: Genus level
-        Given Eszter has created an source-file to feed the deduplicator containing tab-separated WCS data
+        Given Eszter has created a query-file to feed the deduplicator containing tab-separated WCS data
             | id     | family       | genus       | species_epithet | infraspecies_epithet | rank        | infraspecific_rank | full_name                            | basionym_author | publishing_author          | publication                   | collation         | year |
             | 251171 | Restionaceae | Kulinia     |                 |                      |   Genus     |                    | Kulinia                              |                 | B.G.Briggs & L.A.S.Johnson | Telopea       7: 349          | (1998)            |      |
             | 243223 | Restionaceae | Empodisma   |     gracillimum |                      | Species     |                    | Empodisma gracillimum                | F.Muell.        | L.A.S.Johnson & D.F.Cutler | Kew Bull.      28: 383        | (1973 publ. 1974) |      |
@@ -15,7 +15,7 @@ Feature: Match WCS against Ipni
             | 247398 | Restionaceae | Guringalia  |                 |                      |   Genus     |                    | Guringalia                           |                 | B.G.Briggs & L.A.S.Johnson | Telopea       7: 353          | (1998)            |      |
             | 464139 | Restionaceae | Restio      |       saxatilis |                      | Species     |                    | Restio saxatilis                     | Esterh.         | H.P.Linder & C.R.Hardy     | Bothalia       40: 27         | (2010)            |      |
 
-        And she has created a lookup-file to match against
+        And she has created an authority-file to match against
             | id         | family       | genus       | species_epithet | infraspecies_epithet | rank        | infraspecific_rank | full_name                            | basionym_author | publishing_author          | publication                   | collation                 | year | test_comments                                      |
             | 1001674-1  | Restionaceae | Kulinia     |                 |                      | gen.        |                    | Kulinia                              |                 | B.G.Briggs & L.A.S.Johnson | Telopea                       | 7(4): 349 (1998).         | 1998 | Best_match                                         |
             | 715883-1   | Restionaceae | Empodisma   | gracillimum     |                      | spec.       |                    | Empodisma gracillimum                | (F.Muell.)      | L.A.S.Johnson & D.F.Cutler | Kew Bull.                     | 28(3): 383                | 1974 | Best_match                                         |
@@ -59,11 +59,11 @@ Feature: Match WCS against Ipni
                 <bean id="lucene_directory" class="java.lang.String">
                     <constructor-arg value="target/deduplicator"/>
                 </bean>
-                <bean id="sourcefile" class="java.io.File">
-                    <constructor-arg value="REPLACE_WITH_TMPDIR/source.txt" />
+                <bean id="queryfile" class="java.io.File">
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/query.txt" />
                 </bean>
-                <bean id="lookupfile" class="java.io.File">
-                    <constructor-arg value="REPLACE_WITH_TMPDIR/lookup.txt" />
+                <bean id="authorityfile" class="java.io.File">
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/authority.txt" />
                 </bean>
                 <bean id="funkyDict" class="org.kew.stringmod.utils.Dictionary"
                     p:fileDelimiter="&#09;"
@@ -95,25 +95,25 @@ Feature: Match WCS against Ipni
                 </util:list>
                 <util:list id="columnProperties">
                     <bean class="org.kew.stringmod.dedupl.configuration.Property"
-                        p:sourceColumnName="family"
-                        p:lookupColumnName="family"
-                        p:addTransformedSourceValue="true"
+                        p:queryColumnName="family"
+                        p:authorityColumnName="family"
+                        p:addTransformedQueryValue="true"
                         p:matcher-ref="alwaysMatchingMatcher">
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property"
-                        p:sourceColumnName="genus"
-                        p:lookupColumnName="genus"
+                        p:queryColumnName="genus"
+                        p:authorityColumnName="genus"
                         p:useInSelect="true"
-                        p:addOriginalSourceValue="true"
-                        p:addTransformedSourceValue="true"
+                        p:addOriginalQueryValue="true"
+                        p:addTransformedQueryValue="true"
                         p:matcher-ref="exactMatcher">
-                        <property name="sourceTransformers">
+                        <property name="queryTransformers">
                             <util:list id="1">
                                 <ref bean="safeStripNonAlphasTransformer"/>
                                 <ref bean="fakeHybridSignCleaner"/>
                             </util:list>
                         </property>
-                        <property name="lookupTransformers">
+                        <property name="authorityTransformers">
                             <util:list id="1">
                                 <ref bean="safeStripNonAlphasTransformer"/>
                                 <ref bean="fakeHybridSignCleaner"/>
@@ -122,21 +122,21 @@ Feature: Match WCS against Ipni
                         </property>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property"
-                        p:sourceColumnName="species_epithet"
-                        p:lookupColumnName="species_epithet"
+                        p:queryColumnName="species_epithet"
+                        p:authorityColumnName="species_epithet"
                         p:useInSelect="true"
-                        p:addOriginalSourceValue="true"
-                        p:addTransformedSourceValue="true"
-                        p:addOriginalLookupValue="true"
-                        p:addTransformedLookupValue="true"
+                        p:addOriginalQueryValue="true"
+                        p:addTransformedQueryValue="true"
+                        p:addOriginalAuthorityValue="true"
+                        p:addTransformedAuthorityValue="true"
                         p:matcher-ref="exactMatcher">
-                        <property name="sourceTransformers">
+                        <property name="queryTransformers">
                             <util:list id="1">
                                 <ref bean="safeStripNonAlphasTransformer"/>
                                 <ref bean="fakeHybridSignCleaner"/>
                             </util:list>
                         </property>
-                        <property name="lookupTransformers">
+                        <property name="authorityTransformers">
                             <util:list id="1">
                                 <ref bean="safeStripNonAlphasTransformer"/>
                                 <ref bean="fakeHybridSignCleaner"/>
@@ -144,17 +144,17 @@ Feature: Match WCS against Ipni
                         </property>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property"
-                        p:sourceColumnName="infraspecies_epithet"
-                        p:lookupColumnName="infraspecies_epithet"
+                        p:queryColumnName="infraspecies_epithet"
+                        p:authorityColumnName="infraspecies_epithet"
                         p:useInSelect="true"
                         p:matcher-ref="exactMatcher">
-                        <property name="sourceTransformers">
+                        <property name="queryTransformers">
                             <util:list id="1">
                                 <ref bean="safeStripNonAlphasTransformer"/>
                                 <ref bean="fakeHybridSignCleaner"/>
                             </util:list>
                         </property>
-                        <property name="lookupTransformers">
+                        <property name="authorityTransformers">
                             <util:list id="1">
                                 <ref bean="safeStripNonAlphasTransformer"/>
                                 <ref bean="fakeHybridSignCleaner"/>
@@ -162,63 +162,63 @@ Feature: Match WCS against Ipni
                         </property>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property"
-                        p:sourceColumnName="basionym_author"
-                        p:lookupColumnName="basionym_author"
+                        p:queryColumnName="basionym_author"
+                        p:authorityColumnName="basionym_author"
                         p:blanksMatch="true"
                         p:matcher-ref="exactMatcher">
-                        <property name="sourceTransformers">
+                        <property name="queryTransformers">
                             <util:list id="1">
                                 <ref bean="safeStripNonAlphasTransformer"/>
                             </util:list>
                         </property>
-                        <property name="lookupTransformers">
+                        <property name="authorityTransformers">
                             <util:list id="1">
                                 <ref bean="safeStripNonAlphasTransformer"/>
                             </util:list>
                         </property>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property"
-                        p:sourceColumnName="publishing_author"
-                        p:lookupColumnName="publishing_author"
+                        p:queryColumnName="publishing_author"
+                        p:authorityColumnName="publishing_author"
                         p:matcher-ref="exactMatcher">
-                        <property name="sourceTransformers">
+                        <property name="queryTransformers">
                             <util:list id="1">
                                 <ref bean="safeStripNonAlphasTransformer"/>
                             </util:list>
                         </property>
-                        <property name="lookupTransformers">
+                        <property name="authorityTransformers">
                             <util:list id="1">
                                 <ref bean="safeStripNonAlphasTransformer"/>
                             </util:list>
                         </property>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property"
-                        p:sourceColumnName="publication"
-                        p:lookupColumnName="publication"
+                        p:queryColumnName="publication"
+                        p:authorityColumnName="publication"
                         p:matcher-ref="capitalLettersMatcher">
-                        <property name="sourceTransformers">
+                        <property name="queryTransformers">
                             <util:list id="1">
                                 <ref bean="safeStripNonAlphaNumericsTransformer"/>
                             </util:list>
                         </property>
-                        <property name="lookupTransformers">
+                        <property name="authorityTransformers">
                             <util:list id="1">
                                 <ref bean="safeStripNonAlphaNumericsTransformer"/>
                             </util:list>
                         </property>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property"
-                        p:sourceColumnName="collation"
-                        p:lookupColumnName="collation"
+                        p:queryColumnName="collation"
+                        p:authorityColumnName="collation"
                         p:blanksMatch="true"
                         p:matcher-ref="numberMatcher">
-                        <property name="sourceTransformers">
+                        <property name="queryTransformers">
                             <util:list id="1">
                                 <ref bean="safeStripNonAlphaNumericsTransformer"/>
                                 <ref bean="rcollationCleaner"/>
                             </util:list>
                         </property>
-                        <property name="lookupTransformers">
+                        <property name="authorityTransformers">
                             <util:list id="1">
                                 <ref bean="safeStripNonAlphaNumericsTransformer"/>
                                 <ref bean="rcollationCleaner"/>
@@ -227,14 +227,14 @@ Feature: Match WCS against Ipni
                     </bean>
                 </util:list>
                 <bean id="config" class="org.kew.stringmod.dedupl.configuration.MatchConfiguration"
-                    p:sourceFile-ref="sourcefile"
-                    p:lookupFile-ref="lookupfile"
+                    p:queryFile-ref="queryfile"
+                    p:authorityFile-ref="authorityfile"
                     p:properties-ref="columnProperties"
-                    p:scoreFieldName="id"
-                    p:sourceFileEncoding="UTF8"
-                    p:sourceFileDelimiter="&#09;"
-                    p:lookupFileEncoding="UTF8"
-                    p:lookupFileDelimiter="&#09;"
+                    p:sortFieldName="id"
+                    p:queryFileEncoding="UTF-8"
+                    p:queryFileDelimiter="&#09;"
+                    p:authorityFileEncoding="UTF-8"
+                    p:authorityFileDelimiter="&#09;"
                     p:loadReportFrequency="50000"
                     p:assessReportFrequency="100"
                     p:reporters-ref="reporters"/>
@@ -246,10 +246,10 @@ Feature: Match WCS against Ipni
             """
         When this config is run through the deduplicator
         Then a file should have been created in the same folder with the following data:
-            | id     | family_transf | genus       | genus_transf | species_epithet | species_epithet_transf | lookup_species_epithet | lookup_species_epithet_transf | configLog | total_matches | matching_ids |
-            | 251171 | Restionaceae  | Kulinia     | Kulinia      |                 |                        |                        |                               | aConfig   | 1          | 123456       |
-            | 243223 | Restionaceae  | Empodisma   | Empodisma    | gracillimum     | gracillimum            |                        |                               | aConfig   | 0          |              |
-            | 463816 | Restionaceae  | Platycaulos | Platycaulos  | mahonii         | mahonii                |                        |                               | aConfig   | 0          |              |
-            | 224033 | Restionaceae  | Cannomois   | Cannomois    | scirpoides      | scirpoides             |                        |                               | aConfig   | 0          |              |
-            | 247398 | Restionaceae  | Guringalia  | Guringalia   |                 |                        |                        |                               | aConfig   | 0          |              |
-            | 464139 | Restionaceae  | Restio      | Restio       | saxatilis       | saxatilis              |                        |                               | aConfig   | 0          |              |
+            | id     | family_transf | genus       | genus_transf | species_epithet | species_epithet_transf | authority_species_epithet | authority_species_epithet_transf | configLog | total_matches | matching_ids |
+            | 251171 | Restionaceae  | Kulinia     | Kulinia      |                 |                        |                           |                                  | aConfig   | 1             | 123456       |
+            | 243223 | Restionaceae  | Empodisma   | Empodisma    | gracillimum     | gracillimum            |                           |                                  | aConfig   | 0             |              |
+            | 463816 | Restionaceae  | Platycaulos | Platycaulos  | mahonii         | mahonii                |                           |                                  | aConfig   | 0             |              |
+            | 224033 | Restionaceae  | Cannomois   | Cannomois    | scirpoides      | scirpoides             |                           |                                  | aConfig   | 0             |              |
+            | 247398 | Restionaceae  | Guringalia  | Guringalia   |                 |                        |                           |                                  | aConfig   | 0             |              |
+            | 464139 | Restionaceae  | Restio      | Restio       | saxatilis       | saxatilis              |                           |                                  | aConfig   | 0             |              |

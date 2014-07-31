@@ -271,7 +271,7 @@ public class ReconciliationServiceController {
 			List<Type> filteredProperties = new ArrayList<>();
 			List<Property> properties = reconciliationService.getReconciliationServiceConfiguration(configName).getProperties();
 			for (Property p : properties) {
-				String name = p.getSourceColumnName();
+				String name = p.getQueryColumnName();
 
 				// Filter by prefix
 				if (name != null && name.toUpperCase().startsWith(prefix.toUpperCase())) {
@@ -381,7 +381,7 @@ public class ReconciliationServiceController {
 		}
 		else {
 			// If the user supplied some properties, but didn't supply the key property, then it comes from the query
-			String keyColumnName = reconciliationService.getReconciliationServiceConfiguration(configName).getProperties().get(0).getSourceColumnName();
+			String keyColumnName = reconciliationService.getReconciliationServiceConfiguration(configName).getProperties().get(0).getQueryColumnName();
 			if (!containsProperty(properties, keyColumnName)) {
 				properties = Arrays.copyOf(properties, properties.length + 1);
 

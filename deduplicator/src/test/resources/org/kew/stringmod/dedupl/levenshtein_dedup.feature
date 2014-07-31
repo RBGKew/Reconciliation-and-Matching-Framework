@@ -4,7 +4,7 @@ Feature: Deduplication with Levenshtein
     It has to work
 
     Scenario: Simple scenario without false positives
-        Given Alecs has created an input file
+        Given Alecs has created an input-file
             | id | name | anotherName |
             | 1  | Hinz | exactly     |
             | 2  | Kunz | exactly     |
@@ -29,7 +29,7 @@ Feature: Deduplication with Levenshtein
                     <constructor-arg value="target/deduplicator"/>
                 </bean>
                 <bean id="inputfile" class="java.io.File">
-                    <constructor-arg value="REPLACE_WITH_TMPDIR/source.txt" />
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/query.txt" />
                 </bean>
                 <bean id="exactMatcher" class="org.kew.stringmod.dedupl.matchers.ExactMatcher" />
                 <bean id="levenshteinMatcher" class="org.kew.stringmod.dedupl.matchers.LevenshteinMatcher"
@@ -49,21 +49,21 @@ Feature: Deduplication with Levenshtein
                 </util:list>
                 <util:list id="columnProperties">
                     <bean class="org.kew.stringmod.dedupl.configuration.Property"
-                        p:sourceColumnName="name"
+                        p:queryColumnName="name"
                         p:matcher-ref="levenshteinMatcher"
-                        p:addOriginalSourceValue="true" />
+                        p:addOriginalQueryValue="true" />
                     <bean class="org.kew.stringmod.dedupl.configuration.Property"
-                        p:sourceColumnName="anotherName"
+                        p:queryColumnName="anotherName"
                         p:matcher-ref="exactMatcher"
                         p:useInSelect="true" />
                 </util:list>
                 <bean id="config" class="org.kew.stringmod.dedupl.configuration.DeduplicationConfiguration"
-                    p:sourceFile-ref="inputfile"
-                    p:sourceFileDelimiter="&#09;"
+                    p:queryFile-ref="inputfile"
+                    p:queryFileDelimiter="&#09;"
                     p:properties-ref="columnProperties"
                     p:loadReportFrequency="5000"
                     p:writeComparisonReport="true"
-                    p:scoreFieldName="id"
+                    p:sortFieldName="id"
                     p:reporters-ref="reporters"/>
                 <!-- import the generic application-context (equal for dedup/match configurations) -->
                 <import resource="classpath*:application-context.xml"/>
@@ -77,7 +77,7 @@ Feature: Deduplication with Levenshtein
             | 2  | Kunz |            2 |       1 |         2 \| 1 |
 
     Scenario: Scenario with false positives
-        Given Alecs has created an input file
+        Given Alecs has created an input-file
             | id | name | anotherName |
             | 1  | Hinz | exactly     |
             | 2  | Kunz | exactly     |
@@ -105,7 +105,7 @@ Feature: Deduplication with Levenshtein
                     <constructor-arg value="target/deduplicator"/>
                 </bean>
                 <bean id="inputfile" class="java.io.File">
-                    <constructor-arg value="REPLACE_WITH_TMPDIR/source.txt" />
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/query.txt" />
                 </bean>
                 <bean id="falsePositivesDict" class="org.kew.stringmod.utils.Dictionary"
                      p:fileDelimiter="&#09;"
@@ -129,21 +129,21 @@ Feature: Deduplication with Levenshtein
                 </util:list>
                 <util:list id="columnProperties">
                     <bean class="org.kew.stringmod.dedupl.configuration.Property"
-                        p:sourceColumnName="name"
+                        p:queryColumnName="name"
                         p:matcher-ref="levenshteinMatcher"
-                        p:addOriginalSourceValue="true" />
+                        p:addOriginalQueryValue="true" />
                     <bean class="org.kew.stringmod.dedupl.configuration.Property"
-                        p:sourceColumnName="anotherName"
+                        p:queryColumnName="anotherName"
                         p:matcher-ref="exactMatcher"
                         p:useInSelect="true" />
                 </util:list>
                 <bean id="config" class="org.kew.stringmod.dedupl.configuration.DeduplicationConfiguration"
-                    p:sourceFile-ref="inputfile"
-                    p:sourceFileDelimiter="&#09;"
+                    p:queryFile-ref="inputfile"
+                    p:queryFileDelimiter="&#09;"
                     p:properties-ref="columnProperties"
                     p:loadReportFrequency="5000"
                     p:writeComparisonReport="true"
-                    p:scoreFieldName="id"
+                    p:sortFieldName="id"
                     p:reporters-ref="reporters"/>
                 <!-- import the generic application-context (equal for dedup/match configurations) -->
                 <import resource="classpath*:application-context.xml"/>

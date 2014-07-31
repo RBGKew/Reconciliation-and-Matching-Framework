@@ -10,20 +10,22 @@ import org.kew.stringmod.dedupl.reporters.Piper;
 
 /**
  * A configuration holds all the information, of which the most important is
- * - how the named columns are mapped to Transformers and Matchers (via {@link #properties})
- * - where are the input files (source and lookup file)
- * - where and in which format to produce output (via {@link #reporters})
+ * <ul>
+ * 	<li>how the named columns are mapped to Transformers and Matchers (via {@link #properties})</li>
+ * 	<li>where the data to match against ({@link #authorityFile} etc) and the data to match ({@link #queryFile} etc)</li>
+ * 	<li>where and in which format to produce output (via {@link #reporters})</li>
+ * </ul>
  * This information is used by the implementation of DataHandler during the process.
  */
 public abstract class Configuration implements AutoCloseable {
 
 	private String name;
-	
-    private List<Property> properties;
 
-    private File sourceFile;
-    private String sourceFileEncoding = "UTF8";
-    private String sourceFileDelimiter;
+	private List<Property> properties;
+
+	private File queryFile;
+	private String queryFileEncoding = "UTF-8";
+	private String queryFileDelimiter;
 
     private String recordFilter = "";
 
@@ -33,7 +35,7 @@ public abstract class Configuration implements AutoCloseable {
     private boolean writeDelimitedReport=false;
     private boolean includeNonMatchesInDelimitedReport=false;
     private int maximumLoadErrors = 0;
-    
+
     private int loadReportFrequency=50000;
     private int assessReportFrequency=100;
 
@@ -49,14 +51,13 @@ public abstract class Configuration implements AutoCloseable {
     public static final String TRANSFORMED_SUFFIX="_transf";
     public static final String INITIAL_SUFFIX="_init";
 
-    private File lookupFile;
-    private String lookupFileEncoding = "UTF8";
-    private String lookupFileDelimiter;
-    private DatabaseRecordSource lookupRecords;
+	private File authorityFile;
+	private String authorityFileEncoding = "UTF-8";
+	private String authorityFileDelimiter;
+	private DatabaseRecordSource authorityRecords;
 
-    private boolean outputAllMatches;
-    // TODO: replace
-    private String scoreFieldName;
+	private boolean outputAllMatches;
+	private String sortFieldName;
 
     public abstract String[] outputDefs();
 
@@ -75,18 +76,18 @@ public abstract class Configuration implements AutoCloseable {
         }
     }
 
-    public String[] getPropertySourceColumnNames() {
+    public String[] getPropertyQueryColumnNames() {
         String[] propertyNames = new String[this.getProperties().size()];
         for (int i=0;i<propertyNames.length;i++) {
-            propertyNames[i] = (this.getProperties().get(i).getSourceColumnName());
+            propertyNames[i] = (this.getProperties().get(i).getQueryColumnName());
         }
         return propertyNames;
     }
 
-    public String[] getPropertyLookupColumnNames() {
+    public String[] getPropertyAuthorityColumnNames() {
         String[] propertyNames = new String[this.getProperties().size()];
         for (int i=0;i<propertyNames.length;i++) {
-            propertyNames[i] = (this.getProperties().get(i).getLookupColumnName());
+            propertyNames[i] = (this.getProperties().get(i).getAuthorityColumnName());
         }
         return propertyNames;
     }
@@ -108,33 +109,36 @@ public abstract class Configuration implements AutoCloseable {
         this.outputAllMatches = outputAllMatches;
     }
 
-    public String getScoreFieldName() {
-        return scoreFieldName;
-    }
-    public void setScoreFieldName(String scoreFieldName) {
-        this.scoreFieldName = scoreFieldName;
-    }
+	public String getSortFieldName() {
+		return sortFieldName;
+	}
+	/**
+	 * The field to sort results by.
+	 */
+	public void setSortFieldName(String sortFieldName) {
+		this.sortFieldName = sortFieldName;
+	}
 
-    public File getLookupFile() {
-        return lookupFile;
-    }
-    public void setLookupFile(File lookupFile) {
-        this.lookupFile = lookupFile;
-    }
+	public File getAuthorityFile() {
+		return authorityFile;
+	}
+	public void setAuthorityFile(File authorityFile) {
+		this.authorityFile = authorityFile;
+	}
 
-    public String getLookupFileEncoding() {
-        return lookupFileEncoding;
-    }
-    public void setLookupFileEncoding(String lookupFileEncoding) {
-        this.lookupFileEncoding = lookupFileEncoding;
-    }
+	public String getAuthorityFileEncoding() {
+		return authorityFileEncoding;
+	}
+	public void setAuthorityFileEncoding(String authorityFileEncoding) {
+		this.authorityFileEncoding = authorityFileEncoding;
+	}
 
-    public String getLookupFileDelimiter() {
-        return lookupFileDelimiter;
-    }
-    public void setLookupFileDelimiter(String lookupFileDelimiter) {
-        this.lookupFileDelimiter = lookupFileDelimiter;
-    }
+	public String getAuthorityFileDelimiter() {
+		return authorityFileDelimiter;
+	}
+	public void setAuthorityFileDelimiter(String authorityFileDelimiter) {
+		this.authorityFileDelimiter = authorityFileDelimiter;
+	}
 
     public List<Property> getProperties() {
         return properties;
@@ -143,19 +147,19 @@ public abstract class Configuration implements AutoCloseable {
         this.properties = properties;
     }
 
-    public File getSourceFile() {
-        return sourceFile;
-    }
-    public String getSourceFileEncoding() {
-        return sourceFileEncoding;
-    }
+	public File getQueryFile() {
+		return queryFile;
+	}
+	public String getQueryFileEncoding() {
+		return queryFileEncoding;
+	}
 
-    public void setSourceFile(File sourceFile) {
-        this.sourceFile = sourceFile;
-    }
-    public void setSourceFileEncoding(String sourceFileEncoding) {
-        this.sourceFileEncoding = sourceFileEncoding;
-    }
+	public void setQueryFile(File queryFile) {
+		this.queryFile = queryFile;
+	}
+	public void setQueryFileEncoding(String queryFileEncoding) {
+		this.queryFileEncoding = queryFileEncoding;
+	}
 
     public int getLoadReportFrequency() {
         return loadReportFrequency;
@@ -178,12 +182,12 @@ public abstract class Configuration implements AutoCloseable {
         this.writeComparisonReport = writeComparisonReport;
     }
 
-    public String getSourceFileDelimiter() {
-        return sourceFileDelimiter;
-    }
-    public void setSourceFileDelimiter(String sourceFileDelimiter) {
-        this.sourceFileDelimiter = sourceFileDelimiter;
-    }
+	public String getQueryFileDelimiter() {
+		return queryFileDelimiter;
+	}
+	public void setQueryFileDelimiter(String queryFileDelimiter) {
+		this.queryFileDelimiter = queryFileDelimiter;
+	}
 
     public boolean isWriteDelimitedReport() {
         return writeDelimitedReport;
@@ -254,10 +258,10 @@ public abstract class Configuration implements AutoCloseable {
 		this.name = name;
 	}
 
-	public DatabaseRecordSource getLookupRecords() {
-		return lookupRecords;
+	public DatabaseRecordSource getAuthorityRecords() {
+		return authorityRecords;
 	}
-	public void setLookupRecords(DatabaseRecordSource lookupRecords) {
-		this.lookupRecords = lookupRecords;
+	public void setAuthorityRecords(DatabaseRecordSource authorityRecords) {
+		this.authorityRecords = authorityRecords;
 	}
 }

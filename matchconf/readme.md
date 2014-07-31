@@ -29,8 +29,8 @@ CoreApp providing the location of the previously written xml file.
 
 (0) Matching and deduplication
 The deduplication of a data-set is very similar to matching two data-sets to
-each other, only that a deduplication uses the same data-set twice, as 'source'
-and as 'lookup'. Hence on code-level deduplication and match configs look very
+each other, only that a deduplication uses the same data-set twice, as 'query'
+and as 'authority'. Hence on code-level deduplication and match configs look very
 similar. The UI however does obviously separate them.
 
 (1) ORM functionality
@@ -66,7 +66,7 @@ without automatically changing other configurations.
 
 The necessary addition here is the WiredTransformer. This is due to the fact
 that a configuration can have 0:n transformers assigned without being wired,
-also, a wire can have 0:n source-transformers and 0:n lookup-transformers.
+also, a wire can have 0:n query-transformers and 0:n authority-transformers.
 
 The sandbox paradigm is not the case for Dictionaries, as they are meant to be
 re-usable by all configurations.

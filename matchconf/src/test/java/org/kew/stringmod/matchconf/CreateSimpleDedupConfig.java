@@ -47,7 +47,7 @@ public class CreateSimpleDedupConfig {
 
         File workDir = new File(tempDir, workDirPath);
         workDir.mkdir();
-        new File(workDir, "source.tsv").createNewFile();
+        new File(workDir, "query.tsv").createNewFile();
     }
 
     @Given("^he has created a new configuration:$")
@@ -72,7 +72,7 @@ public class CreateSimpleDedupConfig {
         dict.persist();
     }
 
-    @Given("^he has added the following sourceTransformers$")
+    @Given("^he has added the following queryTransformers$")
     public void he_has_added_the_following_transformers(DataTable transformerDefTable) throws Throwable {
         List<Transformer> transis = new ArrayList<>();
         for (Map<String,String> transDef:transformerDefTable.asMaps(String.class, String.class)) {
@@ -108,7 +108,7 @@ public class CreateSimpleDedupConfig {
     @Given("^he has wired them together at the second column$")
     public void he_has_wired_the_together_at_the_second_column() throws Throwable {
         Wire wire = new Wire();
-        wire.setSourceColumnName(this.secondColName);
+        wire.setQueryColumnName(this.secondColName);
         wire.setMatcher(this.matcher);
         wire.setConfiguration(config);
         wire.persist();
@@ -119,7 +119,7 @@ public class CreateSimpleDedupConfig {
             wTrans.setRank(i);
             wTrans.setTransformer(t);
             wTrans.persist();
-            wire.getSourceTransformers().add(wTrans);
+            wire.getQueryTransformers().add(wTrans);
         }
         wire.merge();
         assert (Wire.findWire(wire.getId()) != null);

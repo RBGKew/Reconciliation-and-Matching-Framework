@@ -4,8 +4,8 @@
     <jsp:output omit-xml-declaration="yes"/>
     <page:list id="pl_org_kew_stringmod_matchconf_Wire" items="${wires}" z="/6JMhRy7a2be6sF+OcVhpTcG1nw=">
         <table:table data="${wires}" id="l_org_kew_stringmod_matchconf_Wire" path="/wires" z="YH1xFT7HR/xTuI27MlKMV7u1rNw=">
-            <table:column id="c_org_kew_stringmod_matchconf_Wire_sourceColumnName" property="sourceColumnName" z="HalLNl0Q5moL582TX61Wu/sjtB8="/>
-            <table:column id="c_org_kew_stringmod_matchconf_Wire_lookupColumnName" property="lookupColumnName" z="NauKUxuDjAFEl2UGL/d21cUpH/o="/>
+            <table:column id="c_org_kew_stringmod_matchconf_Wire_queryColumnName" property="queryColumnName" z="HalLNl0Q5moL582TX61Wu/sjtB8="/>
+            <table:column id="c_org_kew_stringmod_matchconf_Wire_authorityColumnName" property="authorityColumnName" z="NauKUxuDjAFEl2UGL/d21cUpH/o="/>
             <table:column id="c_org_kew_stringmod_matchconf_Wire_useInSelect" property="useInSelect" z="WpdAtvklL2QkH9eQbiw4v7P+Awg="/>
             <table:column id="c_org_kew_stringmod_matchconf_Wire_useInNegativeSelect" property="useInNegativeSelect" z="X5LnQrXp8QaqRwCf31ysr5hOgJ4="/>
             <table:column id="c_org_kew_stringmod_matchconf_Wire_indexLength" property="indexLength" z="aEHHghSzxEZ0kgHw2pTzXD3oOqw="/>

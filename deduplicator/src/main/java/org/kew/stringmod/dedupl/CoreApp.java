@@ -12,7 +12,6 @@ import org.apache.commons.cli.ParseException;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
-
 /**
  * Everything begins here.
  */

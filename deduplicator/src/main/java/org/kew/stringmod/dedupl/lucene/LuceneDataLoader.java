@@ -60,7 +60,7 @@ public class LuceneDataLoader implements DataLoader {
     private static Logger logger = LoggerFactory.getLogger(LuceneDataLoader.class);
 
 	/**
-	 * Load the lookup data into Lucene.
+	 * Load the authority data into Lucene.
 	 */
 	@Override
 	public void load() throws DataLoadException {
@@ -73,28 +73,28 @@ public class LuceneDataLoader implements DataLoader {
 
 			/*
 			 * In case no file is specified we (assuming a de-duplication task) use the
-			 * sourceFile also for index creation.
+			 * queryFile also for index creation.
 			 *
-			 * This is why we copy over the source-related properties to the
-			 * lookup-related ones
+			 * This is why we copy over the query-related properties to the
+			 * authority-related ones
 			 */
-			if (config.getLookupRecords() == null) {
-				if (config.getLookupFile() == null) {
+			if (config.getAuthorityRecords() == null) {
+				if (config.getAuthorityFile() == null) {
 					for (Property p : config.getProperties()) {
-						p.setLookupTransformers(p.getSourceTransformers());
-						p.setAddOriginalLookupValue(p.isAddOriginalSourceValue());
-						p.setAddTransformedLookupValue(p.isAddTransformedSourceValue());
-						p.setLookupColumnName(p.getSourceColumnName());
+						p.setAuthorityTransformers(p.getQueryTransformers());
+						p.setAddOriginalAuthorityValue(p.isAddOriginalQueryValue());
+						p.setAddTransformedAuthorityValue(p.isAddTransformedQueryValue());
+						p.setAuthorityColumnName(p.getQueryColumnName());
 					}
-					config.setLookupFile(config.getSourceFile());
-					config.setLookupFileEncoding(config.getSourceFileEncoding());
-					config.setLookupFileDelimiter(config.getSourceFileDelimiter());
+					config.setAuthorityFile(config.getQueryFile());
+					config.setAuthorityFileEncoding(config.getQueryFileEncoding());
+					config.setAuthorityFileDelimiter(config.getQueryFileDelimiter());
 				}
-				this.load(config.getLookupFile());
+				this.load(config.getAuthorityFile());
 			}
 			else {
 				logger.info("{}: Starting data load", configName);
-				this.load(config.getLookupRecords());
+				this.load(config.getAuthorityRecords());
 			}
 		}
 		catch (IOException e) {
@@ -149,7 +149,7 @@ public class LuceneDataLoader implements DataLoader {
 
         try {
             // check whether the necessary column names are present in the ResultSet
-            for (String headerName : this.config.getPropertyLookupColumnNames()) {
+            for (String headerName : this.config.getPropertyAuthorityColumnNames()) {
                 try {
                     resultSet.findColumn(headerName);
                 }
@@ -203,19 +203,19 @@ public class LuceneDataLoader implements DataLoader {
         int errors = 0;
 
         // TODO: either make quote characters and line break characters configurable or simplify even more?
-        CsvPreference customCsvPref = new CsvPreference.Builder('"', this.config.getLookupFileDelimiter().charAt(0), "\n").build();
+        CsvPreference customCsvPref = new CsvPreference.Builder('"', this.config.getAuthorityFileDelimiter().charAt(0), "\n").build();
 
         try (CsvMapReader mr = new CsvMapReader(new InputStreamReader(new FileInputStream(file), "UTF-8"), customCsvPref)) {
 
             final String[] header = mr.getHeader(true);
             // check whether the header column names fit to the ones specified in the configuration
             List<String> headerList = Arrays.asList(header);
-            for (String name:this.config.getPropertyLookupColumnNames()) {
-                if (!headerList.contains(name)) throw new DataLoadException(String.format("%s: Header doesn't contain field name < %s > as defined in config.", this.config.getLookupFile().getPath(), name));
+            for (String name:this.config.getPropertyAuthorityColumnNames()) {
+                if (!headerList.contains(name)) throw new DataLoadException(String.format("%s: Header doesn't contain field name < %s > as defined in config.", this.config.getAuthorityFile().getPath(), name));
             }
             // same for the id-field
             String idFieldName = Configuration.ID_FIELD_NAME;
-            if (!headerList.contains(idFieldName)) throw new DataLoadException(String.format("%s: Id field name not found in header, should be %s!", this.config.getLookupFile().getPath(), idFieldName));
+            if (!headerList.contains(idFieldName)) throw new DataLoadException(String.format("%s: Id field name not found in header, should be %s!", this.config.getAuthorityFile().getPath(), idFieldName));
             Map<String, String> record;
             record = mr.read(header);
 
@@ -280,29 +280,29 @@ public class LuceneDataLoader implements DataLoader {
 
         // The remainder of the columns are added as specified in the properties
         for (Property p : this.config.getProperties()) {
-            String lookupName = p.getLookupColumnName() + Configuration.TRANSFORMED_SUFFIX;
-            String value = Strings.nullToEmpty(record.getString(p.getLookupColumnName()));
+            String authorityName = p.getAuthorityColumnName() + Configuration.TRANSFORMED_SUFFIX;
+            String value = Strings.nullToEmpty(record.getString(p.getAuthorityColumnName()));
 
             // Index the value in its original state, pre transformation
-            Field f = new TextField(p.getLookupColumnName(), value, Field.Store.YES);
+            Field f = new TextField(p.getAuthorityColumnName(), value, Field.Store.YES);
             doc.add(f);
 
             // then transform the value if necessary
-            for (Transformer t:p.getLookupTransformers()) {
+            for (Transformer t:p.getAuthorityTransformers()) {
                 value = t.transform(value);
             }
             // and add this one to the index
-            Field fTransformed = new TextField(lookupName, value, Field.Store.YES);
+            Field fTransformed = new TextField(authorityName, value, Field.Store.YES);
             doc.add(fTransformed);
 
             // For some fields (those which will be passed into a fuzzy matcher like Levenshtein), we index the length
             if (p.isIndexLength()){
-                Field fLength = new StringField(lookupName + Configuration.LENGTH_SUFFIX, String.format("%02d", value.length()), Field.Store.YES);
+                Field fLength = new StringField(authorityName + Configuration.LENGTH_SUFFIX, String.format("%02d", value.length()), Field.Store.YES);
                 doc.add(fLength);
             }
 
             if (p.isIndexInitial() & StringUtils.isNotBlank(value)){
-                Field finit = new TextField(lookupName + Configuration.INITIAL_SUFFIX, value.substring(0, 1), Field.Store.YES);
+                Field finit = new TextField(authorityName + Configuration.INITIAL_SUFFIX, value.substring(0, 1), Field.Store.YES);
                 doc.add(finit);
             }
         }
@@ -319,21 +319,21 @@ public class LuceneDataLoader implements DataLoader {
         doc.add(new StringField(idFieldName, record.get(idFieldName), Field.Store.YES));
         // The remainder of the columns are added as specified in the properties
         for (Property p : this.config.getProperties()) {
-            String lookupName = p.getLookupColumnName() + Configuration.TRANSFORMED_SUFFIX;
-            String value = record.get(p.getLookupColumnName());
+            String authorityName = p.getAuthorityColumnName() + Configuration.TRANSFORMED_SUFFIX;
+            String value = record.get(p.getAuthorityColumnName());
             // super-csv treats blank as null, we don't for now
             value = (value != null) ? value: "";
 
             // Index the value in its original state, pre transformation..
-            Field f = new TextField(p.getLookupColumnName(), value, Field.Store.YES);
+            Field f = new TextField(p.getAuthorityColumnName(), value, Field.Store.YES);
             doc.add(f);
 
             // ..*then* transform the value if necessary..
-            for (Transformer t:p.getLookupTransformers()) {
+            for (Transformer t:p.getAuthorityTransformers()) {
                 value = t.transform(value);
             }
             //.. and add this one to the index
-            Field f1 = new TextField(lookupName, value, Field.Store.YES);
+            Field f1 = new TextField(authorityName, value, Field.Store.YES);
             doc.add(f1);
 
             // For some fields (those which will be passed into a fuzzy matcher like Levenshtein), we index the length
@@ -341,11 +341,11 @@ public class LuceneDataLoader implements DataLoader {
                 int length = 0;
                 if (value != null)
                     length = value.length();
-                Field fl = new StringField(lookupName + Configuration.LENGTH_SUFFIX, String.format("%02d", length), Field.Store.YES);
+                Field fl = new StringField(authorityName + Configuration.LENGTH_SUFFIX, String.format("%02d", length), Field.Store.YES);
                 doc.add(fl);
             }
             if (p.isIndexInitial() & StringUtils.isNotBlank(value)){
-                Field finit = new TextField(lookupName + Configuration.INITIAL_SUFFIX, value.substring(0, 1), Field.Store.YES);
+                Field finit = new TextField(authorityName + Configuration.INITIAL_SUFFIX, value.substring(0, 1), Field.Store.YES);
                 doc.add(finit);
             }
         }

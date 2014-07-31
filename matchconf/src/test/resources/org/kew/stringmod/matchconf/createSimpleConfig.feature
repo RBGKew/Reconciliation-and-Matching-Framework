@@ -9,7 +9,7 @@ Feature: Create a simple configuration
             | name          | workDirPath | maxSearchResults | recordFilter                          | nextConfig |
             | simple-config | some_path   | 100              | funny(recordCheck == javaScriptMagic) | someName   |
         And he has added a dictionary "funkyDict" with the filepath field "/some_other_path/dict.txt"
-        And he has added the following sourceTransformers
+        And he has added the following queryTransformers
             | name               | packageName                     | className                     | params         |
             | funkyTransformer   | org.kew.stringmod.lib.transformers | DictionaryTransformer         | dict=funkyDict |
             | anotherTransformer | org.kew.stringmod.lib.transformers | SafeStripNonAlphasTransformer |                |
@@ -43,8 +43,8 @@ Feature: Create a simple configuration
                 <bean id="lucene_directory" class="java.lang.String">
                     <constructor-arg value="/tmp/matchconf/lucene_directory/"/>
                 </bean>
-                <bean id="sourcefile" class="java.io.File">
-                    <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/source.tsv" />
+                <bean id="queryfile" class="java.io.File">
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/query.tsv" />
                 </bean>
                 <bean id="funkyDict" class="org.kew.stringmod.utils.Dictionary"
                     p:fileDelimiter="&#09;"
@@ -85,9 +85,9 @@ Feature: Create a simple configuration
                 </util:list>
                 <util:list id="columnProperties">
                     <bean class="org.kew.stringmod.dedupl.configuration.Property"
-                        p:sourceColumnName="data_col"
+                        p:queryColumnName="data_col"
                         p:matcher-ref="matchExactly">
-                        <property name="sourceTransformers">
+                        <property name="queryTransformers">
                             <util:list id="1">
                                 <ref bean="funkyTransformer"/>
                                 <ref bean="anotherTransformer"/>
@@ -97,11 +97,11 @@ Feature: Create a simple configuration
                     </bean>
                 </util:list>
                 <bean id="config" class="org.kew.stringmod.dedupl.configuration.DeduplicationConfiguration"
-                    p:sourceFile-ref="sourcefile"
-                    p:sourceFileEncoding="UTF8"
-                    p:sourceFileDelimiter="&#09;"
+                    p:queryFile-ref="queryfile"
+                    p:queryFileEncoding="UTF-8"
+                    p:queryFileDelimiter="&#09;"
                     p:properties-ref="columnProperties"
-                    p:scoreFieldName="id"
+                    p:sortFieldName="id"
                     p:loadReportFrequency="50000"
                     p:assessReportFrequency="100"
                     p:maxSearchResults="100"
@@ -115,12 +115,12 @@ Feature: Create a simple configuration
             """
 
     Scenario: MatchConf, one column, one matcher, two transformers, rest default values
-        Given Alecs has a source-file containing data in three columns, ("id", "data_col1", "otherCol") in a directory "some_path"
-        And Alecs has a lookup-file containing data in three columns ("id", "data_col1", "other_col") in the same directory
+        Given Alecs has a query-file containing data in three columns, ("id", "data_col1", "otherCol") in a directory "some_path"
+        And Alecs has an authority-file containing data in three columns ("id", "data_col1", "other_col") in the same directory
         And he has created a new match configuration:
             | name                | workDirPath |
             | simple-match-config | some_path   |
-        And he has added the following source- and lookupTransformers
+        And he has added the following query- and authorityTransformers
             | name               | packageName                     | className                     | params |
             | 02BlankTransformer | org.kew.stringmod.lib.transformers | ZeroToBlankTransformer        |        |
             | anotherTransformer | org.kew.stringmod.lib.transformers | SafeStripNonAlphasTransformer |        |
@@ -129,9 +129,9 @@ Feature: Create a simple configuration
             | matchExactly   | org.kew.stringmod.dedupl.matchers | ExactMatcher     | blanksMatch=false |
             | matchIntegers  | org.kew.stringmod.dedupl.matchers | IntegerMatcher   | blanksMatch=true  |
         And he has wired them together in the following way:
-            | sourceColumnName | lookupColumnName | sourceTransformers                     | lookupTransformers                     | matcher        | useInSelect |
-            | data_col1        | data_col1        | anotherTransformer, 02BlankTransformer | 02BlankTransformer, anotherTransformer | matchExactly   | true        |
-            | otherCol         | other_col        | 02BlankTransformer                     | anotherTransformer                     | matchIntegers  | false       |
+            | queryColumnName  | authorityColumnName | queryTransformers                      | authorityTransformers                  | matcher        | useInSelect |
+            | data_col1        | data_col1           | anotherTransformer, 02BlankTransformer | 02BlankTransformer, anotherTransformer | matchExactly   | true        |
+            | otherCol         | other_col           | 02BlankTransformer                     | anotherTransformer                     | matchIntegers  | false       |
         And he has added the following match-reporters:
             | name              | fileName             | packageName                  | className              | params |
             | standardReporter  | output.tsv           | org.kew.stringmod.dedupl.reporters | MatchReporter          |        |
@@ -157,11 +157,11 @@ Feature: Create a simple configuration
                 <bean id="lucene_directory" class="java.lang.String">
                     <constructor-arg value="/tmp/matchconf/lucene_directory/"/>
                 </bean>
-                <bean id="sourcefile" class="java.io.File">
-                    <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/source.tsv" />
+                <bean id="queryfile" class="java.io.File">
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/query.tsv" />
                 </bean>
-                <bean id="lookupfile" class="java.io.File">
-                    <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/lookup.tsv" />
+                <bean id="authorityfile" class="java.io.File">
+                    <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/authority.tsv" />
                 </bean>
                 <bean id="matchExactly" class="org.kew.stringmod.dedupl.matchers.ExactMatcher"
                     p:blanksMatch="false"/>
@@ -195,17 +195,17 @@ Feature: Create a simple configuration
                 </util:list>
                 <util:list id="columnProperties">
                     <bean class="org.kew.stringmod.dedupl.configuration.Property"
-                        p:sourceColumnName="data_col1"
-                        p:lookupColumnName="data_col1"
+                        p:queryColumnName="data_col1"
+                        p:authorityColumnName="data_col1"
                         p:useInSelect="true"
                         p:matcher-ref="matchExactly">
-                        <property name="sourceTransformers">
+                        <property name="queryTransformers">
                             <util:list id="1">
                                 <ref bean="02BlankTransformer"/>
                                 <ref bean="anotherTransformer"/>
                             </util:list>
                         </property>
-                        <property name="lookupTransformers">
+                        <property name="authorityTransformers">
                             <util:list id="1">
                                 <ref bean="anotherTransformer"/>
                                 <ref bean="02BlankTransformer"/>
@@ -213,15 +213,15 @@ Feature: Create a simple configuration
                         </property>
                     </bean>
                     <bean class="org.kew.stringmod.dedupl.configuration.Property"
-                        p:sourceColumnName="otherCol"
-                        p:lookupColumnName="other_col"
+                        p:queryColumnName="otherCol"
+                        p:authorityColumnName="other_col"
                         p:matcher-ref="matchIntegers">
-                        <property name="sourceTransformers">
+                        <property name="queryTransformers">
                             <util:list id="1">
                                 <ref bean="02BlankTransformer"/>
                             </util:list>
                         </property>
-                        <property name="lookupTransformers">
+                        <property name="authorityTransformers">
                             <util:list id="1">
                                 <ref bean="anotherTransformer"/>
                             </util:list>
@@ -229,14 +229,14 @@ Feature: Create a simple configuration
                     </bean>
                 </util:list>
                 <bean id="config" class="org.kew.stringmod.dedupl.configuration.MatchConfiguration"
-                    p:sourceFile-ref="sourcefile"
-                    p:sourceFileEncoding="UTF8"
-                    p:sourceFileDelimiter="&#09;"
-                    p:lookupFile-ref="lookupfile"
-                    p:lookupFileEncoding="UTF8"
-                    p:lookupFileDelimiter="&#09;"
+                    p:queryFile-ref="queryfile"
+                    p:queryFileEncoding="UTF-8"
+                    p:queryFileDelimiter="&#09;"
+                    p:authorityFile-ref="authorityfile"
+                    p:authorityFileEncoding="UTF-8"
+                    p:authorityFileDelimiter="&#09;"
                     p:properties-ref="columnProperties"
-                    p:scoreFieldName="id"
+                    p:sortFieldName="id"
                     p:loadReportFrequency="50000"
                     p:assessReportFrequency="100"
                     p:maxSearchResults="10000"

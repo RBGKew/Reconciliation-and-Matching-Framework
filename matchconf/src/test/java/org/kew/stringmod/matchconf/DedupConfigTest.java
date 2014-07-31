@@ -72,7 +72,7 @@ public class DedupConfigTest extends AbstractJUnit4SpringContextTests {
         this.matcher2.setConfiguration(this.config);
 
         this.wire1 = new Wire();
-        this.wire1.setSourceColumnName("sauceColumn");
+        this.wire1.setQueryColumnName("sauceColumn");
         this.wire1.setConfiguration(this.config);
         // wire1 has blanksMatch set to true
         this.wire1.setBlanksMatch(true);
@@ -82,10 +82,10 @@ public class DedupConfigTest extends AbstractJUnit4SpringContextTests {
         this.wTrans1.setRank(1);
         this.wTrans1.setTransformer(this.trans1);
         // wire1 has only one transformer
-        this.wire1.getSourceTransformers().add(this.wTrans1);
+        this.wire1.getQueryTransformers().add(this.wTrans1);
 
         this.wire2 = new Wire();
-        this.wire2.setSourceColumnName("saladColumn");
+        this.wire2.setQueryColumnName("saladColumn");
         this.wire2.setConfiguration(this.config);
         // wire2 has *not* blanksMatch set to true
         this.wire2.setMatcher(this.matcher2);
@@ -94,12 +94,12 @@ public class DedupConfigTest extends AbstractJUnit4SpringContextTests {
         this.wTrans2 = new WiredTransformer();
         this.wTrans2.setRank(2);
         this.wTrans2.setTransformer(this.trans1);
-        this.wire2.getSourceTransformers().add(this.wTrans2);
+        this.wire2.getQueryTransformers().add(this.wTrans2);
 
         this.wTrans3 = new WiredTransformer();
         this.wTrans3.setRank(1);
         this.wTrans3.setTransformer(this.trans2);
-        this.wire2.getSourceTransformers().add(this.wTrans3);
+        this.wire2.getQueryTransformers().add(this.wTrans3);
 
         this.rep1 = new Reporter();
         this.rep1.setName("karkaKolumna");

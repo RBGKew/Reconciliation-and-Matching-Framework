@@ -6,8 +6,8 @@
     <br/> <div id="config-link">for configuration: <a href="/MatchConf/match_configs/${ configName }">${ configName }</a></div> <br/>
 
     <form:create id="fc_org_kew_stringmod_matchconf_Wire" modelAttribute="wire" path="/match_configs/${ configName }/wires" render="${empty dependencies}" z="SPI5cptXJvIUp3IAL6V+YVFYVUE=">
-        <field:input field="lookupColumnName" id="c_org_kew_stringmod_matchconf_Wire_lookupColumnName" z="acpNUyZ2hyPEw0qgiaFL7zaONbU="/>
-        <field:input field="sourceColumnName" id="c_org_kew_stringmod_matchconf_Wire_sourceColumnName" z="Iyj1E63QgPFC+EHUH9g08zRtbLU="/>
+        <field:input field="authorityColumnName" id="c_org_kew_stringmod_matchconf_Wire_authorityColumnName" z="acpNUyZ2hyPEw0qgiaFL7zaONbU="/>
+        <field:input field="queryColumnName" id="c_org_kew_stringmod_matchconf_Wire_queryColumnName" z="Iyj1E63QgPFC+EHUH9g08zRtbLU="/>
 
         <field:checkbox field="useInSelect" id="c_org_kew_stringmod_matchconf_Wire_useInSelect" z="TTpnxEuYpzEvKPuXK5cTGD09y2Q="/>
         <field:checkbox field="useInNegativeSelect" id="c_org_kew_stringmod_matchconf_Wire_useInNegativeSelect" z="g6Fqf7lac9bj4i6phpDcyTMnAeg="/>
@@ -16,13 +16,13 @@
         <field:checkbox field="indexInitial" id="c_org_kew_stringmod_matchconf_Wire_indexInitial" z="4Um0XUlwGw1gsH3hQKMnvD0woj4="/>
         <field:checkbox field="useWildcard" id="c_org_kew_stringmod_matchconf_Wire_useWildcard" z="H2cXRwoDy3CUtITSjtFU3P46ja8="/>
 
-        <field:checkbox field="addOriginalSourceValue" id="c_org_kew_stringmod_matchconf_Wire_addOriginalSourceValue" z="FBobAPBovYc4gqRvKOcr0T+nySg="/>
-        <field:checkbox field="addOriginalLookupValue" id="c_org_kew_stringmod_matchconf_Wire_addOriginalLookupValue" z="OTGOwNh7sNQWPa9RQlE91VCN5n8="/>
-        <field:checkbox field="addTransformedSourceValue" id="c_org_kew_stringmod_matchconf_Wire_addTransformedSourceValue" z="gz9SC9WXQU9Q8G7eX3YXT9eMaK8="/>
-        <field:checkbox field="addTransformedLookupValue" id="c_org_kew_stringmod_matchconf_Wire_addTransformedLookupValue" z="hgjah26dH9JrPRn+D6KcMTzQTrg="/>
+        <field:checkbox field="addOriginalQueryValue" id="c_org_kew_stringmod_matchconf_Wire_addOriginalQueryValue" z="FBobAPBovYc4gqRvKOcr0T+nySg="/>
+        <field:checkbox field="addOriginalAuthorityValue" id="c_org_kew_stringmod_matchconf_Wire_addOriginalAuthorityValue" z="OTGOwNh7sNQWPa9RQlE91VCN5n8="/>
+        <field:checkbox field="addTransformedQueryValue" id="c_org_kew_stringmod_matchconf_Wire_addTransformedQueryValue" z="gz9SC9WXQU9Q8G7eX3YXT9eMaK8="/>
+        <field:checkbox field="addTransformedAuthorityValue" id="c_org_kew_stringmod_matchconf_Wire_addTransformedAuthorityValue" z="hgjah26dH9JrPRn+D6KcMTzQTrg="/>
 
-        <field:select field="sourceTransformers" id="c_org_kew_stringmod_matchconf_Wire_sourceTransformers" itemValue="id" items="${transformers}" multiple="true" path="/transformers" z="voeNY9FXQVoLlheVCxJHfcQTScQ="/>
-        <field:select field="lookupTransformers" id="c_org_kew_stringmod_matchconf_Wire_lookupTransformers" itemValue="id" items="${transformers}" multiple="true" path="/transformers" z="o7MbdgLFHHykZhwugO+cbL5XwPw="/>
+        <field:select field="queryTransformers" id="c_org_kew_stringmod_matchconf_Wire_queryTransformers" itemValue="id" items="${transformers}" multiple="true" path="/transformers" z="voeNY9FXQVoLlheVCxJHfcQTScQ="/>
+        <field:select field="authorityTransformers" id="c_org_kew_stringmod_matchconf_Wire_authorityTransformers" itemValue="id" items="${transformers}" multiple="true" path="/transformers" z="o7MbdgLFHHykZhwugO+cbL5XwPw="/>
 
         <field:select field="matcher" id="c_org_kew_stringmod_matchconf_Wire_matcher" itemValue="id" items="${matchers}" path="/match_configs/${ configName }/matchers" z="lXk5z0p02X2K5OrJ2d71mUvWp+E="/>
     </form:create>

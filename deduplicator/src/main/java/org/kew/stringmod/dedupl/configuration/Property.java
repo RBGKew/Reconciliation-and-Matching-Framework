@@ -10,13 +10,12 @@ import org.kew.stringmod.lib.transformers.Transformer;
  * This is a simple JavaBean that holds configuration options relating
  * to how a value is cleaned, stored and matched.
  *
- * The mapping works via *named* columns.
- *
+ * The mapping works via <strong>named</strong> columns.
  */
 public class Property {
 
-	private String sourceColumnName;
-	private String lookupColumnName;
+	private String queryColumnName;
+	private String authorityColumnName;
 
 	private Matcher matcher;
 
@@ -27,29 +26,32 @@ public class Property {
 	private boolean indexInitial=false;
 	private boolean useWildcard=false;
 
-    private boolean addOriginalSourceValue = false;
-    private boolean addTransformedSourceValue = false;
-    // Matching specific as obsolete for Deduplication tasks
-    private boolean addOriginalLookupValue = false;
-    private boolean addTransformedLookupValue = false;
+	private boolean addOriginalQueryValue = false;
+	private boolean addTransformedQueryValue = false;
+	// Matching specific as obsolete for Deduplication tasks
+	private boolean addOriginalAuthorityValue = false;
+	private boolean addTransformedAuthorityValue = false;
 
-	private List<Transformer> sourceTransformers = new ArrayList<>();
-	private List<Transformer> lookupTransformers = new ArrayList<>();
+	private List<Transformer> queryTransformers = new ArrayList<>();
+	private List<Transformer> authorityTransformers = new ArrayList<>();
 
 	@Override
 	public String toString() {
-		return "Property [name=" + sourceColumnName + "_" + lookupColumnName
+		return "Property [name=" + queryColumnName + "_" + authorityColumnName
 				+ ", matcher=" + matcher + ", useInSelect="
-			    + useInSelect + ", useInNegativeSelect=" + useInNegativeSelect
+				+ useInSelect + ", useInNegativeSelect=" + useInNegativeSelect
 				+ ", indexLength=" + indexLength + ", blanksMatch="
 				+ blanksMatch + ", indexInitial=" + indexInitial + ", useWildcard="
-				+ useWildcard + ", transformers=" + sourceTransformers + "_" + lookupTransformers + "]";
+				+ useWildcard + ", transformers=" + queryTransformers + "_" + authorityTransformers + "]";
 	}
 
 	// Getters and Setters
 	public Matcher getMatcher() {
 		return matcher;
 	}
+	/**
+	 * The {@link Matcher} to use against the transformed fields.
+	 */
 	public void setMatcher(Matcher matcher) {
 		this.matcher = matcher;
 	}
@@ -57,6 +59,9 @@ public class Property {
 	public boolean isUseInSelect() {
 		return useInSelect;
 	}
+	/**
+	 * Whether this property should be used in the query to retrieve potential matches.
+	 */
 	public void setUseInSelect(boolean useInSelect) {
 		this.useInSelect = useInSelect;
 	}
@@ -64,6 +69,10 @@ public class Property {
 	public void setIndexLength(boolean indexLength) {
 		this.indexLength = indexLength;
 	}
+	/**
+	 * Index the length of the record, needed for Lucene Levenshtein matching
+	 * @return
+	 */
 	public boolean isIndexLength() {
 		return indexLength;
 	}
@@ -71,6 +80,9 @@ public class Property {
 	public boolean isBlanksMatch() {
 		return blanksMatch;
 	}
+	/**
+	 * Whether a blank on either side (authority or query) is a match.
+	 */
 	public void setBlanksMatch(boolean blanksMatch) {
 		this.blanksMatch = blanksMatch;
 	}
@@ -78,6 +90,9 @@ public class Property {
 	public boolean isIndexInitial() {
 		return indexInitial;
 	}
+	/**
+	 * Index the first letter, used to limit records retrieved as potential matches.
+	 */
 	public void setIndexInitial(boolean indexInitial) {
 		this.indexInitial = indexInitial;
 	}
@@ -85,6 +100,9 @@ public class Property {
 	public boolean isUseInNegativeSelect() {
 		return useInNegativeSelect;
 	}
+	/**
+	 * Exclude records from query to retrieve potential matches.
+	 */
 	public void setUseInNegativeSelect(boolean useInNegativeSelect) {
 		this.useInNegativeSelect = useInNegativeSelect;
 	}
@@ -92,63 +110,90 @@ public class Property {
 	public boolean isUseWildcard() {
 		return useWildcard;
 	}
+	/**
+	 * Allow approximate matching when retrieving potential matches.
+	 */
 	public void setUseWildcard(boolean useWildcard) {
 		this.useWildcard = useWildcard;
 	}
 
-	public List<Transformer> getSourceTransformers() {
-		return sourceTransformers;
+	public List<Transformer> getQueryTransformers() {
+		return queryTransformers;
 	}
-	public void setSourceTransformers(List<Transformer> sourceTransformers) {
-		this.sourceTransformers = sourceTransformers;
-	}
-
-	public List<Transformer> getLookupTransformers() {
-		return lookupTransformers;
-	}
-	public void setLookupTransformers(List<Transformer> lookupTransformers) {
-		this.lookupTransformers = lookupTransformers;
+	/**
+	 * The {@link Transformer}s used to transform query records before indexing or matching.
+	 */
+	public void setQueryTransformers(List<Transformer> queryTransformers) {
+		this.queryTransformers = queryTransformers;
 	}
 
-	public boolean isAddOriginalLookupValue() {
-		return addOriginalLookupValue;
+	public List<Transformer> getAuthorityTransformers() {
+		return authorityTransformers;
 	}
-	public void setAddOriginalLookupValue(boolean addOriginalLookupValue) {
-		this.addOriginalLookupValue = addOriginalLookupValue;
-	}
-
-	public boolean isAddTransformedLookupValue() {
-		return addTransformedLookupValue;
-	}
-	public void setAddTransformedLookupValue(boolean addTransformedLookupValue) {
-		this.addTransformedLookupValue = addTransformedLookupValue;
+	/**
+	 * The {@link Transformer}s used to transform authority records before indexing or matching.
+	 */
+	public void setAuthorityTransformers(List<Transformer> authorityTransformers) {
+		this.authorityTransformers = authorityTransformers;
 	}
 
-	public boolean isAddOriginalSourceValue() {
-		return addOriginalSourceValue;
+	public boolean isAddOriginalAuthorityValue() {
+		return addOriginalAuthorityValue;
 	}
-	public void setAddOriginalSourceValue(boolean addOriginalSourceValue) {
-		this.addOriginalSourceValue = addOriginalSourceValue;
-	}
-
-	public boolean isAddTransformedSourceValue() {
-		return addTransformedSourceValue;
-	}
-	public void setAddTransformedSourceValue(boolean addTransformedSourceValue) {
-		this.addTransformedSourceValue = addTransformedSourceValue;
+	/**
+	 * Whether to add the untransformed authority value to result records.
+	 */
+	public void setAddOriginalAuthorityValue(boolean addOriginalAuthorityValue) {
+		this.addOriginalAuthorityValue = addOriginalAuthorityValue;
 	}
 
-	public String getSourceColumnName() {
-		return sourceColumnName;
+	public boolean isAddTransformedAuthorityValue() {
+		return addTransformedAuthorityValue;
 	}
-	public void setSourceColumnName(String sourceColumnName) {
-		this.sourceColumnName = sourceColumnName;
+	/**
+	 * Whether to add the transformed authority value to result records.
+	 */
+	public void setAddTransformedAuthorityValue(boolean addTransformedAuthorityValue) {
+		this.addTransformedAuthorityValue = addTransformedAuthorityValue;
 	}
 
-	public String getLookupColumnName() {
-		return lookupColumnName;
+	public boolean isAddOriginalQueryValue() {
+		return addOriginalQueryValue;
 	}
-	public void setLookupColumnName(String lookupColumnName) {
-		this.lookupColumnName = lookupColumnName;
+	/**
+	 * Whether to add the untransformed query value to result records.
+	 */
+	public void setAddOriginalQueryValue(boolean addOriginalQueryValue) {
+		this.addOriginalQueryValue = addOriginalQueryValue;
+	}
+
+	public boolean isAddTransformedQueryValue() {
+		return addTransformedQueryValue;
+	}
+	/**
+	 * Whether to add the transformed query value to result records.
+	 */
+	public void setAddTransformedQueryValue(boolean addTransformedQueryValue) {
+		this.addTransformedQueryValue = addTransformedQueryValue;
+	}
+
+	public String getQueryColumnName() {
+		return queryColumnName;
+	}
+	/**
+	 * The name of the query column this Property refers to.
+	 */
+	public void setQueryColumnName(String queryColumnName) {
+		this.queryColumnName = queryColumnName;
+	}
+
+	public String getAuthorityColumnName() {
+		return authorityColumnName;
+	}
+	/**
+	 * The name of the authority column this Property refers to.
+	 */
+	public void setAuthorityColumnName(String authorityColumnName) {
+		this.authorityColumnName = authorityColumnName;
 	}
 }

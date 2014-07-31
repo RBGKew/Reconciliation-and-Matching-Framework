@@ -26,7 +26,7 @@ public class ReconciliationResultPropertyFormatter implements ReconciliationResu
 		StringBuilder sbFormat = new StringBuilder();
 		List<Property> columns = reconcilationConfig.getProperties();
 		for (Property p : columns) {
-			properties.add(p.getSourceColumnName());
+			properties.add(p.getAuthorityColumnName());
 			if (sbFormat.length() > 0) sbFormat.append(", ");
 			sbFormat.append("%s");
 		}

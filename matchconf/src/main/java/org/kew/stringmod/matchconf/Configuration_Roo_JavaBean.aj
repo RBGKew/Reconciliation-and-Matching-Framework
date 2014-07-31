@@ -28,28 +28,28 @@ privileged aspect Configuration_Roo_JavaBean {
         this.workDirPath = workDirPath;
     }
     
-    public String Configuration.getSourceFileName() {
-        return this.sourceFileName;
+    public String Configuration.getQueryFileName() {
+        return this.queryFileName;
     }
     
-    public void Configuration.setSourceFileName(String sourceFileName) {
-        this.sourceFileName = sourceFileName;
+    public void Configuration.setQueryFileName(String queryFileName) {
+        this.queryFileName = queryFileName;
     }
     
-    public String Configuration.getSourceFileEncoding() {
-        return this.sourceFileEncoding;
+    public String Configuration.getQueryFileEncoding() {
+        return this.queryFileEncoding;
     }
     
-    public void Configuration.setSourceFileEncoding(String sourceFileEncoding) {
-        this.sourceFileEncoding = sourceFileEncoding;
+    public void Configuration.setQueryFileEncoding(String queryFileEncoding) {
+        this.queryFileEncoding = queryFileEncoding;
     }
     
-    public String Configuration.getSourceFileDelimiter() {
-        return this.sourceFileDelimiter;
+    public String Configuration.getQueryFileDelimiter() {
+        return this.queryFileDelimiter;
     }
     
-    public void Configuration.setSourceFileDelimiter(String sourceFileDelimiter) {
-        this.sourceFileDelimiter = sourceFileDelimiter;
+    public void Configuration.setQueryFileDelimiter(String queryFileDelimiter) {
+        this.queryFileDelimiter = queryFileDelimiter;
     }
     
     public String Configuration.getRecordFilter() {
@@ -68,28 +68,28 @@ privileged aspect Configuration_Roo_JavaBean {
         this.nextConfig = nextConfig;
     }
     
-    public String Configuration.getLookupFileName() {
-        return this.lookupFileName;
+    public String Configuration.getAuthorityFileName() {
+        return this.authorityFileName;
     }
     
-    public void Configuration.setLookupFileName(String lookupFileName) {
-        this.lookupFileName = lookupFileName;
+    public void Configuration.setAuthorityFileName(String authorityFileName) {
+        this.authorityFileName = authorityFileName;
     }
     
-    public String Configuration.getLookupFileEncoding() {
-        return this.lookupFileEncoding;
+    public String Configuration.getAuthorityFileEncoding() {
+        return this.authorityFileEncoding;
     }
     
-    public void Configuration.setLookupFileEncoding(String lookupFileEncoding) {
-        this.lookupFileEncoding = lookupFileEncoding;
+    public void Configuration.setAuthorityFileEncoding(String authorityFileEncoding) {
+        this.authorityFileEncoding = authorityFileEncoding;
     }
     
-    public String Configuration.getLookupFileDelimiter() {
-        return this.lookupFileDelimiter;
+    public String Configuration.getAuthorityFileDelimiter() {
+        return this.authorityFileDelimiter;
     }
     
-    public void Configuration.setLookupFileDelimiter(String lookupFileDelimiter) {
-        this.lookupFileDelimiter = lookupFileDelimiter;
+    public void Configuration.setAuthorityFileDelimiter(String authorityFileDelimiter) {
+        this.authorityFileDelimiter = authorityFileDelimiter;
     }
     
     public String Configuration.getPackageName() {
@@ -124,12 +124,12 @@ privileged aspect Configuration_Roo_JavaBean {
         this.assessReportFrequency = assessReportFrequency;
     }
     
-    public String Configuration.getScoreFieldName() {
-        return this.scoreFieldName;
+    public String Configuration.getSortFieldName() {
+        return this.sortFieldName;
     }
     
-    public void Configuration.setScoreFieldName(String scoreFieldName) {
-        this.scoreFieldName = scoreFieldName;
+    public void Configuration.setSortFieldName(String sortFieldName) {
+        this.sortFieldName = sortFieldName;
     }
     
     public String Configuration.getMaxSearchResults() {

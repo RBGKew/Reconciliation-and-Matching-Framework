@@ -11,7 +11,7 @@
 		Matches on genus, species and infraspecies epithets, plus author.
 	-->
 
-	<!-- TPL datasource for lookup data -->
+	<!-- TPL datasource for authority data -->
 	<bean id="tplDatabase" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="${tpl.database.driverClassName}" />
 		<property name="url" value="${tpl.database.url}" />
@@ -26,7 +26,7 @@
 		<property name="removeAbandonedTimeout" value="1200" />
 		<property name="removeAbandonedOnMaintenance" value="true" />
 	</bean>
-	<bean id="lookupFromTplDatabase" class="org.kew.reconciliation.service.DatabaseCursorRecordReader">
+	<bean id="authorityFromTplDatabase" class="org.kew.reconciliation.service.DatabaseCursorRecordReader">
 		<property name="dataSource" ref="tplDatabase"/>
 		<property name="sql" value="SELECT t1ID AS id, genus, species, infraspecificEpithet AS infraspecies, primaryAuthors AS authors, taxonomicStatus, acceptedNameID FROM tpl2_final"/>
 	</bean>
@@ -73,13 +73,13 @@
 	<util:list id="columnProperties">
 		<!-- Genus -->
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:sourceColumnName="genus"
-			p:lookupColumnName="genus"
+			p:queryColumnName="genus"
+			p:authorityColumnName="genus"
 			p:useInSelect="true"
-			p:addOriginalLookupValue="true"
-			p:addOriginalSourceValue="true"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true"
 			p:matcher-ref="exactMatch">
-			<property name="sourceTransformers">
+			<property name="queryTransformers">
 				<util:list id="1">
 					<ref bean="fakeHybridSignCleaner" />
 					<ref bean="safeStripNonAlphas" />
@@ -87,7 +87,7 @@
 					<ref bean="epithetTransformer" />
 				</util:list>
 			</property>
-			<property name="lookupTransformers">
+			<property name="authorityTransformers">
 				<util:list id="1">
 					<ref bean="safeStripNonAlphas" />
 					<ref bean="doubleLettersTransformer" />
@@ -98,14 +98,14 @@
 
 		<!-- Species -->
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:sourceColumnName="species"
-			p:lookupColumnName="species"
+			p:queryColumnName="species"
+			p:authorityColumnName="species"
 			p:indexInitial="true"
 			p:useInSelect="true"
-			p:addOriginalLookupValue="true"
-			p:addOriginalSourceValue="true"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true"
 			p:matcher-ref="ld1Match">
-			<property name="sourceTransformers">
+			<property name="queryTransformers">
 				<util:list id="1">
 					<ref bean="fakeHybridSignCleaner" />
 					<ref bean="safeStripNonAlphas" />
@@ -113,7 +113,7 @@
 					<ref bean="epithetTransformer" />
 				</util:list>
 			</property>
-			<property name="lookupTransformers">
+			<property name="authorityTransformers">
 				<util:list id="1">
 					<ref bean="safeStripNonAlphas"/>
 					<ref bean="doubleLettersTransformer"/>
@@ -124,21 +124,21 @@
 
 		<!-- Infraspecific epithet -->
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:sourceColumnName="infraspecies"
-			p:lookupColumnName="infraspecies"
+			p:queryColumnName="infraspecies"
+			p:authorityColumnName="infraspecies"
 			p:indexInitial="true"
 			p:useInSelect="true"
-			p:addOriginalLookupValue="true"
-			p:addOriginalSourceValue="true"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true"
 			p:matcher-ref="ld1Match">
-			<property name="sourceTransformers">
+			<property name="queryTransformers">
 				<util:list id="1">
 					<ref bean="safeStripNonAlphas"/>
 					<ref bean="doubleLettersTransformer"/>
 					<ref bean="epithetTransformer" />
 				</util:list>
 			</property>
-			<property name="lookupTransformers">
+			<property name="authorityTransformers">
 				<util:list id="1">
 					<ref bean="safeStripNonAlphas"/>
 					<ref bean="doubleLettersTransformer"/>
@@ -149,22 +149,22 @@
 
 		<!-- Authors -->
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:sourceColumnName="authors"
-			p:lookupColumnName="authors"
+			p:queryColumnName="authors"
+			p:authorityColumnName="authors"
 			p:useInSelect="false"
 			p:matcher-ref="commonTokensMatcher"
-			p:addOriginalLookupValue="true"
-			p:addOriginalSourceValue="true"
-			p:addTransformedSourceValue="true"
-			p:addTransformedLookupValue="true">
-			<property name="sourceTransformers">
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true"
+			p:addTransformedQueryValue="true"
+			p:addTransformedAuthorityValue="true">
+			<property name="queryTransformers">
 				<util:list id="1">
 					<ref bean="authorDictionaryTransformer" />
 					<ref bean="stripBasionymAuthor" />
 					<ref bean="shrunkAuthor" />
 				</util:list>
 			</property>
-			<property name="lookupTransformers">
+			<property name="authorityTransformers">
 				<util:list id="1">
 					<ref bean="authorDictionaryTransformer" />
 					<ref bean="stripBasionymAuthor" />
@@ -175,17 +175,17 @@
 
 		<!-- TaxonomicStatus — just for output -->
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:sourceColumnName="taxonomicStatus"
-			p:lookupColumnName="taxonomicStatus"
-			p:addOriginalLookupValue="true"
+			p:queryColumnName="taxonomicStatus"
+			p:authorityColumnName="taxonomicStatus"
+			p:addOriginalAuthorityValue="true"
 			p:matcher-ref="alwaysMatch">
 		</bean>
 
 		<!-- AcceptedNameID — just for output -->
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:sourceColumnName="acceptedNameID"
-			p:lookupColumnName="acceptedNameID"
-			p:addOriginalLookupValue="true"
+			p:queryColumnName="acceptedNameID"
+			p:authorityColumnName="acceptedNameID"
+			p:addOriginalAuthorityValue="true"
 			p:matcher-ref="alwaysMatch">
 		</bean>
 	</util:list>
@@ -209,9 +209,9 @@
 	<bean id="config" class="org.kew.stringmod.dedupl.configuration.ReconciliationServiceConfiguration"
 		p:name="standardTplNameMatch"
 		p:description="Moderately strict reconciliation configuration matching against names stored in The Plant List (TPL)."
-		p:lookupRecords-ref="lookupFromTplDatabase"
+		p:authorityRecords-ref="authorityFromTplDatabase"
 		p:properties-ref="columnProperties"
-		p:scoreFieldName="id"
+		p:sortFieldName="id"
 		p:loadReportFrequency="5000"
 		p:assessReportFrequency="500"
 		p:maxSearchResults="10000"

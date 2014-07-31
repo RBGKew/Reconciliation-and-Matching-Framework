@@ -14,8 +14,8 @@ public class WireEngine {
 
     private final String[] defaultFalseList = new String[] {
             "useInSelect", "useInNegativeSelect", "indexLength", "blanksMatch",
-            "addOriginalSourceValue", "addOriginalLookupValue",
-            "addTransformedSourceValue", "addTransformedLookupValue", "indexInitial",
+            "addOriginalQueryValue", "addOriginalAuthorityValue",
+            "addTransformedQueryValue", "addTransformedAuthorityValue", "indexInitial",
             "useWildcard"};
 
 
@@ -32,9 +32,9 @@ public class WireEngine {
         }
         ArrayList<String> outXML = new ArrayList<String>();
         outXML.add(String.format("%s<bean class=\"org.kew.stringmod.dedupl.configuration.Property\"", indent));
-        outXML.add(String.format("%s%sp:sourceColumnName=\"%s\"", indent, shift, this.wire.getSourceColumnName()));
-        if (this.wire.getLookupColumnName().length() > 0) {
-	        outXML.add(String.format("%s%sp:lookupColumnName=\"%s\"", indent, shift, this.wire.getLookupColumnName()));
+        outXML.add(String.format("%s%sp:queryColumnName=\"%s\"", indent, shift, this.wire.getQueryColumnName()));
+        if (this.wire.getAuthorityColumnName().length() > 0) {
+	        outXML.add(String.format("%s%sp:authorityColumnName=\"%s\"", indent, shift, this.wire.getAuthorityColumnName()));
         }
 
         // all boolean attributes default to false and we only want to write them if they are set to true
@@ -45,23 +45,23 @@ public class WireEngine {
 
         outXML.add(String.format("%s%sp:matcher-ref=\"%s\">", indent, shift, this.wire.getMatcher().getName()));
 
-        List<WiredTransformer> sourceTransens = this.wire.getSourceTransformers();
-        if (sourceTransens.size() > 0) {
-            outXML.add(String.format("%s%s<property name=\"sourceTransformers\">", indent, shift));
+        List<WiredTransformer> queryTransens = this.wire.getQueryTransformers();
+        if (queryTransens.size() > 0) {
+            outXML.add(String.format("%s%s<property name=\"queryTransformers\">", indent, shift));
             outXML.add(String.format("%s%s%s<util:list id=\"1\">", indent, shift, shift));
-            Collections.sort(sourceTransens);
-            for (WiredTransformer wTrans:sourceTransens) {
+            Collections.sort(queryTransens);
+            for (WiredTransformer wTrans:queryTransens) {
                 outXML.add(String.format("%s%s%s%s<ref bean=\"%s\"/>", indent, shift,shift,  shift, wTrans.getTransformer().getName()));
             }
             outXML.add(String.format("%s%s%s</util:list>", indent, shift, shift));
             outXML.add(String.format("%s%s</property>", indent, shift));
         }
-        List<WiredTransformer> lookupTransens = this.wire.getLookupTransformers();
-        if (lookupTransens.size() > 0) {
-            outXML.add(String.format("%s%s<property name=\"lookupTransformers\">", indent, shift));
+        List<WiredTransformer> authorityTransens = this.wire.getAuthorityTransformers();
+        if (authorityTransens.size() > 0) {
+            outXML.add(String.format("%s%s<property name=\"authorityTransformers\">", indent, shift));
             outXML.add(String.format("%s%s%s<util:list id=\"1\">", indent, shift, shift));
-            Collections.sort(lookupTransens);
-            for (WiredTransformer wTrans:lookupTransens) {
+            Collections.sort(authorityTransens);
+            for (WiredTransformer wTrans:authorityTransens) {
                 outXML.add(String.format("%s%s%s%s<ref bean=\"%s\"/>", indent, shift,shift,  shift, wTrans.getTransformer().getName()));
             }
             outXML.add(String.format("%s%s%s</util:list>", indent, shift, shift));

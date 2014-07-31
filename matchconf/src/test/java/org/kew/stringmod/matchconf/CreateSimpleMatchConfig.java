@@ -45,16 +45,16 @@ public class CreateSimpleMatchConfig {
         tempDir.delete();
     }
 
-    @Given("^Alecs has a source-file containing data in three columns, \\(\"([^\"]*)\", \"([^\"]*)\", \"([^\"]*)\"\\) in a directory \"([^\"]*)\"$")
-    public void Alecs_has_a_source_file_containing_data_in_three_columns_in_a_directory(String firstColName, String secondColName, String thirdColName, String workDirPath) throws Throwable {
+    @Given("^Alecs has a query-file containing data in three columns, \\(\"([^\"]*)\", \"([^\"]*)\", \"([^\"]*)\"\\) in a directory \"([^\"]*)\"$")
+    public void Alecs_has_a_query_file_containing_data_in_three_columns_in_a_directory(String firstColName, String secondColName, String thirdColName, String workDirPath) throws Throwable {
         this.workDir = new File(tempDir, workDirPath);
         this.workDir.mkdir();
-        new File(this.workDir, "source.tsv").createNewFile();
+        new File(this.workDir, "query.tsv").createNewFile();
     }
 
-    @Given("^Alecs has a lookup-file containing data in three columns \\(\"([^\"]*)\", \"([^\"]*)\", \"([^\"]*)\"\\) in the same directory$")
-    public void Alecs_has_a_lookup_file_containing_data_in_three_columns_in_the_same(String firstColName, String secondColName, String thirdColName) throws Throwable {
-        new File(this.workDir, "lookup.tsv").createNewFile();
+    @Given("^Alecs has an authority-file containing data in three columns \\(\"([^\"]*)\", \"([^\"]*)\", \"([^\"]*)\"\\) in the same directory$")
+    public void Alecs_has_an_authority_file_containing_data_in_three_columns_in_the_same(String firstColName, String secondColName, String thirdColName) throws Throwable {
+        new File(this.workDir, "authority.tsv").createNewFile();
     }
 
     @Given("^he has created a new match configuration:$")
@@ -65,13 +65,13 @@ public class CreateSimpleMatchConfig {
         config.setName(this.configName);
         config.setClassName("MatchConfiguration");
         config.setWorkDirPath(new File(this.tempDir, colDef.get(0).get("workDirPath")).getPath());
-        config.setLookupFileName("lookup.tsv");
+        config.setAuthorityFileName("authority.tsv");
         config.persist();
         assert (Configuration.findConfiguration(config.getId()) != null);
     }
 
-    @Given("^he has added the following source- and lookupTransformers$")
-    public void he_has_added_the_following_source_and_lookupTransformers(DataTable transformerDefTable) throws Throwable {
+    @Given("^he has added the following query- and authorityTransformers$")
+    public void he_has_added_the_following_query_and_authorityTransformers(DataTable transformerDefTable) throws Throwable {
         List<Transformer> transis = new ArrayList<>();
         for (Map<String,String> transDef:transformerDefTable.asMaps(String.class, String.class)) {
             Transformer transi = new Transformer();
@@ -107,14 +107,14 @@ public class CreateSimpleMatchConfig {
     public void he_has_wired_them_together_in_the_following_way(DataTable wireDefTable) throws Throwable {
         for (Map<String,String> wireDef:wireDefTable.asMaps(String.class, String.class)) {
             Wire wire = new Wire();
-            wire.setSourceColumnName(wireDef.get("sourceColumnName"));
-            wire.setLookupColumnName(wireDef.get("lookupColumnName"));
+            wire.setQueryColumnName(wireDef.get("queryColumnName"));
+            wire.setAuthorityColumnName(wireDef.get("authorityColumnName"));
             wire.setUseInSelect(Boolean.parseBoolean(wireDef.get("useInSelect")));
             wire.setMatcher(this.matchers.get(wireDef.get("matcher")));
             wire.setConfiguration(config);
             wire.persist();
             int i = 0;
-            for (String t:wireDef.get("sourceTransformers").split(",")) {
+            for (String t:wireDef.get("queryTransformers").split(",")) {
                 i ++;
                 WiredTransformer wTrans = new WiredTransformer();
                 // reverse the order to test whether the rank is actually used for sorting
@@ -123,10 +123,10 @@ public class CreateSimpleMatchConfig {
                 Transformer transf = this.transformers.get(t.trim());
                 wTrans.setTransformer(transf);
                 wTrans.persist();
-                wire.getSourceTransformers().add(wTrans);
+                wire.getQueryTransformers().add(wTrans);
             }
             i = 0;
-            for (String t:wireDef.get("lookupTransformers").split(",")) {
+            for (String t:wireDef.get("authorityTransformers").split(",")) {
                 i ++;
                 WiredTransformer wTrans = new WiredTransformer();
                 // reverse the order to test whether the rank is actually used for sorting
@@ -135,7 +135,7 @@ public class CreateSimpleMatchConfig {
                 Transformer transf = this.transformers.get(t.trim());
                 wTrans.setTransformer(transf);
                 wTrans.persist();
-                wire.getLookupTransformers().add(wTrans);
+                wire.getAuthorityTransformers().add(wTrans);
             }
             wire.merge();
             assert (Wire.findWire(wire.getId()) != null);

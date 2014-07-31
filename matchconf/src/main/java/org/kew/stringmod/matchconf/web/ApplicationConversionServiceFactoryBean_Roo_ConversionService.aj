@@ -21,7 +21,7 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
     public Converter<Configuration, String> ApplicationConversionServiceFactoryBean.getConfigurationToStringConverter() {
         return new org.springframework.core.convert.converter.Converter<org.kew.stringmod.matchconf.Configuration, java.lang.String>() {
             public String convert(Configuration configuration) {
-                return new StringBuilder().append(configuration.getName()).append(' ').append(configuration.getWorkDirPath()).append(' ').append(configuration.getSourceFileName()).append(' ').append(configuration.getSourceFileEncoding()).toString();
+                return new StringBuilder().append(configuration.getName()).append(' ').append(configuration.getWorkDirPath()).append(' ').append(configuration.getQueryFileName()).append(' ').append(configuration.getQueryFileEncoding()).toString();
             }
         };
     }
@@ -117,7 +117,7 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
     public Converter<Wire, String> ApplicationConversionServiceFactoryBean.getWireToStringConverter() {
         return new org.springframework.core.convert.converter.Converter<org.kew.stringmod.matchconf.Wire, java.lang.String>() {
             public String convert(Wire wire) {
-                return new StringBuilder().append(wire.getSourceColumnName()).append(' ').append(wire.getLookupColumnName()).toString();
+                return new StringBuilder().append(wire.getQueryColumnName()).append(' ').append(wire.getAuthorityColumnName()).toString();
             }
         };
     }

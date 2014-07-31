@@ -6,7 +6,7 @@
     <br/> <div id="config-link">for configuration: <a href="/MatchConf/dedup_configs/${ configName }">${ configName }</a></div> <br/>
 
     <form:update id="fu_org_kew_stringmod_matchconf_Wire" modelAttribute="wire" path="/dedup_configs/${ configName }/wires" versionField="Version" z="KIOFyddiGDqdzu87ppIkV+87Zqs=">
-        <field:input field="sourceColumnName" id="c_org_kew_stringmod_matchconf_Wire_sourceColumnName" z="Iyj1E63QgPFC+EHUH9g08zRtbLU="/>
+        <field:input field="queryColumnName" id="c_org_kew_stringmod_matchconf_Wire_queryColumnName" z="Iyj1E63QgPFC+EHUH9g08zRtbLU="/>
 
         <field:checkbox field="useInSelect" id="c_org_kew_stringmod_matchconf_Wire_useInSelect" z="TTpnxEuYpzEvKPuXK5cTGD09y2Q="/>
         <field:checkbox field="useInNegativeSelect" id="c_org_kew_stringmod_matchconf_Wire_useInNegativeSelect" z="g6Fqf7lac9bj4i6phpDcyTMnAeg="/>
@@ -15,17 +15,17 @@
         <field:checkbox field="indexInitial" id="c_org_kew_stringmod_matchconf_Wire_indexInitial" z="4Um0XUlwGw1gsH3hQKMnvD0woj4="/>
         <field:checkbox field="useWildcard" id="c_org_kew_stringmod_matchconf_Wire_useWildcard" z="H2cXRwoDy3CUtITSjtFU3P46ja8="/>
 
-        <field:checkbox field="addOriginalSourceValue" id="c_org_kew_stringmod_matchconf_Wire_addOriginalSourceValue" z="FBobAPBovYc4gqRvKOcr0T+nySg="/>
-        <field:checkbox field="addTransformedSourceValue" id="c_org_kew_stringmod_matchconf_Wire_addTransformedSourceValue" z="gz9SC9WXQU9Q8G7eX3YXT9eMaK8="/>
+        <field:checkbox field="addOriginalQueryValue" id="c_org_kew_stringmod_matchconf_Wire_addOriginalQueryValue" z="FBobAPBovYc4gqRvKOcr0T+nySg="/>
+        <field:checkbox field="addTransformedQueryValue" id="c_org_kew_stringmod_matchconf_Wire_addTransformedQueryValue" z="gz9SC9WXQU9Q8G7eX3YXT9eMaK8="/>
 
-        <field:select field="sourceTransformers" disabled="true" id="c_org_kew_stringmod_matchconf_Wire_sourceTransformers" itemLabel="transformer" itemValue="id" items="${ sourceTransformers }" multiple="true" path="${ configType }_configs/${ configName }/wires/${ wireName }/wired_transformers" z=""/>
+        <field:select field="queryTransformers" disabled="true" id="c_org_kew_stringmod_matchconf_Wire_queryTransformers" itemLabel="transformer" itemValue="id" items="${ queryTransformers }" multiple="true" path="${ configType }_configs/${ configName }/wires/${ wireName }/wired_transformers" z=""/>
 
         <field:select field="matcher" id="c_org_kew_stringmod_matchconf_Wire_matcher" itemValue="id" items="${matchers}" path="/${ configType }_configs/${ configName }/matchers" z="lXk5z0p02X2K5OrJ2d71mUvWp+E="/>
     </form:update>
     <script type="text/javascript">
 	    jQuery(function($) {
 		    $('form').bind('submit', function() {
-		        $(this).find('#_sourceTransformers_id').removeAttr('disabled');
+		        $(this).find('#_queryTransformers_id').removeAttr('disabled');
 		    });
 		});
     </script>

@@ -9,7 +9,7 @@
 
 	<!-- • STANDARD IPNI PUBLICATION MATCH • -->
 
-	<!-- IPNI datasource for lookup data -->
+	<!-- IPNI datasource for authority data -->
 	<bean id="ipniDatabase" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="${ipni.database.driverClassName}" />
 		<property name="url" value="${ipni.database.url}" />
@@ -25,7 +25,7 @@
 		<property name="removeAbandonedTimeout" value="1200" />
 		<property name="removeAbandonedOnMaintenance" value="true" />
 	</bean>
-	<bean id="lookupFromIpniDatabase" class="org.kew.reconciliation.service.DatabaseCursorRecordReader">
+	<bean id="authorityFromIpniDatabase" class="org.kew.reconciliation.service.DatabaseCursorRecordReader">
 		<property name="dataSource" ref="ipniDatabase"/>
 		<property name="sql" value="SELECT publication_id AS id, abbrev AS publication, publication_date AS date, tl2_author AS author FROM publication"/>
 		<property name="fetchSize" value="5000"/>
@@ -77,19 +77,19 @@
 	<util:list id="columnProperties">
 		<!-- Publication publicationiation -->
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:sourceColumnName="publication"
-			p:lookupColumnName="publication"
+			p:queryColumnName="publication"
+			p:authorityColumnName="publication"
 			p:indexInitial="true"
 			p:useInSelect="true"
 			p:matcher-ref="exactOrBlankOrCommonTokens"
-			p:addOriginalLookupValue="true"
-			p:addOriginalSourceValue="true">
-			<property name="sourceTransformers">
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
+			<property name="queryTransformers">
 				<util:list id="1">
 					<ref bean="bracketedRemover" />
 				</util:list>
 			</property>
-			<property name="lookupTransformers">
+			<property name="authorityTransformers">
 				<util:list id="1">
 					<ref bean="bracketedRemover" />
 				</util:list>
@@ -98,18 +98,18 @@
 
 		<!-- Publication date -->
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:sourceColumnName="date"
-			p:lookupColumnName="date"
+			p:queryColumnName="date"
+			p:authorityColumnName="date"
 			p:useInSelect="false"
 			p:matcher-ref="blankOrInRange"
-			p:addOriginalLookupValue="true"
-			p:addOriginalSourceValue="true">
-			<property name="sourceTransformers">
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
+			<property name="queryTransformers">
 				<util:list id="1">
 					<ref bean="yearRangeExtractor" />
 				</util:list>
 			</property>
-			<property name="lookupTransformers">
+			<property name="authorityTransformers">
 				<util:list id="1">
 					<ref bean="yearRangeExtractor"/>
 				</util:list>
@@ -118,20 +118,20 @@
 
 		<!-- Publication authors -->
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:sourceColumnName="author"
-			p:lookupColumnName="author"
+			p:queryColumnName="author"
+			p:authorityColumnName="author"
 			p:useInSelect="false"
 			p:matcher-ref="exactOrBlankOrCommonToken"
-			p:addOriginalLookupValue="true"
-			p:addOriginalSourceValue="true">
-			<property name="sourceTransformers">
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
+			<property name="queryTransformers">
 				<util:list id="1">
 					<ref bean="nameExtractor" />
 					<ref bean="stripIpniTl2AuthorRefs" />
 					<ref bean="safeStripNonAlphas" />
 				</util:list>
 			</property>
-			<property name="lookupTransformers">
+			<property name="authorityTransformers">
 				<util:list id="1">
 					<ref bean="nameExtractor" />
 					<ref bean="stripIpniTl2AuthorRefs" />
@@ -157,9 +157,9 @@
 	<bean id="config" class="org.kew.stringmod.dedupl.configuration.ReconciliationServiceConfiguration"
 		p:name="standardIpniPublicationMatch"
 		p:description="Moderately strict reconciliation configuration matching against publications stored in the International Plant Name Index (IPNI)."
-		p:lookupRecords-ref="lookupFromIpniDatabase"
+		p:authorityRecords-ref="authorityFromIpniDatabase"
 		p:properties-ref="columnProperties"
-		p:scoreFieldName="id"
+		p:sortFieldName="id"
 		p:loadReportFrequency="5000"
 		p:assessReportFrequency="1000"
 		p:maxSearchResults="10000"

@@ -72,11 +72,11 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
         }
         // transform fields where required
         for (Property prop:config.getProperties()) {
-            String fName = prop.getSourceColumnName();
+            String fName = prop.getQueryColumnName();
             String fValue = record.get(fName);
             // transform the field-value..
             fValue = fValue == null ? "" : fValue; // super-csv treats blank as null, we don't for now
-            for (Transformer t:prop.getSourceTransformers()) {
+            for (Transformer t:prop.getQueryTransformers()) {
                 try {
                     fValue = t.transform(fValue);
                 }
@@ -136,7 +136,7 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
     }
 
     public void sortMatches(List<Map<String, String>> matches) {
-        final String sortOn = config.getScoreFieldName();
+        final String sortOn = config.getSortFieldName();
         try {
             Collections.sort(matches, Collections.reverseOrder(new Comparator<Map<String, String>>() {
                 @Override
@@ -160,13 +160,13 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
      *
      * The iterative flow is:
      * - load the data (== write the lucene index)
-     * - iterate over the source data file
+     * - iterate over the query data file
      *     - for each record, look for matches in the index
      *    - for each record, report into new fields of this record about matches via reporters
      *
      * The main difference to a deduplication task as defined by {@link LuceneDeduplicator}
-     * is that we use two different datasets, one to create the lookup index, the other one as
-     * source file (where we iterate over each record to look up possible matches).
+     * is that we use two different datasets, one to create the authority index, the other one as
+     * query file (where we iterate over each record to look up possible matches).
      */
     @Override
     public void run() throws Exception {
@@ -175,25 +175,25 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
 
         // TODO: either make quote characters and line break characters configurable or simplify even more?
         CsvPreference csvPref = new CsvPreference.Builder(
-                '"', this.getConfig().getSourceFileDelimiter().charAt(0), "\n").build();
+                '"', this.getConfig().getQueryFileDelimiter().charAt(0), "\n").build();
         int i = 0;
         try (MatchConfiguration config = this.getConfig();
              IndexReader indexReader= this.getIndexReader();
-             CsvMapReader mr = new CsvMapReader(new InputStreamReader(new FileInputStream(this.getConfig().getSourceFile()), "UTF-8"), csvPref)) {
+             CsvMapReader mr = new CsvMapReader(new InputStreamReader(new FileInputStream(this.getConfig().getQueryFile()), this.getConfig().getQueryFileEncoding()), csvPref)) {
 
             this.prepareEnvs();
 
-            // loop over the sourceFile
+            // loop over the queryFile
             int numMatches = 0;
             final String[] header = mr.getHeader(true);
             // check whether the header column names fit to the ones specified in the configuration
             List<String> headerList = Arrays.asList(header);
-            for (String name:this.config.getPropertySourceColumnNames()) {
-                if (!headerList.contains(name)) throw new Exception(String.format("%s: Header doesn't contain field name < %s > as defined in config.", this.config.getSourceFile().getPath(), name));
+            for (String name:this.config.getPropertyQueryColumnNames()) {
+                if (!headerList.contains(name)) throw new Exception(String.format("%s: Header doesn't contain field name < %s > as defined in config.", this.config.getQueryFile().getPath(), name));
             }
             // same for the id-field
             String idFieldName = Configuration.ID_FIELD_NAME;
-            if (!headerList.contains(idFieldName)) throw new Exception(String.format("%s: Id field name not found in header, should be %s!", this.config.getSourceFile().getPath(), idFieldName));
+            if (!headerList.contains(idFieldName)) throw new Exception(String.format("%s: Id field name not found in header, should be %s!", this.config.getQueryFile().getPath(), idFieldName));
             Map<String, String> record;
             while((record = mr.read(header)) != null) {
                 List<Map<String, String>> matches = getMatches(record, numMatches);

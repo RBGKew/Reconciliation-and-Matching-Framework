@@ -43,12 +43,12 @@ public class ConfigurationEngine {
 
         ArrayList<String> outXML = new ArrayList<String>();
 
-        String sourceFilePath = new File(new File(this.config.getWorkDirPath()), this.config.getSourceFileName()).getPath();
+        String queryFilePath = new File(new File(this.config.getWorkDirPath()), this.config.getQueryFileName()).getPath();
         // change to unix-style path for convencience, even if on windows..
-        sourceFilePath = sourceFilePath.replace("\\\\", "/");
-        String lookupFilePath = new File(new File(this.config.getWorkDirPath()), this.config.getLookupFileName()).getPath();
+        queryFilePath = queryFilePath.replace("\\\\", "/");
+        String authorityFilePath = new File(new File(this.config.getWorkDirPath()), this.config.getAuthorityFileName()).getPath();
         // change to unix-style path for convencience, even if on windows..
-        lookupFilePath = lookupFilePath.replace("\\\\", "/");
+        authorityFilePath = authorityFilePath.replace("\\\\", "/");
 
         outXML.add("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         outXML.add("<beans xmlns=\"http://www.springframework.org/schema/beans\"");
@@ -68,12 +68,12 @@ public class ConfigurationEngine {
         outXML.add(String.format("%s<bean id=\"lucene_directory\" class=\"java.lang.String\">", shift, shift));
         outXML.add(String.format("%s%s<constructor-arg value=\"%s\"/>", shift, shift, this.luceneDirectory));
         outXML.add(String.format("%s</bean>", shift));
-        outXML.add(String.format("%s<bean id=\"sourcefile\" class=\"java.io.File\">", shift, shift));
-        outXML.add(String.format("%s%s<constructor-arg value=\"%s\" />", shift, shift, sourceFilePath));
+        outXML.add(String.format("%s<bean id=\"queryfile\" class=\"java.io.File\">", shift, shift));
+        outXML.add(String.format("%s%s<constructor-arg value=\"%s\" />", shift, shift, queryFilePath));
         outXML.add(String.format("%s</bean>", shift));
         if (this.config.getClassName().equals("MatchConfiguration")) {
-            outXML.add(String.format("%s<bean id=\"lookupfile\" class=\"java.io.File\">", shift, shift));
-            outXML.add(String.format("%s%s<constructor-arg value=\"%s\" />", shift, shift, lookupFilePath));
+            outXML.add(String.format("%s<bean id=\"authorityfile\" class=\"java.io.File\">", shift, shift));
+            outXML.add(String.format("%s%s<constructor-arg value=\"%s\" />", shift, shift, authorityFilePath));
             outXML.add(String.format("%s</bean>", shift));
         }
 
@@ -109,16 +109,16 @@ public class ConfigurationEngine {
         outXML.add(String.format("%s</util:list>", shift));
 
         outXML.add(String.format("%s<bean id=\"config\" class=\"%s.%s\"", shift, this.config.getPackageName(), this.config.getClassName()));
-        outXML.add(String.format("%s%sp:sourceFile-ref=\"sourcefile\"", shift, shift));
-        outXML.add(String.format("%s%sp:sourceFileEncoding=\"%s\"", shift, shift, this.config.getSourceFileEncoding()));
-        outXML.add(String.format("%s%sp:sourceFileDelimiter=\"%s\"", shift, shift, this.config.getSourceFileDelimiter()));
+        outXML.add(String.format("%s%sp:queryFile-ref=\"queryfile\"", shift, shift));
+        outXML.add(String.format("%s%sp:queryFileEncoding=\"%s\"", shift, shift, this.config.getQueryFileEncoding()));
+        outXML.add(String.format("%s%sp:queryFileDelimiter=\"%s\"", shift, shift, this.config.getQueryFileDelimiter()));
         if (this.config.getClassName().equals("MatchConfiguration")) {
-            outXML.add(String.format("%s%sp:lookupFile-ref=\"lookupfile\"", shift, shift));
-            outXML.add(String.format("%s%sp:lookupFileEncoding=\"%s\"", shift, shift, this.config.getLookupFileEncoding()));
-            outXML.add(String.format("%s%sp:lookupFileDelimiter=\"%s\"", shift, shift, this.config.getLookupFileDelimiter()));
+            outXML.add(String.format("%s%sp:authorityFile-ref=\"authorityfile\"", shift, shift));
+            outXML.add(String.format("%s%sp:authorityFileEncoding=\"%s\"", shift, shift, this.config.getAuthorityFileEncoding()));
+            outXML.add(String.format("%s%sp:authorityFileDelimiter=\"%s\"", shift, shift, this.config.getAuthorityFileDelimiter()));
         }
         outXML.add(String.format("%s%sp:properties-ref=\"columnProperties\"", shift, shift));
-        outXML.add(String.format("%s%sp:scoreFieldName=\"%s\"", shift, shift, this.config.getScoreFieldName()));
+        outXML.add(String.format("%s%sp:sortFieldName=\"%s\"", shift, shift, this.config.getSortFieldName()));
         outXML.add(String.format("%s%sp:loadReportFrequency=\"%s\"", shift, shift, this.config.getLoadReportFrequency()));
         outXML.add(String.format("%s%sp:assessReportFrequency=\"%s\"", shift, shift, this.config.getAssessReportFrequency()));
         outXML.add(String.format("%s%sp:maxSearchResults=\"%s\"", shift, shift, this.config.getMaxSearchResults()));
@@ -153,18 +153,18 @@ public class ConfigurationEngine {
         // 1. does the working directory exist?
         File workDir = new File(this.config.getWorkDirPath());
         if (!workDir.exists()) {
-            throw new FileNotFoundException(String.format("The specified working directory %s does not exist! You need to create it and put the source file in it.", config.getWorkDirPath()));
+            throw new FileNotFoundException(String.format("The specified working directory %s does not exist! You need to create it and put the query file in it.", config.getWorkDirPath()));
         }
-        // 2a. does the source file exist?
-        File sourceFile = new File(workDir, config.getSourceFileName());
-        if (!sourceFile.exists()) {
-            throw new FileNotFoundException(String.format("There is no file found at the specified location of the source-file %s. Move the source file there with the specified sourceFileName.", sourceFile.toPath()));
+        // 2a. does the query file exist?
+        File queryFile = new File(workDir, config.getQueryFileName());
+        if (!queryFile.exists()) {
+            throw new FileNotFoundException(String.format("There is no file found at the specified location of the query-file %s. Move the query file there with the specified queryFileName.", queryFile.toPath()));
         }
-        // 2b. if the config is for matching: does the lookup file exist?
+        // 2b. if the config is for matching: does the authority file exist?
         if (this.config.getClassName().equals("MatchConfiguration")) {
-            File lookupFile = new File(workDir, config.getLookupFileName());
-            if (!lookupFile.exists()) {
-                throw new FileNotFoundException(String.format("There is no file found at the specified location of the lookup-file %s. Move the lookup file there with the specified lookupFileName.", lookupFile.toPath()));
+            File authorityFile = new File(workDir, config.getAuthorityFileName());
+            if (!authorityFile.exists()) {
+                throw new FileNotFoundException(String.format("There is no file found at the specified location of the authority-file %s. Move the authority file there with the specified authorityFileName.", authorityFile.toPath()));
             }
         }
         // 3. write out the xml-configuration file

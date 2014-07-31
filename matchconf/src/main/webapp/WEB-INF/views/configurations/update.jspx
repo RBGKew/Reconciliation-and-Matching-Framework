@@ -5,19 +5,19 @@
     <form:update id="fu_org_kew_stringmod_matchconf_Configuration" modelAttribute="configuration" path="/configurations" versionField="Version" z="bCnHb1PO8Fn3DBzbx4qpEUY+6/g=">
         <field:input field="name" id="c_org_kew_stringmod_matchconf_Configuration_name" z="IqjY4uCe03G4uCnT1D3jeOjf2kY="/>
         <field:input field="workDirPath" id="c_org_kew_stringmod_matchconf_Configuration_workDirPath" z="Gy2oMVMjdXYVJJCZ58CeVY/5/lQ="/>
-        <field:input field="sourceFileName" id="c_org_kew_stringmod_matchconf_Configuration_sourceFileName" z="O0QJEJOmvdAhy+5Ez9eAjJzLK48="/>
-        <field:input field="sourceFileEncoding" id="c_org_kew_stringmod_matchconf_Configuration_sourceFileEncoding" z="h1ZBIx1GfNSV8/iCrc4qHLE8ed0="/>
-        <field:input field="sourceFileDelimiter" id="c_org_kew_stringmod_matchconf_Configuration_sourceFileDelimiter" z="BtWPHbWqbHb+I7gHnq38PcVpCbc="/>
+        <field:input field="queryFileName" id="c_org_kew_stringmod_matchconf_Configuration_queryFileName" z="O0QJEJOmvdAhy+5Ez9eAjJzLK48="/>
+        <field:input field="queryFileEncoding" id="c_org_kew_stringmod_matchconf_Configuration_queryFileEncoding" z="h1ZBIx1GfNSV8/iCrc4qHLE8ed0="/>
+        <field:input field="queryFileDelimiter" id="c_org_kew_stringmod_matchconf_Configuration_queryFileDelimiter" z="BtWPHbWqbHb+I7gHnq38PcVpCbc="/>
         <field:input field="recordFilter" id="c_org_kew_stringmod_matchconf_Configuration_recordFilter" z="7isHBYKuYsRPFqBrjztzoejBl+4="/>
         <field:input field="nextConfig" id="c_org_kew_stringmod_matchconf_Configuration_nextConfig" z="aKD9NtmnJRP4Rbz2Rauvq3SxowA="/>
-        <field:input field="lookupFileName" id="c_org_kew_stringmod_matchconf_Configuration_lookupFileName" z="KwXJSB1Tu6cxL0epVrUtwhCNaVo="/>
-        <field:input field="lookupFileEncoding" id="c_org_kew_stringmod_matchconf_Configuration_lookupFileEncoding" z="fR4g40aZe3MIndSaxTIfGf2QpYA="/>
-        <field:input field="lookupFileDelimiter" id="c_org_kew_stringmod_matchconf_Configuration_lookupFileDelimiter" z="IfKAnH41QJBlvxLPj+w0E7C0N7o="/>
+        <field:input field="authorityFileName" id="c_org_kew_stringmod_matchconf_Configuration_authorityFileName" z="KwXJSB1Tu6cxL0epVrUtwhCNaVo="/>
+        <field:input field="authorityFileEncoding" id="c_org_kew_stringmod_matchconf_Configuration_authorityFileEncoding" z="fR4g40aZe3MIndSaxTIfGf2QpYA="/>
+        <field:input field="authorityFileDelimiter" id="c_org_kew_stringmod_matchconf_Configuration_authorityFileDelimiter" z="IfKAnH41QJBlvxLPj+w0E7C0N7o="/>
         <field:input field="packageName" id="c_org_kew_stringmod_matchconf_Configuration_packageName" z="NOowTUxrPSIzMroWwcQpzvUpA7I="/>
         <field:input field="className" id="c_org_kew_stringmod_matchconf_Configuration_className" z="Y7e2Qz7Iw/9osDQbidrAj2CBwqk="/>
         <field:input field="loadReportFrequency" id="c_org_kew_stringmod_matchconf_Configuration_loadReportFrequency" z="ehN0wGFD+0fJRsaRIBNWppWlcgM="/>
         <field:input field="assessReportFrequency" id="c_org_kew_stringmod_matchconf_Configuration_assessReportFrequency" z="DJxvKnE/qZmarujTyRzidwQbBLM="/>
-        <field:input field="scoreFieldName" id="c_org_kew_stringmod_matchconf_Configuration_scoreFieldName" z="BDFm0AnML6mEwKHyRTGjKhSwFLU="/>
+        <field:input field="sortFieldName" id="c_org_kew_stringmod_matchconf_Configuration_sort_field_name" z="BDFm0AnML6mEwKHyRTGjKhSwFLU="/>
         <field:input field="maxSearchResults" id="c_org_kew_stringmod_matchconf_Configuration_maxSearchResults" z="xCIgFxNe/czex0UCjQTDkpzPssw="/>
         <field:simple field="wiring" id="c_org_kew_stringmod_matchconf_Configuration_wiring" messageCode="entity_reference_not_managed" messageCodeAttribute="Wire" z="Vq1nDmd2HlB6bzejjr1u+OxQhAU="/>
         <field:simple field="transformers" id="c_org_kew_stringmod_matchconf_Configuration_transformers" messageCode="entity_reference_not_managed" messageCodeAttribute="Transformer" z="AswCZjs/vivcZKkz5tJ07nDXmlI="/>

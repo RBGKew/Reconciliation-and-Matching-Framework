@@ -25,7 +25,7 @@ import org.springframework.web.util.WebUtils;
 public class CustomWiredTransformerController {
 
     @SuppressWarnings("serial")
-    private final static HashSet<String> T_TYPES = new HashSet<String>() {{add("source"); add("lookup");}};
+    private final static HashSet<String> T_TYPES = new HashSet<String>() {{add("query"); add("authority");}};
 
     @RequestMapping(value="/{configType}_configs/{configName}/wires/{wireName}/{transformerType}_transformers", method = RequestMethod.POST, produces = "text/html")
     public String create(@PathVariable("configType") String configType, @PathVariable("configName") String configName, @PathVariable("wireName") String wireName, @PathVariable("transformerType") String transformerType, @Valid WiredTransformer wiredTransformer, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) throws Exception {

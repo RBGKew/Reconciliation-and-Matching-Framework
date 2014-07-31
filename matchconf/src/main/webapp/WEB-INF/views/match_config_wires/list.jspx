@@ -7,8 +7,8 @@
 
     <page:list id="pl_org_kew_stringmod_matchconf_Wire" items="${wires}" z="pHrV9Tymv8NNGMuYBinlVKivNx0=">
         <table:table data="${wires}" id="l_org_kew_stringmod_matchconf_Wire" path="/match_configs/${ configName }/wires" z="mh2j7So59pSqUM85yfvMnKf4ikg=">
-            <table:column id="c_org_kew_stringmod_matchconf_Wire_lookupColumnName" property="lookupColumnName" z="xfV5khLKbl5Lrptz+43XBha4lKA="/>
-            <table:column id="c_org_kew_stringmod_matchconf_Wire_sourceColumnName" property="sourceColumnName" z="o9aOfxdG6KdwAlKLRTId59kDy1c="/>
+            <table:column id="c_org_kew_stringmod_matchconf_Wire_authorityColumnName" property="authorityColumnName" z="xfV5khLKbl5Lrptz+43XBha4lKA="/>
+            <table:column id="c_org_kew_stringmod_matchconf_Wire_queryColumnName" property="queryColumnName" z="o9aOfxdG6KdwAlKLRTId59kDy1c="/>
             <table:column id="c_org_kew_stringmod_matchconf_Wire_useInSelect" property="useInSelect" z="kKh1sMas76ryBoMW2eh+14ZiorA="/>
             <table:column id="c_org_kew_stringmod_matchconf_Wire_useInNegativeSelect" property="useInNegativeSelect" z="OQfgJg+TKrRVzZ8I7l1UkBC+ObA="/>
             <table:column id="c_org_kew_stringmod_matchconf_Wire_indexLength" property="indexLength" z="r8Bqtl3Fv3TYgr5O3CH1fkxQJGM="/>

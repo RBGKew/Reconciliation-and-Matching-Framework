@@ -9,8 +9,8 @@ import java.util.Map;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexableField;
 
-/*
- * A very simple wrapper around an ArrayList specific to lucene Documents, that knows whether it's sorted or not.
+/**
+ * A very simple wrapper around an ArrayList specific to Lucene Documents, that knows whether it's sorted or not.
  * It can so far only add and get Documents and return its size
  */
 public class DocList  {
