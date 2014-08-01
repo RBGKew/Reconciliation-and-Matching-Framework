@@ -1,9 +1,11 @@
 package org.kew.reconciliation.config;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.perf4j.slf4j.aop.TimingAspect;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -25,6 +27,7 @@ import org.springframework.web.servlet.view.tiles2.TilesView;
 		org.kew.reconciliation.service.ReconciliationService.class,
 		org.kew.reconciliation.ws.MatchController.class
 })
+@EnableAspectJAutoProxy
 public class MvcConfig extends WebMvcConfigurerAdapter {
 	static @Bean public PropertySourcesPlaceholderConfigurer myPropertySourcesPlaceholderConfigurer() {
 		PropertySourcesPlaceholderConfigurer p = new PropertySourcesPlaceholderConfigurer();
@@ -103,5 +106,10 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 		taskExecutor.setMaxPoolSize(2);
 		taskExecutor.initialize();
 		return taskExecutor;
+	}
+
+	@Bean
+	public TimingAspect timingAspect() {
+		return new TimingAspect();
 	}
 }

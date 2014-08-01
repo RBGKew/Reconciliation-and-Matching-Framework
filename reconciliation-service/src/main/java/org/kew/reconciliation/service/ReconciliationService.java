@@ -17,6 +17,9 @@ import org.kew.stringmod.dedupl.configuration.ReconciliationServiceConfiguration
 import org.kew.stringmod.dedupl.exception.MatchExecutionException;
 import org.kew.stringmod.dedupl.exception.TooManyMatchesException;
 import org.kew.stringmod.dedupl.lucene.LuceneMatcher;
+import org.perf4j.StopWatch;
+import org.perf4j.aop.Profiled;
+import org.perf4j.slf4j.Slf4JStopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +37,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ReconciliationService {
-	private static Logger logger = LoggerFactory.getLogger(ReconciliationService.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReconciliationService.class);
+	private static final Logger timingLogger = LoggerFactory.getLogger("org.kew.reconciliation.TimingLogger");
+	private static final String queryTimingLoggerName = "org.kew.reconciliation.QueryTimingLogger";
 
 	@Value("${environment:unknown}")
 	private String environment;
@@ -125,6 +130,8 @@ public class ReconciliationService {
 			}
 		}
 
+		StopWatch sw = new Slf4JStopWatch(timingLogger);
+
 		String configurationFile = CONFIG_BASE + configFileName;
 		logger.info("{}: Loading configuration from file", configFileName, configurationFile);
 
@@ -162,18 +169,24 @@ public class ReconciliationService {
 				loadedConfigurationFilenames.remove(configFileName);
 			}
 
+			sw.stop("LoadConfiguration:"+configFileName+".failure");
 			throw new ReconciliationServiceException("Problem loading configuration "+configFileName, e);
 		}
+
+		sw.stop("LoadConfiguration:"+configFileName+".success");
 	}
 
 	/**
 	 * Unloads a single configuration.
 	 */
+	@Profiled(tag="UnloadConfiguration:{$0}", logFailuresSeparately=true)
 	public void unloadConfiguration(String configFileName) throws ReconciliationServiceException {
 		synchronized (loadedConfigurationFilenames) {
 			if (!loadedConfigurationFilenames.contains(configFileName)) {
 				throw new ReconciliationServiceException("Match configuration "+configFileName+" is not loaded.");
 			}
+
+			StopWatch sw = new Slf4JStopWatch(timingLogger);
 
 			logger.info("{}: Unloading configuration", configFileName);
 
@@ -187,6 +200,8 @@ public class ReconciliationService {
 			context.close();
 
 			loadedConfigurationFilenames.remove(configFileName);
+
+			sw.stop("UnloadConfiguration:"+configFileName+".success");
 		}
 	}
 
@@ -244,6 +259,7 @@ public class ReconciliationService {
 	 * @throws MatchExecutionException 
 	 * @throws TooManyMatchesException 
 	 */
+	@Profiled(tag="MatchQuery:{$0}", logger=queryTimingLoggerName, logFailuresSeparately=true)
 	public synchronized List<Map<String,String>> doQuery(String configName, Map<String, String> userSuppliedRecord) throws TooManyMatchesException, MatchExecutionException {
 		List<Map<String,String>> matches = null;
 

@@ -21,6 +21,11 @@ public class WebAppInitializer implements WebApplicationInitializer {
 		WebApplicationContext rootContext = createRootContext(servletContext);
 
 		configureSpringMvc(servletContext, rootContext);
+
+		// Add Perf4J graphing servlet
+		ServletRegistration.Dynamic servletRegistration = servletContext.addServlet("perf4j", org.perf4j.logback.servlet.GraphingServlet.class);
+		servletRegistration.setInitParameter("graphNames", "graphOtherTimes,graphQueryTimes,graphQueriesPerSecond");
+		servletRegistration.addMapping("/perf4j");
 	}
 
 	private WebApplicationContext createRootContext(ServletContext servletContext) {

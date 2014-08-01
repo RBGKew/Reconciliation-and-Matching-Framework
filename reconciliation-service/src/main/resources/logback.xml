@@ -1,34 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.github.com/enricopulatzo/logback-XSD/master/src/main/xsd/logback.xsd">
-  <timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss"/>
+	<timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss"/>
 
-  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <!-- encoders are assigned the type
-         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
-    <encoder>
-      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-    </encoder>
-    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>debug</level>
-    </filter>
-  </appender>
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<withJansi>true</withJansi>
+		<encoder>
+			<pattern>%highlight(%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n)</pattern>
+		</encoder>
+	</appender>
 
-  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-    <file>target/logs/webservice-${bySecond}.log</file>
-    <encoder>
-      <pattern>%d{HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
-    </encoder>
-  </appender>
+	<appender name="greenStdout" class="ch.qos.logback.core.ConsoleAppender">
+		<withJansi>true</withJansi>
+		<encoder>
+			<pattern>%green(%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n)</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>info</level>
+		</filter>
+	</appender>
 
-  <logger name="org.kew.reconciliation" level="debug"/>
-  <logger name="org.kew.stringmod.dedupl.lucene.LuceneDataLoader" level="debug"/>
-  <logger name="com.mysql" level="warn"/>
-  <logger name="MySQL" level="warn"/>
+	<appender name="file" class="ch.qos.logback.core.FileAppender">
+		<file>target/logs/webservice-${bySecond}.log</file>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
+		</encoder>
+	</appender>
 
-  <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="debug" />
+	<!-- Perf4J appenders -->
+	<appender name="graphOtherTimes" class="org.perf4j.logback.GraphingStatisticsAppender" />
+	<appender name="graphQueryTimes" class="org.perf4j.logback.GraphingStatisticsAppender" />
+	<appender name="graphQueriesPerSecond" class="org.perf4j.logback.GraphingStatisticsAppender">
+		<param name="GraphType" value="TPS" />
+	</appender>
+	<appender name="perf4jFileAppender" class="ch.qos.logback.core.FileAppender">
+		<file>target/logs/timing-${bySecond}.log</file>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
+		</encoder>
+	</appender>
 
-  <root level="info">
-    <appender-ref ref="STDOUT" />
-    <appender-ref ref="FILE" />
-  </root>
+	<!-- Perf4J coalescers -->
+	<appender name="CoalescingOtherStatistics" class="org.perf4j.logback.AsyncCoalescingStatisticsAppender">
+		<param name="TimeSlice" value="15000"/>
+		<appender-ref ref="graphOtherTimes"/>
+	</appender>
+	<appender name="CoalescingQueryStatistics" class="org.perf4j.logback.AsyncCoalescingStatisticsAppender">
+		<param name="TimeSlice" value="15000"/>
+		<param name="QueueSize" value="10000"/>
+		<param name="DownstreamLogLevel" value="debug"/>
+		<appender-ref ref="graphQueryTimes"/>
+		<appender-ref ref="graphQueriesPerSecond"/>
+		<appender-ref ref="greenStdout"/>
+		<appender-ref ref="perf4jFileAppender"/>
+	</appender>
+
+	<!-- Perf4J Loggers -->
+	<logger name="org.kew.reconciliation.TimingLogger" additivity="false">
+		<level value="info"/>
+		<appender-ref ref="CoalescingOtherStatistics"/>
+		<appender-ref ref="greenStdout"/>
+	</logger>
+	<logger name="org.kew.reconciliation.QueryTimingLogger" additivity="false">
+		<level value="info"/>
+		<appender-ref ref="CoalescingQueryStatistics"/>
+		<appender-ref ref="greenStdout"/>
+		<appender-ref ref="perf4jFileAppender"/>
+	</logger>
+
+	<!-- Other loggers -->
+	<logger name="org.kew.reconciliation" level="debug"/>
+	<logger name="org.kew.stringmod.dedupl.lucene.LuceneDataLoader" level="debug"/>
+	<logger name="com.mysql" level="warn"/>
+	<logger name="MySQL" level="warn"/>
+
+	<logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="debug" />
+
+	<root level="info">
+		<appender-ref ref="stdout" />
+		<appender-ref ref="file" />
+	</root>
 </configuration>
