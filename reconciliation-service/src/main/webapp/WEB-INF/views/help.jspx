@@ -9,7 +9,7 @@
 	</c:if>
 	<spring:url var="base" value="/"/>
 
-	<h1>Using Kew Name Reconciliation Services with Open Refine</h1>
+	<h1>About Reconciliation</h1>
 
 	<p>
 		<em>Reconciliation</em> is the semi-automated process of matching text
@@ -20,26 +20,34 @@
 	</p>
 
 	<p>
-		<em>Open Refine</em> is a tool that can be used to do this, initially
-		developed by Google and called <em>Google Refine</em>. It can query a
+		<em>Open Refine</em> (previously called <em>Google Refine</em>)
+		is a tool that can be used to do this.  It can query a
 		<em>Web Service</em> — a website that returns information in a
 		form the computer can interpret — and record the results,
 		whether that’s an exact match, a close match, a list of possible
 		matches, or no match at all.
 	</p>
 
+	<h1>About Kew’s Reconciliation Services</h1>
+
 	<p>
-		<em>Data sources</em> currently include <em>IPNI</em>
-		(work-in-progress) and <em>The Plant List</em>. The <em>World
+		Kew provides several reconciliation services, according to the type of
+		entity (name, publication etc) and the underlying data source.  At
+		present, these include <em>IPNI</em> and <em>The Plant List</em>.  The <em>World
 		Checklist</em> may be added later. Once The Plant List and the World
 		Checklist have themselves been fully reconciled to IPNI (implying that
 		any missing names have been added to IPNI) it will usually be
 		appropriate to reconcile only to IPNI.
 	</p>
 
-	<h3>Software installation</h3>
+	<h2>Using Kew’s Reconciliation Services with Open Refine</h2>
 
-	<p>Watch the three introductory videos:</p>
+	<h3>Software overview and installation</h3>
+
+	<p>
+		Watch the three introductory videos — these instructions assume some familiarity
+		with Open Refine.  There’s also <a href="http://openrefine.org/documentation.html">written
+		documentation</a>.</p>
 
 	<ul>
 		<li><a href="https://www.youtube.com/watch?v=B70J_H_zAWM">General introduction, editing messy data</a></li>
@@ -48,17 +56,8 @@
 	</ul>
 
 	<p>
-		Rather than repeat everything in the videos, these instructions will
-		assume you’ve watched them. There’s also <a href="http://openrefine.org/documentation.html">written documentation</a>.
-	</p>
-
-	<p>
 		Download Open Refine from <a href="http://openrefine.org/download.html">the download page</a>,
-		choose version 2.5.
-	</p>
-
-	<p>
-		<em>[TO DO: Further installation instructions, if necessary.]</em>
+		choose the development version, currently <code>2.6-beta1</code>.
 	</p>
 
 	<h3>Data preparation</h3>
@@ -66,178 +65,207 @@
 	<p>
 		The services can cope with names recorded in a single column, like
 		<code>Quercus alba L.</code> or
-		<code>Quercus alba f. latiloba Sarg.</code>, but for better results split the data into these columns:
+		<code>Quercus alba f. latiloba Sarg.</code>, but for better results split the data into a single column
+		for each necessary part (e.g. generic epithet, species epithet, publication title etc).
+		You can use Open Refine to do this — see the videos — or any other program.
 	</p>
 
-	<ul>
-		<li>generic epithet</li>
-		<li>specific epithet</li>
-		<li>infraspecific epithet</li>
-		<li>primary author(s) or full authorship (with basionym author in brackets)</li>
-	</ul>
-
-	<p>You can use Open Refine to do this — see the videos
-		— or any other program.</p>
-
-	<p>Optionally, use facets to limit which names you wish to match
+	<p>
+		Optionally, use facets to limit which names you wish to match
 		— for example, to select particular ranks to match (TPL
 		doesn’t include any ranks above species, and the Reconciliation
-		Service doesn’t yet support anything above genus).</p>
+		Service doesn’t yet support anything above genus).
+	</p>
 
-	<p>If you have a lot of names (over 1000) you could star 10 or so
-		names and facet on them, for a trial run.</p>
+	<p>
+		If you have a lot of names (over 1000) you could star 10 or so
+		names and facet on them, for a trial run.
+	</p>
 
 	<p>
 		<spring:url var="about" value="/about" />
 		Find the configuration you want to use from the <a href="${about}">list here</a>.
 		Note the two <em>endpoints</em>: the Open Refine reconciliation service, and the
-		<abbr title="JavaScript Object Notation">JSON</abbr> web service.
+		<abbr title="JavaScript Object Notation">JSON</abbr> web service.  These instructions
+		will assume you have a list of plant names and wish to reconcile them against the
+		<spring:url var="aboutStandardTpl" value="/about/standardTplNameMatch" />
+		<a href="${aboutStandardTpl}">Standard TPL Name Match</a> service.
 	</p>
+
+	<h3>Querying the web service</h3>
+
+	<spring:url var="reconcileUrl" value="/reconcile/standardTplNameMatch" />
 
 	<p>There are two options for querying the Reconciliation Service:</p>
 
+	<h4>Querying as an Open Refine Reconciliation Service</h4>
+
+	<p>
+		This has a better user interface for choosing between multiple
+		matches, but it’s more difficult to access derived data, like
+		whether a reconciled name is known to be a synonym.
+	</p>
+
 	<ol>
-		<li><p>As an Open Refine Reconciliation Service</p>
-
-			<p>This has a better interface for choosing between multiple
-				matches.</p>
-
-			<ol>
-				<li>If you only have full scientific names in a single column,
-					choose that column</li>
-				<li>Otherwise, choose another column — like an identifier</li>
-				<li>Click the column heading, and choose <em>Reconcile</em> → <em>Start
-						reconciling…</em>.
-				</li>
-				<li>If this is the first time you’ve reconciled against a
-					particular service, you will need to click <em>Add Standard
-					Service</em>. Enter the URL from the Reconciliation Service website,
-					for example <code>http://${serverAndPort}${base}reconcile/standardTplNameMatch</code>,
-					and click OK.
-				</li>
-				<li>Select the service from the list on the left. After a
-					moment, the dialog is filled in with options.</li>
-				<li>If you have columns for genus, species etc fill in the text
-					boxes for <em>Also use relevant details from other columns</em>.
-					The values to fill in come from those listed on the website
-					describing the service (in this case, <code>genus</code>, <code>species</code>
-					etc).<br />
-					<spring:url var="img" value="/img/reconciling-select-properties.png"/>
-					<img src="${img}" alt="" />
-				</li>
-				<li>Click <em>Start Reconciling</em></li>
-				<li>Results appear after a while. Where there’s a single
-					possibility it will have been automatically selected. Otherwise,
-					you can select the match using the tick boxes.<br />
-					<spring:url var="img" value="/img/reconciling-results.png"/>
-					<img src="${img}" alt="" />
-				</li>
-				<li>If matching hasn’t worked you can also click <em>Search
-					for match</em> and adjust the query.<br />
-					<spring:url var="img" value="/img/reconciling-suggest-entity.png"/>
-					<img src="reconciling-suggest-entity.png" alt="" />
-					<img src="${img}" alt="" />
-				</li>
-				<li>To get the identifiers click the column, choose <em>Add column based on this column…</em>
-					and use the expression <code>cell.recon.match.id</code>.
-				</li>
-			</ol>
+		<li>
+			If you have whole entities (e.g. full scientific names) in a single column,
+			choose that column
 		</li>
-		<li><p>As a standard web service</p>
+		<li>
+			Otherwise, choose the “main” column — the first in the list given on the
+			page describing the service, in this case <code>genus</code>
+		</li>
+		<li>
+			Click the column heading, and choose <em>Reconcile</em> → <em>Start
+			reconciling…</em>.
+		</li>
+		<li>
+			If this is the first time you’ve reconciled against a
+			particular service, you will need to click <em>Add Standard
+			Service</em>. Enter the URL from the Reconciliation Service website,
+			for example <code>${reconcileUrl}</code>,
+			and click OK.
+		</li>
+		<li>
+			Select the service from the list on the left. After a
+			moment, the dialog is filled in with options.
+		</li>
+		<li>
+			If you have columns for genus, species etc fill in the text
+			boxes for <em>Also use relevant details from other columns</em>.
+			The values to fill in come from those listed on the website
+			describing the service (in this case, <code>genus</code>, <code>species</code>
+			etc).<br />
+			<spring:url var="img" value="/img/reconciling-select-properties.png"/>
+			<img src="${img}" alt="" />
+		</li>
+		<li>
+			Click <em>Start Reconciling</em>
+		</li>
+		<li>
+			Results appear after a while. Where there’s a single
+			possibility it will have been automatically selected. Otherwise,
+			you can select the match using the tick boxes.<br />
+			<spring:url var="img" value="/img/reconciling-results.png"/>
+			<img src="${img}" alt="" />
+		</li>
+		<li>
+			If matching hasn’t worked you can also click <em>Search
+			for match</em> and adjust the query.<br />
+			<spring:url var="img" value="/img/reconciling-suggest-entity.png"/>
+			<img src="${img}" alt="" />
+		</li>
+		<li>
+			To get the identifiers: click the column, choose <em>Add column based on this column…</em>
+			and use the expression <code>cell.recon.match.id</code>.  To get the name
+			use <code>cell.recon.match.name</code> instead.
+		</li>
+	</ol>
 
-			<p>This requires fewer steps to retrieve additional data returned
-				by the web service (e.g. taxomic status from TPL), but at present
-				you must have your names split into columns.</p>
+	<h4>Querying as a standard web service</h4>
 
-			<ol>
-				<spring:url var="jsonExample" value="/match/standardTplNameMatch?genus=Quercus&amp;species=alba&amp;authors=L." />
-				<li>Click a column heading and choose <em>Edit column</em> → <em>Add
-						column by fetching URLs</em></li>
-				<li>Use one of the query expressions below, replacing <code>Genus</code>,
-					<code>Species</code> etc with the column headings from your
-					dataset. This constructs a URL like <a href="${jsonExample}">this</a>
-					(which you can click on to see the web service response, in <abbr
-					title="JavaScript Object Notation">JSON</abbr> format).
-				</li>
-			</ol>
+	<p>
+		This requires fewer steps to retrieve additional data returned
+		by the web service (e.g. taxomic status from TPL), but
+		you must have your names split into columns, and
+		it requires writing some computer code.
+	</p>
+
+	<ol>
+		<spring:url var="jsonBase" value="/match/standardTplNameMatch" />
+		<spring:url var="jsonExample" value="/match/standardTplNameMatch?genus=Quercus&amp;species=alba&amp;authors=L." />
+		<li>
+			Click a column heading and choose <em>Edit column</em> → <em>Add
+			column by fetching URLs</em>
+		</li>
+		<li>
+			Give the column a name, and set the <code>Throttle delay</code> to zero.
+		</li>
+		<li>
+			Use one of the query expressions below, replacing <code>Genus</code>,
+			<code>Species</code> etc with the column headings from your
+			dataset. This constructs a URL like <a href="${jsonExample}">this</a>
+			(which you can click on to see the web service response, in <abbr
+			title="JavaScript Object Notation">JSON</abbr> format).
 			<pre>
-<code>"http://${serverAndPort}${base}match/standardTplNameMatch?genus="+row.cells["Genus"].value.escape('url')
+<code>"http://${serverAndPort}${jsonBase}?genus="+row.cells["Genus"].value.escape('url')
 +forNonBlank(row.cells["Species"].value, v, "&amp;species="+v.escape('url'), "")
 +forNonBlank(row.cells["InfraSpecies"].value, v, "&amp;infraspecies="+v.escape('url'), "")
 +forNonBlank(row.cells["InfraAuthor"].value, v, "&amp;authors="+v.escape('url'),
-    forNonBlank(row.cells["SpeciesAuthor"].value, v, "&amp;authors="+v.escape('url'), "")
-)
-</code></pre>
+	forNonBlank(row.cells["SpeciesAuthor"].value, v, "&amp;authors="+v.escape('url'), "")
+)</code></pre>
 
-			<ol>
-				<li>Results are returned in [<abbr
-					title="JavaScript Object Notation">JSON</abbr>] format, and look
-					something like this (but all on one line):
-				</li>
-			</ol>
+			<spring:url var="img" value="/img/reconciling-add-with-webservice.png"/>
+			<img src="${img}" alt="" />
+		</li>
+
+		<li>
+			Results are returned in [<abbr title="JavaScript Object Notation">JSON</abbr>]
+			format, and might look something like this (but all on one line):
 			<pre><code>[
-    {
-        "species": "alba",
-        "authors_transf": "l",
-        "genus": "Quercus",
-        "taxonomicStatus": "Accepted",
-        "genus_transf": "Querca",
-        "species_transf": "alba",
-        "id": "kew-171499",
-        "authors": "L.",
-        "acceptedNameID": "kew-171499",
-        "acceptedNameID_transf": "kew-171499",
-        "infraspecies_transf": "",
-        "infraspecies": "",
-        "taxonomicStatus_transf": "Accepted"
-    }
-]
-</code></pre>
+	{
+		"species": "alba",
+		"authors_transf": "l",
+		"genus": "Quercus",
+		"taxonomicStatus": "Accepted",
+		"genus_transf": "Querca",
+		"species_transf": "alba",
+		"id": "kew-171499",
+		"authors": "L.",
+		"acceptedNameID": "kew-171499",
+		"acceptedNameID_transf": "kew-171499",
+		"infraspecies_transf": "",
+		"infraspecies": "",
+		"taxonomicStatus_transf": "Accepted"
+	}
+]</code></pre>
 
-			<p>
-				In <abbr title="JavaScript Object Notation">JSON</abbr> terms,
-				that’s an array (i.e. a list, denoted by <code>[ ... ]</code>)
-				containing objects (i.e. “things”, that’s the <code>{ ... }</code>) with properties
-				(<code>"a": "b"</code>). Hopefully most match results only contain a single match. You can
-				check this (and facet on the result) by making a new column out of
-				the match result:
-			</p>
-			<pre>
-				<code>parseJson(value).length()</code>
-			</pre>
+			In <abbr title="JavaScript Object Notation">JSON</abbr> terms,
+			that’s an array (i.e. a list, denoted by <code>[ ... ]</code>)
+			containing objects (i.e. “things”, that’s the <code>{ ... }</code>) with properties
+			(<code>"a": "b"</code>).
+		</li>
 
-			<ol>
-				<li>Perhaps after faceting for match results containing only
-					one name, properties of interest can be extracted. Add another
-					column:</li>
-			</ol>
-			<pre>
-				<code>parseJson(value)[0].id</code>
-			</pre>
+		<li>
+			Probably most match results only contain a single match. You can
+			check this (and facet on the result) by making a new column out of
+			the match result:
+			<pre><code>parseJson(value).length()</code></pre>
+		</li>
 
-			<p>
-				(The <code>[0]</code>
-				means the “zeroth” object in the list, programming
-				languages often count from zero, like floors in buildings. The
-				<code>.id</code>
-				chooses which property to extract.)
-			</p>
+		<li>
+			Perhaps after faceting for match results containing only
+			one name, properties of interest can be extracted. Add another
+			column:
 
-			<ol>
-				<li>You can also do more complicated things:</li>
-			</ol>
-<pre><code>parseJson(row.cells["value"].value)[0].genus + ' ' +
-parseJson(row.cells["value"].value)[0].species + ' ' +
-parseJson(row.cells["value"].value)[0].infraspecies + ' ' +
-parseJson(row.cells["value"].value)[0].authors
-</code></pre>
+			<pre><code>parseJson(value)[0].id</code></pre>
 
-			<p>
-				See the <a href="https://github.com/OpenRefine/OpenRefine/wiki/GREL-Functions">GREL Functions Documentation</a>
-				for more information.
-			</p>
+			(The <code>[0]</code>
+			means the “zeroth” object in the list, programming
+			languages often count from zero, like floors in buildings. The
+			<code>.id</code>
+			chooses which property to extract.  With this TPL reconciliation
+			choose <code>.taxonomicStatus</code> to retrieve
+			the accepted/synonym/etc status from TPL.)
+		</li>
+
+		<li>
+			You can also do more complicated things:
+
+			<pre><code>with (parseJson(value)[0],
+      m,
+      if (m.taxonomicStatus == "Accepted",
+          "Accepted",
+          m.taxonomicStatus + " of " + m.acceptedNameID
+      )
+)</code></pre>
+
+			See the <a href="https://github.com/OpenRefine/OpenRefine/wiki/GREL-Functions">GREL Functions Documentation</a>
+			for more information.
 		</li>
 	</ol>
+
+	<h3>Using the results</h3>
 
 	<p>
 		Either way, you can then export the results into CSV (or other
