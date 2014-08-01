@@ -54,12 +54,11 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
     /**
      * Performs a match against the Lucene index, and returns a list of matches.
      * @param record The record needing to be matched
-     * @param maximumMatches Maximum number of matches to return, otherwise throws TooManyMatchesException
      * @return A list of matched records
-     * @throws TooManyMatchesException Thrown if more than maximumMatches matches are found
+     * @throws TooManyMatchesException Thrown if more than configured maximum number of matches are found
      * @throws MatchExecutionException For other errors finding a match
      */
-    public List<Map<String,String>> getMatches(Map<String, String> record, int maximumMatches) throws TooManyMatchesException, MatchExecutionException {
+    public List<Map<String,String>> getMatches(Map<String, String> record) throws TooManyMatchesException, MatchExecutionException {
         // pipe everything through to the output where an existing filter evaluates to false;
         try {
             if (!StringUtils.isBlank(config.getRecordFilter()) && !jsEnv.evalFilter(config.getRecordFilter(), record)) {
@@ -118,7 +117,6 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
             try {
                 Document toDoc = getFromLucene(sd.doc);
                 if (LuceneUtils.recordsMatch(record, toDoc, config.getProperties())) {
-                    maximumMatches++;
                     Map<String,String> toDocAsMap = LuceneUtils.doc2Map(toDoc);
                     matches.add(toDocAsMap);
                     logger.info("Match is {}", toDocAsMap);
@@ -196,11 +194,12 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
             if (!headerList.contains(idFieldName)) throw new Exception(String.format("%s: Id field name not found in header, should be %s!", this.config.getQueryFile().getPath(), idFieldName));
             Map<String, String> record;
             while((record = mr.read(header)) != null) {
-                List<Map<String, String>> matches = getMatches(record, numMatches);
+                List<Map<String, String>> matches = getMatches(record);
                 if (matches == null) {
                     for (Piper piper:config.getPipers()) piper.pipe(record);
                     continue;
                 }
+                numMatches += matches.size();
                 if (i++ % config.getAssessReportFrequency() == 0) logger.info("Assessed " + i + " records, found " + numMatches + " matches");
                 // call each reporter that has a say; all they get is a complete list of duplicates for this record.
                 for (LuceneReporter reporter : config.getReporters()) {

@@ -122,7 +122,7 @@ public class MatchController {
 						logger.debug("Next record is {}", record);
 						suppliedData.add(record);
 						try {
-							List<Map<String,String>> theseMatches = matcher.getMatches(record, 5);
+							List<Map<String,String>> theseMatches = matcher.getMatches(record);
 							// Just write out some matches to std out:
 							if (theseMatches != null) {
 								logger.debug("Record ID {}, matched: {}", record.get("id"), theseMatches.size());

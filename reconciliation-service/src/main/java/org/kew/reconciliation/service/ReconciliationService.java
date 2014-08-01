@@ -271,7 +271,7 @@ public class ReconciliationService {
 			return null;
 		}
 
-		matches = matcher.getMatches(userSuppliedRecord, 5);
+		matches = matcher.getMatches(userSuppliedRecord);
 		// Just write out some matches to std out:
 		logger.debug("Found some matches: {}", matches.size());
 		if (matches.size() < 4) {

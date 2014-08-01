@@ -84,7 +84,7 @@ public class MatchConfigurationTestingStepdefs {
 		Map<String,String> query = new HashMap<>();
 		query.putAll(origQuery);
 
-		List<Map<String,String>> matches = currentMatcher.getMatches(query, 50);
+		List<Map<String,String>> matches = currentMatcher.getMatches(query);
 
 		logger.debug("Found some matches: {}", matches.size());
 		if (matches.size() < 4) {
