@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
@@ -128,11 +129,27 @@ public class LuceneDataLoader implements DataLoader {
 //		}
 //		else {
 			// Create a new index, overwriting any that already exists.
-			logger.debug("{}: Wiping existing index, if it exists", configName);
+			logger.debug("{}: Overwriting existing index, if it exists", configName);
 			indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
 //		}
 
-		return new IndexWriter(directory, indexWriterConfig);
+		IndexWriter indexWriter;
+
+		try {
+			indexWriter = new IndexWriter(directory, indexWriterConfig);
+		}
+		catch (IOException e) {
+			logger.warn("Exception while creating index, removing index directory and retrying", e);
+			// Try deleting the index directory.
+			File dir = directory.getDirectory();
+			if (dir.isDirectory() && dir.listFiles() != null) {
+				logger.warn("{}: Wiping existing index directory {}", configName, dir);
+				FileUtils.deleteDirectory(dir);
+			}
+			indexWriter = new IndexWriter(directory, indexWriterConfig);
+		}
+
+		return indexWriter;
 	}
 
 	private void load(DatabaseRecordSource recordSource) throws DataLoadException {
