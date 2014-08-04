@@ -28,12 +28,15 @@
 							<td>${c.key}</td>
 							<td>
 								<div class="controls">
-									<c:if test="${c.value}">
+									<c:if test="${c.value == 'LOADED'}">
 										<button name="reload" value="${c.key}" type="submit" class="btn btn-warning">Reload</button> 
 										<button name="unload" value="${c.key}" type="submit" class="btn btn-danger">Unload</button>
 									</c:if>
-									<c:if test="${!c.value}">
+									<c:if test="${c.value == 'NOT_LOADED'}">
 										<button name="load" value="${c.key}" type="submit" class="btn btn-success">Load</button>
+									</c:if>
+									<c:if test="${c.value == 'LOADING'}">
+										<button name="loading" value="${c.key}" type="submit" class="btn btn-inverse" disabled="disabled">Loading</button> (Refresh page manually to re-check.)
 									</c:if>
 								</div>
 							</td>

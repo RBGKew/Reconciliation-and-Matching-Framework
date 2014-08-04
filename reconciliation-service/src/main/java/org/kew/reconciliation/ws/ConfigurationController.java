@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.kew.reconciliation.service.ReconciliationService;
+import org.kew.reconciliation.service.ReconciliationService.ConfigurationStatus;
 import org.kew.reconciliation.service.ReconciliationServiceException;
 import org.kew.stringmod.dedupl.configuration.Property;
 import org.kew.stringmod.dedupl.configuration.ReconciliationServiceConfiguration;
@@ -48,13 +49,13 @@ public class ConfigurationController {
 	public String doConfigurationAdmin(Model model) throws ReconciliationServiceException {
 		logger.info("Request for configuration admin page");
 
-		List<String> loadedConfigFiles = reconciliationService.getLoadedConfigurationFilenames();
-		logger.debug("Loaded config files: {}", loadedConfigFiles);
+		Map<String,ConfigurationStatus> configurationStatuses = reconciliationService.getConfigurationStatuses();
+		logger.debug("Loaded/loading config files: {}", configurationStatuses);
 
-		Map<String, Boolean> configurations = new TreeMap<>();
+		Map<String,ConfigurationStatus> configurations = new TreeMap<>();
 
 		for (String configurationFileName : reconciliationService.listAvailableConfigurationFiles()) {
-			configurations.put(configurationFileName, loadedConfigFiles.contains(configurationFileName));
+			configurations.put(configurationFileName, configurationStatuses.get(configurationFileName) == null ? ConfigurationStatus.NOT_LOADED : configurationStatuses.get(configurationFileName));
 		}
 
 		model.addAttribute("configurations", configurations);
@@ -77,7 +78,7 @@ public class ConfigurationController {
 			logger.info("Request to reload {}", configName);
 
 			reconciliationService.unloadConfiguration(configName);
-			reconciliationService.loadConfiguration(configName);
+			reconciliationService.loadConfigurationInBackground(configName);
 		}
 
 		if (unload != null) {
@@ -93,7 +94,7 @@ public class ConfigurationController {
 			String configName = load;
 			logger.info("Request to load {}", configName);
 
-			reconciliationService.loadConfiguration(configName);
+			reconciliationService.loadConfigurationInBackground(configName);
 		}
 
 		return "redirect:/admin";

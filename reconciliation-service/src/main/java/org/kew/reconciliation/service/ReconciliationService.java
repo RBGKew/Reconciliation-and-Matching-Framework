@@ -50,7 +50,10 @@ public class ReconciliationService {
 	@Autowired
 	private TaskExecutor taskExecutor;
 
-	private final List<String> loadedConfigurationFilenames = new ArrayList<String>();
+	private final Map<String,ConfigurationStatus> configurationStatuses = new HashMap<String,ConfigurationStatus>();
+	public enum ConfigurationStatus {
+		NOT_LOADED, LOADED, LOADING;
+	}
 
 	private final String CONFIG_BASE = "/META-INF/spring/reconciliation-service/";
 	private final String CONFIG_EXTENSION = ".xml";
@@ -70,7 +73,12 @@ public class ReconciliationService {
 		// Load up the matchers from the specified files
 		if (initialConfigurations != null) {
 			for (String config : initialConfigurations) {
-				taskExecutor.execute(new BackgroundConfigurationLoaderTask(config + CONFIG_EXTENSION));
+				try {
+					loadConfigurationInBackground(config + CONFIG_EXTENSION);
+				}
+				catch (ReconciliationServiceException e) {
+					throw new RuntimeException("Error kicking off data load for Reconciliation Service", e);
+				}
 			}
 		}
 	}
@@ -118,16 +126,30 @@ public class ReconciliationService {
 	}
 
 	/**
-	 * Loads a single configuration.
+	 * Loads a single configuration in the background.
 	 */
-	public void loadConfiguration(String configFileName) throws ReconciliationServiceException {
-		synchronized (loadedConfigurationFilenames) {
-			if (loadedConfigurationFilenames.contains(configFileName)) {
+	public void loadConfigurationInBackground(String configFileName) throws ReconciliationServiceException {
+		synchronized (configurationStatuses) {
+			ConfigurationStatus status = configurationStatuses.get(configFileName);
+			if (status == ConfigurationStatus.LOADED) {
 				throw new ReconciliationServiceException("Match configuration "+configFileName+" is already loaded.");
 			}
-			else {
-				loadedConfigurationFilenames.add(configFileName);
+			else if (status == ConfigurationStatus.LOADING) {
+				throw new ReconciliationServiceException("Match configuration "+configFileName+" is loading.");
 			}
+			configurationStatuses.put(configFileName, ConfigurationStatus.LOADING);
+		}
+
+		taskExecutor.execute(new BackgroundConfigurationLoaderTask(configFileName));
+	}
+
+	/**
+	 * Loads a single configuration.
+	 */
+	private void loadConfiguration(String configFileName) throws ReconciliationServiceException {
+		synchronized (configurationStatuses) {
+			ConfigurationStatus status = configurationStatuses.get(configFileName);
+			assert (status == ConfigurationStatus.LOADING);
 		}
 
 		StopWatch sw = new Slf4JStopWatch(timingLogger);
@@ -156,6 +178,14 @@ public class ReconciliationService {
 					metadata.setName(metadata.getName() + " (" + environment + ")");
 				}
 			}
+
+			synchronized (configurationStatuses) {
+				ConfigurationStatus status = configurationStatuses.get(configFileName);
+				if (status != ConfigurationStatus.LOADING) {
+					logger.error("Unexpected configuration status '"+status+"' after loading "+configFileName);
+				}
+				configurationStatuses.put(configFileName, ConfigurationStatus.LOADED);
+			}
 		}
 		catch (Exception e) {
 			logger.error("Problem loading configuration "+configFileName, e);
@@ -165,8 +195,12 @@ public class ReconciliationService {
 			matchers.remove(configName);
 			contexts.remove(configFileName);
 
-			synchronized (loadedConfigurationFilenames) {
-				loadedConfigurationFilenames.remove(configFileName);
+			synchronized (configurationStatuses) {
+				ConfigurationStatus status = configurationStatuses.get(configFileName);
+				if (status != ConfigurationStatus.LOADING) {
+					logger.error("Unexpected configuration status '"+status+"' after loading "+configFileName);
+				}
+				configurationStatuses.remove(configFileName);
 			}
 
 			sw.stop("LoadConfiguration:"+configFileName+".failure");
@@ -181,8 +215,12 @@ public class ReconciliationService {
 	 */
 	@Profiled(tag="UnloadConfiguration:{$0}", logFailuresSeparately=true)
 	public void unloadConfiguration(String configFileName) throws ReconciliationServiceException {
-		synchronized (loadedConfigurationFilenames) {
-			if (!loadedConfigurationFilenames.contains(configFileName)) {
+		synchronized (configurationStatuses) {
+			ConfigurationStatus status = configurationStatuses.get(configFileName);
+			if (status == ConfigurationStatus.LOADING) {
+				throw new ReconciliationServiceException("Match configuration "+configFileName+" is loading, wait until it has completed.");
+			}
+			else if (status == null) {
 				throw new ReconciliationServiceException("Match configuration "+configFileName+" is not loaded.");
 			}
 
@@ -199,7 +237,7 @@ public class ReconciliationService {
 
 			context.close();
 
-			loadedConfigurationFilenames.remove(configFileName);
+			configurationStatuses.remove(configFileName);
 
 			sw.stop("UnloadConfiguration:"+configFileName+".success");
 		}
@@ -312,8 +350,8 @@ public class ReconciliationService {
 		this.initialConfigurations = initialConfigurations;
 	}
 
-	public List<String> getLoadedConfigurationFilenames() {
-		return loadedConfigurationFilenames;
+	public Map<String, ConfigurationStatus> getConfigurationStatuses() {
+		return configurationStatuses;
 	}
 
 	public Map<String, Integer> getTotals() {
