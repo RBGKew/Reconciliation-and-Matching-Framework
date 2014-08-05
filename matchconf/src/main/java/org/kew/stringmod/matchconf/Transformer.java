@@ -18,7 +18,7 @@ import org.springframework.roo.addon.tostring.RooToString;
 
 /**
  * This is the ORM equivalent to any implementation of
- * {@link org.kew.stringmod.lib.transformers.Transformer}.
+ * {@link org.kew.rmf.transformers.Transformer}.
  *
  * It can describe any matcher, the provided params are expected to be a comma-separated
  * String of key=value pairs.

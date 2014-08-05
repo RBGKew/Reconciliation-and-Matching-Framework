@@ -1,64 +1,45 @@
 package org.kew.stringmod.matchconf.web;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.lang.reflect.Modifier;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
-import org.apache.commons.lang.StringUtils;
-import org.kew.stringmod.utils.LibraryRegister;
+import org.kew.rmf.transformers.Transformer;
+import org.kew.stringmod.dedupl.matchers.Matcher;
+import org.kew.stringmod.dedupl.reporters.Reporter;
 import org.reflections.Reflections;
 
 /**
- * The LibraryScanner filters for all LibraryRegister-annotated classes in the
- * provided `BASE_PACKAGES`.
- *
- * It produces a map that groups the classes in packages.
+ * The LibraryScanner finds Transformers, Matchers and Reporters and produces a map that groups the classes in packages.
  */
 public class LibraryScanner {
+	/**
+	 * Produces a map that groups the classes in packages.
+	 */
+	public static Map<String, Map<String, Set<String>>> availableItems() {
+		Map<String, Map<String, Set<String>>> items = new TreeMap<>();
 
-	public static final String[] BASE_PACKAGES = {
-		"org.kew.stringmod.dedupl.*", // the core deduplicator
-		"org.kew.stringmod.lib.*"     // the lib containing re-usable transformers etc.
-	};
+		items.put("matchers", classesImplementingInterface(Matcher.class));
+		items.put("transformers", classesImplementingInterface(Transformer.class));
+		items.put("reporters", classesImplementingInterface(Reporter.class));
 
-    /**
-     * Produces a map that groups the classes in packages.
-     */
-    public static Map<String, Map<String, List<String>>> availableItems() {
-        Map<String, Map<String, List<String>>> items = new HashMap<>();
-        Set<Class<?>> clazzes = new HashSet<>();
-        for (String packName : BASE_PACKAGES) {
-            Reflections reflections = new Reflections(packName);
-            clazzes.addAll(reflections.getTypesAnnotatedWith(LibraryRegister.class));
-        }
-        // TODO: add a field to Configuration that enables a user to add any package on the
-        //        classpath to the available items
-        for (Class<?> clazz:clazzes) {
-            LibraryRegister annotation = (LibraryRegister) clazz.getAnnotation(LibraryRegister.class);
-            String category = annotation.category();
-            if (items.get(category) == null) items.put(category,  new HashMap<String, List<String>>());
-            String packageName = getPackageName(clazz.getName());
-            if (items.get(category).get(packageName) == null) items.get(category).put(packageName, new ArrayList<String>());
-            items.get(category).get(packageName).add(clazz.getSimpleName());
-        }
-        for (Map<String, List<String>> itemMap:items.values()) {
-            for (List<String> itemList:itemMap.values()) {
-                Collections.sort(itemList);
-            }
+		return items;
+	}
 
-        }
-        return items;
-    }
+	private static Map<String, Set<String>> classesImplementingInterface(Class<?> ınterface) {
+		Map<String, Set<String>> classesByPackage = new TreeMap<>();
 
-    public static String getPackageName(String packageAndClass) {
-        String[] myList = packageAndClass.split("\\.");
-        myList = Arrays.copyOfRange(myList, 0, myList.length - 1);
-        return StringUtils.join(myList, ".");
-    }
+		Reflections reflections = new Reflections(ınterface.getPackage().getName());
 
+		for (Class<?> clazz : reflections.getSubTypesOf(ınterface)) {
+			if (Modifier.isAbstract(clazz.getModifiers())) continue;
+			String packageName = clazz.getPackage().getName();
+			if (classesByPackage.get(packageName) == null) classesByPackage.put(packageName, new TreeSet<String>());
+			classesByPackage.get(packageName).add(clazz.getSimpleName());
+		}
+
+		return classesByPackage;
+	}
 }

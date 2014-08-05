@@ -1,15 +1,11 @@
 package org.kew.stringmod.dedupl.matchers;
 
-import org.kew.stringmod.utils.LibraryRegister;
-
-
 /**
  * This matcher is  wrapper for multiple matchers, 
  * all of which must match. 
  * @author nn00kg
  *
  */
-@LibraryRegister(category="matchers")
 public class CompositeAllMatcher extends CompositeMatcher{
 
 	@Override

@@ -2,7 +2,7 @@ package org.kew.stringmod.matchconf.utils;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * A helper class to get and set attributes via conventional getField and setField methods

@@ -9,7 +9,7 @@ import java.text.Normalizer;
 import java.util.HashMap;
 import java.util.List;
 
-import org.kew.stringmod.lib.transformers.Transformer;
+import org.kew.rmf.transformers.Transformer;
 
 import com.googlecode.ehcache.annotations.Cacheable;
 

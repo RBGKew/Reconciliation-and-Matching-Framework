@@ -3,8 +3,8 @@ package org.kew.stringmod.dedupl.configuration;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kew.rmf.transformers.Transformer;
 import org.kew.stringmod.dedupl.matchers.Matcher;
-import org.kew.stringmod.lib.transformers.Transformer;
 
 /**
  * This is a simple JavaBean that holds configuration options relating

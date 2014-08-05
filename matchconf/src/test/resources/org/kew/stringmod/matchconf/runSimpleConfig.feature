@@ -25,10 +25,10 @@ Feature: run a simple configuration
                 </bean>
                 <bean id="matchExactly" class="org.kew.stringmod.dedupl.matchers.ExactMatcher"
                     p:blanksMatch="false"/>
-                <bean id="a2BTransformer" class="org.kew.stringmod.lib.transformers.A2BTransformer"
+                <bean id="a2BTransformer" class="org.kew.rmf.transformers.A2BTransformer"
                     p:a="a"
                     p:b="" />
-                <bean id="anotherTransformer" class="org.kew.stringmod.lib.transformers.SafeStripNonAlphasTransformer" />
+                <bean id="anotherTransformer" class="org.kew.rmf.transformers.SafeStripNonAlphasTransformer" />
                 <util:list id="reporters">
                     <bean class="org.kew.stringmod.dedupl.reporters.DedupReporter"
                         p:name="outputReporter"

@@ -11,20 +11,20 @@
 	</bean>
 	
 	<bean id="stripNonAlphaNumerics"
-		class="org.kew.stringmod.lib.transformers.StripNonAlphanumericCharactersTransformer"/>
+		class="org.kew.rmf.transformers.StripNonAlphanumericCharactersTransformer"/>
 	<bean id="stripNulls"
-		class="org.kew.stringmod.lib.transformers.A2BTransformer" p:a="NULL" p:b="" />
+		class="org.kew.rmf.transformers.A2BTransformer" p:a="NULL" p:b="" />
 	<bean id="whiteSpaceNormaliser"
-		class="org.kew.stringmod.lib.transformers.A2BTransformer" p:a="" p:b="" p:removeMultipleWhitespaces="true"/>
+		class="org.kew.rmf.transformers.A2BTransformer" p:a="" p:b="" p:removeMultipleWhitespaces="true"/>
 		
 	<!--bean id="stripSoloCapitals"
-		class="org.kew.stringmod.lib.transformers.RegexExtractorTransformer" p:regex="[A-Z][a-z]+ " /-->		
+		class="org.kew.rmf.transformers.RegexExtractorTransformer" p:regex="[A-Z][a-z]+ " /-->
 	<bean id="surnameExtractor"
-		class="org.kew.stringmod.lib.transformers.RegexExtractorTransformer" p:regex="[A-Z][a-z]+" />
+		class="org.kew.rmf.transformers.RegexExtractorTransformer" p:regex="[A-Z][a-z]+" />
 	<bean id="yearShrinker"
-		class="org.kew.stringmod.lib.transformers.StringShrinker" c:shrinkTo="4"/>
+		class="org.kew.rmf.transformers.StringShrinker" c:shrinkTo="4"/>
 	<bean id="countryShrinker"
-		class="org.kew.stringmod.lib.transformers.StringShrinker" c:shrinkTo="2"/>
+		class="org.kew.rmf.transformers.StringShrinker" c:shrinkTo="2"/>
 
 	<bean id="exactMatch" class="org.kew.stringmod.dedupl.matchers.ExactMatcher"
 		p:blanksMatch="false" />

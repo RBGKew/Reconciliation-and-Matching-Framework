@@ -12,14 +12,10 @@
 	</parent>
 
 	<dependencies>
-		<!-- internal multimodule dependencies -->
+		<!-- String Transformers -->
 		<dependency>
 			<groupId>org.kew.rmf</groupId>
-			<artifactId>stringmodlib</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.kew.rmf</groupId>
-			<artifactId>stringmodutils</artifactId>
+			<artifactId>string-transformers</artifactId>
 		</dependency>
 
 		<!-- json serialisation -->

@@ -10,16 +10,16 @@ Feature: Create a simple configuration
             | simple-config | some_path   | 100              | funny(recordCheck == javaScriptMagic) | someName   |
         And he has added a dictionary "funkyDict" with the filepath field "/some_other_path/dict.txt"
         And he has added the following queryTransformers
-            | name               | packageName                     | className                     | params         |
-            | funkyTransformer   | org.kew.stringmod.lib.transformers | DictionaryTransformer         | dict=funkyDict |
-            | anotherTransformer | org.kew.stringmod.lib.transformers | SafeStripNonAlphasTransformer |                |
-            | a2BTransformer     | org.kew.stringmod.lib.transformers | A2BTransformer                | a="a", b=" "   |
+            | name               | packageName              | className                     | params         |
+            | funkyTransformer   | org.kew.rmf.transformers | DictionaryTransformer         | dict=funkyDict |
+            | anotherTransformer | org.kew.rmf.transformers | SafeStripNonAlphasTransformer |                |
+            | a2BTransformer     | org.kew.rmf.transformers | A2BTransformer                | a="a", b=" "   |
         And he has added a matcher for the second column:
             | name         | packageName                 | className    | params            |
             | matchExactly | org.kew.stringmod.dedupl.matchers | ExactMatcher | blanksMatch=false |
         And he has wired them together at the second column
         And he has added the following reporters:
-            | name              | fileName             | packageName                  | className              | params |
+            | name              | fileName             | packageName                        | className              | params |
             | standardReporter  | output.tsv           | org.kew.stringmod.dedupl.reporters | DedupReporter          |        |
             | multilineReporter | output_multiline.tsv | org.kew.stringmod.dedupl.reporters | DedupReporterMultiline |        |
         When he asks to write the configuration out to the filesystem
@@ -46,16 +46,16 @@ Feature: Create a simple configuration
                 <bean id="queryfile" class="java.io.File">
                     <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/query.tsv" />
                 </bean>
-                <bean id="funkyDict" class="org.kew.stringmod.utils.Dictionary"
+                <bean id="funkyDict" class="org.kew.rmf.utils.CsvDictionary"
                     p:fileDelimiter="&#09;"
                     p:filePath="/some_other_path/dict.txt" />
                 <bean id="matchExactly" class="org.kew.stringmod.dedupl.matchers.ExactMatcher"
                     p:blanksMatch="false"/>
-                <bean id="a2BTransformer" class="org.kew.stringmod.lib.transformers.A2BTransformer"
+                <bean id="a2BTransformer" class="org.kew.rmf.transformers.A2BTransformer"
                     p:a="a"
                     p:b=" "/>
-                <bean id="anotherTransformer" class="org.kew.stringmod.lib.transformers.SafeStripNonAlphasTransformer" />
-                <bean id="funkyTransformer" class="org.kew.stringmod.lib.transformers.DictionaryTransformer"
+                <bean id="anotherTransformer" class="org.kew.rmf.transformers.SafeStripNonAlphasTransformer" />
+                <bean id="funkyTransformer" class="org.kew.rmf.transformers.DictionaryTransformer"
                     p:dict-ref="funkyDict"/>
                 <util:list id="reporters">
                     <bean class="org.kew.stringmod.dedupl.reporters.DedupReporter"
@@ -121,9 +121,9 @@ Feature: Create a simple configuration
             | name                | workDirPath |
             | simple-match-config | some_path   |
         And he has added the following query- and authorityTransformers
-            | name               | packageName                     | className                     | params |
-            | 02BlankTransformer | org.kew.stringmod.lib.transformers | ZeroToBlankTransformer        |        |
-            | anotherTransformer | org.kew.stringmod.lib.transformers | SafeStripNonAlphasTransformer |        |
+            | name               | packageName              | className                     | params |
+            | 02BlankTransformer | org.kew.rmf.transformers | ZeroToBlankTransformer        |        |
+            | anotherTransformer | org.kew.rmf.transformers | SafeStripNonAlphasTransformer |        |
         And he has added two matchers:
             | name           | packageName                 | className        | params            |
             | matchExactly   | org.kew.stringmod.dedupl.matchers | ExactMatcher     | blanksMatch=false |
@@ -167,8 +167,8 @@ Feature: Create a simple configuration
                     p:blanksMatch="false"/>
                 <bean id="matchIntegers" class="org.kew.stringmod.dedupl.matchers.IntegerMatcher"
                     p:blanksMatch="true"/>
-                <bean id="02BlankTransformer" class="org.kew.stringmod.lib.transformers.ZeroToBlankTransformer" />
-                <bean id="anotherTransformer" class="org.kew.stringmod.lib.transformers.SafeStripNonAlphasTransformer" />
+                <bean id="02BlankTransformer" class="org.kew.rmf.transformers.ZeroToBlankTransformer" />
+                <bean id="anotherTransformer" class="org.kew.rmf.transformers.SafeStripNonAlphasTransformer" />
                 <util:list id="reporters">
                     <bean class="org.kew.stringmod.dedupl.reporters.MatchReporter"
                         p:name="standardReporter"

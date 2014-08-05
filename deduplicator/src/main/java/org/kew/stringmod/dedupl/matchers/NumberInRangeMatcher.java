@@ -3,14 +3,11 @@ package org.kew.stringmod.dedupl.matchers;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import org.kew.stringmod.utils.LibraryRegister;
-
 import com.googlecode.ehcache.annotations.Cacheable;
 
 /**
  * This matcher tests for a number appearing in a number range, e.g. "34" ? "12-18 30-36" is true.
  */
-@LibraryRegister(category="matchers")
 public class NumberInRangeMatcher implements Matcher {
 
 	private static final String rangesRegex = "\\b(\\d+)([-–—+]?|\\b)(\\d*\\b?)";

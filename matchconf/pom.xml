@@ -20,11 +20,13 @@
 		<!-- internal multimodule dependencies -->
 		<dependency>
 			<groupId>org.kew.rmf</groupId>
-			<artifactId>stringmodutils</artifactId>
+			<artifactId>deduplicator</artifactId>
 		</dependency>
+
+		<!-- String Transformers -->
 		<dependency>
 			<groupId>org.kew.rmf</groupId>
-			<artifactId>deduplicator</artifactId>
+			<artifactId>string-transformers</artifactId>
 		</dependency>
 
         <dependency>

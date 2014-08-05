@@ -5,9 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.kew.stringmod.utils.LibraryRegister;
 
-@LibraryRegister(category="reporters")
 public class MatchReporter extends LuceneReporter {
 
     protected static String[] AVAILABLE_FIELDS = new String[] {"configLog", "total_matches", "matching_ids"};

@@ -1,13 +1,10 @@
 package org.kew.stringmod.dedupl.matchers;
 
-import org.kew.stringmod.utils.LibraryRegister;
-
 /**
  * A simple number matcher that compares two Integers and accepts a maximal difference of
  * `maxDiff` to match.
  *
  */
-@LibraryRegister(category="matchers")
 public class IntegerMatcher implements Matcher {
 
 	public static int COST = 1;

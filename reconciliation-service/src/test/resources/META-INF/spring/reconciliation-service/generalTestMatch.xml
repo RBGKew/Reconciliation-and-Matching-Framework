@@ -16,16 +16,16 @@
 	</bean>
 
 	<!-- Transformers -->
-	<bean id="safeStripNonAlphas" class="org.kew.stringmod.lib.transformers.SafeStripNonAlphasTransformer" p:replaceWith=""/>
+	<bean id="safeStripNonAlphas" class="org.kew.rmf.transformers.SafeStripNonAlphasTransformer" p:replaceWith=""/>
 
-	<bean id="epithetTransformer" class="org.kew.stringmod.lib.transformers.EpithetTransformer"/>
-	<bean id="fakeHybridSignCleaner" class="org.kew.stringmod.lib.transformers.FakeHybridSignCleaner" />
+	<bean id="epithetTransformer" class="org.kew.rmf.transformers.EpithetTransformer"/>
+	<bean id="fakeHybridSignCleaner" class="org.kew.rmf.transformers.FakeHybridSignCleaner" />
 
-	<bean id="surnameExtractor" class="org.kew.stringmod.lib.transformers.authors.SurnameExtractor"/>
-	<bean id="stripBasionymAuthor" class="org.kew.stringmod.lib.transformers.authors.StripBasionymAuthorTransformer"/>
-	<bean id="stripInAuthor" class="org.kew.stringmod.lib.transformers.authors.StripInAuthorTransformer"/>
-	<bean id="stripExAuthor" class="org.kew.stringmod.lib.transformers.authors.StripExAuthorTransformer"/>
-	<bean id="shrunkAuthor" class="org.kew.stringmod.lib.transformers.authors.ShrunkAuthors" p:shrinkTo="3"/>
+	<bean id="surnameExtractor" class="org.kew.rmf.transformers.authors.SurnameExtractor"/>
+	<bean id="stripBasionymAuthor" class="org.kew.rmf.transformers.authors.StripBasionymAuthorTransformer"/>
+	<bean id="stripInAuthor" class="org.kew.rmf.transformers.authors.StripInAuthorTransformer"/>
+	<bean id="stripExAuthor" class="org.kew.rmf.transformers.authors.StripExAuthorTransformer"/>
+	<bean id="shrunkAuthor" class="org.kew.rmf.transformers.authors.ShrunkAuthors" p:shrinkTo="3"/>
 
 	<!-- Matchers -->
 	<bean id="exactMatch" class="org.kew.stringmod.dedupl.matchers.ExactMatcher" p:blanksMatch="false" />

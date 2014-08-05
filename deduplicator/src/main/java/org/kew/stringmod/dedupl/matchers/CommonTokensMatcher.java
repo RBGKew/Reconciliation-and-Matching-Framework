@@ -5,10 +5,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 
-import org.kew.stringmod.utils.LibraryRegister;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * This matcher calculates how many tokens are shared between two strings, the tokens
@@ -16,7 +14,6 @@ import org.slf4j.LoggerFactory;
  * @author nn00kg
  *
  */
-@LibraryRegister(category="matchers")
 public class CommonTokensMatcher extends TokeniserMatcher {
 
     public static int COST = 5;

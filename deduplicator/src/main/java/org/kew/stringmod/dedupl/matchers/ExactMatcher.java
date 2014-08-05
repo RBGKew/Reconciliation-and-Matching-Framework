@@ -1,13 +1,12 @@
 package org.kew.stringmod.dedupl.matchers;
 
-import org.kew.stringmod.utils.LibraryRegister;
 import org.apache.commons.lang.StringUtils;
+
 /**
  * This matcher tests for equality between the two inputs (exact matches).
  * @author nn00kg
  *
  */
-@LibraryRegister(category="matchers")
 public class ExactMatcher implements Matcher {
 
 	public static int COST = 0;

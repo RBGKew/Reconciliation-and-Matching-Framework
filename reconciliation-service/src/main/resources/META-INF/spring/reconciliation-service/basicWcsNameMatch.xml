@@ -15,14 +15,14 @@
 		<constructor-arg value="${dataDir}/wcs-gs-and-ildis-gs-and-solanaceae-gs.csv" />
 	</bean>
 
-	<bean id="epithetTransformer" class="org.kew.stringmod.lib.transformers.EpithetTransformer"/>
+	<bean id="epithetTransformer" class="org.kew.rmf.transformers.EpithetTransformer"/>
 
-	<bean id="surnameExtractor" class="org.kew.stringmod.lib.transformers.authors.SirnameExtracter"/>
+	<bean id="surnameExtractor" class="org.kew.rmf.transformers.authors.SirnameExtracter"/>
 
-	<bean id="stripBasionymAuthor" class="org.kew.stringmod.lib.transformers.authors.StripBasionymAuthorTransformer"/>
-	<bean id="stripInAuthor" class="org.kew.stringmod.lib.transformers.authors.StripInAuthorTransformer"/>
-	<bean id="stripExAuthor" class="org.kew.stringmod.lib.transformers.authors.StripExAuthorTransformer"/>
-	<bean id="shrunkAuthor" class="org.kew.stringmod.lib.transformers.authors.ShrunkAuthors" p:shrinkTo="4"/>
+	<bean id="stripBasionymAuthor" class="org.kew.rmf.transformers.authors.StripBasionymAuthorTransformer"/>
+	<bean id="stripInAuthor" class="org.kew.rmf.transformers.authors.StripInAuthorTransformer"/>
+	<bean id="stripExAuthor" class="org.kew.rmf.transformers.authors.StripExAuthorTransformer"/>
+	<bean id="shrunkAuthor" class="org.kew.rmf.transformers.authors.ShrunkAuthors" p:shrinkTo="4"/>
 
 	<bean id="exactMatch" class="org.kew.stringmod.dedupl.matchers.ExactMatcher" p:blanksMatch="false" />
 	<bean id="exactMatchBlanksOk" class="org.kew.stringmod.dedupl.matchers.ExactMatcher" p:blanksMatch="true" />

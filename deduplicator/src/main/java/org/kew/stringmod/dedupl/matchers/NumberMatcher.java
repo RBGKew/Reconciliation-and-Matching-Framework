@@ -1,7 +1,6 @@
 package org.kew.stringmod.dedupl.matchers;
 
-import org.kew.stringmod.lib.transformers.StripNonNumericCharactersTransformer;
-import org.kew.stringmod.utils.LibraryRegister;
+import org.kew.rmf.transformers.StripNonNumericCharactersTransformer;
 
 import com.googlecode.ehcache.annotations.Cacheable;
 
@@ -11,7 +10,6 @@ import com.googlecode.ehcache.annotations.Cacheable;
  * If noNumbersRequireRestMatch == true and both strings don't contain any numbers,
  * they are matched for exact string equality.
  */
-@LibraryRegister(category="matchers")
 public class NumberMatcher extends CommonTokensMatcher {
 
 	public static int COST = 5;

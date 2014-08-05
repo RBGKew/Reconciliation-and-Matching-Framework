@@ -107,13 +107,13 @@ Feature: Deduplication with Levenshtein
                 <bean id="inputfile" class="java.io.File">
                     <constructor-arg value="REPLACE_WITH_TMPDIR/query.txt" />
                 </bean>
-                <bean id="falsePositivesDict" class="org.kew.stringmod.utils.Dictionary"
+                <bean id="falsePositivesDict" class="org.kew.rmf.utils.CsvDictionary"
                      p:fileDelimiter="&#09;"
                      p:filePath="REPLACE_WITH_TMPDIR/funkyDict.txt" />
                 <bean id="exactMatcher" class="org.kew.stringmod.dedupl.matchers.ExactMatcher" />
                 <bean id="levenshteinMatcher" class="org.kew.stringmod.dedupl.matchers.LevenshteinMatcher"
                     p:maxDistance="3"
-                    p:dict-ref="falsePositivesDict" />
+                    p:dictionary-ref="falsePositivesDict" />
                 <util:list id="reporters">
                     <bean class="org.kew.stringmod.dedupl.reporters.DedupReporter"
                         p:name="dedupReporter"

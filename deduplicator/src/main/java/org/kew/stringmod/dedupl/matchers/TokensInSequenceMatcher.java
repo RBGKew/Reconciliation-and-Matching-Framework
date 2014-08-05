@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.kew.stringmod.lib.transformers.StripNonNumericCharactersTransformer;
-import org.kew.stringmod.utils.LibraryRegister;
+import org.kew.rmf.transformers.StripNonNumericCharactersTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * This matcher returns a match if the shorter list of tokens occurs in order 
@@ -17,7 +15,6 @@ import org.slf4j.LoggerFactory;
  * @author nn00kg
  *
  */
-@LibraryRegister(category="matchers")
 public class TokensInSequenceMatcher extends TokeniserMatcher {
 
     public static int COST = 5;

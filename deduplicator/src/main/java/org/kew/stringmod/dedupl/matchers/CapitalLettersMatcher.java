@@ -1,15 +1,12 @@
 package org.kew.stringmod.dedupl.matchers;
 
-import org.kew.stringmod.lib.transformers.CapitalLettersExtractor;
-import org.kew.stringmod.utils.LibraryRegister;
+import org.kew.rmf.transformers.CapitalLettersExtractor;
 
 import com.googlecode.ehcache.annotations.Cacheable;
-
 
 /**
  * This matcher tests for common tokens using only the capital letters in the strings supplied.
  */
-@LibraryRegister(category="matchers")
 public class CapitalLettersMatcher extends CommonTokensMatcher{
 	
 	CapitalLettersExtractor removeNonCaps = new CapitalLettersExtractor();

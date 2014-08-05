@@ -60,21 +60,21 @@ Feature: Deduplicate Ipni
                     p:minRatio="0.5"/>
                 <bean id="alwaysMatchingMatcher" class="org.kew.stringmod.dedupl.matchers.AlwaysMatchingMatcher" />
                 <bean id="yearCleaner"
-                    class="org.kew.stringmod.lib.transformers.ZeroToBlankTransformer" />
+                    class="org.kew.rmf.transformers.ZeroToBlankTransformer" />
                 <bean id="safeStripNonAlphasTransformer"
-                    class="org.kew.stringmod.lib.transformers.SafeStripNonAlphasTransformer" />
+                    class="org.kew.rmf.transformers.SafeStripNonAlphasTransformer" />
                 <bean id="fakeHybridSignCleaner"
-                    class="org.kew.stringmod.lib.transformers.FakeHybridSignCleaner" />
+                    class="org.kew.rmf.transformers.FakeHybridSignCleaner" />
                 <bean id="safeStripNonAlphaNumericsTransformer"
-                    class="org.kew.stringmod.lib.transformers.SafeStripNonAlphaNumericsTransformer" />
+                    class="org.kew.rmf.transformers.SafeStripNonAlphanumericsTransformer" />
                 <bean id="collationCleaner"
-                    class="org.kew.stringmod.lib.transformers.CompositeTransformer">
+                    class="org.kew.rmf.transformers.CompositeTransformer">
                     <property name="transformers">
                         <util:list id="1">
                             <bean id="icollationCleaner"
-                                class="org.kew.stringmod.lib.transformers.SafeStripNonAlphaNumericsTransformer" />
+                                class="org.kew.rmf.transformers.SafeStripNonAlphanumericsTransformer" />
                             <bean id="rcollationCleaner"
-                                class="org.kew.stringmod.lib.transformers.RomanNumeralTransformer" />
+                                class="org.kew.rmf.transformers.RomanNumeralTransformer" />
                         </util:list>
                     </property>
                 </bean>
@@ -320,21 +320,21 @@ Feature: Deduplicate Ipni
                     p:minRatio="0.5"/>
                 <bean id="alwaysMatchingMatcher" class="org.kew.stringmod.dedupl.matchers.AlwaysMatchingMatcher" />
                 <bean id="yearCleaner"
-                    class="org.kew.stringmod.lib.transformers.ZeroToBlankTransformer" />
+                    class="org.kew.rmf.transformers.ZeroToBlankTransformer" />
                 <bean id="safeStripNonAlphasTransformer"
-                    class="org.kew.stringmod.lib.transformers.SafeStripNonAlphasTransformer" />
+                    class="org.kew.rmf.transformers.SafeStripNonAlphasTransformer" />
                 <bean id="fakeHybridSignCleaner"
-                    class="org.kew.stringmod.lib.transformers.FakeHybridSignCleaner" />
+                    class="org.kew.rmf.transformers.FakeHybridSignCleaner" />
                 <bean id="safeStripNonAlphaNumericsTransformer"
-                    class="org.kew.stringmod.lib.transformers.SafeStripNonAlphaNumericsTransformer" />
+                    class="org.kew.rmf.transformers.SafeStripNonAlphanumericsTransformer" />
                 <bean id="collationCleaner"
-                    class="org.kew.stringmod.lib.transformers.CompositeTransformer">
+                    class="org.kew.rmf.transformers.CompositeTransformer">
                     <property name="transformers">
                         <util:list id="1">
                             <bean id="icollationCleaner"
-                                class="org.kew.stringmod.lib.transformers.SafeStripNonAlphaNumericsTransformer" />
+                                class="org.kew.rmf.transformers.SafeStripNonAlphanumericsTransformer" />
                             <bean id="rcollationCleaner"
-                                class="org.kew.stringmod.lib.transformers.RomanNumeralTransformer" />
+                                class="org.kew.rmf.transformers.RomanNumeralTransformer" />
                         </util:list>
                     </property>
                 </bean>

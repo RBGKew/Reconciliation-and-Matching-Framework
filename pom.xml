@@ -22,8 +22,6 @@
 	<modules>
 		<module>deduplicator</module>
 		<module>matchconf</module>
-		<module>stringmodlib</module>
-		<module>stringmodutils</module>
 		<module>reconciliation-service-model</module>
 		<module>reconciliation-service</module>
 	</modules>
@@ -58,6 +56,7 @@
         <roo.version>1.2.5.RELEASE</roo.version>
         <slf4j.version>1.7.5</slf4j.version>
         <spring.version>3.2.8.RELEASE</spring.version>
+        <string-transformers.version>1.0.0-SNAPSHOT</string-transformers.version>
         <super-csv.version>2.1.0</super-csv.version>
     </properties>
 
@@ -83,18 +82,14 @@
 			</dependency>
 			<dependency>
 				<groupId>org.kew.rmf</groupId>
-				<artifactId>stringmodlib</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.kew.rmf</groupId>
-				<artifactId>stringmodutils</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.kew.rmf</groupId>
 				<artifactId>reconciliation-service-model</artifactId>
 				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.kew.rmf</groupId>
+				<artifactId>string-transformers</artifactId>
+				<version>${string-transformers.version}</version>
 			</dependency>
 
             <dependency>

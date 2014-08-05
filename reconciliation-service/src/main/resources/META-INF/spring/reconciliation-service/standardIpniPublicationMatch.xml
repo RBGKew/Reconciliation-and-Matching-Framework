@@ -32,12 +32,12 @@
 	</bean>
 
 	<!-- Transformers -->
-	<bean id="safeStripNonAlphanumerics" class="org.kew.stringmod.lib.transformers.SafeStripNonAlphaNumericsTransformer" p:replaceWith=""/>
-	<bean id="nameExtractor" class="org.kew.stringmod.lib.transformers.authors.SurnameExtractor" />
-	<bean id="bracketedRemover" class="org.kew.stringmod.lib.transformers.A2BTransformer" p:a="\[[^\[\]]*?\]" />
-	<bean id="safeStripNonAlphas" class="org.kew.stringmod.lib.transformers.SafeStripNonAlphasTransformer" p:replaceWith=" "/>
-	<bean id="yearRangeExtractor" class="org.kew.stringmod.lib.transformers.YearRangeExtractorTransformer" />
-	<bean id="stripIpniTl2AuthorRefs" class="org.kew.stringmod.lib.transformers.A2BTransformer" p:a="[¹²]" p:b=" " />
+	<bean id="safeStripNonAlphanumerics" class="org.kew.rmf.transformers.SafeStripNonAlphanumericsTransformer" p:replaceWith=""/>
+	<bean id="nameExtractor" class="org.kew.rmf.transformers.authors.SurnameExtractor" />
+	<bean id="bracketedRemover" class="org.kew.rmf.transformers.A2BTransformer" p:a="\[[^\[\]]*?\]" />
+	<bean id="safeStripNonAlphas" class="org.kew.rmf.transformers.SafeStripNonAlphasTransformer" p:replaceWith=" "/>
+	<bean id="yearRangeExtractor" class="org.kew.rmf.transformers.YearRangeExtractorTransformer" />
+	<bean id="stripIpniTl2AuthorRefs" class="org.kew.rmf.transformers.A2BTransformer" p:a="[¹²]" p:b=" " />
 
 	<!-- Matchers -->
 	<bean id="exactMatchBlanksOk" class="org.kew.stringmod.dedupl.matchers.ExactMatcher" p:blanksMatch="true" />

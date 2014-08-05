@@ -34,27 +34,27 @@
 	</bean>
 
 	<!-- Transformers -->
-	<bean id="safeStripNonAlphas" class="org.kew.stringmod.lib.transformers.SafeStripNonAlphasTransformer" p:replaceWith=""/>
+	<bean id="safeStripNonAlphas" class="org.kew.rmf.transformers.SafeStripNonAlphasTransformer" p:replaceWith=""/>
 
-	<bean id="epithetTransformer" class="org.kew.stringmod.lib.transformers.EpithetTransformer"/>
-	<bean id="fakeHybridSignCleaner" class="org.kew.stringmod.lib.transformers.FakeHybridSignCleaner" />
+	<bean id="epithetTransformer" class="org.kew.rmf.transformers.EpithetTransformer"/>
+	<bean id="fakeHybridSignCleaner" class="org.kew.rmf.transformers.FakeHybridSignCleaner" />
 
-	<bean id="stripInAuthor" class="org.kew.stringmod.lib.transformers.authors.StripInAuthorTransformer"/>
-	<bean id="stripExAuthor" class="org.kew.stringmod.lib.transformers.authors.StripExAuthorTransformer"/>
-	<bean id="shrunkAuthor" class="org.kew.stringmod.lib.transformers.authors.ShrunkAuthors" p:shrinkTo="3"/>
+	<bean id="stripInAuthor" class="org.kew.rmf.transformers.authors.StripInAuthorTransformer"/>
+	<bean id="stripExAuthor" class="org.kew.rmf.transformers.authors.StripExAuthorTransformer"/>
+	<bean id="shrunkAuthor" class="org.kew.rmf.transformers.authors.ShrunkAuthors" p:shrinkTo="3"/>
 
 	<!-- Dictionary transformers -->
-	<bean id="authorDictionaryTransformer" class="org.kew.stringmod.lib.transformers.DictionaryTransformer">
-		<property name="dict">
-			<bean class="org.kew.stringmod.utils.Dictionary"
+	<bean id="authorDictionaryTransformer" class="org.kew.rmf.transformers.DictionaryTransformer">
+		<property name="dictionary">
+			<bean class="org.kew.rmf.utils.CsvDictionary"
 				p:fileDelimiter="&#09;"
 				p:filePath="${dataDir}/dictionaries/authorDictionary.tsv" />
 		</property>
 	</bean>
 
-	<bean id="doubleLettersTransformer" class="org.kew.stringmod.lib.transformers.DictionaryRegexTransformer">
-		<property name="dict">
-			<bean class="org.kew.stringmod.utils.Dictionary"
+	<bean id="doubleLettersTransformer" class="org.kew.rmf.transformers.DictionaryRegexTransformer">
+		<property name="dictionary">
+			<bean class="org.kew.rmf.utils.CsvDictionary"
 				p:fileDelimiter="&#09;"
 				p:filePath="${dataDir}/dictionaries/doubleLettersDictionary.tsv" />
 		</property>

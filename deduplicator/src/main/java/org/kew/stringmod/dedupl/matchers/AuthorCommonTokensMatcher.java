@@ -1,9 +1,8 @@
 package org.kew.stringmod.dedupl.matchers;
 
-import org.kew.stringmod.lib.transformers.SafeStripNonAlphaNumericsTransformer;
-import org.kew.stringmod.lib.transformers.authors.StripExAuthorTransformer;
-import org.kew.stringmod.lib.transformers.authors.StripInAuthorTransformer;
-import org.kew.stringmod.utils.LibraryRegister;
+import org.kew.rmf.transformers.SafeStripNonAlphanumericsTransformer;
+import org.kew.rmf.transformers.authors.StripExAuthorTransformer;
+import org.kew.rmf.transformers.authors.StripInAuthorTransformer;
 
 import com.googlecode.ehcache.annotations.Cacheable;
 
@@ -12,14 +11,13 @@ import com.googlecode.ehcache.annotations.Cacheable;
  * @author nn00kg
  *
  */
-@LibraryRegister(category="matchers")
 public class AuthorCommonTokensMatcher extends CommonTokensMatcher{
 
     public static int COST = 1;
 
     final private StripInAuthorTransformer inCleaner = new StripInAuthorTransformer();
     final private StripExAuthorTransformer exCleaner = new StripExAuthorTransformer();
-    final private SafeStripNonAlphaNumericsTransformer stripNonDs = new SafeStripNonAlphaNumericsTransformer();
+    final private SafeStripNonAlphanumericsTransformer stripNonDs = new SafeStripNonAlphanumericsTransformer();
 
     @Override
     public int getCost() {

@@ -1,7 +1,6 @@
 package org.kew.stringmod.matchconf.web;
 
-import org.apache.commons.lang.StringUtils;
-
+import org.apache.commons.lang3.StringUtils;
 
 public class FieldValidator {
 

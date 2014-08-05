@@ -65,7 +65,7 @@ Feature: Match WCS against Ipni
                 <bean id="authorityfile" class="java.io.File">
                     <constructor-arg value="REPLACE_WITH_TMPDIR/authority.txt" />
                 </bean>
-                <bean id="funkyDict" class="org.kew.stringmod.utils.Dictionary"
+                <bean id="funkyDict" class="org.kew.rmf.utils.CsvDictionary"
                     p:fileDelimiter="&#09;"
                     p:filePath="REPLACE_WITH_TMPDIR/funkyDict.txt" />
                 <bean id="alwaysMatchingMatcher" class="org.kew.stringmod.dedupl.matchers.AlwaysMatchingMatcher" />
@@ -74,12 +74,12 @@ Feature: Match WCS against Ipni
                     p:minRatio="1"/>
                 <bean id="numberMatcher" class="org.kew.stringmod.dedupl.matchers.NumberMatcher"
                     p:minRatio="1"/>
-                <bean id="safeStripNonAlphasTransformer" class="org.kew.stringmod.lib.transformers.SafeStripNonAlphasTransformer" />
-                <bean id="fakeHybridSignCleaner" class="org.kew.stringmod.lib.transformers.FakeHybridSignCleaner" />
-                <bean id="safeStripNonAlphaNumericsTransformer" class="org.kew.stringmod.lib.transformers.SafeStripNonAlphaNumericsTransformer" />
-                <bean id="rcollationCleaner" class="org.kew.stringmod.lib.transformers.RomanNumeralTransformer " />
-                <bean id="funkyTransformer" class="org.kew.stringmod.lib.transformers.DictionaryTransformer"
-                    p:dict-ref="funkyDict" />
+                <bean id="safeStripNonAlphasTransformer" class="org.kew.rmf.transformers.SafeStripNonAlphasTransformer" />
+                <bean id="fakeHybridSignCleaner" class="org.kew.rmf.transformers.FakeHybridSignCleaner" />
+                <bean id="safeStripNonAlphaNumericsTransformer" class="org.kew.rmf.transformers.SafeStripNonAlphanumericsTransformer" />
+                <bean id="rcollationCleaner" class="org.kew.rmf.transformers.RomanNumeralTransformer " />
+                <bean id="funkyTransformer" class="org.kew.rmf.transformers.DictionaryTransformer"
+                    p:dictionary-ref="funkyDict" />
                 <util:list id="reporters">
                     <bean class="org.kew.stringmod.dedupl.reporters.MatchReporter"
                         p:name="standardReporter"

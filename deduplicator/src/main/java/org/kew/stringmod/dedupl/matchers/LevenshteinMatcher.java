@@ -1,10 +1,7 @@
 package org.kew.stringmod.dedupl.matchers;
 
-import java.io.IOException;
-
 import org.apache.commons.lang.StringUtils;
-import org.kew.stringmod.utils.Dictionary;
-import org.kew.stringmod.utils.LibraryRegister;
+import org.kew.rmf.utils.Dictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,9 +13,7 @@ import com.googlecode.ehcache.annotations.Cacheable;
  * It is computationally expensive, so has a cost of 10.
  * The maximum distance is configurable.
  * @author nn00kg
- *
  */
-@LibraryRegister(category="matchers")
 public class LevenshteinMatcher implements Matcher {
 
     public static int COST = 10;
@@ -29,15 +24,13 @@ public class LevenshteinMatcher implements Matcher {
 
     private static Logger logger = LoggerFactory.getLogger(LevenshteinMatcher.class);
 
-    private Dictionary dict;
-    private boolean fileLoaded = false;
+    private Dictionary dictionary;
 
-    public Dictionary getDict() {
-        return dict;
+    public Dictionary getDictionary() {
+        return dictionary;
     }
-
-    public void setDict(Dictionary dict) {
-        this.dict = dict;
+    public void setDictionary(Dictionary dictionary) {
+        this.dictionary = dictionary;
     }
 
     @Override
@@ -65,31 +58,27 @@ public class LevenshteinMatcher implements Matcher {
                 }
             }
         }
-        if (this.getDict() != null && matches){
+        if (this.getDictionary() != null && matches) {
             matches = doFalsePositiveCheck(s1,s2);
         }
         return matches;
     }
 
-    private boolean doFalsePositiveCheck(String s1, String s2) throws MatchException {
-        logger.info("FALSE_POSITIVES_CHECK");
-        if (!fileLoaded) {
-            try {
-                this.dict.readFile();
-                this.fileLoaded = true;
-            }
-            catch (IOException e) {
-                throw new MatchException("Error loading dictionary "+this.dict+" for false positive check.", e);
-            }
-        }
-        boolean passed = true;
-        Dictionary falsePositives = this.getDict();
-        if (falsePositives.containsKey(s1) && falsePositives.get(s1).equals(s2)) passed = false;
-        else
-            if (falsePositives.containsKey(s2) && falsePositives.get(s2).equals(s1)) passed = false;
-        if (!passed) logger.info("Rejected match (" + s1 + ", " + s2 + ") as false positive");
-        return passed;
-    }
+	private boolean doFalsePositiveCheck(String s1, String s2) {
+		logger.info("FALSE_POSITIVES_CHECK");
+		boolean passed = true;
+		Dictionary falsePositives = this.getDictionary();
+		if (falsePositives.get(s1) != null && falsePositives.get(s1).equals(s2)) {
+			passed = false;
+		}
+		else if (falsePositives.get(s2) != null && falsePositives.get(s2).equals(s1)) {
+			passed = false;
+		}
+		if (!passed) {
+			logger.info("Rejected match (" + s1 + ", " + s2 + ") as false positive");
+		}
+		return passed;
+	}
 
     public Integer calculateLevenshtein(String s1, String s2){
         numExecutions++;
