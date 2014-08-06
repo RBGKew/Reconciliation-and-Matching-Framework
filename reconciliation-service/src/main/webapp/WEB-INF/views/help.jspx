@@ -278,4 +278,12 @@
 		This section will be completed as we discover problems — <a href="mailto:M.Blissett@kew.org?subject=Reconciliation%20service">please let us know!</a>.
 		Allocating more memory may help, refer to the <a href="https://github.com/OpenRefine/OpenRefine/wiki/FAQ:-Allocate-More-Memory">OpenRefine documentation</a> on this.
 	</p>
+
+	<h3>Advanced data preparation / manipulation</h3>
+
+	<p>
+		It's possible to use some of the transformers that are behind these reconciliation services to prepare your data.  For example, you may wish to
+		extract a year out of a field containing a whole reference.  See the <a href="https://github.com/RBGKew/String-Transformers#string-transformers">String Transformers</a> project
+		for how to do this.
+	</p>
 </div>
