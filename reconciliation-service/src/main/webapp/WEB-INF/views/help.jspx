@@ -271,4 +271,11 @@
 		Either way, you can then export the results into CSV (or other
 		standard formats) using the <em>Export</em> menu.
 	</p>
+
+	<h3>Troubleshooting</h3>
+
+	<p>
+		This section will be completed as we discover problems — <a href="mailto:M.Blissett@kew.org?subject=Reconciliation%20service">please let us know!</a>.
+		Allocating more memory may help, refer to the <a href="https://github.com/OpenRefine/OpenRefine/wiki/FAQ:-Allocate-More-Memory">OpenRefine documentation</a> on this.
+	</p>
 </div>
