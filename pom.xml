@@ -48,7 +48,7 @@
         <junit.version>4.11</junit.version>
         <liquibase.version>3.0.1</liquibase.version>
         <logback.version>1.0.13</logback.version>
-        <logback-evaluators.version>1.0.3</logback-evaluators.version>
+        <logback-evaluators.version>1.0.4</logback-evaluators.version>
         <lucene.version>4.4.0</lucene.version>
         <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
 		<perf4j.version>0.9.16</perf4j.version>
