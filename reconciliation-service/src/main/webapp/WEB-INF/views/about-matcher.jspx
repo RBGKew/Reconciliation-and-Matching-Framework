@@ -16,6 +16,8 @@
 			<p>Contains <span class="badge">${total}</span> records.</p>
 		</c:if>
 
+		<h4>Transformer and matcher detail</h4>
+
 		<table class="table table-bordered table-striped table-condensed">
 			<thead>
 				<tr>

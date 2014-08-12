@@ -7,9 +7,85 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
-	<!-- • STANDARD IPNI NAME MATCH •
-		See standardIpniNameMatch.md for details.
-	-->
+	<!-- • STANDARD IPNI NAME MATCH • -->
+
+	<bean id="description" class="java.lang.String"><constructor-arg><value>
+		<![CDATA[
+			Moderately strict reconciliation configuration matching against names stored in the <a href="http://ipni.org/">International Plant Name Index</a> (IPNI).
+
+			<h4>A note about handling ranks</h4>
+
+			<p>
+				<em>Not relevant if you are using the reconciliation service with a single query string, i.e. without having your data split up into columns like family, genus, species etc.</em>
+			</p>
+
+			<p>
+				So that all ranks can be handled, this matcher takes three ordered epithet arguments.  Names of generic rank or
+				higher should be supplied as <code>epithet_1</code>, names of infrageneric or specific rank should also include <code>epithet_2</code>,
+				infraspecific names have the infraspecific epithet as <code>epithet_3</code>.
+			</p>
+
+			<table class="table table-bordered table-striped table-condensed">
+				<tr>
+					<th>rank of name</th>
+					<th>epithet_1</th>
+					<th>epithet_2</th>
+					<th>epithet_3</th>
+				</tr>
+				<tr>
+					<td>above family</td>
+					<td>epithet</td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>family</td>
+					<td>familial</td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>infrafamily</td>
+					<td>infrafamilial</td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>genus</td>
+					<td>generic</td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>infragenus</td>
+					<td>generic</td>
+					<td>infrageneric</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>species</td>
+					<td>generic</td>
+					<td>specific</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>infraspecies</td>
+					<td>generic</td>
+					<td>specific</td>
+					<td>infraspecific</td>
+				</tr>
+			</table>
+
+			<h4>Presence or absence of fields</h4>
+
+			<ul>
+				<li><code>epithet_1</code> is mandatory.</li>
+				<li><code>epithet_2</code> and <code>epithet_3</code>, if present in the query, will be present in all results.  If not in the query only names without a second or third epithet will be returned.</li>
+				<li><code>basionym_author</code> and <code>publishing_author</code> will be matched (on either side) by a blank field.</li>
+				<li><code>full_name</code> is ignored, it’s there due to a limitation of the software at present.</li>
+			</ul>
+		]]>
+	</value></constructor-arg></bean>
 
 	<!-- IPNI Flat datasource for authority data -->
 	<bean id="ipniFlatDatabase" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
@@ -243,8 +319,8 @@
 	</bean>
 
 	<bean id="config" class="org.kew.stringmod.dedupl.configuration.ReconciliationServiceConfiguration"
-		p:name="standardIpniNameMatch"
-		p:description="Moderately strict reconciliation configuration matching against names stored in the International Plant Name Index (IPNI)."
+		p:name="StandardIpniNameMatch"
+		p:description-ref="description"
 		p:authorityRecords-ref="authorityFromIpniDatabase"
 		p:properties-ref="columnProperties"
 		p:sortFieldName="id"

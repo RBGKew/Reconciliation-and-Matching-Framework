@@ -88,13 +88,13 @@
 		Note the two <em>endpoints</em>: the Open Refine reconciliation service, and the
 		<abbr title="JavaScript Object Notation">JSON</abbr> web service.  These instructions
 		will assume you have a list of plant names and wish to reconcile them against the
-		<spring:url var="aboutStandardTpl" value="/about/standardTplNameMatch" />
+		<spring:url var="aboutStandardTpl" value="/about/StandardTplNameMatch" />
 		<a href="${aboutStandardTpl}">Standard TPL Name Match</a> service.
 	</p>
 
 	<h3>Querying the web service</h3>
 
-	<spring:url var="reconcileUrl" value="/reconcile/standardTplNameMatch" />
+	<spring:url var="reconcileUrl" value="/reconcile/StandardTplNameMatch" />
 
 	<p>There are two options for querying the Reconciliation Service:</p>
 
@@ -172,8 +172,8 @@
 	</p>
 
 	<ol>
-		<spring:url var="jsonBase" value="/match/standardTplNameMatch" />
-		<spring:url var="jsonExample" value="/match/standardTplNameMatch?genus=Quercus&amp;species=alba&amp;authors=L." />
+		<spring:url var="jsonBase" value="/match/StandardTplNameMatch" />
+		<spring:url var="jsonExample" value="/match/StandardTplNameMatch?genus=Quercus&amp;species=alba&amp;authors=L." />
 		<li>
 			Click a column heading and choose <em>Edit column</em> → <em>Add
 			column by fetching URLs</em>

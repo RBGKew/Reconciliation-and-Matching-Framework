@@ -128,7 +128,7 @@
 	</util:list>
 	
 	<bean id="config" class="org.kew.stringmod.dedupl.configuration.MatchConfiguration"
-		p:name="basicCollEventMatch"
+		p:name="BasicCollectionEventMatch"
 		p:authorityFile-ref="authorityfile"
 		p:authorityFileEncoding="UTF8"
 		p:authorityFileDelimiter=","

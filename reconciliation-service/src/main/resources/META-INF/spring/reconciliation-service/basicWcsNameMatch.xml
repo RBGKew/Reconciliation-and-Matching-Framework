@@ -95,7 +95,7 @@
 	</util:list>
 
 	<bean id="config" class="org.kew.stringmod.dedupl.configuration.MatchConfiguration"
-		p:name="basicWcsNameMatch"
+		p:name="BasicWcsNameMatch"
 		p:authorityFile-ref="authorityfile"
 		p:authorityFileEncoding="UTF8"
 		p:authorityFileDelimiter=","

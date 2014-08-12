@@ -106,7 +106,7 @@
 	</util:list>
 	
 	<bean id="config" class="org.kew.shs.dedupl.configuration.MatchConfiguration"
-		p:name="advCollEventMatch"
+		p:name="AdvancedCollectionEventMatch"
 		p:authorityFile-ref="authorityfile"
 		p:authorityFileEncoding="UTF8"
 		p:authorityFileDelimiter=","

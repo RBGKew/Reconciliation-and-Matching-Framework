@@ -155,7 +155,7 @@
 	</bean>
 
 	<bean id="config" class="org.kew.stringmod.dedupl.configuration.ReconciliationServiceConfiguration"
-		p:name="standardIpniPublicationMatch"
+		p:name="StandardIpniPublicationMatch"
 		p:description="Moderately strict reconciliation configuration matching against publications stored in the International Plant Name Index (IPNI)."
 		p:authorityRecords-ref="authorityFromIpniDatabase"
 		p:properties-ref="columnProperties"
