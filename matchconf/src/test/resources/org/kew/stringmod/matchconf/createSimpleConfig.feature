@@ -10,10 +10,10 @@ Feature: Create a simple configuration
             | simple-config | some_path   | 100              | funny(recordCheck == javaScriptMagic) | someName   |
         And he has added a dictionary "funkyDict" with the filepath field "/some_other_path/dict.txt"
         And he has added the following queryTransformers
-            | name               | packageName              | className                     | params         |
-            | funkyTransformer   | org.kew.rmf.transformers | DictionaryTransformer         | dict=funkyDict |
-            | anotherTransformer | org.kew.rmf.transformers | SafeStripNonAlphasTransformer |                |
-            | a2BTransformer     | org.kew.rmf.transformers | A2BTransformer                | a="a", b=" "   |
+            | name               | packageName              | className                               | params         |
+            | funkyTransformer   | org.kew.rmf.transformers | DictionaryTransformer                   | dict=funkyDict |
+            | anotherTransformer | org.kew.rmf.transformers | StripNonAlphabeticCharactersTransformer |                |
+            | a2BTransformer     | org.kew.rmf.transformers | A2BTransformer                          | a="a", b=" "   |
         And he has added a matcher for the second column:
             | name         | packageName                 | className    | params            |
             | matchExactly | org.kew.stringmod.dedupl.matchers | ExactMatcher | blanksMatch=false |
@@ -54,7 +54,7 @@ Feature: Create a simple configuration
                 <bean id="a2BTransformer" class="org.kew.rmf.transformers.A2BTransformer"
                     p:a="a"
                     p:b=" "/>
-                <bean id="anotherTransformer" class="org.kew.rmf.transformers.SafeStripNonAlphasTransformer" />
+                <bean id="anotherTransformer" class="org.kew.rmf.transformers.StripNonAlphabeticCharactersTransformer" />
                 <bean id="funkyTransformer" class="org.kew.rmf.transformers.DictionaryTransformer"
                     p:dict-ref="funkyDict"/>
                 <util:list id="reporters">
@@ -121,9 +121,9 @@ Feature: Create a simple configuration
             | name                | workDirPath |
             | simple-match-config | some_path   |
         And he has added the following query- and authorityTransformers
-            | name               | packageName              | className                     | params |
-            | 02BlankTransformer | org.kew.rmf.transformers | ZeroToBlankTransformer        |        |
-            | anotherTransformer | org.kew.rmf.transformers | SafeStripNonAlphasTransformer |        |
+            | name               | packageName              | className                               | params |
+            | 02BlankTransformer | org.kew.rmf.transformers | ZeroToBlankTransformer                  |        |
+            | anotherTransformer | org.kew.rmf.transformers | StripNonAlphabeticCharactersTransformer |        |
         And he has added two matchers:
             | name           | packageName                 | className        | params            |
             | matchExactly   | org.kew.stringmod.dedupl.matchers | ExactMatcher     | blanksMatch=false |
@@ -168,7 +168,7 @@ Feature: Create a simple configuration
                 <bean id="matchIntegers" class="org.kew.stringmod.dedupl.matchers.IntegerMatcher"
                     p:blanksMatch="true"/>
                 <bean id="02BlankTransformer" class="org.kew.rmf.transformers.ZeroToBlankTransformer" />
-                <bean id="anotherTransformer" class="org.kew.rmf.transformers.SafeStripNonAlphasTransformer" />
+                <bean id="anotherTransformer" class="org.kew.rmf.transformers.StripNonAlphabeticCharactersTransformer" />
                 <util:list id="reporters">
                     <bean class="org.kew.stringmod.dedupl.reporters.MatchReporter"
                         p:name="standardReporter"

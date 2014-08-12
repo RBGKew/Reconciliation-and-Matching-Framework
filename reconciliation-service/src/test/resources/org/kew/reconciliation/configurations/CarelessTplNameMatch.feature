@@ -2,6 +2,7 @@ Feature: Reconcile against TPL, using a careless configuration (optimistic match
 
 	Background:
 		Given I have loaded the "carelessTplNameMatch" configuration
+		# Note: only names with generic epithet 'Quercus' or 'Lessingianthus' are loaded.
 
 	Scenario: Exact match
 		When I query for
@@ -46,3 +47,13 @@ Feature: Reconcile against TPL, using a careless configuration (optimistic match
 			| 8       | gcc-156539 |
 			| 9       | gcc-156539 |
 			| 10      | gcc-156539 |
+
+	Scenario: Single string queries
+		When I query with only a single string for
+			| queryId | queryString                     |
+			| 41      | Quercus alba L.                 |
+			| 42      | Lessingianthus arctatus Dematt. |
+		Then the results are
+			| queryId | results    |
+			| 41      | kew-171499 |
+			| 42      | gcc-156539 |

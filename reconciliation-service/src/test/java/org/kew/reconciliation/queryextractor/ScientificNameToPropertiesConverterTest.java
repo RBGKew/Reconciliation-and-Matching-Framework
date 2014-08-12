@@ -14,85 +14,127 @@ public class ScientificNameToPropertiesConverterTest {
 	public void testExtractProperties() {
 		QueryStringToPropertiesExtractor extractor = new ScientificNameToPropertiesConverter();
 
-		Property expectedGenus = new Property();
-		Property expectedSpecies = new Property();
-		Property expectedInfraspecies = new Property();
-		Property expectedAuthors = new Property();
+		Property expectedEpithet1 = new Property();
+		Property expectedEpithet2 = new Property();
+		Property expectedEpithet3 = new Property();
+		Property expectedBasionymAuthor = new Property();
+		Property expectedPublishingAuthor = new Property();
 
-		expectedGenus.setP("genus");
-		expectedGenus.setPid("genus");
-		expectedSpecies.setP("species");
-		expectedSpecies.setPid("species");
-		expectedInfraspecies.setP("infraspecies");
-		expectedInfraspecies.setPid("infraspecies");
-		expectedAuthors.setP("authors");
-		expectedAuthors.setPid("authors");
+		expectedEpithet1.setP("epithet_1");
+		expectedEpithet1.setPid("epithet_1");
+		expectedEpithet2.setP("epithet_2");
+		expectedEpithet2.setPid("epithet_2");
+		expectedEpithet3.setP("epithet_3");
+		expectedEpithet3.setPid("epithet_3");
+		expectedBasionymAuthor.setP("basionym_author");
+		expectedBasionymAuthor.setPid("basionym_author");
+		expectedPublishingAuthor.setP("publishing_author");
+		expectedPublishingAuthor.setPid("publishing_author");
 
 		// Fagaceae
-		expectedGenus.setV("Fagaceae");
-		assertThat(asList(extractor.extractProperties("Fagaceae")), hasItems(expectedGenus));
+		expectedEpithet1.setV("Fagaceae");
+		assertThat(asList(extractor.extractProperties("Fagaceae")), hasItems(expectedEpithet1));
 		assertThat(asList(extractor.extractProperties("Fagaceae")).size(), equalTo(1));
 
 		// Fagaceae Juss.
-		expectedGenus.setV("Fagaceae");
-		expectedAuthors.setV("Juss.");
-		assertThat(asList(extractor.extractProperties("Fagaceae Juss.")), hasItems(expectedGenus, expectedAuthors));
+		expectedEpithet1.setV("Fagaceae");
+		expectedPublishingAuthor.setV("Juss.");
+		assertThat(asList(extractor.extractProperties("Fagaceae Juss.")), hasItems(expectedEpithet1, expectedPublishingAuthor));
 		assertThat(asList(extractor.extractProperties("Fagaceae Juss.")).size(), equalTo(2));
 
+		// Asteraceae subfam. Barnadesioidae K.Bremer & R.K.Jansen
+		expectedEpithet1.setV("Barnadesioidae");
+		expectedPublishingAuthor.setV("K.Bremer & R.K.Jansen");
+		assertThat(asList(extractor.extractProperties("Asteraceae subfam. Barnadesioidae K.Bremer & R.K.Jansen")), hasItems(expectedEpithet1, expectedPublishingAuthor));
+		assertThat(asList(extractor.extractProperties("Asteraceae subfam. Barnadesioidae K.Bremer & R.K.Jansen")).size(), equalTo(2));
+
+		// Barnadesioidae K.Bremer & R.K.Jansen
+		expectedEpithet1.setV("Barnadesioidae");
+		expectedPublishingAuthor.setV("K.Bremer & R.K.Jansen");
+		assertThat(asList(extractor.extractProperties("Barnadesioidae K.Bremer & R.K.Jansen")), hasItems(expectedEpithet1, expectedPublishingAuthor));
+		assertThat(asList(extractor.extractProperties("Barnadesioidae K.Bremer & R.K.Jansen")).size(), equalTo(2));
+
+		// Asteraceae trib. Chaenactideae B.G.Baldwin
+		expectedEpithet1.setV("Chaenactideae");
+		expectedPublishingAuthor.setV("B.G.Baldwin");
+		assertThat(asList(extractor.extractProperties("Asteraceae trib. Chaenactideae B.G.Baldwin")), hasItems(expectedEpithet1, expectedPublishingAuthor));
+		assertThat(asList(extractor.extractProperties("Asteraceae trib. Chaenactideae B.G.Baldwin")).size(), equalTo(2));
+
+		// Asteraceae subtrib. Chaenactidinae Rydb.
+		expectedEpithet1.setV("Chaenactideae");
+		expectedPublishingAuthor.setV("B.G.Baldwin");
+		assertThat(asList(extractor.extractProperties("Chaenactideae B.G.Baldwin")), hasItems(expectedEpithet1, expectedPublishingAuthor));
+		assertThat(asList(extractor.extractProperties("Chaenactideae B.G.Baldwin")).size(), equalTo(2));
+
+		// Asteraceae supersubtrib. Chaenactidodinae C.Jeffrey
+		expectedEpithet1.setV("Chaenactidodinae");
+		expectedPublishingAuthor.setV("C.Jeffrey");
+		assertThat(asList(extractor.extractProperties("Asteraceae supersubtrib. Chaenactidodinae C.Jeffrey")), hasItems(expectedEpithet1, expectedPublishingAuthor));
+		assertThat(asList(extractor.extractProperties("Asteraceae supersubtrib. Chaenactidodinae C.Jeffrey")).size(), equalTo(2));
+
 		// Quercus
-		expectedGenus.setV("Quercus");
-		assertThat(asList(extractor.extractProperties("Quercus")), hasItems(expectedGenus));
+		expectedEpithet1.setV("Quercus");
+		assertThat(asList(extractor.extractProperties("Quercus")), hasItems(expectedEpithet1));
 		assertThat(asList(extractor.extractProperties("Quercus")).size(), equalTo(1));
 
 		// Quercus L.
-		expectedGenus.setV("Quercus");
-		expectedAuthors.setV("L.");
-		assertThat(asList(extractor.extractProperties("Quercus L.")), hasItems(expectedGenus, expectedAuthors));
+		expectedEpithet1.setV("Quercus");
+		expectedPublishingAuthor.setV("L.");
+		assertThat(asList(extractor.extractProperties("Quercus L.")), hasItems(expectedEpithet1, expectedPublishingAuthor));
 		assertThat(asList(extractor.extractProperties("Quercus L.")).size(), equalTo(2));
 
+		// Helichrysum sect. Chrysocephalum (Walp.) Benth.
+		expectedEpithet1.setV("Helichrysum");
+		expectedEpithet2.setV("Chrysocephalum");
+		expectedBasionymAuthor.setV("Walp.");
+		expectedPublishingAuthor.setV("Benth.");
+		assertThat(asList(extractor.extractProperties("Helichrysum sect. Chrysocephalum (Walp.) Benth.")), hasItems(expectedEpithet1, expectedEpithet2, expectedBasionymAuthor, expectedPublishingAuthor));
+		assertThat(asList(extractor.extractProperties("Helichrysum sect. Chrysocephalum (Walp.) Benth.")).size(), equalTo(4));
+
 		// Quercus alba
-		expectedGenus.setV("Quercus");
-		expectedSpecies.setV("alba");
-		assertThat(asList(extractor.extractProperties("Quercus alba")), hasItems(expectedGenus, expectedSpecies));
+		expectedEpithet1.setV("Quercus");
+		expectedEpithet2.setV("alba");
+		assertThat(asList(extractor.extractProperties("Quercus alba")), hasItems(expectedEpithet1, expectedEpithet2));
 		assertThat(asList(extractor.extractProperties("Quercus alba")).size(), equalTo(2));
 
 		// Quercus alba L.
-		expectedGenus.setV("Quercus");
-		expectedSpecies.setV("alba");
-		expectedAuthors.setV("L.");
-		assertThat(asList(extractor.extractProperties("Quercus alba L.")), hasItems(expectedGenus, expectedSpecies, expectedAuthors));
+		expectedEpithet1.setV("Quercus");
+		expectedEpithet2.setV("alba");
+		expectedPublishingAuthor.setV("L.");
+		assertThat(asList(extractor.extractProperties("Quercus alba L.")), hasItems(expectedEpithet1, expectedEpithet2, expectedPublishingAuthor));
 		assertThat(asList(extractor.extractProperties("Quercus alba L.")).size(), equalTo(3));
 
 		// Quercus alba f. alba
-		expectedGenus.setV("Quercus");
-		expectedSpecies.setV("alba");
-		expectedInfraspecies.setV("alba");
-		assertThat(asList(extractor.extractProperties("Quercus alba f. alba")), hasItems(expectedGenus, expectedSpecies, expectedInfraspecies));
+		expectedEpithet1.setV("Quercus");
+		expectedEpithet2.setV("alba");
+		expectedEpithet3.setV("alba");
+		assertThat(asList(extractor.extractProperties("Quercus alba f. alba")), hasItems(expectedEpithet1, expectedEpithet2, expectedEpithet3));
 		assertThat(asList(extractor.extractProperties("Quercus alba f. alba")).size(), equalTo(3));
 
 		// Quercus alba f. viridis Trel.
-		expectedGenus.setV("Quercus");
-		expectedSpecies.setV("alba");
-		expectedInfraspecies.setV("viridis");
-		expectedAuthors.setV("Trel.");
-		assertThat(asList(extractor.extractProperties("Quercus alba f. viridis Trel.")), hasItems(expectedGenus, expectedSpecies, expectedInfraspecies, expectedAuthors));
+		expectedEpithet1.setV("Quercus");
+		expectedEpithet2.setV("alba");
+		expectedEpithet3.setV("viridis");
+		expectedPublishingAuthor.setV("Trel.");
+		assertThat(asList(extractor.extractProperties("Quercus alba f. viridis Trel.")), hasItems(expectedEpithet1, expectedEpithet2, expectedEpithet3, expectedPublishingAuthor));
 		assertThat(asList(extractor.extractProperties("Quercus alba f. viridis Trel.")).size(), equalTo(4));
 
 		// Quercus alba f. latiloba (Sarg.) E.J.Palmer & Steyerm.
-		expectedGenus.setV("Quercus");
-		expectedSpecies.setV("alba");
-		expectedInfraspecies.setV("latiloba");
-		expectedAuthors.setV("(Sarg.) E.J.Palmer & Steyerm.");
-		assertThat(asList(extractor.extractProperties("Quercus alba f. latiloba (Sarg.) E.J.Palmer & Steyerm.")), hasItems(expectedGenus, expectedSpecies, expectedInfraspecies, expectedAuthors));
-		assertThat(asList(extractor.extractProperties("Quercus alba f. latiloba (Sarg.) E.J.Palmer & Steyerm.")).size(), equalTo(4));
+		expectedEpithet1.setV("Quercus");
+		expectedEpithet2.setV("alba");
+		expectedEpithet3.setV("latiloba");
+		expectedBasionymAuthor.setV("Sarg.");
+		expectedPublishingAuthor.setV("E.J.Palmer & Steyerm.");
+		assertThat(asList(extractor.extractProperties("Quercus alba f. latiloba (Sarg.) E.J.Palmer & Steyerm.")), hasItems(expectedEpithet1, expectedEpithet2, expectedEpithet3, expectedBasionymAuthor, expectedPublishingAuthor));
+		assertThat(asList(extractor.extractProperties("Quercus alba f. latiloba (Sarg.) E.J.Palmer & Steyerm.")).size(), equalTo(5));
 
-		// TODO: Not yet implemented.
 		// Quercus alba L. f. latiloba (Sarg.) E.J.Palmer & Steyerm.
-		//expectedGenus.setV("Quercus");
-		//expectedSpecies.setV("alba");
-		//expectedInfraspecies.setV("latiloba");
-		//expectedAuthors.setV("(Sarg.) E.J.Palmer & Steyerm.");
-		//assertThat(asList(extractor.extractProperties("Quercus alba L. f. latiloba (Sarg.) E.J.Palmer & Steyerm.")), hasItems(expectedGenus, expectedSpecies, expectedInfraspecies, expectedAuthors));
-		//assertThat(asList(extractor.extractProperties("Quercus alba L. f. latiloba (Sarg.) E.J.Palmer & Steyerm.")).size(), equalTo(4));
+		expectedEpithet1.setV("Quercus");
+		expectedEpithet2.setV("alba");
+		expectedEpithet3.setV("latiloba");
+		expectedBasionymAuthor.setV("Sarg.");
+		expectedPublishingAuthor.setV("E.J.Palmer & Steyerm.");
+		assertThat(asList(extractor.extractProperties("Quercus alba L. f. latiloba (Sarg.) E.J.Palmer & Steyerm.")), hasItems(expectedEpithet1, expectedEpithet2, expectedEpithet3, expectedBasionymAuthor, expectedPublishingAuthor));
+		assertThat(asList(extractor.extractProperties("Quercus alba L. f. latiloba (Sarg.) E.J.Palmer & Steyerm.")).size(), equalTo(5));
 	}
 }

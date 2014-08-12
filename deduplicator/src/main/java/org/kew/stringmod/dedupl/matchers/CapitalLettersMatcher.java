@@ -15,7 +15,7 @@ public class CapitalLettersMatcher extends CommonTokensMatcher{
 	@Cacheable(cacheName="clctMatchCache")
 	public boolean matches(String s1, String s2) {
 		if (s1 == null && s2 == null) return true;
-		this.removeNonCaps.setB(this.getDelimiter());
+		this.removeNonCaps.setReplacement(this.getDelimiter());
 		return super.matches(this.removeNonCaps.transform(s1), this.removeNonCaps.transform(s2));
 	}
 

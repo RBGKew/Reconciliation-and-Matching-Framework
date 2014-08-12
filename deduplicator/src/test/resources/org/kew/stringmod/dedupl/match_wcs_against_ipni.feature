@@ -74,9 +74,9 @@ Feature: Match WCS against Ipni
                     p:minRatio="1"/>
                 <bean id="numberMatcher" class="org.kew.stringmod.dedupl.matchers.NumberMatcher"
                     p:minRatio="1"/>
-                <bean id="safeStripNonAlphasTransformer" class="org.kew.rmf.transformers.SafeStripNonAlphasTransformer" />
-                <bean id="fakeHybridSignCleaner" class="org.kew.rmf.transformers.FakeHybridSignCleaner" />
-                <bean id="safeStripNonAlphaNumericsTransformer" class="org.kew.rmf.transformers.SafeStripNonAlphanumericsTransformer" />
+                <bean id="safeStripNonAlphasTransformer" class="org.kew.rmf.transformers.StripNonAlphabeticCharactersTransformer" />
+                <bean id="fakeHybridSignCleaner" class="org.kew.rmf.transformers.botany.FakeHybridSignCleaner" />
+                <bean id="safeStripNonAlphaNumericsTransformer" class="org.kew.rmf.transformers.StripNonAlphanumericCharactersTransformer" />
                 <bean id="rcollationCleaner" class="org.kew.rmf.transformers.RomanNumeralTransformer " />
                 <bean id="funkyTransformer" class="org.kew.rmf.transformers.DictionaryTransformer"
                     p:dictionary-ref="funkyDict" />

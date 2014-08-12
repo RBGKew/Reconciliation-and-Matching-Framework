@@ -8,7 +8,7 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
 	<!-- • STANDARD IPNI NAME MATCH •
-		Matches on genus, species and infraspecies epithets, plus author.
+		See standardIpniNameMatch.md for details.
 	-->
 
 	<!-- IPNI Flat datasource for authority data -->
@@ -29,19 +29,21 @@
 	</bean>
 	<bean id="authorityFromIpniDatabase" class="org.kew.reconciliation.service.DatabaseCursorRecordReader">
 		<property name="dataSource" ref="ipniFlatDatabase"/>
-		<property name="sql" value="SELECT id,genus,species,infraspecies,authors FROM ipni_flat_topcopy_notsuppressed WHERE genus IS NOT NULL"/>
+		<property name="sql" value="SELECT id, rank, COALESCE(genus, COALESCE(infra_family, family)) AS epithet_1, COALESCE(infra_genus, species) AS epithet_2, infraspecies AS epithet_3, basionym_author, publishing_author, full_name FROM ipni_flat_topcopy_notsuppressed ${ipniflat.testWhere:};"/>
 		<property name="fetchSize" value="150000"/>
 	</bean>
 
 	<!-- Transformers -->
-	<bean id="safeStripNonAlphas" class="org.kew.rmf.transformers.SafeStripNonAlphasTransformer" p:replaceWith=""/>
-
-	<bean id="epithetTransformer" class="org.kew.rmf.transformers.EpithetTransformer"/>
-	<bean id="fakeHybridSignCleaner" class="org.kew.rmf.transformers.FakeHybridSignCleaner" />
+	<bean id="lowercase" class="org.kew.rmf.transformers.LowerCaseTransformer"/>
+	<bean id="stripNonAlphas" class="org.kew.rmf.transformers.StripNonAlphabeticCharactersTransformer" p:replacement=""/>
+	<bean id="epithetTransformer" class="org.kew.rmf.transformers.botany.EpithetTransformer"/>
+	<bean id="fakeHybridSignCleaner" class="org.kew.rmf.transformers.botany.FakeHybridSignCleaner" />
 
 	<bean id="stripInAuthor" class="org.kew.rmf.transformers.authors.StripInAuthorTransformer"/>
 	<bean id="stripExAuthor" class="org.kew.rmf.transformers.authors.StripExAuthorTransformer"/>
 	<bean id="shrunkAuthor" class="org.kew.rmf.transformers.authors.ShrunkAuthors" p:shrinkTo="3"/>
+	<bean id="stripBasionymAuthorTransformer" class="org.kew.rmf.transformers.authors.StripBasionymAuthorTransformer"/>
+	<bean id="stripPublishingAuthorTransformer" class="org.kew.rmf.transformers.authors.StripPublishingAuthorTransformer"/>
 
 	<!-- Dictionary transformers -->
 	<bean id="authorDictionaryTransformer" class="org.kew.rmf.transformers.DictionaryTransformer">
@@ -69,91 +71,101 @@
 	<util:list id="reporters"/>
 
 	<util:list id="columnProperties">
-		<!-- Genus -->
+		<!-- First epithet -->
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:queryColumnName="genus"
-			p:authorityColumnName="genus"
+			p:queryColumnName="epithet_1"
+			p:authorityColumnName="epithet_1"
 			p:useInSelect="true"
 			p:matcher-ref="exactMatch"
 			p:addOriginalAuthorityValue="true"
 			p:addOriginalQueryValue="true">
-			<property name="queryTransformers">
+			<property name="authorityTransformers">
 				<util:list id="1">
-					<ref bean="fakeHybridSignCleaner" />
-					<ref bean="safeStripNonAlphas" />
+					<ref bean="lowercase"/>
+					<ref bean="stripNonAlphas" /><!-- Wanted? -->
 					<ref bean="doubleLettersTransformer" />
 					<ref bean="epithetTransformer" />
 				</util:list>
 			</property>
-			<property name="authorityTransformers">
+			<property name="queryTransformers">
 				<util:list id="1">
-					<ref bean="safeStripNonAlphas" />
+					<ref bean="lowercase"/>
+					<ref bean="fakeHybridSignCleaner" />
+					<ref bean="stripNonAlphas" />
 					<ref bean="doubleLettersTransformer" />
 					<ref bean="epithetTransformer" />
 				</util:list>
 			</property>
 		</bean>
 
-		<!-- Species -->
+		<!-- Second epithet -->
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:queryColumnName="species"
-			p:authorityColumnName="species"
+			p:queryColumnName="epithet_2"
+			p:authorityColumnName="epithet_2"
 			p:indexInitial="true"
 			p:useInSelect="true"
 			p:matcher-ref="ld1Match"
 			p:addOriginalAuthorityValue="true"
 			p:addOriginalQueryValue="true">
-			<property name="queryTransformers">
+			<property name="authorityTransformers">
 				<util:list id="1">
-					<ref bean="fakeHybridSignCleaner" />
-					<ref bean="safeStripNonAlphas" />
+					<ref bean="lowercase"/>
+					<ref bean="stripNonAlphas" /><!-- Wanted? -->
 					<ref bean="doubleLettersTransformer" />
 					<ref bean="epithetTransformer" />
 				</util:list>
 			</property>
-			<property name="authorityTransformers">
+			<property name="queryTransformers">
 				<util:list id="1">
-					<ref bean="safeStripNonAlphas"/>
-					<ref bean="doubleLettersTransformer"/>
+					<ref bean="lowercase"/>
+					<ref bean="fakeHybridSignCleaner" />
+					<ref bean="stripNonAlphas" />
+					<ref bean="doubleLettersTransformer" />
 					<ref bean="epithetTransformer" />
 				</util:list>
 			</property>
 		</bean>
 
-		<!-- Infraspecific epithet -->
+		<!-- Third epithet -->
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:queryColumnName="infraspecies" p:authorityColumnName="infraspecies"
+			p:queryColumnName="epithet_3"
+			p:authorityColumnName="epithet_3"
 			p:indexInitial="true"
 			p:useInSelect="true"
 			p:matcher-ref="ld1Match"
 			p:addOriginalAuthorityValue="true"
-			p:addOriginalQueryValue="true">
-			<property name="queryTransformers">
+			p:addOriginalQueryValue="true"><!-- Change true to false. -->
+			<property name="authorityTransformers">
 				<util:list id="1">
-					<ref bean="safeStripNonAlphas"/>
-					<ref bean="doubleLettersTransformer"/>
+					<ref bean="lowercase"/>
+					<ref bean="stripNonAlphas" /><!-- Wanted? -->
+					<ref bean="doubleLettersTransformer" />
 					<ref bean="epithetTransformer" />
 				</util:list>
 			</property>
-			<property name="authorityTransformers">
+			<property name="queryTransformers">
 				<util:list id="1">
-					<ref bean="safeStripNonAlphas"/>
-					<ref bean="doubleLettersTransformer"/>
+					<ref bean="lowercase"/>
+					<ref bean="fakeHybridSignCleaner" />
+					<ref bean="stripNonAlphas" />
+					<ref bean="doubleLettersTransformer" />
 					<ref bean="epithetTransformer" />
 				</util:list>
 			</property>
 		</bean>
 
-		<!-- Authors -->
+		<!-- Basionym author -->
 		<bean class="org.kew.stringmod.dedupl.configuration.Property"
-			p:queryColumnName="authors"
-			p:authorityColumnName="authors"
+			p:queryColumnName="basionym_author"
+			p:authorityColumnName="basionym_author"
 			p:useInSelect="false"
-			p:matcher-ref="ld1Match"
+			p:matcher-ref="commonTokensMatcher"
+			p:blanksMatch="true"
 			p:addOriginalAuthorityValue="true"
 			p:addOriginalQueryValue="true">
 			<property name="queryTransformers">
 				<util:list id="1">
+					<ref bean="stripPublishingAuthorTransformer" />
 					<ref bean="authorDictionaryTransformer" />
 					<ref bean="stripExAuthor" />
 					<ref bean="stripInAuthor" />
@@ -168,20 +180,64 @@
 					<ref bean="shrunkAuthor"/>
 				</util:list>
 			</property>
+		</bean>
+
+		<!-- Publishing author -->
+		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+			p:queryColumnName="publishing_author"
+			p:authorityColumnName="publishing_author"
+			p:useInSelect="false"
+			p:matcher-ref="commonTokensMatcher"
+			p:blanksMatch="true"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
+			<property name="queryTransformers">
+				<util:list id="1">
+					<ref bean="stripBasionymAuthorTransformer" />
+					<ref bean="authorDictionaryTransformer" />
+					<ref bean="stripExAuthor" />
+					<ref bean="stripInAuthor" />
+					<ref bean="shrunkAuthor"/>
+				</util:list>
+			</property>
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<ref bean="authorDictionaryTransformer" />
+					<ref bean="stripExAuthor" />
+					<ref bean="stripInAuthor" />
+					<ref bean="shrunkAuthor"/>
+				</util:list>
+			</property>
+		</bean>
+
+		<!--
+			TODO:
+			publication
+			reference_collation
+			name_status
+			rank
+		-->
+
+		<!-- Full name, for output -->
+		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+			p:authorityColumnName="full_name"
+			p:queryColumnName="full_name"
+			p:useInSelect="false"
+			p:blanksMatch="true"
+			p:matcher-ref="alwaysMatch"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="false">
 		</bean>
 	</util:list>
 
 	<bean id="scientificNameToPropertiesConverter" class="org.kew.reconciliation.queryextractor.ScientificNameToPropertiesConverter" />
 
 	<bean id="reconciliationResultFormat" class="org.kew.reconciliation.service.resultformatter.ReconciliationResultPropertyFormatter"
-		p:format="%s %s %s %s"
+		p:format="%s"
 		p:stripRepeats=" ">
 		<property name="properties">
 			<util:list id="1">
-				<value>genus</value>
-				<value>species</value>
-				<value>infraspecies</value>
-				<value>authors</value>
+				<value>full_name</value>
 			</util:list>
 		</property>
 	</bean>

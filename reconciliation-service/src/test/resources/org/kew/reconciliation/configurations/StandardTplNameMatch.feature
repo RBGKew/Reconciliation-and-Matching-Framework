@@ -2,6 +2,7 @@ Feature: Reconcile against TPL, using a standard configuration (not to lax, not 
 
 	Background:
 		Given I have loaded the "standardTplNameMatch" configuration
+		# Note: only names with generic epithet 'Quercus' or 'Lessingianthus' are loaded.
 
 	Scenario: Exact match
 		When I query for
@@ -32,3 +33,13 @@ Feature: Reconcile against TPL, using a standard configuration (not to lax, not 
 			| 4       | Quercus | alba    | L.      | kew-171499 |
 		#	| 5       | Quercus | alba    | L.      | kew-171499 |
 		#	| 6       | Quercus | alba    | L.      | kew-171499 |
+
+	Scenario: Single string queries
+		When I query with only a single string for
+			| queryId | queryString                     |
+			| 41      | Quercus alba L.                 |
+			| 42      | Lessingianthus arctatus Dematt. |
+		Then the results are
+			| queryId | results    |
+			| 41      | kew-171499 |
+			| 42      | gcc-156539 |

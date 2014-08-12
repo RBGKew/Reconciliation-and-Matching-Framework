@@ -28,13 +28,13 @@
 	</bean>
 	<bean id="authorityFromTplDatabase" class="org.kew.reconciliation.service.DatabaseCursorRecordReader">
 		<property name="dataSource" ref="tplDatabase"/>
-		<property name="sql" value="SELECT t1ID AS id, genus, species, infraspecificEpithet AS infraspecies, primaryAuthors AS authors, taxonomicStatus, acceptedNameID FROM tpl2_final"/>
+		<property name="sql" value="SELECT t1ID AS id, genus, species, infraspecificEpithet AS infraspecies, primaryAuthors AS authors, taxonomicStatus, acceptedNameID FROM tpl2_final ${tpl.testWhere:};"/>
 	</bean>
 
-	<bean id="epithetTransformer" class="org.kew.rmf.transformers.EpithetTransformer"/>
+	<bean id="epithetTransformer" class="org.kew.rmf.transformers.botany.EpithetTransformer"/>
 
-	<bean id="fakeHybridSignCleaner" class="org.kew.rmf.transformers.FakeHybridSignCleaner" />
-	<bean id="safeStripNonAlphasTransformerNothing" class="org.kew.rmf.transformers.SafeStripNonAlphasTransformer" p:replaceWith=""/>
+	<bean id="fakeHybridSignCleaner" class="org.kew.rmf.transformers.botany.FakeHybridSignCleaner" />
+	<bean id="stripNonAlphabetic" class="org.kew.rmf.transformers.StripNonAlphabeticCharactersTransformer" p:replacement=""/>
 
 	<bean id="surnameExtractor" class="org.kew.rmf.transformers.authors.SurnameExtractor"/>
 
@@ -92,14 +92,14 @@
 			<property name="queryTransformers">
 				<util:list id="1">
 					<ref bean="fakeHybridSignCleaner" />
-					<ref bean="safeStripNonAlphasTransformerNothing" />
+					<ref bean="stripNonAlphabetic" />
 					<ref bean="doubleLettersTransformer" />
 					<ref bean="epithetTransformer" />
 				</util:list>
 			</property>
 			<property name="authorityTransformers">
 				<util:list id="1">
-					<ref bean="safeStripNonAlphasTransformerNothing" />
+					<ref bean="stripNonAlphabetic" />
 					<ref bean="doubleLettersTransformer" />
 					<ref bean="epithetTransformer" />
 				</util:list>
@@ -118,14 +118,14 @@
 			<property name="queryTransformers">
 				<util:list id="1">
 					<ref bean="fakeHybridSignCleaner" />
-					<ref bean="safeStripNonAlphasTransformerNothing" />
+					<ref bean="stripNonAlphabetic" />
 					<ref bean="doubleLettersTransformer" />
 					<ref bean="epithetTransformer" />
 				</util:list>
 			</property>
 			<property name="authorityTransformers">
 				<util:list id="1">
-					<ref bean="safeStripNonAlphasTransformerNothing"/>
+					<ref bean="stripNonAlphabetic"/>
 					<ref bean="doubleLettersTransformer"/>
 					<ref bean="epithetTransformer" />
 				</util:list>
@@ -142,14 +142,14 @@
 			p:matcher-ref="ld1Match">
 			<property name="queryTransformers">
 				<util:list id="1">
-					<ref bean="safeStripNonAlphasTransformerNothing"/>
+					<ref bean="stripNonAlphabetic"/>
 					<ref bean="doubleLettersTransformer"/>
 					<ref bean="epithetTransformer" />
 				</util:list>
 			</property>
 			<property name="authorityTransformers">
 				<util:list id="1">
-					<ref bean="safeStripNonAlphasTransformerNothing"/>
+					<ref bean="stripNonAlphabetic"/>
 					<ref bean="doubleLettersTransformer"/>
 					<ref bean="epithetTransformer" />
 				</util:list>
@@ -170,7 +170,7 @@
 				<util:list id="1">
 					<ref bean="authorDictionaryTransformer" />
 					<ref bean="stripBasionymAuthor" />
-					<ref bean="safeStripNonAlphasTransformerNothing"/>
+					<ref bean="stripNonAlphabetic"/>
 					<ref bean="shrunkAuthor" />
 				</util:list>
 			</property>
@@ -178,7 +178,7 @@
 				<util:list id="1">
 					<ref bean="authorDictionaryTransformer" />
 					<ref bean="stripBasionymAuthor" />
-					<ref bean="safeStripNonAlphasTransformerNothing"/>
+					<ref bean="stripNonAlphabetic"/>
 					<ref bean="shrunkAuthor" />
 				</util:list>
 			</property>
@@ -201,7 +201,7 @@
 		</bean>
 	</util:list>
 
-	<bean id="scientificNameToPropertiesConverter" class="org.kew.reconciliation.queryextractor.ScientificNameToPropertiesConverter" />
+	<bean id="genusSpeciesInfraspeciesToPropertiesConverter" class="org.kew.reconciliation.queryextractor.GenusSpeciesInfraspeciesToPropertiesConverter" />
 
 	<bean id="reconciliationResultFormat" class="org.kew.reconciliation.service.resultformatter.ReconciliationResultPropertyFormatter"
 		p:format="%s %s %s %s (%s)"
@@ -229,7 +229,7 @@
 		p:recordFilter=""
 		p:maximumLoadErrors="0"
 		p:reuseIndex="false"
-		p:queryStringToPropertiesExtractor-ref="scientificNameToPropertiesConverter"
+		p:queryStringToPropertiesExtractor-ref="genusSpeciesInfraspeciesToPropertiesConverter"
 		p:reconciliationResultFormatter-ref="reconciliationResultFormat"
 
 		p:title="The Plant List (Careless) Reconciliation Service"

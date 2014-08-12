@@ -7,7 +7,7 @@
 			<pattern>%highlight(%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n)</pattern>
 		</encoder>
 		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-			<level>debug</level>
+			<level>trace</level>
 		</filter>
 	</appender>
 
@@ -19,6 +19,8 @@
 	</appender>
 
 	<logger name="org.kew" level="debug" />
+<!-- 	<logger name="org.kew.stringmod.dedupl.lucene.LuceneUtils" level="trace"/> -->
+<!-- 	<logger name="org.kew.stringmod.dedupl.lucene.LuceneDataLoader" level="trace"/> -->
 
 	<root level="info">
 		<appender-ref ref="STDOUT" />

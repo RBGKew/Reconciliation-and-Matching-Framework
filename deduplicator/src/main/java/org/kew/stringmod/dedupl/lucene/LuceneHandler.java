@@ -55,7 +55,6 @@ public class LuceneHandler<C extends Configuration> {
 		Query q = queryParser.parse(query);
 		logger.debug("Querying Lucene with query --> {}", q);
 		TopDocs td = indexSearcher.search(q, maxSearchResults);
-		logger.debug(Integer.toString(td.totalHits));
 		return td;
 	}
 	

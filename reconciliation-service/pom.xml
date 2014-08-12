@@ -17,6 +17,7 @@
 	</properties>
 
 	<dependencies>
+
 		<dependency>
 			<groupId>org.kew.rmf</groupId>
 			<artifactId>deduplicator</artifactId>
@@ -25,6 +26,12 @@
 			<groupId>org.kew.rmf</groupId>
 			<artifactId>reconciliation-service-model</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>org.gbif</groupId>
+			<artifactId>name-parser</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
@@ -41,7 +48,6 @@
 		<dependency>
 			<groupId> org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
-			<version>1.9.5</version>
 		</dependency>
 
 		<dependency>
@@ -162,6 +168,12 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-dbcp2</artifactId>
 			<version>${commons-dbcp.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
@@ -198,11 +210,6 @@
 		<dependency>
 			<groupId>info.cukes</groupId>
 			<artifactId>cucumber-spring</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>info.cukes</groupId>
-			<artifactId>gherkin</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

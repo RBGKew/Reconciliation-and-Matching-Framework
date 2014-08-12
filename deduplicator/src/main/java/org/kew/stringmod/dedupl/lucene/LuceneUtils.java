@@ -127,34 +127,47 @@ public class LuceneUtils {
         return recordsMatch(map, to, properties);
     }
 
-    public static boolean recordsMatch(Map<String,String> from, Document to, List<Property> properties) throws MatchException {
-        boolean recordMatch = false;
-        logger.trace("Comparing records: {} {}", from.get(Configuration.ID_FIELD_NAME), to.get(Configuration.ID_FIELD_NAME));
-        for (Property p : properties){
-            String queryName = p.getQueryColumnName() + Configuration.TRANSFORMED_SUFFIX;
-            String authorityName = p.getAuthorityColumnName() + Configuration.TRANSFORMED_SUFFIX;
-            String s1 = from.get(queryName);
-            s1 = (s1 != null) ? s1: "";
-            String s2 = to.get(authorityName);
-            s2= (s2 != null) ? s2: "";
-            boolean fieldMatch = false;
-            if (p.isBlanksMatch()){
-                fieldMatch = (StringUtils.isBlank(s1) || StringUtils.isBlank(s2));
-                if (fieldMatch){
-                    logger.trace(queryName);
-                }
-            }
-            if (!fieldMatch){
-                fieldMatch = p.getMatcher().matches(s1, s2);
-                logger.trace("{} : {} : {}", s1, s2, fieldMatch);
-            }
-            recordMatch = fieldMatch;
-            if (!recordMatch) {
-                logger.trace("failed on {}", queryName);
-                break;
-            }
-        }
-        return recordMatch;
-    }
+	public static boolean recordsMatch(Map<String,String> queryRecord, Document authorityRecord, List<Property> properties) throws MatchException {
+		if (logger.isTraceEnabled()) {
+			logger.trace("Comparing records: Q:{} A:{}", queryRecord.get(Configuration.ID_FIELD_NAME), authorityRecord.get(Configuration.ID_FIELD_NAME));
+		}
 
+		boolean recordMatch = false;
+
+		for (Property p : properties) {
+			String queryName = p.getQueryColumnName() + Configuration.TRANSFORMED_SUFFIX;
+			String authorityName = p.getAuthorityColumnName() + Configuration.TRANSFORMED_SUFFIX;
+
+			String query = queryRecord.get(queryName);
+			query = (query != null) ? query : "";
+
+			String authority = authorityRecord.get(authorityName);
+			authority= (authority != null) ? authority : "";
+
+			boolean fieldMatch = false;
+
+			if (p.isBlanksMatch()){
+				if (StringUtils.isBlank(query)) {
+					fieldMatch = true;
+					logger.trace("Q:'' ? A:'{}' → true (blank query)", authority);
+				}
+				else if (StringUtils.isBlank(authority)) {
+					fieldMatch = true;
+					logger.trace("Q:'{}' ? A:'' → true (blank authority)", query);
+				}
+			}
+
+			if (!fieldMatch) {
+				fieldMatch = p.getMatcher().matches(query, authority);
+				logger.trace("Q:'{}' ? A:'{}' → {}", query, authority, fieldMatch);
+			}
+
+			recordMatch = fieldMatch;
+			if (!recordMatch) {
+				logger.trace("Failed on {}", queryName);
+				break;
+			}
+		}
+		return recordMatch;
+	}
 }

@@ -32,12 +32,12 @@
 	</bean>
 
 	<!-- Transformers -->
-	<bean id="safeStripNonAlphanumerics" class="org.kew.rmf.transformers.SafeStripNonAlphanumericsTransformer" p:replaceWith=""/>
+	<bean id="stripNonAlphanumeric" class="org.kew.rmf.transformers.StripNonAlphanumericCharactersTransformer" p:replacement=""/>
 	<bean id="nameExtractor" class="org.kew.rmf.transformers.authors.SurnameExtractor" />
-	<bean id="bracketedRemover" class="org.kew.rmf.transformers.A2BTransformer" p:a="\[[^\[\]]*?\]" />
-	<bean id="safeStripNonAlphas" class="org.kew.rmf.transformers.SafeStripNonAlphasTransformer" p:replaceWith=" "/>
+	<bean id="bracketedRemover" class="org.kew.rmf.transformers.RegexTransformer" p:pattern="\[[^\[\]]*?\]" />
+	<bean id="stripNonAlphabetic" class="org.kew.rmf.transformers.StripNonAlphabeticCharactersTransformer" p:replacement=" "/>
 	<bean id="yearRangeExtractor" class="org.kew.rmf.transformers.YearRangeExtractorTransformer" />
-	<bean id="stripIpniTl2AuthorRefs" class="org.kew.rmf.transformers.A2BTransformer" p:a="[¹²]" p:b=" " />
+	<bean id="stripIpniTl2AuthorRefs" class="org.kew.rmf.transformers.RegexTransformer" p:pattern="[¹²³⁴⁵⁶⁷⁸⁹⁰]" p:replacement=" " />
 
 	<!-- Matchers -->
 	<bean id="exactMatchBlanksOk" class="org.kew.stringmod.dedupl.matchers.ExactMatcher" p:blanksMatch="true" />
@@ -128,14 +128,14 @@
 				<util:list id="1">
 					<ref bean="nameExtractor" />
 					<ref bean="stripIpniTl2AuthorRefs" />
-					<ref bean="safeStripNonAlphas" />
+					<ref bean="stripNonAlphabetic" />
 				</util:list>
 			</property>
 			<property name="authorityTransformers">
 				<util:list id="1">
 					<ref bean="nameExtractor" />
 					<ref bean="stripIpniTl2AuthorRefs" />
-					<ref bean="safeStripNonAlphas" />
+					<ref bean="stripNonAlphabetic" />
 				</util:list>
 			</property>
 		</bean>

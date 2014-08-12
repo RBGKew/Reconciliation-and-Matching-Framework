@@ -28,7 +28,7 @@ Feature: run a simple configuration
                 <bean id="a2BTransformer" class="org.kew.rmf.transformers.A2BTransformer"
                     p:a="a"
                     p:b="" />
-                <bean id="anotherTransformer" class="org.kew.rmf.transformers.SafeStripNonAlphasTransformer" />
+                <bean id="anotherTransformer" class="org.kew.rmf.transformers.StripNonAlphabeticCharactersTransformer" />
                 <util:list id="reporters">
                     <bean class="org.kew.stringmod.dedupl.reporters.DedupReporter"
                         p:name="outputReporter"

@@ -213,7 +213,6 @@ public class ReconciliationService {
 	/**
 	 * Unloads a single configuration.
 	 */
-	@Profiled(tag="UnloadConfiguration:{$0}", logFailuresSeparately=true)
 	public void unloadConfiguration(String configFileName) throws ReconciliationServiceException {
 		synchronized (configurationStatuses) {
 			ConfigurationStatus status = configurationStatuses.get(configFileName);

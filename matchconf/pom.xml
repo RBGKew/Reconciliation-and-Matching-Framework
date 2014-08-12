@@ -78,10 +78,6 @@
         </dependency>
         <dependency>
             <groupId>info.cukes</groupId>
-            <artifactId>gherkin</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>info.cukes</groupId>
             <artifactId>cucumber-junit</artifactId>
         </dependency>
         <dependency>

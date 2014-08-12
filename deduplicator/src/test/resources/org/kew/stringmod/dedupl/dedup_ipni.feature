@@ -62,17 +62,17 @@ Feature: Deduplicate Ipni
                 <bean id="yearCleaner"
                     class="org.kew.rmf.transformers.ZeroToBlankTransformer" />
                 <bean id="safeStripNonAlphasTransformer"
-                    class="org.kew.rmf.transformers.SafeStripNonAlphasTransformer" />
+                    class="org.kew.rmf.transformers.StripNonAlphabeticCharactersTransformer" />
                 <bean id="fakeHybridSignCleaner"
-                    class="org.kew.rmf.transformers.FakeHybridSignCleaner" />
+                    class="org.kew.rmf.transformers.botany.FakeHybridSignCleaner" />
                 <bean id="safeStripNonAlphaNumericsTransformer"
-                    class="org.kew.rmf.transformers.SafeStripNonAlphanumericsTransformer" />
+                    class="org.kew.rmf.transformers.StripNonAlphanumericCharactersTransformer" />
                 <bean id="collationCleaner"
                     class="org.kew.rmf.transformers.CompositeTransformer">
                     <property name="transformers">
                         <util:list id="1">
                             <bean id="icollationCleaner"
-                                class="org.kew.rmf.transformers.SafeStripNonAlphanumericsTransformer" />
+                                class="org.kew.rmf.transformers.StripNonAlphanumericCharactersTransformer" />
                             <bean id="rcollationCleaner"
                                 class="org.kew.rmf.transformers.RomanNumeralTransformer" />
                         </util:list>
@@ -322,17 +322,17 @@ Feature: Deduplicate Ipni
                 <bean id="yearCleaner"
                     class="org.kew.rmf.transformers.ZeroToBlankTransformer" />
                 <bean id="safeStripNonAlphasTransformer"
-                    class="org.kew.rmf.transformers.SafeStripNonAlphasTransformer" />
+                    class="org.kew.rmf.transformers.StripNonAlphabeticCharactersTransformer" />
                 <bean id="fakeHybridSignCleaner"
-                    class="org.kew.rmf.transformers.FakeHybridSignCleaner" />
+                    class="org.kew.rmf.transformers.botany.FakeHybridSignCleaner" />
                 <bean id="safeStripNonAlphaNumericsTransformer"
-                    class="org.kew.rmf.transformers.SafeStripNonAlphanumericsTransformer" />
+                    class="org.kew.rmf.transformers.StripNonAlphanumericCharactersTransformer" />
                 <bean id="collationCleaner"
                     class="org.kew.rmf.transformers.CompositeTransformer">
                     <property name="transformers">
                         <util:list id="1">
                             <bean id="icollationCleaner"
-                                class="org.kew.rmf.transformers.SafeStripNonAlphanumericsTransformer" />
+                                class="org.kew.rmf.transformers.StripNonAlphanumericCharactersTransformer" />
                             <bean id="rcollationCleaner"
                                 class="org.kew.rmf.transformers.RomanNumeralTransformer" />
                         </util:list>

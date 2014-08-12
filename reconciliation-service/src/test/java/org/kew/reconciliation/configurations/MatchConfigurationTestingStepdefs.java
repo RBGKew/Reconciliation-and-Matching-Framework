@@ -9,6 +9,11 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
+import org.kew.reconciliation.queryextractor.QueryStringToPropertiesExtractor;
+import org.kew.reconciliation.refine.domain.query.Property;
+import org.kew.stringmod.dedupl.configuration.ReconciliationServiceConfiguration;
+import org.kew.stringmod.dedupl.exception.MatchExecutionException;
+import org.kew.stringmod.dedupl.exception.TooManyMatchesException;
 import org.kew.stringmod.dedupl.lucene.LuceneMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +61,21 @@ public class MatchConfigurationTestingStepdefs {
 		}
 	}
 
+	@When("^I query with only a single string for$")
+	public void i_query_with_only_a_single_string_for(List<Map<String,String>> singleStringQueries) throws Throwable {
+		Assert.assertNotNull("No matcher selected", currentMatcher);
+
+		// Go through the list of queries one at a time, execute the query, store the result in a new key "result".
+
+		queryResults = new ArrayList<>();
+
+		for (Map<String,String> testQuery : singleStringQueries) {
+			Map<String,String> result = doSingleStringTestQuery(testQuery.get("queryId"), testQuery.get("queryString"));
+			logger.debug("Query result: {}", result);
+			queryResults.add(result);
+		}
+	}
+
 	@Then("^the results are$")
 	public void the_results_are(List<Map<String,String>> expectedResults) throws Throwable {
 		for (Map<String,String> expectedResult : expectedResults) {
@@ -79,11 +99,29 @@ public class MatchConfigurationTestingStepdefs {
 		Assert.assertThat("Match results not correct for query "+expectedResult.get("queryId"), actualResult.get("results"), Matchers.equalTo(expectedResult.get("results")));
 	}
 
-	private Map<String,String> doSingleTestQuery(Map<String,String> origQuery) throws Exception {
+	private Map<String,String> doSingleStringTestQuery(String queryId, String query) throws TooManyMatchesException, MatchExecutionException {
+		ReconciliationServiceConfiguration reconConfig = (ReconciliationServiceConfiguration) currentMatcher.getConfig();
+		QueryStringToPropertiesExtractor propertiesExtractor = reconConfig.getQueryStringToPropertiesExtractor();
+
+		Property[] properties = propertiesExtractor.extractProperties(query);
+
+		Map<String, String> suppliedRecord = new HashMap<String, String>();
+		suppliedRecord.put("queryId", queryId);
+
+		for (Property p : properties) {
+			logger.trace("Setting: {} to {}", p.getPid(), p.getV());
+			suppliedRecord.put(p.getPid(), p.getV());
+		}
+
+		return doSingleTestQuery(suppliedRecord);
+	}
+
+	private Map<String,String> doSingleTestQuery(Map<String,String> origQuery) throws TooManyMatchesException, MatchExecutionException {
 		// Copy the map, as Cucumber supplies an UnmodifiableMap
 		Map<String,String> query = new HashMap<>();
 		query.putAll(origQuery);
 
+		query.put("id", query.get("queryId")); // Means the id can show up in the debug output.
 		List<Map<String,String>> matches = currentMatcher.getMatches(query);
 
 		logger.debug("Found some matches: {}", matches.size());
@@ -91,6 +129,7 @@ public class MatchConfigurationTestingStepdefs {
 			logger.debug("Matches for {} are {}", query, matches);
 		}
 
+		// Construct result string (list of ids)
 		ArrayList<String> matchedIds = new ArrayList<>();
 		for (Map<String,String> match : matches) {
 			matchedIds.add(match.get("id"));

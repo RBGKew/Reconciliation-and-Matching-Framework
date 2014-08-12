@@ -1,6 +1,6 @@
 package org.kew.stringmod.dedupl.matchers;
 
-import org.kew.rmf.transformers.SafeStripNonAlphanumericsTransformer;
+import org.kew.rmf.transformers.StripNonAlphanumericCharactersTransformer;
 import org.kew.rmf.transformers.authors.StripExAuthorTransformer;
 import org.kew.rmf.transformers.authors.StripInAuthorTransformer;
 
@@ -17,7 +17,7 @@ public class AuthorCommonTokensMatcher extends CommonTokensMatcher{
 
     final private StripInAuthorTransformer inCleaner = new StripInAuthorTransformer();
     final private StripExAuthorTransformer exCleaner = new StripExAuthorTransformer();
-    final private SafeStripNonAlphanumericsTransformer stripNonDs = new SafeStripNonAlphanumericsTransformer();
+    final private StripNonAlphanumericCharactersTransformer stripNonDs = new StripNonAlphanumericCharactersTransformer();
 
     @Override
     public int getCost() {
