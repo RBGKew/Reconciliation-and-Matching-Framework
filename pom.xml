@@ -501,6 +501,12 @@
 			<url>http://repository.gbif.org/content/groups/gbif</url>
 			<snapshots><enabled>false</enabled></snapshots>
 		</repository>
+
+		<repository>
+			<id>central-snapshots</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<releases><enabled>false</enabled></releases><snapshots><enabled>true</enabled></snapshots>
+		</repository>
 	</repositories>
 
 	<distributionManagement>
