@@ -138,8 +138,9 @@
 			<table id="singleQueryResultTable" class="table table-bordered table-striped table-condensed"> </table>
 			<pre id="singleQueryResult"> </pre>
 
-			<script>
+			<script><![CDATA[
 				var reconciliationServiceUrl = "${reconciliationServiceUrl}";
+				var viewUrlPattern = "${reconciliationConfiguration.viewUrl}";
 
 				$("#singleQuery").submit(function(event) {
 
@@ -154,7 +155,8 @@
 
 						var headers = "<thead><tr><th>id</th><th>name</th></tr></thead>";
 						var body = "<tbody>" + jQuery.map(data.result, function(r, i) {
-							return "<tr><td>"+r.id+"</td><td>"+r.name+"</td></tr>";
+							var viewUrl = viewUrlPattern.replace("{{id}}", r.id);
+							return "<tr><td><a href=\""+viewUrl+"\">"+r.id+"</a></td><td>"+r.name+"</td></tr>";
 						}) + "</tbody>";
 
 						$("#singleQueryResultTable").html(headers+body);
@@ -163,7 +165,7 @@
 
 					return false;
 				});
-			</script>
+			]]></script>
 
 		</div>
 	</div>
