@@ -9,6 +9,8 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
@@ -16,6 +18,7 @@ import org.springframework.context.support.GenericXmlApplicationContext;
  * Everything begins here.
  */
 public class CoreApp {
+	private static final Logger logger = LoggerFactory.getLogger(CoreApp.class);
 
 	public static void main(String[] args) throws Exception {
 
@@ -64,8 +67,7 @@ public class CoreApp {
 		String[] cacheNames = cacheManager.getCacheNames();
 		for (int i = 0; i < cacheNames.length; i++) {
 			String cacheName = cacheNames[i];
-			System.out.println(cacheName+" - "+ cacheManager.getCache(cacheName).getStatistics().toString());
+			logger.info("Cache {}: {}", cacheName, cacheManager.getCache(cacheName).getStatistics());
 		}
 	}
-
 }
