@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- * Information, administration, help pages etc.
+ * Administration, configuration information pages etc.
  */
 @Controller
 public class ConfigurationController {
@@ -38,12 +38,6 @@ public class ConfigurationController {
 
 	@Autowired
 	private ReconciliationService reconciliationService;
-
-	@RequestMapping(produces="text/html", value={"/","/about"}, method = RequestMethod.GET)
-	public String doWelcome(Model model) {
-		model.addAttribute("availableMatchers", reconciliationService.getMatchers().keySet());
-		return "about-general";
-	}
 
 	@RequestMapping(produces="text/html", value = "/admin", method = RequestMethod.GET)
 	public String doConfigurationAdmin(Model model) throws ReconciliationServiceException {
@@ -100,6 +94,12 @@ public class ConfigurationController {
 		return "redirect:/admin";
 	}
 
+	@RequestMapping(produces="text/html", value = "/about", method = RequestMethod.GET)
+	public String doWelcome(Model model) {
+		model.addAttribute("availableMatchers", reconciliationService.getMatchers().keySet());
+		return "about-general";
+	}
+
 	@RequestMapping(produces="text/html", value = "/about/{configName}", method = RequestMethod.GET)
 	public String doAbout(@PathVariable String configName, Model model) {
 		List<String> properties = new ArrayList<String>();
@@ -135,10 +135,5 @@ public class ConfigurationController {
 			model.addAttribute("transformers", p_transformers);
 		}
 		return "about-matcher";
-	}
-
-	@RequestMapping(produces="text/html", value={"/help"}, method = RequestMethod.GET)
-	public String doHelp(Model model) {
-		return "help";
 	}
 }
