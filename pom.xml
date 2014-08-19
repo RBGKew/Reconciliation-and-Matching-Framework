@@ -57,7 +57,7 @@
         <roo.version>1.2.5.RELEASE</roo.version>
         <slf4j.version>1.7.5</slf4j.version>
         <spring.version>3.2.8.RELEASE</spring.version>
-		<string-transformers.version>0.1.1-SNAPSHOT</string-transformers.version>
+		<string-transformers.version>0.2.0</string-transformers.version>
         <super-csv.version>2.1.0</super-csv.version>
     </properties>
 
