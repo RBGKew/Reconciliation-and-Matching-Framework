@@ -210,6 +210,8 @@ public class ReconciliationServiceConfiguration extends MatchConfiguration imple
 	}
 	/**
 	 * URL template for suggest entity flyouts.  <code>{id}</code> will be replaced with the entity id.
+	 * <br/>
+	 * <strong>Do not have Javascript or wide-ranging CSS in here — it could break OpenRefine.</strong>
 	 */
 	public void setSuggestFlyoutUrl(String suggestFlyoutUrl) {
 		this.suggestFlyoutUrl = suggestFlyoutUrl;

@@ -1,6 +1,8 @@
 package org.kew.stringmod.dedupl.lucene;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;
@@ -9,6 +11,7 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.queryparser.flexible.standard.QueryParserUtil;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TopDocs;
@@ -43,12 +46,37 @@ public class LuceneHandler<C extends Configuration> {
 	}
 
 	public IndexSearcher getIndexSearcher() throws CorruptIndexException, IOException {
-		if (this.indexSearcher == null) this.indexSearcher = new IndexSearcher(this.getIndexReader());
+		if (this.indexSearcher == null) {
+			this.indexSearcher = new IndexSearcher(this.getIndexReader());
+		}
 		return this.indexSearcher;
 	}
 
 	public Document getFromLucene(int n) throws IOException {
 		return indexReader.document(n);
+	}
+
+	/**
+	 * Retrieves a record by indexed id from the Lucene datastore.
+	 */
+	public Map<String, String> getRecordById(String id) throws IOException {
+		String queryString = Configuration.ID_FIELD_NAME + ":" + QueryParserUtil.escape(id);
+
+		TopDocs resultDoc = null;
+		try {
+			resultDoc = queryLucene(queryString, getIndexSearcher(), 1);
+		}
+		catch (ParseException e) {
+			logger.error("Unexpected error parsing query '"+queryString+"'", e);
+			return null;
+		}
+
+		if (resultDoc.scoreDocs.length > 0) {
+			return LuceneUtils.doc2Map(getFromLucene(resultDoc.scoreDocs[0].doc));
+		}
+		else {
+			return new HashMap<>();
+		}
 	}
 
 	public TopDocs queryLucene(String query, IndexSearcher indexSearcher, int maxSearchResults) throws IOException, ParseException {

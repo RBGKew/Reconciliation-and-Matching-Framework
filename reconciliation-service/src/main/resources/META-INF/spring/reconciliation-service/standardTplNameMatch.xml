@@ -227,8 +227,7 @@
 		p:viewUrl="http://www.theplantlist.org/tpl1.1/record/{{id}}?reconcileView"
 		p:previewUrl="http://www.theplantlist.org/tpl1.1/record/{{id}}?reconcilePreview"
 		p:previewWidth="400"
-		p:previewHeight="400"
-		p:suggestFlyoutUrl="http://www.theplantlist.org/tpl1.1/record/{id}?reconcileSuggest">
+		p:previewHeight="400">
 		<property name="defaultTypes">
 			<util:list id="2">
 				<bean class="org.kew.reconciliation.refine.domain.metadata.Type"

@@ -321,37 +321,80 @@ public class ReconciliationServiceController {
 	}
 
 	/**
-	 * Entity suggest flyout
+	 * Entity suggest flyout.
+	 * <br/>
+	 * Either calls the URL provided in the configuration, or generates an HTML snippet containing the known Property fields (in order) in a table.
 	 */
 	@RequestMapping(value = "/reconcile/{configName}/flyout/{id:.+}", method={RequestMethod.GET,RequestMethod.POST}, produces="application/json; charset=UTF-8")
 	public ResponseEntity<String> doSuggestFlyout(@PathVariable String configName, @PathVariable String id, @RequestParam(value="callback",required=false) String callback) {
 		logger.info("{}: Suggest flyout request for {}", configName, id);
 
 		// TODO: This should be replaced by a class which is customisable, e.g. to return HTML, or transform RDF.
+		String targetUrl;
+
 		try {
-			String targetUrl = reconciliationService.getReconciliationServiceConfiguration(configName).getSuggestFlyoutUrl();
-
-			ResponseEntity<String> httpResponse = template.getForEntity(targetUrl, String.class, id);
-
-			if (httpResponse.getStatusCode() != HttpStatus.OK) {
-				logger.debug("{}: Received HTTP {} from URL {} with id {}", configName, httpResponse.getStatusCode(), targetUrl, id);
-			}
-
-			String domainUpToSlash = targetUrl.substring(0, targetUrl.indexOf('/', 10));
-			String html = httpResponse.getBody();
-			html = html.replaceFirst("</head>", "<base href='"+domainUpToSlash+"/'/>");
-
-			FlyoutResponse jsonWrappedHtml = new FlyoutResponse(html);
-			logger.debug("JSON response is {}", wrapResponse(callback, jsonMapper.writeValueAsString(jsonWrappedHtml)));
-			return new ResponseEntity<String>(wrapResponse(callback, jsonMapper.writeValueAsString(jsonWrappedHtml)), httpResponse.getStatusCode());
+			targetUrl = reconciliationService.getReconciliationServiceConfiguration(configName).getSuggestFlyoutUrl();
 		}
 		catch (MatchExecutionException | NullPointerException e) {
 			logger.info(configName + ": Not found when retrieving URL for id "+id, e);
 			return new ResponseEntity<String>(e.toString(), HttpStatus.NOT_FOUND);
 		}
-		catch (IOException e) {
-			logger.warn(configName + ": Exception retrieving URL for id "+id, e);
-			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+
+		// If the configuration has a flyout configured use it
+		if (targetUrl != null) {
+			try {
+				ResponseEntity<String> httpResponse = template.getForEntity(targetUrl, String.class, id);
+
+				if (httpResponse.getStatusCode() != HttpStatus.OK) {
+					logger.debug("{}: Received HTTP {} from URL {} with id {}", configName, httpResponse.getStatusCode(), targetUrl, id);
+				}
+
+				String domainUpToSlash = targetUrl.substring(0, targetUrl.indexOf('/', 10));
+				String html = httpResponse.getBody();
+				html = html.replaceFirst("</head>", "<base href='"+domainUpToSlash+"/'/>");
+
+				FlyoutResponse jsonWrappedHtml = new FlyoutResponse(html);
+				logger.debug("JSON response is {}", wrapResponse(callback, jsonMapper.writeValueAsString(jsonWrappedHtml)));
+				return new ResponseEntity<String>(wrapResponse(callback, jsonMapper.writeValueAsString(jsonWrappedHtml)), httpResponse.getStatusCode());
+			}
+			catch (NullPointerException e) {
+				logger.info(configName + ": Not found when retrieving URL for id "+id, e);
+				return new ResponseEntity<String>(e.toString(), HttpStatus.NOT_FOUND);
+			}
+			catch (IOException e) {
+				logger.warn(configName + ": Exception retrieving URL for id "+id, e);
+				return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+		// Otherwise create something very simple from the Properties
+		else {
+			try {
+				StringBuilder flyout = new StringBuilder();
+				flyout.append("<!DOCTYPE HTML><html><body><table>\n");
+
+				Map<String,String> doc = reconciliationService.getMatcher(configName).getRecordById(id);
+
+				List<Property> properties = reconciliationService.getReconciliationServiceConfiguration(configName).getProperties();
+				for (Property p : properties) {
+					String name = p.getQueryColumnName();
+
+					flyout.append("<tr><th>");
+					flyout.append(name);
+					flyout.append("</th><td>");
+					flyout.append(doc.get(name));
+					flyout.append("</td></tr>\n");
+				}
+
+				flyout.append("</table></body></html>\n");
+
+				FlyoutResponse jsonWrappedHtml = new FlyoutResponse(flyout.toString());
+				logger.debug("JSON response is {}", wrapResponse(callback, jsonMapper.writeValueAsString(jsonWrappedHtml)));
+				return new ResponseEntity<String>(wrapResponse(callback, jsonMapper.writeValueAsString(jsonWrappedHtml)), HttpStatus.OK);
+			}
+			catch (IOException| MatchExecutionException e) {
+				logger.warn(configName + ": Exception creating entity flyout for id "+id, e);
+				return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+			}
 		}
 	}
 
