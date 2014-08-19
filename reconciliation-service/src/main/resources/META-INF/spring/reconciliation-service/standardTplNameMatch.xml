@@ -208,7 +208,7 @@
 
 	<bean id="config" class="org.kew.stringmod.dedupl.configuration.ReconciliationServiceConfiguration"
 		p:name="StandardTplNameMatch"
-		p:description="Moderately strict reconciliation configuration matching against names stored in The Plant List (TPL)."
+		p:description="Reconciliation configuration matching against names stored in The Plant List (TPL)."
 		p:authorityRecords-ref="authorityFromTplDatabase"
 		p:properties-ref="columnProperties"
 		p:sortFieldName="id"
@@ -221,7 +221,7 @@
 		p:queryStringToPropertiesExtractor-ref="genusSpeciesInfraspeciesToPropertiesConverter"
 		p:reconciliationResultFormatter-ref="reconciliationResultFormat"
 
-		p:title="The Plant List (Standard) Reconciliation Service"
+		p:title="The Plant List Reconciliation Service"
 		p:identifierSpace="http://www.theplantlist.org/tpl1.1/record/"
 		p:schemaSpace="http://rdf.freebase.com/ns/type.object.id"
 		p:viewUrl="http://www.theplantlist.org/tpl1.1/record/{{id}}?reconcileView"
