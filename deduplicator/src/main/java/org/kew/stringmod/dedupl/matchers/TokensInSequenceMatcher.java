@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
  * in the longer list of tokens - e.g. "10 2 140" and "10 140" will match, but 
  * "10 2 140" and "10 141" will not. 
  * @author nn00kg
- *
  */
 public class TokensInSequenceMatcher extends TokeniserMatcher {
 
@@ -27,7 +26,6 @@ public class TokensInSequenceMatcher extends TokeniserMatcher {
     }
 
     @Override
-    /*@Cacheable(cacheName="ctMatchCache")*/
     public boolean matches(String s1, String s2) {
         logger.trace("s1: {}", s1);
         logger.trace("s2: {}", s2);

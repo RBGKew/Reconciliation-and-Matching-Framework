@@ -2,8 +2,6 @@ package org.kew.stringmod.dedupl.matchers;
 
 import org.kew.rmf.transformers.CapitalLettersExtractor;
 
-import com.googlecode.ehcache.annotations.Cacheable;
-
 /**
  * This matcher tests for common tokens using only the capital letters in the strings supplied.
  */
@@ -12,7 +10,6 @@ public class CapitalLettersMatcher extends CommonTokensMatcher{
 	CapitalLettersExtractor removeNonCaps = new CapitalLettersExtractor();
 
 	@Override
-	@Cacheable(cacheName="clctMatchCache")
 	public boolean matches(String s1, String s2) {
 		if (s1 == null && s2 == null) return true;
 		this.removeNonCaps.setReplacement(this.getDelimiter());

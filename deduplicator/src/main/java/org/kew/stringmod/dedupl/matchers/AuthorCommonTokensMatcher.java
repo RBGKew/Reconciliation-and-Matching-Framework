@@ -4,12 +4,9 @@ import org.kew.rmf.transformers.StripNonAlphanumericCharactersTransformer;
 import org.kew.rmf.transformers.authors.StripExAuthorTransformer;
 import org.kew.rmf.transformers.authors.StripInAuthorTransformer;
 
-import com.googlecode.ehcache.annotations.Cacheable;
-
 /**
  * This matcher tests for common tokens in two authorship strings
  * @author nn00kg
- *
  */
 public class AuthorCommonTokensMatcher extends CommonTokensMatcher{
 
@@ -25,7 +22,6 @@ public class AuthorCommonTokensMatcher extends CommonTokensMatcher{
     }
 
     @Override
-    @Cacheable(cacheName="actMatchCache")
     public boolean matches(String s1, String s2) {
         boolean matches = false;
         if (s1 == null && s2 == null)

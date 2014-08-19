@@ -67,10 +67,6 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.googlecode.ehcache-spring-annotations</groupId>
-			<artifactId>ehcache-spring-annotations</artifactId>
-		</dependency>
 
 		<!-- lucene related -->
 		<dependency>

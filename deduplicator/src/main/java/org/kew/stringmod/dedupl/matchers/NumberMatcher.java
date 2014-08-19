@@ -2,8 +2,6 @@ package org.kew.stringmod.dedupl.matchers;
 
 import org.kew.rmf.transformers.StripNonNumericCharactersTransformer;
 
-import com.googlecode.ehcache.annotations.Cacheable;
-
 /**
  * This matcher tests for common tokens using only the numeric tokens in the strings supplied.
  *
@@ -23,7 +21,6 @@ public class NumberMatcher extends CommonTokensMatcher {
 	}
 
 	@Override
-	@Cacheable(cacheName="nctMatchCache")
 	public boolean matches(String s1, String s2) {
 		if (s1 == null && s2 == null) return true;
 		String no1 = doConvert(s1);

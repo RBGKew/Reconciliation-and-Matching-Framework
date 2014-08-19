@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.googlecode.ehcache.annotations.Cacheable;
-
 /**
  * This matcher tests for common tokens after splitting the input strings into a sequence of ngrams. 
  * The ngram length ("n") is configurable.
@@ -19,7 +17,6 @@ public class NGramMatcher extends CommonTokensMatcher{
 	public static int COST = 10;
 
 	@Override
-	@Cacheable(cacheName="ngMatchCache")
 	public boolean matches(String s1, String s2){
 		boolean matches = false;
 		if (StringUtils.isNotEmpty(s1) && StringUtils.isNotEmpty(s2)){

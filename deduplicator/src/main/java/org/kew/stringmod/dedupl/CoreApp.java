@@ -2,8 +2,6 @@ package org.kew.stringmod.dedupl;
 
 import java.io.File;
 
-import net.sf.ehcache.CacheManager;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
@@ -62,12 +60,5 @@ public class CoreApp {
 		DataHandler<?> engine = (DataHandler<?>) context.getBean("engine");
 		// Call the run method
 		engine.run();
-		// Dump the cache statistics
-		CacheManager cacheManager = (CacheManager) context.getBean("cacheManager");
-		String[] cacheNames = cacheManager.getCacheNames();
-		for (int i = 0; i < cacheNames.length; i++) {
-			String cacheName = cacheNames[i];
-			logger.info("Cache {}: {}", cacheName, cacheManager.getCache(cacheName).getStatistics());
-		}
 	}
 }

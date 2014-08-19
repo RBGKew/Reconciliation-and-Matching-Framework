@@ -31,8 +31,6 @@ import org.slf4j.LoggerFactory;
 import org.supercsv.io.CsvMapReader;
 import org.supercsv.prefs.CsvPreference;
 
-import com.google.common.base.Strings;
-
 /**
  * This implementation reads a file and stores its content in a Lucene index.
  * The rules for this are defined in the corresponding Configuration.
@@ -298,7 +296,8 @@ public class LuceneDataLoader implements DataLoader {
         // The remainder of the columns are added as specified in the properties
         for (Property p : this.config.getProperties()) {
             String authorityName = p.getAuthorityColumnName() + Configuration.TRANSFORMED_SUFFIX;
-            String value = Strings.nullToEmpty(record.getString(p.getAuthorityColumnName()));
+            String value = record.getString(p.getAuthorityColumnName());
+            if (value == null) value = "";
 
             // Index the value in its original state, pre transformation
             Field f = new TextField(p.getAuthorityColumnName(), value, Field.Store.YES);

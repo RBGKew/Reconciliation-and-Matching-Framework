@@ -5,8 +5,6 @@ import org.kew.rmf.utils.Dictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.googlecode.ehcache.annotations.Cacheable;
-
 /**
  * This matcher uses the Levenshtein edit distance algorithm
  * (provided by the Apache StringUtils class).
@@ -39,7 +37,6 @@ public class LevenshteinMatcher implements Matcher {
     }
 
     @Override
-    @Cacheable(cacheName="ldMatchCache")
     public boolean matches(String s1, String s2) throws MatchException {
         boolean matches = false;
         numCalls++;

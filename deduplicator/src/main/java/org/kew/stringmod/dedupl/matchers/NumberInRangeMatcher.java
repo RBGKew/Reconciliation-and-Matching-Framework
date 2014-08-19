@@ -3,8 +3,6 @@ package org.kew.stringmod.dedupl.matchers;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import com.googlecode.ehcache.annotations.Cacheable;
-
 /**
  * This matcher tests for a number appearing in a number range, e.g. "34" ? "12-18 30-36" is true.
  */
@@ -14,7 +12,6 @@ public class NumberInRangeMatcher implements Matcher {
 	private static final Pattern rangesPattern = Pattern.compile(rangesRegex);
 
 	@Override
-	@Cacheable(cacheName="nirMatchCache")
 	public boolean matches(String s1, String s2) {
 		// Search for ranges
 		if (s1 == null && s2 == null) return true;
@@ -38,7 +35,6 @@ public class NumberInRangeMatcher implements Matcher {
 		return false;
 	}
 
-	@Cacheable(cacheName="nirRangeMatchCache")
 	private ArrayList<int[]> findRanges(String s) {
 		ArrayList<int[]> ranges = new ArrayList<>();
 		if (s != null) {

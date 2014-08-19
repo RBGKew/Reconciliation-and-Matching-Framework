@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.file.Files;
 
 import org.junit.Test;
 import org.kew.rmf.transformers.DictionaryTransformer;
@@ -13,13 +14,11 @@ import org.kew.rmf.transformers.TransformationException;
 import org.supercsv.io.CsvListWriter;
 import org.supercsv.prefs.CsvPreference;
 
-import com.google.common.io.Files;
-
 public class CsvDictionaryTest {
 
 	@Test
 	public void test() throws IOException, TransformationException {
-		File tempDir = Files.createTempDir();
+		File tempDir = Files.createTempDirectory("CsvDictionaryTest").toFile();
 		tempDir.createNewFile();
 		File dictFile = new File(tempDir, "dictFile.txt");
 		CsvPreference customCsvPref = new CsvPreference.Builder('"', '\t', "\n").build();

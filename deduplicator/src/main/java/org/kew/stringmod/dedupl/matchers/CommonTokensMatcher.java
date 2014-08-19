@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
  * This matcher calculates how many tokens are shared between two strings, the tokens
  * If the calculated ratio is above the `minRatio` it returns true.
  * @author nn00kg
- *
  */
 public class CommonTokensMatcher extends TokeniserMatcher {
 
@@ -27,7 +26,6 @@ public class CommonTokensMatcher extends TokeniserMatcher {
         return COST;
     }
 
-    /*@Cacheable(cacheName="ctMatchCache")*/
     @Override
     public boolean matches(String s1, String s2) {
         logger.trace("s1: {}", s1);
@@ -78,5 +76,4 @@ public class CommonTokensMatcher extends TokeniserMatcher {
     public void setUniqueCommonTokens(boolean uniqueCommonTokens) {
         this.uniqueCommonTokens = uniqueCommonTokens;
     }
-
 }

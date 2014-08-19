@@ -11,8 +11,6 @@ import java.util.List;
 
 import org.kew.rmf.transformers.Transformer;
 
-import com.googlecode.ehcache.annotations.Cacheable;
-
 /**
  * This matcher tests for common author abbreviations in two authorship strings
  * It takes two input files - one is for a standard set of author abbreviations and the other is for any author misspellings-
@@ -59,7 +57,6 @@ public class AuthorAbbreviationsMatcher extends AuthorCommonTokensMatcher{
 
 	boolean storeAndReuseTransformations;
 
-	@Cacheable(cacheName="aabMatchCache")
 	public boolean matches_new(String s1, String s2) throws Exception {
 		// First check for match w/out transform
 		boolean matches = match_inner(s1, s2);
@@ -93,7 +90,6 @@ public class AuthorAbbreviationsMatcher extends AuthorCommonTokensMatcher{
 	}
 
 	@Override
-	@Cacheable(cacheName="aabMatchCache")
 	public boolean matches(String s1, String s2) {
 		boolean matches = false;
 		if (s1 == null && s2 == null)
