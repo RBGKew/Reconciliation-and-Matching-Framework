@@ -155,7 +155,7 @@ public class ReconciliationService {
 		StopWatch sw = new Slf4JStopWatch(timingLogger);
 
 		String configurationFile = CONFIG_BASE + configFileName;
-		logger.info("{}: Loading configuration from file", configFileName, configurationFile);
+		logger.info("{}: Loading configuration from file {}", configFileName, configurationFile);
 
 		ConfigurableApplicationContext context = new GenericXmlApplicationContext(configurationFile);
 		context.registerShutdownHook();
@@ -232,7 +232,7 @@ public class ReconciliationService {
 			String configName = configFileName.substring(0, configFileName.length() - 4);
 			totals.remove(configName);
 			matchers.remove(configName);
-			contexts.remove(configName);
+			contexts.remove(configFileName);
 
 			context.close();
 
