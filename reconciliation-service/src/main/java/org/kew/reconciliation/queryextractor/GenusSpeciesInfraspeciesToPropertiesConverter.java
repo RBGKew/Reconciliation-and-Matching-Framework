@@ -25,7 +25,7 @@ public class GenusSpeciesInfraspeciesToPropertiesConverter implements QueryStrin
 		 * For the moment, this is just a very basic implementation to satisfy the requirements of the
 		 * Reconciliation Service "suggest" and "preview" queries.
 		 */
-		queryString.replace("  ", " ");
+		queryString = queryString.replace("  ", " ");
 		String[] parts = queryString.split(" ");
 		String genus = null, species = null, infraspecies = null, authors = null;
 
@@ -34,8 +34,8 @@ public class GenusSpeciesInfraspeciesToPropertiesConverter implements QueryStrin
 
 		if (parts.length == 1) return makeProperties(genus, species, infraspecies, authors);
 
-		// If second part has capital letter, assume rest of name is authors
-		if (isCapital(parts[1].charAt(0))) {
+		// If second part has capital letter or "(", assume rest of name is authors
+		if (isCapital(parts[1].charAt(0)) || parts[1].charAt(0) == '(') {
 			authors = joinRest(parts, 1);
 		}
 		// Otherwise, assume second part is species
@@ -44,8 +44,8 @@ public class GenusSpeciesInfraspeciesToPropertiesConverter implements QueryStrin
 
 			if (parts.length == 2) return makeProperties(genus, species, infraspecies, authors);
 
-			// If third part has capital letter, assume rest of name is authors
-			if (isCapital(parts[2].charAt(0))) {
+			// If third part has capital letter or "(", assume rest of name is authors
+			if (isCapital(parts[2].charAt(0)) || parts[2].charAt(0) == '(') {
 				authors = joinRest(parts, 2);
 			}
 			// Otherwise, infraspecific rank (ignore) and infraspecific epithet
