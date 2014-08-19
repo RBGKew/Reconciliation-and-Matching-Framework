@@ -56,6 +56,10 @@
 	</ul>
 
 	<p>
+		<em>Open Refine needs Java to run.  If your computer supports it choose 64-bit Java.</em>
+	</p>
+
+	<p>
 		Download Open Refine from <a href="http://openrefine.org/download.html">the download page</a>,
 		choose the development version, currently <code>2.6-beta1</code>.
 	</p>
