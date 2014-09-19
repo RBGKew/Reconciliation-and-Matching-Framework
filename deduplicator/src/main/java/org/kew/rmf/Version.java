@@ -1,4 +1,4 @@
-package org.kew.reconciliation;
+package org.kew.rmf;
 
 import java.io.InputStream;
 import java.util.Properties;
@@ -16,7 +16,8 @@ public class Version {
 
 	static {
 		try {
-			InputStream is = Version.class.getResourceAsStream("/META-INF/maven/org.kew.rmf/reconciliation-service/pom.properties");
+			InputStream is = Version.class.getResourceAsStream("/META-INF/maven/org.kew.rmf/deduplicator/pom.properties");
+
 			if (is == null) {
 				logger.info("Could not load Maven properties file — probably a development execution.");
 				VERSION = "UNKNOWN";

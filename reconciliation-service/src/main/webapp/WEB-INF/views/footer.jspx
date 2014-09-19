@@ -5,7 +5,7 @@
 	<hr/>
 	<footer>
 		<p class="text-muted">
-			Reconciliation Service: version <em><jsp:expression>org.kew.reconciliation.Version.getVersion()</jsp:expression></em>.
+			Reconciliation Service: version <em><jsp:expression>org.kew.rmf.Version.getVersion()</jsp:expression></em>.
 		</p>
 	</footer>
 </jsp:root>
