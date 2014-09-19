@@ -67,18 +67,17 @@
 	<h3>Data preparation</h3>
 
 	<p>
-		The services can cope with names recorded in a single column, like
+		The services are easiest to use if the whole name (or value to be reconciled) is in a sngle column, like
 		<code>Quercus alba L.</code> or
-		<code>Quercus alba f. latiloba Sarg.</code>, but for better results split the data into a single column
+		<code>Quercus alba f. latiloba Sarg.</code>.  Better results can sometimes be obtained with a column
 		for each necessary part (e.g. generic epithet, species epithet, publication title etc).
 		You can use Open Refine to do this — see the videos — or any other program.
 	</p>
 
 	<p>
 		Optionally, use facets to limit which names you wish to match
-		— for example, to select particular ranks to match (TPL
-		doesn’t include any ranks above species, and the Reconciliation
-		Service doesn’t yet support anything above genus).
+		— for example, to select particular ranks to match (The Plant List only includes
+		species and infraspecies names).
 	</p>
 
 	<p>
@@ -92,13 +91,13 @@
 		Note the two <em>endpoints</em>: the Open Refine reconciliation service, and the
 		<abbr title="JavaScript Object Notation">JSON</abbr> web service.  These instructions
 		will assume you have a list of plant names and wish to reconcile them against the
-		<spring:url var="aboutStandardTpl" value="/about/StandardTplNameMatch" />
-		<a href="${aboutStandardTpl}">Standard TPL Name Match</a> service.
+		<spring:url var="aboutTplNameUrl" value="/about/TplName" />
+		<a href="${aboutTplNameUrl}">TPL Name reconciliation service</a>.
 	</p>
 
 	<h3>Querying the web service</h3>
 
-	<spring:url var="reconcileUrl" value="/reconcile/StandardTplNameMatch" />
+	<spring:url var="reconcileTplNameUrl" value="/reconcile/TplName" />
 
 	<p>There are two options for querying the Reconciliation Service:</p>
 
@@ -116,8 +115,7 @@
 			choose that column
 		</li>
 		<li>
-			Otherwise, choose the “main” column — the first in the list given on the
-			page describing the service, in this case <code>genus</code>
+			Otherwise, choose a column unique to each record, like an identifier.
 		</li>
 		<li>
 			Click the column heading, and choose <em>Reconcile</em> → <em>Start
@@ -127,7 +125,7 @@
 			If this is the first time you’ve reconciled against a
 			particular service, you will need to click <em>Add Standard
 			Service</em>. Enter the URL from the Reconciliation Service website,
-			for example <code>${reconcileUrl}</code>,
+			for example <code><a href="${reconcileTplNameUrl}">http://${serverAndPort}${reconcileTplNameUrl}</a></code>,
 			and click OK.
 		</li>
 		<li>
@@ -152,6 +150,8 @@
 			you can select the match using the tick boxes.<br />
 			<spring:url var="img" value="/img/reconciling-results.png"/>
 			<img src="${img}" alt="" />
+			It’s likely you will received multiple results where the data source (IPNI, The Plant List) has
+			duplicate names.  We hope to hide the duplicates from IPNI in the near future.
 		</li>
 		<li>
 			If matching hasn’t worked you can also click <em>Search
@@ -176,23 +176,23 @@
 	</p>
 
 	<ol>
-		<spring:url var="jsonBase" value="/match/StandardTplNameMatch" />
-		<spring:url var="jsonExample" value="/match/StandardTplNameMatch?genus=Quercus&amp;species=alba&amp;authors=L." />
+		<spring:url var="matchTplBaseUrl" value="/match/TplName" />
+		<spring:url var="matchTplExampleUrl" value="/match/TplName?genus=Quercus&amp;species=alba&amp;authors=L." />
 		<li>
 			Click a column heading and choose <em>Edit column</em> → <em>Add
 			column by fetching URLs</em>
 		</li>
 		<li>
-			Give the column a name, and set the <code>Throttle delay</code> to zero.
+			Give the column a name, and <strong>set the <code>Throttle delay</code> to zero</strong>.
 		</li>
 		<li>
 			Use one of the query expressions below, replacing <code>Genus</code>,
 			<code>Species</code> etc with the column headings from your
-			dataset. This constructs a URL like <a href="${jsonExample}">this</a>
+			dataset. This constructs a URL like <a href="${matchTplExampleUrl}">this</a>
 			(which you can click on to see the web service response, in <abbr
 			title="JavaScript Object Notation">JSON</abbr> format).
 			<pre>
-<code>"http://${serverAndPort}${jsonBase}?genus="+row.cells["Genus"].value.escape('url')
+<code>"http://${serverAndPort}${matchTplBaseUrl}?genus="+row.cells["Genus"].value.escape('url')
 +forNonBlank(row.cells["Species"].value, v, "&amp;species="+v.escape('url'), "")
 +forNonBlank(row.cells["InfraSpecies"].value, v, "&amp;infraspecies="+v.escape('url'), "")
 +forNonBlank(row.cells["InfraAuthor"].value, v, "&amp;authors="+v.escape('url'),
@@ -204,7 +204,7 @@
 		</li>
 
 		<li>
-			Results are returned in [<abbr title="JavaScript Object Notation">JSON</abbr>]
+			Results are returned in <abbr title="JavaScript Object Notation">JSON</abbr>
 			format, and might look something like this (but all on one line):
 			<pre><code>[
 	{
@@ -225,15 +225,14 @@
 ]</code></pre>
 
 			In <abbr title="JavaScript Object Notation">JSON</abbr> terms,
-			that’s an array (i.e. a list, denoted by <code>[ ... ]</code>)
-			containing objects (i.e. “things”, that’s the <code>{ ... }</code>) with properties
+			that’s an array (a list, denoted by <code>[ ... ]</code>)
+			containing objects (“things”, that’s the <code>{ ... }</code>) with properties
 			(<code>"a": "b"</code>).
 		</li>
 
 		<li>
 			Probably most match results only contain a single match. You can
-			check this (and facet on the result) by making a new column out of
-			the match result:
+			create a <em>custom text facet</em> with this expression:
 			<pre><code>parseJson(value).length()</code></pre>
 		</li>
 
@@ -279,7 +278,7 @@
 	<h3>Troubleshooting</h3>
 
 	<p>
-		This section will be completed as we discover problems — <a href="mailto:M.Blissett@kew.org?subject=Reconciliation%20service">please let us know!</a>.
+		This section will be completed as we discover problems — <a href="mailto:M.Blissett@kew.org?subject=Reconciliation%20service%20preview">please let us know!</a>.
 		Allocating more memory may help, refer to the <a href="https://github.com/OpenRefine/OpenRefine/wiki/FAQ:-Allocate-More-Memory">OpenRefine documentation</a> on this.
 	</p>
 
@@ -289,5 +288,11 @@
 		It's possible to use some of the transformers that are behind these reconciliation services to prepare your data.  For example, you may wish to
 		extract a year out of a field containing a whole reference.  See the <a href="https://github.com/RBGKew/String-Transformers#string-transformers">String Transformers</a> project
 		for how to do this.
+	</p>
+
+	<h3>Source code</h3>
+
+	<p>
+		The source code should be available on <a href="https://github.com/RBGKew/">Kew’s GitHub page</a> soon (probably at some point in October).
 	</p>
 </div>

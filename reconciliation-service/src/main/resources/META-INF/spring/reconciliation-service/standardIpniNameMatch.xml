@@ -7,7 +7,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
-	<!-- • STANDARD IPNI NAME MATCH • -->
+	<!-- • IPNI NAME MATCH CONFIGURATION • -->
 
 	<bean id="description" class="java.lang.String"><constructor-arg><value>
 		<![CDATA[
@@ -319,7 +319,7 @@
 	</bean>
 
 	<bean id="config" class="org.kew.stringmod.dedupl.configuration.ReconciliationServiceConfiguration"
-		p:name="StandardIpniNameMatch"
+		p:name="IpniName"
 		p:description-ref="description"
 		p:authorityRecords-ref="authorityFromIpniDatabase"
 		p:properties-ref="columnProperties"
@@ -333,7 +333,7 @@
 		p:queryStringToPropertiesExtractor-ref="scientificNameToPropertiesConverter"
 		p:reconciliationResultFormatter-ref="reconciliationResultFormat"
 
-		p:title="IPNI (Standard) Reconciliation Service"
+		p:title="IPNI Name Reconciliation Service"
 		p:identifierSpace="http://ipni.org/urn:lsid:ipni.org:names:"
 		p:schemaSpace="http://rdf.freebase.com/ns/type.object.id"
 		p:viewUrl="http://ipni.org/urn:lsid:ipni.org:names:{{id}}"

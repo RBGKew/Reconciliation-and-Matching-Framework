@@ -7,7 +7,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
-	<!-- • STANDARD TPL NAME MATCH •
+	<!-- • TPL NAME MATCH •
 		Matches on genus, species and infraspecies epithets, plus author.
 	-->
 
@@ -207,7 +207,7 @@
 	</bean>
 
 	<bean id="config" class="org.kew.stringmod.dedupl.configuration.ReconciliationServiceConfiguration"
-		p:name="StandardTplNameMatch"
+		p:name="TplName"
 		p:description="Reconciliation configuration matching against names stored in The Plant List (TPL)."
 		p:authorityRecords-ref="authorityFromTplDatabase"
 		p:properties-ref="columnProperties"

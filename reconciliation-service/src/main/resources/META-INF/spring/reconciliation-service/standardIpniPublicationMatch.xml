@@ -7,7 +7,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
-	<!-- • STANDARD IPNI PUBLICATION MATCH • -->
+	<!-- • IPNI PUBLICATION MATCH • -->
 
 	<!-- IPNI datasource for authority data -->
 	<bean id="ipniDatabase" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
@@ -155,7 +155,7 @@
 	</bean>
 
 	<bean id="config" class="org.kew.stringmod.dedupl.configuration.ReconciliationServiceConfiguration"
-		p:name="StandardIpniPublicationMatch"
+		p:name="IpniPublication"
 		p:description="Moderately strict reconciliation configuration matching against publications stored in the International Plant Name Index (IPNI)."
 		p:authorityRecords-ref="authorityFromIpniDatabase"
 		p:properties-ref="columnProperties"
@@ -169,7 +169,7 @@
 		p:queryStringToPropertiesExtractor-ref="citationQueryStringExtractor"
 		p:reconciliationResultFormatter-ref="reconciliationResultFormat"
 
-		p:title="IPNI Publications (Standard) Reconciliation Service"
+		p:title="IPNI Publications Reconciliation Service"
 		p:identifierSpace="http://ipni.org/urn:lsid:ipni.org:publications:"
 		p:schemaSpace="http://rdf.freebase.com/ns/type.object.id"
 		p:viewUrl="http://ipni.org/ipni/idPublicationSearch.do?id={{id}}"
