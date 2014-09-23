@@ -8,7 +8,7 @@
 	<spring:url var="helpUrl" value="/help"/>
 	<spring:url var="availableConfigurationsUrl" value="/about"/>
 
-	<h1>Kew Reconciliation Services</h1>
+	<h1>Kew Reconciliation Services (preview)</h1>
 
 	<p>
 		<em>Reconciliation</em> is the semi-automated process of matching text
