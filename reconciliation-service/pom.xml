@@ -14,6 +14,7 @@
 		<mysql.version>5.1.31</mysql.version>
 		<postgresql.version>9.3-1100-jdbc41</postgresql.version>
 		<tiles.version>2.2.2</tiles.version>
+		<servlet-filters.version>20140923</servlet-filters.version>
 	</properties>
 
 	<dependencies>
@@ -66,6 +67,12 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.kew.web</groupId>
+			<artifactId>servlet-filter</artifactId>
+			<version>${servlet-filters.version}</version>
 		</dependency>
 
 		<!-- file upload -->

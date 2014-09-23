@@ -2,10 +2,13 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:spring="http://www.springframework.org/tags" version="2.0">
-	<hr/>
+	<jsp:output omit-xml-declaration="yes"/>
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+
+	<br/>
 	<footer>
-		<p class="text-muted">
-			Reconciliation Service: version <em><jsp:expression>org.kew.rmf.Version.getVersion()</jsp:expression></em>.
+		<p style="color: grey; font-size: 0.6em">
+			Version <jsp:expression>org.kew.rmf.Version.getVersion()</jsp:expression>.
 		</p>
 	</footer>
 </jsp:root>
