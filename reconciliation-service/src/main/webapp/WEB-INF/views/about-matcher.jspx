@@ -113,13 +113,13 @@
 			</form>
 		</div>
 
-		<div>
+		<div id="singleQueryDiv" style="display: none">
 			<h3>
 				<span class="glyphicon glyphicon-search"> </span> Single query
 			</h3>
 			<p>Perform a single reconciliation query using this configuration:</p>
 
-			<form id="singleQuery" class="form-horizontal" action="javascript:alert( 'success!' );">
+			<form id="singleQuery" class="form-horizontal">
 				<c:forEach var="property" items="${properties}">
 					<div class="form-group">
 						<label class="col-sm-2 control-label" for="${property}">${property}</label>
@@ -157,7 +157,7 @@
 						var body = "<tbody>" + jQuery.map(data.result, function(r, i) {
 							var viewUrl = viewUrlPattern.replace("{{id}}", r.id);
 							return "<tr><td><a href=\""+viewUrl+"\">"+r.id+"</a></td><td>"+r.name+"</td></tr>";
-						}) + "</tbody>";
+						}).join(" ") + "</tbody>";
 
 						$("#singleQueryResultTable").html(headers+body);
 
@@ -165,6 +165,8 @@
 
 					return false;
 				});
+
+				$("#singleQueryDiv").show();
 			]]></script>
 
 		</div>
