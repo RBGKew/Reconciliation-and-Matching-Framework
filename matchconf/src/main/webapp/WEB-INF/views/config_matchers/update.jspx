@@ -5,11 +5,11 @@
 
     <div id="config-link">for configuration: <a href="/MatchConf/${ configType }_configs/${ configName }">${ configName }</a></div> <br/>
 
-    <form:update id="fu_org_kew_stringmod_matchconf_Matcher" modelAttribute="matcher" path="/${ configType }_configs/${ configName }/matchers" versionField="Version" z="KslYhvYPtGe87zzaPy1ajfDZXro=">
-        <field:select field="composedBy" id="c_org_kew_stringmod_matchconf_Matcher_composedBy" itemValue="id" items="${matchers}" multiple="true" path="/${ configType }_configs/${ configName }/matchers" z="lg7HXlHmAV4nN84WqZeazq8aLbQ="/>
-        <field:input field="name" id="c_org_kew_stringmod_matchconf_Matcher_name" z="Al1NPPXchxS30hT+j26vnNg5kP0="/>
-        <field:input field="packageName" id="c_org_kew_stringmod_matchconf_Matcher_packageName" z="5Uxlum2gTx8Fu4G3YdVEkQzIrsA="/>
-        <field:input field="className" id="c_org_kew_stringmod_matchconf_Matcher_className" z="eRUO2ZzUHuot4r1pbHBxyUIQnKY="/>
-        <field:input field="params" id="c_org_kew_stringmod_matchconf_Matcher_params" z="Zch43MLyLNXl+8ktqvZOnz54C18="/>
+    <form:update id="fu_org_kew_rmf_matchconf_Matcher" modelAttribute="matcher" path="/${ configType }_configs/${ configName }/matchers" versionField="Version" z="KslYhvYPtGe87zzaPy1ajfDZXro=">
+        <field:select field="composedBy" id="c_org_kew_rmf_matchconf_Matcher_composedBy" itemValue="id" items="${matchers}" multiple="true" path="/${ configType }_configs/${ configName }/matchers" z="lg7HXlHmAV4nN84WqZeazq8aLbQ="/>
+        <field:input field="name" id="c_org_kew_rmf_matchconf_Matcher_name" z="Al1NPPXchxS30hT+j26vnNg5kP0="/>
+        <field:input field="packageName" id="c_org_kew_rmf_matchconf_Matcher_packageName" z="5Uxlum2gTx8Fu4G3YdVEkQzIrsA="/>
+        <field:input field="className" id="c_org_kew_rmf_matchconf_Matcher_className" z="eRUO2ZzUHuot4r1pbHBxyUIQnKY="/>
+        <field:input field="params" id="c_org_kew_rmf_matchconf_Matcher_params" z="Zch43MLyLNXl+8ktqvZOnz54C18="/>
     </form:update>
 </div>

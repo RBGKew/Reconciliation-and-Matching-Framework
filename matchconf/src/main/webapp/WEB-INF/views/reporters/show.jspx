@@ -2,14 +2,14 @@
 <div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
-    <page:show id="ps_org_kew_stringmod_matchconf_Reporter" object="${reporter}" path="/reporters" z="ocEV+Db+qwvcyevCM9+5OBpBu6U=">
-        <field:display field="name" id="s_org_kew_stringmod_matchconf_Reporter_name" object="${reporter}" z="60g3gxlS4VZACcEMuxzhYXMWmSI="/>
-        <field:display field="delimiter" id="s_org_kew_stringmod_matchconf_Reporter_delimiter" object="${reporter}" z="i/c5nYeOCD+5EGJmF6zTPSG8n3s="/>
-        <field:display field="idDelimiter" id="s_org_kew_stringmod_matchconf_Reporter_idDelimiter" object="${reporter}" z="33PA9ha9imppXPoEgZsjFW4die8="/>
-        <field:display field="fileName" id="s_org_kew_stringmod_matchconf_Reporter_fileName" object="${reporter}" z="qsaRttj/oquFP+YPwcUiGEkIbhQ="/>
-        <field:display field="packageName" id="s_org_kew_stringmod_matchconf_Reporter_packageName" object="${reporter}" z="J8ohm75pUmYzSToD2TrBtQXKAug="/>
-        <field:display field="className" id="s_org_kew_stringmod_matchconf_Reporter_className" object="${reporter}" z="L2HyNMCiDExUXKy3dXWr3RfT8hU="/>
-        <field:display field="params" id="s_org_kew_stringmod_matchconf_Reporter_params" object="${reporter}" z="/NQwHfzUbs7WJEXZLfItkbQ3mPg="/>
-        <field:display field="config" id="s_org_kew_stringmod_matchconf_Reporter_config" object="${reporter}" z="uQfQbjjHQNYColg40Wk0AD+yi4Y="/>
+    <page:show id="ps_org_kew_rmf_matchconf_Reporter" object="${reporter}" path="/reporters" z="ocEV+Db+qwvcyevCM9+5OBpBu6U=">
+        <field:display field="name" id="s_org_kew_rmf_matchconf_Reporter_name" object="${reporter}" z="60g3gxlS4VZACcEMuxzhYXMWmSI="/>
+        <field:display field="delimiter" id="s_org_kew_rmf_matchconf_Reporter_delimiter" object="${reporter}" z="i/c5nYeOCD+5EGJmF6zTPSG8n3s="/>
+        <field:display field="idDelimiter" id="s_org_kew_rmf_matchconf_Reporter_idDelimiter" object="${reporter}" z="33PA9ha9imppXPoEgZsjFW4die8="/>
+        <field:display field="fileName" id="s_org_kew_rmf_matchconf_Reporter_fileName" object="${reporter}" z="qsaRttj/oquFP+YPwcUiGEkIbhQ="/>
+        <field:display field="packageName" id="s_org_kew_rmf_matchconf_Reporter_packageName" object="${reporter}" z="J8ohm75pUmYzSToD2TrBtQXKAug="/>
+        <field:display field="className" id="s_org_kew_rmf_matchconf_Reporter_className" object="${reporter}" z="L2HyNMCiDExUXKy3dXWr3RfT8hU="/>
+        <field:display field="params" id="s_org_kew_rmf_matchconf_Reporter_params" object="${reporter}" z="/NQwHfzUbs7WJEXZLfItkbQ3mPg="/>
+        <field:display field="config" id="s_org_kew_rmf_matchconf_Reporter_config" object="${reporter}" z="uQfQbjjHQNYColg40Wk0AD+yi4Y="/>
     </page:show>
 </div>

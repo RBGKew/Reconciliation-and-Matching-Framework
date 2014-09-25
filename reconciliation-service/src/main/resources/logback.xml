@@ -55,12 +55,12 @@
 	</appender>
 
 	<!-- Perf4J Loggers -->
-	<logger name="org.kew.reconciliation.TimingLogger" additivity="false">
+	<logger name="org.kew.rmf.reconciliation.TimingLogger" additivity="false">
 		<level value="info"/>
 		<appender-ref ref="CoalescingOtherStatistics"/>
 		<appender-ref ref="greenStdout"/>
 	</logger>
-	<logger name="org.kew.reconciliation.QueryTimingLogger" additivity="false">
+	<logger name="org.kew.rmf.reconciliation.QueryTimingLogger" additivity="false">
 		<level value="info"/>
 		<appender-ref ref="CoalescingQueryStatistics"/>
 		<appender-ref ref="greenStdout"/>
@@ -68,8 +68,8 @@
 	</logger>
 
 	<!-- Other loggers -->
-	<logger name="org.kew.reconciliation" level="debug"/>
-	<logger name="org.kew.stringmod.dedupl.lucene.LuceneDataLoader" level="debug"/>
+	<logger name="org.kew.rmf.reconciliation" level="debug"/>
+	<logger name="org.kew.rmf.core.lucene.LuceneDataLoader" level="debug"/>
 	<logger name="com.mysql" level="warn"/>
 	<logger name="MySQL" level="warn"/>
 

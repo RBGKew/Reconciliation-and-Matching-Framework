@@ -1,14 +1,14 @@
 // Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-06-14 10:00:53
-project --topLevelPackage org.kew.stringmod.matchconf --projectName MatchConf --java 7 --packaging JAR
+project --topLevelPackage org.kew.rmf.matchconf --projectName MatchConf --java 7 --packaging JAR
 jpa setup --database HYPERSONIC_PERSISTENT --provider HIBERNATE 
-entity jpa --class org.kew.stringmod.matchconf.Bot
+entity jpa --class org.kew.rmf.matchconf.Bot
 field string --fieldName name 
 field string --fieldName packageName 
 field string --fieldName className 
 field string --fieldName params
 field set --fieldName composedBy --type Bot --cardinality ONE_TO_MANY --mappedBy composer
 field reference --fieldName composer --type Bot --cardinality MANY_TO_ONE
-entity jpa --class org.kew.stringmod.matchconf.Wire
+entity jpa --class org.kew.rmf.matchconf.Wire
 field string columnName
 field number columnIndex --type java.lang.Integer
 field reference --fieldName matcher --type Bot
@@ -20,10 +20,10 @@ field boolean blanksMatch=false
 field boolean indexOriginal=false
 field boolean indexInitial=false
 field boolean useWildcard=false
-entity jpa --class org.kew.stringmod.matchconf.Configuration
+entity jpa --class org.kew.rmf.matchconf.Configuration
 field string --fieldName workDirPath
 field string --fieldName inputFileName="input.csv"
-field string --fieldName packageName="org.kew.stringmod.matchconf.configuration"
+field string --fieldName packageName="org.kew.rmf.matchconf.configuration"
 field string --fieldName className="DeduplicationConfiguration"
 field set --fieldName wiring --type Wire --cardinality ONE_TO_MANY --mappedBy configuration
 field string inputFileEncoding="UTF8"
@@ -35,7 +35,7 @@ field number assessReportFrequency=100 --type java.lang.Number
 field string sortFieldName="id"
 field reference --class Wire --fieldName configuration --type Configuration --cardinality MANY_TO_ONE
 web mvc setup 
-web mvc all --package org.kew.stringmod.matchconf.web
+web mvc all --package org.kew.rmf.matchconf.web
 // script replay.roo
 // Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-06-14 10:11:41
 // Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-06-14 10:11:56
@@ -131,8 +131,8 @@ finder list --class ~.Configuration
 finder add --finderName findConfigurationsByNameEquals --class Configuration
 // Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-06-20 15:12:20
 // Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-06-20 15:13:37
-controller all --package org.kew.stringmod.matchconf.web
-web mvc all --package org.kew.stringmod.matchconf.web
+controller all --package org.kew.rmf.matchconf.web
+web mvc all --package org.kew.rmf.matchconf.web
 // Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-06-20 15:18:37
 // Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-06-20 15:18:50
 // Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-06-20 15:19:17
@@ -201,11 +201,11 @@ field string --fieldName params --class LuceneReporter
 field string --fieldName packageName
 field string --fieldName className
 // Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-07-25 08:35:14
-web mvc all --package org.kew.stringmod.matchconf.web
+web mvc all --package org.kew.rmf.matchconf.web
 // Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-07-26 09:58:20
 // Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-08-02 10:15:57
 // Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-08-06 14:08:32
-web mvc all --package org.kew.stringmod.matchconf.web
+web mvc all --package org.kew.rmf.matchconf.web
 // Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-08-07 17:35:54
 // Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-08-08 17:08:32
 // Spring Roo 1.2.4.BUILD-SNAPSHOT [rev a41c4d1] log opened at 2013-08-08 17:13:44

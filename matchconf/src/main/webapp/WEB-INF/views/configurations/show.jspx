@@ -2,22 +2,22 @@
 <div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
-    <page:show id="ps_org_kew_stringmod_matchconf_Configuration" object="${configuration}" path="/configurations" z="86eiB2q/5j9WI2muuqtzPX3oRHc=">
-        <field:display field="name" id="s_org_kew_stringmod_matchconf_Configuration_name" object="${configuration}" z="WOnNyqTxZRe6iDabAzF5Gs1mriI="/>
-        <field:display field="workDirPath" id="s_org_kew_stringmod_matchconf_Configuration_workDirPath" object="${configuration}" z="1AQDkysrS9oRIyvElp7cnVeumDE="/>
-        <field:display field="queryFileName" id="s_org_kew_stringmod_matchconf_Configuration_queryFileName" object="${configuration}" z="FuoVTxKxI7blnMHZTqNjRNk2w7Q="/>
-        <field:display field="queryFileEncoding" id="s_org_kew_stringmod_matchconf_Configuration_queryFileEncoding" object="${configuration}" z="N1nDukWngTvu/N0WaceVJpvozwI="/>
-        <field:display field="queryFileDelimiter" id="s_org_kew_stringmod_matchconf_Configuration_queryFileDelimiter" object="${configuration}" z="af9q++2Zw11RpOmH1rC7qSRxVA8="/>
-        <field:display field="recordFilter" id="s_org_kew_stringmod_matchconf_Configuration_recordFilter" object="${configuration}" z="Ms6rkO1IajCxoSQyhfT68xDJHIY="/>
-        <field:display field="nextConfig" id="s_org_kew_stringmod_matchconf_Configuration_nextConfig" object="${configuration}" z="vUki1M5YUZR6WmZoQkGT7xvHafs="/>
-        <field:display field="authorityFileName" id="s_org_kew_stringmod_matchconf_Configuration_authorityFileName" object="${configuration}" z="0c0nMbdFE0q0CfA7UrP8LTO23fs="/>
-        <field:display field="authorityFileEncoding" id="s_org_kew_stringmod_matchconf_Configuration_authorityFileEncoding" object="${configuration}" z="OV9/Coea6fEuBs6PdXydg1+NvzY="/>
-        <field:display field="authorityFileDelimiter" id="s_org_kew_stringmod_matchconf_Configuration_authorityFileDelimiter" object="${configuration}" z="B8yWuDsJjL6T+IRa0eWbgEp6lwg="/>
-        <field:display field="packageName" id="s_org_kew_stringmod_matchconf_Configuration_packageName" object="${configuration}" z="nrL0isD6QuMXLKnXsYifWi6GQlg="/>
-        <field:display field="className" id="s_org_kew_stringmod_matchconf_Configuration_className" object="${configuration}" z="JzyJwrTXTp1ixB4ZY6rxBe6d9S8="/>
-        <field:display field="loadReportFrequency" id="s_org_kew_stringmod_matchconf_Configuration_loadReportFrequency" object="${configuration}" z="ysk7qRtYp9P5K3hPjhPoasNK8jI="/>
-        <field:display field="assessReportFrequency" id="s_org_kew_stringmod_matchconf_Configuration_assessReportFrequency" object="${configuration}" z="yR6uxowj0iJHOSkutWfTaQCf/r0="/>
-        <field:display field="sortFieldName" id="s_org_kew_stringmod_matchconf_Configuration_sort_field_name" object="${configuration}" z="ZL4MofedVy7lxeP1KvPkxM/J11M="/>
-        <field:display field="maxSearchResults" id="s_org_kew_stringmod_matchconf_Configuration_maxSearchResults" object="${configuration}" z="eg1yK2lposmOFxjY9dn1A3qjKH4="/>
+    <page:show id="ps_org_kew_rmf_matchconf_Configuration" object="${configuration}" path="/configurations" z="86eiB2q/5j9WI2muuqtzPX3oRHc=">
+        <field:display field="name" id="s_org_kew_rmf_matchconf_Configuration_name" object="${configuration}" z="WOnNyqTxZRe6iDabAzF5Gs1mriI="/>
+        <field:display field="workDirPath" id="s_org_kew_rmf_matchconf_Configuration_workDirPath" object="${configuration}" z="1AQDkysrS9oRIyvElp7cnVeumDE="/>
+        <field:display field="queryFileName" id="s_org_kew_rmf_matchconf_Configuration_queryFileName" object="${configuration}" z="FuoVTxKxI7blnMHZTqNjRNk2w7Q="/>
+        <field:display field="queryFileEncoding" id="s_org_kew_rmf_matchconf_Configuration_queryFileEncoding" object="${configuration}" z="N1nDukWngTvu/N0WaceVJpvozwI="/>
+        <field:display field="queryFileDelimiter" id="s_org_kew_rmf_matchconf_Configuration_queryFileDelimiter" object="${configuration}" z="af9q++2Zw11RpOmH1rC7qSRxVA8="/>
+        <field:display field="recordFilter" id="s_org_kew_rmf_matchconf_Configuration_recordFilter" object="${configuration}" z="Ms6rkO1IajCxoSQyhfT68xDJHIY="/>
+        <field:display field="nextConfig" id="s_org_kew_rmf_matchconf_Configuration_nextConfig" object="${configuration}" z="vUki1M5YUZR6WmZoQkGT7xvHafs="/>
+        <field:display field="authorityFileName" id="s_org_kew_rmf_matchconf_Configuration_authorityFileName" object="${configuration}" z="0c0nMbdFE0q0CfA7UrP8LTO23fs="/>
+        <field:display field="authorityFileEncoding" id="s_org_kew_rmf_matchconf_Configuration_authorityFileEncoding" object="${configuration}" z="OV9/Coea6fEuBs6PdXydg1+NvzY="/>
+        <field:display field="authorityFileDelimiter" id="s_org_kew_rmf_matchconf_Configuration_authorityFileDelimiter" object="${configuration}" z="B8yWuDsJjL6T+IRa0eWbgEp6lwg="/>
+        <field:display field="packageName" id="s_org_kew_rmf_matchconf_Configuration_packageName" object="${configuration}" z="nrL0isD6QuMXLKnXsYifWi6GQlg="/>
+        <field:display field="className" id="s_org_kew_rmf_matchconf_Configuration_className" object="${configuration}" z="JzyJwrTXTp1ixB4ZY6rxBe6d9S8="/>
+        <field:display field="loadReportFrequency" id="s_org_kew_rmf_matchconf_Configuration_loadReportFrequency" object="${configuration}" z="ysk7qRtYp9P5K3hPjhPoasNK8jI="/>
+        <field:display field="assessReportFrequency" id="s_org_kew_rmf_matchconf_Configuration_assessReportFrequency" object="${configuration}" z="yR6uxowj0iJHOSkutWfTaQCf/r0="/>
+        <field:display field="sortFieldName" id="s_org_kew_rmf_matchconf_Configuration_sort_field_name" object="${configuration}" z="ZL4MofedVy7lxeP1KvPkxM/J11M="/>
+        <field:display field="maxSearchResults" id="s_org_kew_rmf_matchconf_Configuration_maxSearchResults" object="${configuration}" z="eg1yK2lposmOFxjY9dn1A3qjKH4="/>
     </page:show>
 </div>

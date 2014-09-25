@@ -9,6 +9,11 @@
 	<artifactId>reconciliation-service</artifactId>
 	<packaging>war</packaging>
 
+	<name>Reconciliation Service</name>
+	<description>
+		Implementation of an OpenRefine Reconciliation Service, exposing premade RMF configurations.
+	</description>
+
 	<properties>
 		<commons-dbcp.version>2.0.1</commons-dbcp.version>
 		<mysql.version>5.1.31</mysql.version>
@@ -21,7 +26,7 @@
 
 		<dependency>
 			<groupId>org.kew.rmf</groupId>
-			<artifactId>deduplicator</artifactId>
+			<artifactId>rmf-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.kew.rmf</groupId>

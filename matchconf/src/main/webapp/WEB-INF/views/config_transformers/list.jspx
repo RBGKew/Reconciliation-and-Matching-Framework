@@ -5,10 +5,10 @@
 
     <br/> <div id="config-link">for configuration: <a href="/MatchConf/${ configType }_configs/${ configName }">${ configName }</a></div> <br/>
 
-    <page:list id="pl_org_kew_stringmod_matchconf_Transformer" items="${transformers}" z="NKGWQsy2Zjz2O0wsV6cSgwN25LY=">
-        <table:table data="${transformers}" id="l_org_kew_stringmod_matchconf_Transformer" path="/${ configType }_configs/${ configName }/transformers" z="TL1w2oH+CaTlj1F13L0E9F8TF7w=">
-            <table:column id="c_org_kew_stringmod_matchconf_Transformer_name" property="name" z="IL+pRledm5Ed7uhhud8XN3ra+nA="/>
-            <table:column id="c_org_kew_stringmod_matchconf_Transformer_params" property="params" z="8MbPOMPCX0ZgbhStIgtWRlmfA/0="/>
+    <page:list id="pl_org_kew_rmf_matchconf_Transformer" items="${transformers}" z="NKGWQsy2Zjz2O0wsV6cSgwN25LY=">
+        <table:table data="${transformers}" id="l_org_kew_rmf_matchconf_Transformer" path="/${ configType }_configs/${ configName }/transformers" z="TL1w2oH+CaTlj1F13L0E9F8TF7w=">
+            <table:column id="c_org_kew_rmf_matchconf_Transformer_name" property="name" z="IL+pRledm5Ed7uhhud8XN3ra+nA="/>
+            <table:column id="c_org_kew_rmf_matchconf_Transformer_params" property="params" z="8MbPOMPCX0ZgbhStIgtWRlmfA/0="/>
         </table:table>
     </page:list>
 </div>

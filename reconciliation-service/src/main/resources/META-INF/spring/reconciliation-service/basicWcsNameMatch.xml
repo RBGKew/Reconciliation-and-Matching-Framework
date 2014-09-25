@@ -24,10 +24,10 @@
 	<bean id="stripExAuthor" class="org.kew.rmf.transformers.authors.StripExAuthorTransformer"/>
 	<bean id="shrunkAuthor" class="org.kew.rmf.transformers.authors.ShrunkAuthors" p:shrinkTo="4"/>
 
-	<bean id="exactMatch" class="org.kew.stringmod.dedupl.matchers.ExactMatcher" p:blanksMatch="false" />
-	<bean id="exactMatchBlanksOk" class="org.kew.stringmod.dedupl.matchers.ExactMatcher" p:blanksMatch="true" />
+	<bean id="exactMatch" class="org.kew.rmf.matchers.ExactMatcher" p:blanksMatch="false" />
+	<bean id="exactMatchBlanksOk" class="org.kew.rmf.matchers.ExactMatcher" p:blanksMatch="true" />
 
-	<bean id="authorCompositeMatcher" class="org.kew.stringmod.dedupl.matchers.CompositeAnyMatcher">
+	<bean id="authorCompositeMatcher" class="org.kew.rmf.matchers.CompositeAnyMatcher">
 		<property name="matchers">
 			<util:list id="comp1">
 				<ref bean="exactMatchBlanksOk" />
@@ -36,22 +36,22 @@
 		</property>
 	</bean>
 
-	<bean id="alwaysMatch" class="org.kew.stringmod.dedupl.matchers.AlwaysMatchingMatcher"/>
-	<bean id="neverMatch" class="org.kew.stringmod.dedupl.matchers.NeverMatchingMatcher"/>
-	<bean id="ldMatch" class="org.kew.stringmod.dedupl.matchers.LevenshteinMatcher" p:maxDistance="1"/>
-	<bean id="ldMatchAuthor" class="org.kew.stringmod.dedupl.matchers.LevenshteinMatcher" p:maxDistance="2"/>
+	<bean id="alwaysMatch" class="org.kew.rmf.matchers.AlwaysMatchingMatcher"/>
+	<bean id="neverMatch" class="org.kew.rmf.matchers.NeverMatchingMatcher"/>
+	<bean id="ldMatch" class="org.kew.rmf.matchers.LevenshteinMatcher" p:maxDistance="1"/>
+	<bean id="ldMatchAuthor" class="org.kew.rmf.matchers.LevenshteinMatcher" p:maxDistance="2"/>
 
-	<bean id="ngramMatchAuthors" class="org.kew.stringmod.dedupl.matchers.NGramMatcher" p:nGramLength="2" p:minRatio="0.7"/>
+	<bean id="ngramMatchAuthors" class="org.kew.rmf.matchers.NGramMatcher" p:nGramLength="2" p:minRatio="0.7"/>
 
 	<util:list id="reporters"/>
 
 	<util:list id="columnProperties">
-		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+		<bean class="org.kew.rmf.core.configuration.Property"
 			p:queryColumnName="genus" p:authorityColumnName="genus"
 			p:useInSelect="true" p:matcher-ref="exactMatch"
 			p:addOriginalAuthorityValue="true" p:addOriginalQueryValue="true">
 		</bean>
-		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+		<bean class="org.kew.rmf.core.configuration.Property"
 			p:queryColumnName="species" p:authorityColumnName="species"
 			p:indexInitial="true"
 			p:useInSelect="true" p:matcher-ref="ldMatch"
@@ -67,7 +67,7 @@
 				</util:list>
 			</property>
 		</bean>
-		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+		<bean class="org.kew.rmf.core.configuration.Property"
 			p:queryColumnName="authors" p:authorityColumnName="b_authors"
 			p:useInSelect="false" p:matcher-ref="authorCompositeMatcher"
 			p:addOriginalAuthorityValue="true" p:addOriginalQueryValue="true">
@@ -94,7 +94,7 @@
 		</bean>
 	</util:list>
 
-	<bean id="config" class="org.kew.stringmod.dedupl.configuration.MatchConfiguration"
+	<bean id="config" class="org.kew.rmf.core.configuration.MatchConfiguration"
 		p:name="BasicWcsNameMatch"
 		p:authorityFile-ref="authorityfile"
 		p:authorityFileEncoding="UTF8"

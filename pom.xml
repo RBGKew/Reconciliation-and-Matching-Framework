@@ -6,10 +6,10 @@
 	<version>0.2.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>String Matching and Entity Reconciliation Service</name>
+	<name>Reconciliation and Matching Framework</name>
 	<url>http://www.kew.org</url>
 	<description>
-		The Entity Reconciliation and String Matching Framework contains string transformations and matchers, both general and specific to taxonomy,
+		The Reconciliation and Matching Framework contains string transformations and matchers, both general and specific to taxonomy,
 		a framework to link these together to find matches between strings, a tool to produce configurations
 		and a webservice for reconciling against configured datasources.
 	</description>
@@ -20,7 +20,7 @@
 	</organization>
 
 	<modules>
-		<module>deduplicator</module>
+		<module>rmf-core</module>
 		<module>matchconf</module>
 		<module>reconciliation-service-model</module>
 		<module>reconciliation-service</module>
@@ -78,7 +78,7 @@
 		<dependencies>
 			<dependency>
 				<groupId>org.kew.rmf</groupId>
-				<artifactId>deduplicator</artifactId>
+				<artifactId>rmf-core</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

@@ -8,6 +8,6 @@
 	<context:annotation-config />
 
 	<!-- @Configuration classes as beans -->
-	<bean class="org.kew.reconciliation.config.CoreConfig" />
-	<bean class="org.kew.reconciliation.config.MvcConfig" />
+	<bean class="org.kew.rmf.reconciliation.config.CoreConfig" />
+	<bean class="org.kew.rmf.reconciliation.config.MvcConfig" />
 </beans>

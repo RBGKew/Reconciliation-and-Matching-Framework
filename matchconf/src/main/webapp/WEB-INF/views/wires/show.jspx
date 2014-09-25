@@ -2,20 +2,20 @@
 <div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
-    <page:show id="ps_org_kew_stringmod_matchconf_Wire" object="${wire}" path="/wires" z="m6zPW0bca3LmGtMQC+JfXSFQtac=">
-        <field:display field="queryColumnName" id="s_org_kew_stringmod_matchconf_Wire_queryColumnName" object="${wire}" z="/zOfJva/O7VC7oXLFpaCiDTCE40="/>
-        <field:display field="authorityColumnName" id="s_org_kew_stringmod_matchconf_Wire_authorityColumnName" object="${wire}" z="fXg1FkNtu8JTas+wxp5HdBUg8Nw="/>
-        <field:display field="useInSelect" id="s_org_kew_stringmod_matchconf_Wire_useInSelect" object="${wire}" z="nnBXkZdzu/OAFOZYGveoqeBqFbk="/>
-        <field:display field="useInNegativeSelect" id="s_org_kew_stringmod_matchconf_Wire_useInNegativeSelect" object="${wire}" z="PkbyRQp0NaPMO0IFktVW54iAXKc="/>
-        <field:display field="indexLength" id="s_org_kew_stringmod_matchconf_Wire_indexLength" object="${wire}" z="iPNqJF6mo0HmxH6RzmeIoJb4JqQ="/>
-        <field:display field="blanksMatch" id="s_org_kew_stringmod_matchconf_Wire_blanksMatch" object="${wire}" z="/ulCfTyIo6Kmpv8BgVkx2djmzv4="/>
-        <field:display field="addOriginalQueryValue" id="s_org_kew_stringmod_matchconf_Wire_addOriginalQueryValue" object="${wire}" z="V3mzZbtkQ2/id65WCjeeIKK3ek8="/>
-        <field:display field="addOriginalAuthorityValue" id="s_org_kew_stringmod_matchconf_Wire_addOriginalAuthorityValue" object="${wire}" z="vvEfY98ADEhb+zFrXh05cawIah8="/>
-        <field:display field="addTransformedQueryValue" id="s_org_kew_stringmod_matchconf_Wire_addTransformedQueryValue" object="${wire}" z="CjZ57swwOl17nPzQ29JkmBNPhsI="/>
-        <field:display field="addTransformedAuthorityValue" id="s_org_kew_stringmod_matchconf_Wire_addTransformedAuthorityValue" object="${wire}" z="AbJdU7WZijHK21R81ORKCVkq0xA="/>
-        <field:display field="indexInitial" id="s_org_kew_stringmod_matchconf_Wire_indexInitial" object="${wire}" z="qhEuwwbF3McEhp33m0sLOAInpGI="/>
-        <field:display field="useWildcard" id="s_org_kew_stringmod_matchconf_Wire_useWildcard" object="${wire}" z="1RtTIQVVUgRJc3KycUUQjsmo0cE="/>
-        <field:display field="matcher" id="s_org_kew_stringmod_matchconf_Wire_matcher" object="${wire}" z="OQk1ojgiwFWeYiebgryctA/xCig="/>
-        <field:display field="configuration" id="s_org_kew_stringmod_matchconf_Wire_configuration" object="${wire}" z="VBB+YVOAcqGD18xe8i16gbmY7eQ="/>
+    <page:show id="ps_org_kew_rmf_matchconf_Wire" object="${wire}" path="/wires" z="m6zPW0bca3LmGtMQC+JfXSFQtac=">
+        <field:display field="queryColumnName" id="s_org_kew_rmf_matchconf_Wire_queryColumnName" object="${wire}" z="/zOfJva/O7VC7oXLFpaCiDTCE40="/>
+        <field:display field="authorityColumnName" id="s_org_kew_rmf_matchconf_Wire_authorityColumnName" object="${wire}" z="fXg1FkNtu8JTas+wxp5HdBUg8Nw="/>
+        <field:display field="useInSelect" id="s_org_kew_rmf_matchconf_Wire_useInSelect" object="${wire}" z="nnBXkZdzu/OAFOZYGveoqeBqFbk="/>
+        <field:display field="useInNegativeSelect" id="s_org_kew_rmf_matchconf_Wire_useInNegativeSelect" object="${wire}" z="PkbyRQp0NaPMO0IFktVW54iAXKc="/>
+        <field:display field="indexLength" id="s_org_kew_rmf_matchconf_Wire_indexLength" object="${wire}" z="iPNqJF6mo0HmxH6RzmeIoJb4JqQ="/>
+        <field:display field="blanksMatch" id="s_org_kew_rmf_matchconf_Wire_blanksMatch" object="${wire}" z="/ulCfTyIo6Kmpv8BgVkx2djmzv4="/>
+        <field:display field="addOriginalQueryValue" id="s_org_kew_rmf_matchconf_Wire_addOriginalQueryValue" object="${wire}" z="V3mzZbtkQ2/id65WCjeeIKK3ek8="/>
+        <field:display field="addOriginalAuthorityValue" id="s_org_kew_rmf_matchconf_Wire_addOriginalAuthorityValue" object="${wire}" z="vvEfY98ADEhb+zFrXh05cawIah8="/>
+        <field:display field="addTransformedQueryValue" id="s_org_kew_rmf_matchconf_Wire_addTransformedQueryValue" object="${wire}" z="CjZ57swwOl17nPzQ29JkmBNPhsI="/>
+        <field:display field="addTransformedAuthorityValue" id="s_org_kew_rmf_matchconf_Wire_addTransformedAuthorityValue" object="${wire}" z="AbJdU7WZijHK21R81ORKCVkq0xA="/>
+        <field:display field="indexInitial" id="s_org_kew_rmf_matchconf_Wire_indexInitial" object="${wire}" z="qhEuwwbF3McEhp33m0sLOAInpGI="/>
+        <field:display field="useWildcard" id="s_org_kew_rmf_matchconf_Wire_useWildcard" object="${wire}" z="1RtTIQVVUgRJc3KycUUQjsmo0cE="/>
+        <field:display field="matcher" id="s_org_kew_rmf_matchconf_Wire_matcher" object="${wire}" z="OQk1ojgiwFWeYiebgryctA/xCig="/>
+        <field:display field="configuration" id="s_org_kew_rmf_matchconf_Wire_configuration" object="${wire}" z="VBB+YVOAcqGD18xe8i16gbmY7eQ="/>
     </page:show>
 </div>

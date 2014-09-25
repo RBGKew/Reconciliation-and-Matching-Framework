@@ -1,25 +1,29 @@
-# deduplicator-framework
+# Reconciliation and Matching Framework (RMF)
 
-This is a multi-module maven project. It consists of:
+This is a multi-module Maven project.  It consists of:
 
 * the deduplicator (incl. the CoreApp): a command-line tool for deduplication
-  and string matching task
-* match-conf: a wrapper around the app providing a UI with (persistent)
+  and string matching tasks
+* matchconf: a wrapper around the app providing a UI with (persistent)
   configuration functionality
-* stringmodlib: a set of string modification packages meant for easy re-use
-  as well by other apps
-* stringmodutils: several classes re-used by more than one submodule
+* reconciliation-service: a wrapper around the app exposing premade match
+  configurations as [OpenRefine](http://www.openrefine.org/) reconciliation
+  services
+* reconciliation-service-model: domain objects for the reconciliation service.
 
-## testing
+## Testing
 mvn clean test
 
-## local deployment of match-conf
+## Local deployment of matchconf
 The following starts a local server on port 8080.
-[in the root directory of deduplicator-framework:] mvn clean install
-cd matchconf
-mvn jetty:deploy-war
 
-## detailed information regarding the app and match-conf
+# `mvn clean install`
+# `cd matchconf`
+# `mvn jetty:deploy-war`
+
+## Detailed information
 Read in the submodules:
-- deduplicator-framework-app/readme.md
-- matchconf/readme.md
+
+* [deduplicator/readme.md](deduplicator/readme.md)
+* [matchconf/readme.md](matchconf/readme.md)
+* [reconciliation-service/readme.md](reconciliation-service/readme.md)

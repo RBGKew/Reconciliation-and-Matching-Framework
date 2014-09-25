@@ -103,7 +103,7 @@
 		<property name="removeAbandonedTimeout" value="1200" />
 		<property name="removeAbandonedOnMaintenance" value="true" />
 	</bean>
-	<bean id="authorityFromIpniDatabase" class="org.kew.reconciliation.service.DatabaseCursorRecordReader">
+	<bean id="authorityFromIpniDatabase" class="org.kew.rmf.reconciliation.service.DatabaseCursorRecordReader">
 		<property name="dataSource" ref="ipniFlatDatabase"/>
 		<property name="sql" value="SELECT id, rank, COALESCE(genus, COALESCE(infra_family, family)) AS epithet_1, COALESCE(infra_genus, species) AS epithet_2, infraspecies AS epithet_3, basionym_author, publishing_author, full_name FROM ipni_flat_topcopy_notsuppressed ${ipniflat.testWhere:};"/>
 		<property name="fetchSize" value="150000"/>
@@ -139,16 +139,16 @@
 	</bean>
 
 	<!-- Matchers -->
-	<bean id="exactMatch" class="org.kew.stringmod.dedupl.matchers.ExactMatcher" p:blanksMatch="false" />
-	<bean id="commonTokensMatcher" class="org.kew.stringmod.dedupl.matchers.CommonTokensMatcher" p:minRatio="0.5"/>
-	<bean id="alwaysMatch" class="org.kew.stringmod.dedupl.matchers.AlwaysMatchingMatcher"/>
-	<bean id="ld1Match" class="org.kew.stringmod.dedupl.matchers.LevenshteinMatcher" p:maxDistance="1"/>
+	<bean id="exactMatch" class="org.kew.rmf.matchers.ExactMatcher" p:blanksMatch="false" />
+	<bean id="commonTokensMatcher" class="org.kew.rmf.matchers.CommonTokensMatcher" p:minRatio="0.5"/>
+	<bean id="alwaysMatch" class="org.kew.rmf.matchers.AlwaysMatchingMatcher"/>
+	<bean id="ld1Match" class="org.kew.rmf.matchers.LevenshteinMatcher" p:maxDistance="1"/>
 
 	<util:list id="reporters"/>
 
 	<util:list id="columnProperties">
 		<!-- First epithet -->
-		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+		<bean class="org.kew.rmf.core.configuration.Property"
 			p:queryColumnName="epithet_1"
 			p:authorityColumnName="epithet_1"
 			p:useInSelect="true"
@@ -175,7 +175,7 @@
 		</bean>
 
 		<!-- Second epithet -->
-		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+		<bean class="org.kew.rmf.core.configuration.Property"
 			p:queryColumnName="epithet_2"
 			p:authorityColumnName="epithet_2"
 			p:indexInitial="true"
@@ -203,7 +203,7 @@
 		</bean>
 
 		<!-- Third epithet -->
-		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+		<bean class="org.kew.rmf.core.configuration.Property"
 			p:queryColumnName="epithet_3"
 			p:authorityColumnName="epithet_3"
 			p:indexInitial="true"
@@ -231,7 +231,7 @@
 		</bean>
 
 		<!-- Basionym author -->
-		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+		<bean class="org.kew.rmf.core.configuration.Property"
 			p:queryColumnName="basionym_author"
 			p:authorityColumnName="basionym_author"
 			p:useInSelect="false"
@@ -259,7 +259,7 @@
 		</bean>
 
 		<!-- Publishing author -->
-		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+		<bean class="org.kew.rmf.core.configuration.Property"
 			p:queryColumnName="publishing_author"
 			p:authorityColumnName="publishing_author"
 			p:useInSelect="false"
@@ -295,7 +295,7 @@
 		-->
 
 		<!-- Full name, for output -->
-		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+		<bean class="org.kew.rmf.core.configuration.Property"
 			p:authorityColumnName="full_name"
 			p:queryColumnName="full_name"
 			p:useInSelect="false"
@@ -306,9 +306,9 @@
 		</bean>
 	</util:list>
 
-	<bean id="scientificNameToPropertiesConverter" class="org.kew.reconciliation.queryextractor.ScientificNameToPropertiesConverter" />
+	<bean id="scientificNameToPropertiesConverter" class="org.kew.rmf.reconciliation.queryextractor.ScientificNameToPropertiesConverter" />
 
-	<bean id="reconciliationResultFormat" class="org.kew.reconciliation.service.resultformatter.ReconciliationResultPropertyFormatter"
+	<bean id="reconciliationResultFormat" class="org.kew.rmf.reconciliation.service.resultformatter.ReconciliationResultPropertyFormatter"
 		p:format="%s"
 		p:stripRepeats=" ">
 		<property name="properties">
@@ -318,7 +318,7 @@
 		</property>
 	</bean>
 
-	<bean id="config" class="org.kew.stringmod.dedupl.configuration.ReconciliationServiceConfiguration"
+	<bean id="config" class="org.kew.rmf.core.configuration.ReconciliationServiceConfiguration"
 		p:name="IpniName"
 		p:description-ref="description"
 		p:authorityRecords-ref="authorityFromIpniDatabase"
@@ -343,7 +343,7 @@
 		p:suggestFlyoutUrl="http://ipni.org/ipni/idPlantNameSearch.do?id={id}&amp;reconcileSuggest">
 		<property name="defaultTypes">
 			<util:list id="2">
-				<bean class="org.kew.reconciliation.refine.domain.metadata.Type"
+				<bean class="org.kew.rmf.refine.domain.metadata.Type"
 					p:id="/biology/organism_classification/scientific_name"
 					p:name="Scientific name"/>
 			</util:list>

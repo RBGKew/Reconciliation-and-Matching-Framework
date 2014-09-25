@@ -5,11 +5,11 @@
 
     <br/> <div id="config-link">for configuration: <a href="/MatchConf/${ configType }_configs/${ configName }">${ configName }</a></div> <br/>
 
-    <form:create id="fc_org_kew_stringmod_matchconf_Transformer" modelAttribute="transformer" path="/${ configType }_configs/${ configName }/transformers" render="${empty dependencies}" z="Ta/2PoCdwTyqf+kcjIF3ijOnM+0=">
-        <field:input field="name" id="c_org_kew_stringmod_matchconf_Transformer_name" z="xMjizgy7wf9jBszC7omJ8cp84os="/>
-        <field:input field="packageName" id="c_org_kew_stringmod_matchconf_Transformer_packageName" z="qET4WRKkmsVACu40DvrpPogAsSM="/>
-        <field:input field="className" id="c_org_kew_stringmod_matchconf_Transformer_className" z="29dGh8lQJYpA2TsN3nNQpJXh4AE="/>
-        <field:input field="params" id="c_org_kew_stringmod_matchconf_Transformer_params" z="KxxihXMDX1VfJwcKM9PiBDb3LtU="/>
+    <form:create id="fc_org_kew_rmf_matchconf_Transformer" modelAttribute="transformer" path="/${ configType }_configs/${ configName }/transformers" render="${empty dependencies}" z="Ta/2PoCdwTyqf+kcjIF3ijOnM+0=">
+        <field:input field="name" id="c_org_kew_rmf_matchconf_Transformer_name" z="xMjizgy7wf9jBszC7omJ8cp84os="/>
+        <field:input field="packageName" id="c_org_kew_rmf_matchconf_Transformer_packageName" z="qET4WRKkmsVACu40DvrpPogAsSM="/>
+        <field:input field="className" id="c_org_kew_rmf_matchconf_Transformer_className" z="29dGh8lQJYpA2TsN3nNQpJXh4AE="/>
+        <field:input field="params" id="c_org_kew_rmf_matchconf_Transformer_params" z="KxxihXMDX1VfJwcKM9PiBDb3LtU="/>
     </form:create>
-    <form:dependency dependencies="${dependencies}" id="d_org_kew_stringmod_matchconf_Transformer" render="${not empty dependencies}" z="P9co5SKaTWd5slMdRSBOQfwAGL0="/>
+    <form:dependency dependencies="${dependencies}" id="d_org_kew_rmf_matchconf_Transformer" render="${not empty dependencies}" z="P9co5SKaTWd5slMdRSBOQfwAGL0="/>
 </div>

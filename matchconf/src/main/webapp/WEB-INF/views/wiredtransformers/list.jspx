@@ -2,10 +2,10 @@
 <div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
-    <page:list id="pl_org_kew_stringmod_matchconf_WiredTransformer" items="${wiredtransformers}" z="VuUrDrsm0ANWMH5+8e3CX64e9No=">
-        <table:table data="${wiredtransformers}" id="l_org_kew_stringmod_matchconf_WiredTransformer" path="/wiredtransformers" z="bG0mDlbXyOpvLc3A/LRJGrUCA50=">
-            <table:column id="c_org_kew_stringmod_matchconf_WiredTransformer_rank" property="rank" z="mDt08SM9GooqkdEYeW0yks5J/Do="/>
-            <table:column id="c_org_kew_stringmod_matchconf_WiredTransformer_transformer" property="transformer" z="1Btw0wAzwCaVo1Y4tV46VWCeLnI="/>
+    <page:list id="pl_org_kew_rmf_matchconf_WiredTransformer" items="${wiredtransformers}" z="VuUrDrsm0ANWMH5+8e3CX64e9No=">
+        <table:table data="${wiredtransformers}" id="l_org_kew_rmf_matchconf_WiredTransformer" path="/wiredtransformers" z="bG0mDlbXyOpvLc3A/LRJGrUCA50=">
+            <table:column id="c_org_kew_rmf_matchconf_WiredTransformer_rank" property="rank" z="mDt08SM9GooqkdEYeW0yks5J/Do="/>
+            <table:column id="c_org_kew_rmf_matchconf_WiredTransformer_transformer" property="transformer" z="1Btw0wAzwCaVo1Y4tV46VWCeLnI="/>
         </table:table>
     </page:list>
 </div>

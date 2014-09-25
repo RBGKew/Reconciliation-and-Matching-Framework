@@ -2,12 +2,12 @@
 <div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
-    <page:show id="ps_org_kew_stringmod_matchconf_Matcher" object="${matcher}" path="/matchers" z="BH/6qnFExoVzW7zuWFn30dMMM+U=">
-        <field:display field="name" id="s_org_kew_stringmod_matchconf_Matcher_name" object="${matcher}" z="xW1BjmmBJc4MN7X9ot6zIAc1Row="/>
-        <field:display field="packageName" id="s_org_kew_stringmod_matchconf_Matcher_packageName" object="${matcher}" z="cgb0ZV23FnLDpHw5WNbCwQEcs1Q="/>
-        <field:display field="className" id="s_org_kew_stringmod_matchconf_Matcher_className" object="${matcher}" z="oEhfksnJ9Vgj6SXMy7RyarGmJfs="/>
-        <field:display field="params" id="s_org_kew_stringmod_matchconf_Matcher_params" object="${matcher}" z="4Z/067IoX0woXrUGkNXOMm0l1yk="/>
-        <field:display field="composedBy" id="s_org_kew_stringmod_matchconf_Matcher_composedBy" object="${matcher}" z="s8R9g783vneK7y6bZI+xK4F9XlM="/>
-        <field:display field="configuration" id="s_org_kew_stringmod_matchconf_Matcher_configuration" object="${matcher}" z="ukDHAP0SJgqWptLVMZAPycTJXNc="/>
+    <page:show id="ps_org_kew_rmf_matchconf_Matcher" object="${matcher}" path="/matchers" z="BH/6qnFExoVzW7zuWFn30dMMM+U=">
+        <field:display field="name" id="s_org_kew_rmf_matchconf_Matcher_name" object="${matcher}" z="xW1BjmmBJc4MN7X9ot6zIAc1Row="/>
+        <field:display field="packageName" id="s_org_kew_rmf_matchconf_Matcher_packageName" object="${matcher}" z="cgb0ZV23FnLDpHw5WNbCwQEcs1Q="/>
+        <field:display field="className" id="s_org_kew_rmf_matchconf_Matcher_className" object="${matcher}" z="oEhfksnJ9Vgj6SXMy7RyarGmJfs="/>
+        <field:display field="params" id="s_org_kew_rmf_matchconf_Matcher_params" object="${matcher}" z="4Z/067IoX0woXrUGkNXOMm0l1yk="/>
+        <field:display field="composedBy" id="s_org_kew_rmf_matchconf_Matcher_composedBy" object="${matcher}" z="s8R9g783vneK7y6bZI+xK4F9XlM="/>
+        <field:display field="configuration" id="s_org_kew_rmf_matchconf_Matcher_configuration" object="${matcher}" z="ukDHAP0SJgqWptLVMZAPycTJXNc="/>
     </page:show>
 </div>

@@ -5,8 +5,8 @@
 
     <br/> <div id="config-link">for wire <a href="/MatchConf/${ configType }_configs/${ configName }/wires/${ wireName }">${ wireName }</a> in configuration <a href="/MatchConf/${ configType }_configs/${ configName }">${ configName }</a></div> <br/>
 
-    <page:show id="ps_org_kew_stringmod_matchconf_WiredTransformer" object="${wiredTransformer}" path="/${ configType }_configs/${ configName }/wires/${ wireName }/${ transformerType }_transformers" z="vH4qfbbmsPWW2JKlDD9QCu9fVYY=">
-        <field:display field="rank" id="s_org_kew_stringmod_matchconf_WiredTransformer_rank" object="${wiredTransformer}" z="qZV59sSsHfNXN9IYwcLoihhjBH0="/>
-        <field:display field="transformer" id="s_org_kew_stringmod_matchconf_WiredTransformer_transformer" object="${wiredTransformer}" z="9EAxpzRAoPSkp7i+hQqD7mPwWi8="/>
+    <page:show id="ps_org_kew_rmf_matchconf_WiredTransformer" object="${wiredTransformer}" path="/${ configType }_configs/${ configName }/wires/${ wireName }/${ transformerType }_transformers" z="vH4qfbbmsPWW2JKlDD9QCu9fVYY=">
+        <field:display field="rank" id="s_org_kew_rmf_matchconf_WiredTransformer_rank" object="${wiredTransformer}" z="qZV59sSsHfNXN9IYwcLoihhjBH0="/>
+        <field:display field="transformer" id="s_org_kew_rmf_matchconf_WiredTransformer_transformer" object="${wiredTransformer}" z="9EAxpzRAoPSkp7i+hQqD7mPwWi8="/>
     </page:show>
 </div>

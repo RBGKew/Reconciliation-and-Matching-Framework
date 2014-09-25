@@ -5,7 +5,7 @@
     
     <context:spring-configured/>
     
-    <context:component-scan base-package="org.kew.stringmod.matchconf">
+    <context:component-scan base-package="org.kew.rmf.matchconf">
         <context:exclude-filter expression=".*_Roo_.*" type="regex"/>
         <context:exclude-filter expression="org.springframework.stereotype.Controller" type="annotation"/>
     </context:component-scan>

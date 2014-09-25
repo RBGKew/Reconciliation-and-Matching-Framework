@@ -2,23 +2,23 @@
 <div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
-    <form:create id="fc_org_kew_stringmod_matchconf_Wire" modelAttribute="wire" path="/wires" render="${empty dependencies}" z="EZTNNF/tQ0dSsUzdmGUv1+JGGVI=">
-        <field:input field="queryColumnName" id="c_org_kew_stringmod_matchconf_Wire_queryColumnName" z="/baTmO6IWunlit++4q3fQK/vHzI="/>
-        <field:input field="authorityColumnName" id="c_org_kew_stringmod_matchconf_Wire_authorityColumnName" z="yaDdzWCV5KDBzMe2GQApiHlEUP8="/>
-        <field:checkbox field="useInSelect" id="c_org_kew_stringmod_matchconf_Wire_useInSelect" z="rUwqjkFtZtDPn538dvHFTI8gXp8="/>
-        <field:checkbox field="useInNegativeSelect" id="c_org_kew_stringmod_matchconf_Wire_useInNegativeSelect" z="wYCe2kbp+Jky10PaVKkCBInFKss="/>
-        <field:checkbox field="indexLength" id="c_org_kew_stringmod_matchconf_Wire_indexLength" z="04nB73e4KOBgk218g1bryU7MIFA="/>
-        <field:checkbox field="blanksMatch" id="c_org_kew_stringmod_matchconf_Wire_blanksMatch" z="l4F6JAMcQG+1l6ewiR0c9Iz7bvM="/>
-        <field:checkbox field="addOriginalQueryValue" id="c_org_kew_stringmod_matchconf_Wire_addOriginalQueryValue" z="uX5j3L02nP4R38E1755KdmxCwAk="/>
-        <field:checkbox field="addOriginalAuthorityValue" id="c_org_kew_stringmod_matchconf_Wire_addOriginalAuthorityValue" z="PA0qV7uHoyv2opyVuFd8qgaV5TI="/>
-        <field:checkbox field="addTransformedQueryValue" id="c_org_kew_stringmod_matchconf_Wire_addTransformedQueryValue" z="q0KXY3pZqzGy0OLPRYK5AjQ8ta0="/>
-        <field:checkbox field="addTransformedAuthorityValue" id="c_org_kew_stringmod_matchconf_Wire_addTransformedAuthorityValue" z="0XGcPSUYPdxOgyrAEP50xfnWwqs="/>
-        <field:checkbox field="indexInitial" id="c_org_kew_stringmod_matchconf_Wire_indexInitial" z="EK7Xl60xS8J+FugQqVtMcg+GWdw="/>
-        <field:checkbox field="useWildcard" id="c_org_kew_stringmod_matchconf_Wire_useWildcard" z="4y25mX4i8dsQ1zn71FXI2S8qO6Y="/>
-        <field:select field="matcher" id="c_org_kew_stringmod_matchconf_Wire_matcher" itemValue="id" items="${matchers}" path="/matchers" z="fCKS9ZUjrMg8/OCaqbMf164bTcc="/>
-        <field:select field="configuration" id="c_org_kew_stringmod_matchconf_Wire_configuration" itemValue="id" items="${configurations}" path="/configurations" z="VtMfAVVYz3cR6SE4ZY8jI6kHfJ4="/>
-        <field:simple field="queryTransformers" id="c_org_kew_stringmod_matchconf_Wire_queryTransformers" messageCode="entity_reference_not_managed" messageCodeAttribute="Wired Transformer" z="X0b7lXLEvIVlrj1U6/tq9/Bpa2w="/>
-        <field:simple field="authorityTransformers" id="c_org_kew_stringmod_matchconf_Wire_authorityTransformers" messageCode="entity_reference_not_managed" messageCodeAttribute="Wired Transformer" z="Bqt0CCQX1YyWpe9PHPvaEgcr0nw="/>
+    <form:create id="fc_org_kew_rmf_matchconf_Wire" modelAttribute="wire" path="/wires" render="${empty dependencies}" z="EZTNNF/tQ0dSsUzdmGUv1+JGGVI=">
+        <field:input field="queryColumnName" id="c_org_kew_rmf_matchconf_Wire_queryColumnName" z="/baTmO6IWunlit++4q3fQK/vHzI="/>
+        <field:input field="authorityColumnName" id="c_org_kew_rmf_matchconf_Wire_authorityColumnName" z="yaDdzWCV5KDBzMe2GQApiHlEUP8="/>
+        <field:checkbox field="useInSelect" id="c_org_kew_rmf_matchconf_Wire_useInSelect" z="rUwqjkFtZtDPn538dvHFTI8gXp8="/>
+        <field:checkbox field="useInNegativeSelect" id="c_org_kew_rmf_matchconf_Wire_useInNegativeSelect" z="wYCe2kbp+Jky10PaVKkCBInFKss="/>
+        <field:checkbox field="indexLength" id="c_org_kew_rmf_matchconf_Wire_indexLength" z="04nB73e4KOBgk218g1bryU7MIFA="/>
+        <field:checkbox field="blanksMatch" id="c_org_kew_rmf_matchconf_Wire_blanksMatch" z="l4F6JAMcQG+1l6ewiR0c9Iz7bvM="/>
+        <field:checkbox field="addOriginalQueryValue" id="c_org_kew_rmf_matchconf_Wire_addOriginalQueryValue" z="uX5j3L02nP4R38E1755KdmxCwAk="/>
+        <field:checkbox field="addOriginalAuthorityValue" id="c_org_kew_rmf_matchconf_Wire_addOriginalAuthorityValue" z="PA0qV7uHoyv2opyVuFd8qgaV5TI="/>
+        <field:checkbox field="addTransformedQueryValue" id="c_org_kew_rmf_matchconf_Wire_addTransformedQueryValue" z="q0KXY3pZqzGy0OLPRYK5AjQ8ta0="/>
+        <field:checkbox field="addTransformedAuthorityValue" id="c_org_kew_rmf_matchconf_Wire_addTransformedAuthorityValue" z="0XGcPSUYPdxOgyrAEP50xfnWwqs="/>
+        <field:checkbox field="indexInitial" id="c_org_kew_rmf_matchconf_Wire_indexInitial" z="EK7Xl60xS8J+FugQqVtMcg+GWdw="/>
+        <field:checkbox field="useWildcard" id="c_org_kew_rmf_matchconf_Wire_useWildcard" z="4y25mX4i8dsQ1zn71FXI2S8qO6Y="/>
+        <field:select field="matcher" id="c_org_kew_rmf_matchconf_Wire_matcher" itemValue="id" items="${matchers}" path="/matchers" z="fCKS9ZUjrMg8/OCaqbMf164bTcc="/>
+        <field:select field="configuration" id="c_org_kew_rmf_matchconf_Wire_configuration" itemValue="id" items="${configurations}" path="/configurations" z="VtMfAVVYz3cR6SE4ZY8jI6kHfJ4="/>
+        <field:simple field="queryTransformers" id="c_org_kew_rmf_matchconf_Wire_queryTransformers" messageCode="entity_reference_not_managed" messageCodeAttribute="Wired Transformer" z="X0b7lXLEvIVlrj1U6/tq9/Bpa2w="/>
+        <field:simple field="authorityTransformers" id="c_org_kew_rmf_matchconf_Wire_authorityTransformers" messageCode="entity_reference_not_managed" messageCodeAttribute="Wired Transformer" z="Bqt0CCQX1YyWpe9PHPvaEgcr0nw="/>
     </form:create>
-    <form:dependency dependencies="${dependencies}" id="d_org_kew_stringmod_matchconf_Wire" render="${not empty dependencies}" z="gXIDEWMT84Zw0ACsJbAeoNhEZP0="/>
+    <form:dependency dependencies="${dependencies}" id="d_org_kew_rmf_matchconf_Wire" render="${not empty dependencies}" z="gXIDEWMT84Zw0ACsJbAeoNhEZP0="/>
 </div>

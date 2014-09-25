@@ -26,7 +26,7 @@
 		<property name="removeAbandonedTimeout" value="1200" />
 		<property name="removeAbandonedOnMaintenance" value="true" />
 	</bean>
-	<bean id="authorityFromTplDatabase" class="org.kew.reconciliation.service.DatabaseCursorRecordReader">
+	<bean id="authorityFromTplDatabase" class="org.kew.rmf.reconciliation.service.DatabaseCursorRecordReader">
 		<property name="dataSource" ref="tplDatabase"/>
 		<property name="sql" value="SELECT t1ID AS id, genus, species, infraspecificEpithet AS infraspecies, primaryAuthors AS authors, taxonomicStatus, acceptedNameID FROM tpl2_final ${tpl.testWhere:};"/>
 	</bean>
@@ -61,10 +61,10 @@
 	</bean>
 
 	<!-- Matchers -->
-	<bean id="exactMatch" class="org.kew.stringmod.dedupl.matchers.ExactMatcher" p:blanksMatch="false" />
-	<bean id="commonTokensMatcher" class="org.kew.stringmod.dedupl.matchers.CommonTokensMatcher" p:minRatio="0.5"/>
-	<bean id="alwaysMatch" class="org.kew.stringmod.dedupl.matchers.AlwaysMatchingMatcher"/>
-	<bean id="ld1Match" class="org.kew.stringmod.dedupl.matchers.LevenshteinMatcher" p:maxDistance="1"/>
+	<bean id="exactMatch" class="org.kew.rmf.matchers.ExactMatcher" p:blanksMatch="false" />
+	<bean id="commonTokensMatcher" class="org.kew.rmf.matchers.CommonTokensMatcher" p:minRatio="0.5"/>
+	<bean id="alwaysMatch" class="org.kew.rmf.matchers.AlwaysMatchingMatcher"/>
+	<bean id="ld1Match" class="org.kew.rmf.matchers.LevenshteinMatcher" p:maxDistance="1"/>
 
 	<!-- Reporters -->
 	<util:list id="reporters"/>
@@ -72,7 +72,7 @@
 	<!-- Columns -->
 	<util:list id="columnProperties">
 		<!-- Genus -->
-		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+		<bean class="org.kew.rmf.core.configuration.Property"
 			p:queryColumnName="genus"
 			p:authorityColumnName="genus"
 			p:useInSelect="true"
@@ -97,7 +97,7 @@
 		</bean>
 
 		<!-- Species -->
-		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+		<bean class="org.kew.rmf.core.configuration.Property"
 			p:queryColumnName="species"
 			p:authorityColumnName="species"
 			p:indexInitial="true"
@@ -123,7 +123,7 @@
 		</bean>
 
 		<!-- Infraspecific epithet -->
-		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+		<bean class="org.kew.rmf.core.configuration.Property"
 			p:queryColumnName="infraspecies"
 			p:authorityColumnName="infraspecies"
 			p:indexInitial="true"
@@ -148,7 +148,7 @@
 		</bean>
 
 		<!-- Authors -->
-		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+		<bean class="org.kew.rmf.core.configuration.Property"
 			p:queryColumnName="authors"
 			p:authorityColumnName="authors"
 			p:useInSelect="false"
@@ -174,7 +174,7 @@
 		</bean>
 
 		<!-- TaxonomicStatus — just for output -->
-		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+		<bean class="org.kew.rmf.core.configuration.Property"
 			p:queryColumnName="taxonomicStatus"
 			p:authorityColumnName="taxonomicStatus"
 			p:addOriginalAuthorityValue="true"
@@ -182,7 +182,7 @@
 		</bean>
 
 		<!-- AcceptedNameID — just for output -->
-		<bean class="org.kew.stringmod.dedupl.configuration.Property"
+		<bean class="org.kew.rmf.core.configuration.Property"
 			p:queryColumnName="acceptedNameID"
 			p:authorityColumnName="acceptedNameID"
 			p:addOriginalAuthorityValue="true"
@@ -190,9 +190,9 @@
 		</bean>
 	</util:list>
 
-	<bean id="genusSpeciesInfraspeciesToPropertiesConverter" class="org.kew.reconciliation.queryextractor.GenusSpeciesInfraspeciesToPropertiesConverter" />
+	<bean id="genusSpeciesInfraspeciesToPropertiesConverter" class="org.kew.rmf.reconciliation.queryextractor.GenusSpeciesInfraspeciesToPropertiesConverter" />
 
-	<bean id="reconciliationResultFormat" class="org.kew.reconciliation.service.resultformatter.ReconciliationResultPropertyFormatter"
+	<bean id="reconciliationResultFormat" class="org.kew.rmf.reconciliation.service.resultformatter.ReconciliationResultPropertyFormatter"
 		p:format="%s %s %s %s (%s)"
 		p:stripRepeats=" ">
 		<property name="properties">
@@ -206,7 +206,7 @@
 		</property>
 	</bean>
 
-	<bean id="config" class="org.kew.stringmod.dedupl.configuration.ReconciliationServiceConfiguration"
+	<bean id="config" class="org.kew.rmf.core.configuration.ReconciliationServiceConfiguration"
 		p:name="TplName"
 		p:description="Reconciliation configuration matching against names stored in The Plant List (TPL)."
 		p:authorityRecords-ref="authorityFromTplDatabase"
@@ -230,7 +230,7 @@
 		p:previewHeight="400">
 		<property name="defaultTypes">
 			<util:list id="2">
-				<bean class="org.kew.reconciliation.refine.domain.metadata.Type"
+				<bean class="org.kew.rmf.refine.domain.metadata.Type"
 					p:id="/biology/organism_classification/scientific_name"
 					p:name="Scientific name"/>
 			</util:list>

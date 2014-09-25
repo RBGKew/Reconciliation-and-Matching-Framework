@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <artifactId>MatchConf</artifactId>
-    <packaging>war</packaging>
-    <name>MatchConf</name>
-
+	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.kew.rmf</groupId>
 		<artifactId>reconciliation-and-matching-framework</artifactId>
 		<version>0.2.1-SNAPSHOT</version>
 	</parent>
+	<artifactId>matchconf</artifactId>
+	<packaging>war</packaging>
+
+	<name>MatchConf</name>
+	<description>
+		Java web application providing a user interface for producing match configurations used by the RMF Core.
+	</description>
 
     <properties>
         <jetty.version>9.0.4.v20130625</jetty.version>
@@ -20,7 +23,7 @@
 		<!-- internal multimodule dependencies -->
 		<dependency>
 			<groupId>org.kew.rmf</groupId>
-			<artifactId>deduplicator</artifactId>
+			<artifactId>rmf-core</artifactId>
 		</dependency>
 
 		<!-- String Transformers -->

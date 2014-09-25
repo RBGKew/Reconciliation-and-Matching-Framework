@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+
+	<!-- Lucene stuff goes here -->
+
+	<!-- Define the Lucene version -->
+	<util:constant id="LUCENE_VERSION"
+		static-field="org.apache.lucene.util.Version.LUCENE_31" />
+
+	<!-- Set the analyzer, to be used by the IndexWriter -->
+	<!--bean id="luceneAnalyzer" class="org.apache.lucene.analysis.standard.StandardAnalyzer"-->
+	<bean id="luceneAnalyzer" class="org.apache.lucene.analysis.core.WhitespaceAnalyzer">
+		<constructor-arg ref="LUCENE_VERSION" />
+	</bean>
+
+	<!-- Set the Lucene directory -->
+	<!-- also, using the SimpleFSLockFactory -->
+	<bean id="luceneFileSystemStore" class="org.apache.lucene.store.FSDirectory"
+		factory-method="open">
+		<constructor-arg>
+			<bean class="java.io.File">
+				<constructor-arg ref="lucene_directory"/>
+			</bean>
+		</constructor-arg>
+		<constructor-arg>
+			<bean class="org.apache.lucene.store.SimpleFSLockFactory" />
+		</constructor-arg>
+	</bean>
+
+	<!-- This defines a LuceneDataLoader, and passes in some Lucene-specific object
+	references (defined above) and the dedup/match configuration ("config") -->
+	<bean id="dataLoader" class="org.kew.rmf.core.lucene.LuceneDataLoader"
+		p:luceneVersion-ref="LUCENE_VERSION"
+		p:luceneAnalyzer-ref="luceneAnalyzer"
+		p:directory-ref="luceneFileSystemStore"
+		p:config-ref="config"/>
+
+	<bean id="queryParser" class="org.apache.lucene.queryparser.classic.QueryParser">
+		<constructor-arg ref="LUCENE_VERSION" />
+		<constructor-arg value="id" />
+		<constructor-arg ref="luceneAnalyzer" />
+	</bean>
+
+</beans>

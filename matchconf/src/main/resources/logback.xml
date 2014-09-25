@@ -15,10 +15,10 @@
     </encoder>
   </appender>
 
-  <logger name="org.kew.stringmod.dedupl.lucene.LuceneMatcher" level="info"/>
-  <logger name="org.kew.stringmod.dedupl.lucene.LuceneHandler" level="info"/>
-  <logger name="org.kew.stringmod.dedupl.lucene.LuceneUtils" level="info"/>
-  <logger name="org.kew.stringmod.matchconf.CloneMe" level="debug"/>
+  <logger name="org.kew.rmf.core.lucene.LuceneMatcher" level="info"/>
+  <logger name="org.kew.rmf.core.lucene.LuceneHandler" level="info"/>
+  <logger name="org.kew.rmf.core.lucene.LuceneUtils" level="info"/>
+  <logger name="org.kew.rmf.matchconf.CloneMe" level="debug"/>
 
   <root level="info">
     <appender-ref ref="STDOUT" />

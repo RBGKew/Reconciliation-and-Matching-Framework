@@ -38,7 +38,7 @@
 
 	<!-- This defines a LuceneDataLoader, and passes in some Lucene-specific object
 	references (defined above) and the dedup/match configuration ("config") -->
-	<bean id="dataLoader" class="org.kew.stringmod.dedupl.lucene.LuceneDataLoader"
+	<bean id="dataLoader" class="org.kew.rmf.core.lucene.LuceneDataLoader"
 		p:luceneVersion-ref="LUCENE_VERSION"
 		p:luceneAnalyzer-ref="luceneAnalyzer"
 		p:directory-ref="luceneFileSystemStore"

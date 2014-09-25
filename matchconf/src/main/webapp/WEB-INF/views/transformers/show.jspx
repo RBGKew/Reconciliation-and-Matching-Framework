@@ -2,12 +2,12 @@
 <div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
-    <page:show id="ps_org_kew_stringmod_matchconf_Transformer" object="${transformer}" path="/transformers" z="PfqinA01fE45fiIa/wZ8wYi2I0k=">
-        <field:display field="name" id="s_org_kew_stringmod_matchconf_Transformer_name" object="${transformer}" z="HgsJTPJcDXSNmrsfHF7Ly8S9k30="/>
-        <field:display field="packageName" id="s_org_kew_stringmod_matchconf_Transformer_packageName" object="${transformer}" z="Z7/602QIceZVHhJXyrLbUQyvZrI="/>
-        <field:display field="className" id="s_org_kew_stringmod_matchconf_Transformer_className" object="${transformer}" z="nnRVjV8NqSrt5UhHXVna/tEBlnM="/>
-        <field:display field="params" id="s_org_kew_stringmod_matchconf_Transformer_params" object="${transformer}" z="wU6cd6Yujwxou+WyUANLboLq2QQ="/>
-        <field:display field="composedBy" id="s_org_kew_stringmod_matchconf_Transformer_composedBy" object="${transformer}" z="pp5CKSGcNPI7xQL27otw/jXFewA="/>
-        <field:display field="configuration" id="s_org_kew_stringmod_matchconf_Transformer_configuration" object="${transformer}" z="9D+9f63DqwDyiZ8F/xGRZonFJm4="/>
+    <page:show id="ps_org_kew_rmf_matchconf_Transformer" object="${transformer}" path="/transformers" z="PfqinA01fE45fiIa/wZ8wYi2I0k=">
+        <field:display field="name" id="s_org_kew_rmf_matchconf_Transformer_name" object="${transformer}" z="HgsJTPJcDXSNmrsfHF7Ly8S9k30="/>
+        <field:display field="packageName" id="s_org_kew_rmf_matchconf_Transformer_packageName" object="${transformer}" z="Z7/602QIceZVHhJXyrLbUQyvZrI="/>
+        <field:display field="className" id="s_org_kew_rmf_matchconf_Transformer_className" object="${transformer}" z="nnRVjV8NqSrt5UhHXVna/tEBlnM="/>
+        <field:display field="params" id="s_org_kew_rmf_matchconf_Transformer_params" object="${transformer}" z="wU6cd6Yujwxou+WyUANLboLq2QQ="/>
+        <field:display field="composedBy" id="s_org_kew_rmf_matchconf_Transformer_composedBy" object="${transformer}" z="pp5CKSGcNPI7xQL27otw/jXFewA="/>
+        <field:display field="configuration" id="s_org_kew_rmf_matchconf_Transformer_configuration" object="${transformer}" z="9D+9f63DqwDyiZ8F/xGRZonFJm4="/>
     </page:show>
 </div>

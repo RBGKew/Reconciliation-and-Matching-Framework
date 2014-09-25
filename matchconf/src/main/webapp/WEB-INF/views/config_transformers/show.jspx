@@ -5,10 +5,10 @@
 
     <br/> <div id="config-link">for configuration: <a href="/MatchConf/${ configType }_configs/${ configName }">${ configName }</a></div> <br/>
 
-    <page:show id="ps_org_kew_stringmod_matchconf_Transformer" object="${transformer}" path="/${ configType }_configs/${ configName }/transformers" z="whegg1NrvyJ1uMtLhLZUYYDe1Ig=">
-        <field:display field="name" id="s_org_kew_stringmod_matchconf_Transformer_name" object="${transformer}" z="Z8tX6PEkvKJOABQHrNKdXNy0LeE="/>
-        <field:display field="packageName" id="s_org_kew_stringmod_matchconf_Transformer_packageName" object="${transformer}" z="Xijth8Vn2ZCDg5L2mWdv8u1rZ/A="/>
-        <field:display field="className" id="s_org_kew_stringmod_matchconf_Transformer_className" object="${transformer}" z="CQTROvEOFSjxABmtN52WHpaeThM="/>
-        <field:display field="params" id="s_org_kew_stringmod_matchconf_Transformer_params" object="${transformer}" z="LovCXm/h6mtKLyGUSw4FLzK4KJs="/>
+    <page:show id="ps_org_kew_rmf_matchconf_Transformer" object="${transformer}" path="/${ configType }_configs/${ configName }/transformers" z="whegg1NrvyJ1uMtLhLZUYYDe1Ig=">
+        <field:display field="name" id="s_org_kew_rmf_matchconf_Transformer_name" object="${transformer}" z="Z8tX6PEkvKJOABQHrNKdXNy0LeE="/>
+        <field:display field="packageName" id="s_org_kew_rmf_matchconf_Transformer_packageName" object="${transformer}" z="Xijth8Vn2ZCDg5L2mWdv8u1rZ/A="/>
+        <field:display field="className" id="s_org_kew_rmf_matchconf_Transformer_className" object="${transformer}" z="CQTROvEOFSjxABmtN52WHpaeThM="/>
+        <field:display field="params" id="s_org_kew_rmf_matchconf_Transformer_params" object="${transformer}" z="LovCXm/h6mtKLyGUSw4FLzK4KJs="/>
     </page:show>
 </div>

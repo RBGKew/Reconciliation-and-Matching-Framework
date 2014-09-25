@@ -2,14 +2,14 @@
 <div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
-    <form:update id="fu_org_kew_stringmod_matchconf_Reporter" modelAttribute="reporter" path="/reporters" versionField="Version" z="koKTysniVsZhW5SJv59BuTF3gOQ=">
-        <field:input field="name" id="c_org_kew_stringmod_matchconf_Reporter_name" z="EAO84arz1TaEMLKRV3szx8KMI+0="/>
-        <field:input field="delimiter" id="c_org_kew_stringmod_matchconf_Reporter_delimiter" z="S+DUZ3A8q10kSvRwvkkmWewi/Po="/>
-        <field:input field="idDelimiter" id="c_org_kew_stringmod_matchconf_Reporter_idDelimiter" z="eSAv8F6haM7aOVFngJEGnXF515Q="/>
-        <field:input field="fileName" id="c_org_kew_stringmod_matchconf_Reporter_fileName" z="rnp3308B00/govnpQ8EvfrQjUuk="/>
-        <field:input field="packageName" id="c_org_kew_stringmod_matchconf_Reporter_packageName" z="OFbyEDYS/HG8viHZRNUTgTyC660="/>
-        <field:input field="className" id="c_org_kew_stringmod_matchconf_Reporter_className" z="cTGWt7Mhac+7MmdM5sTb3wygfVM="/>
-        <field:input field="params" id="c_org_kew_stringmod_matchconf_Reporter_params" z="MWNCLx4Hp/1CiV4QIqNOSgO+1dk="/>
-        <field:select field="config" id="c_org_kew_stringmod_matchconf_Reporter_config" itemValue="id" items="${configurations}" path="/configurations" z="rFtTZ/0LwpzpY9nLTUe5q8U2Q0E="/>
+    <form:update id="fu_org_kew_rmf_matchconf_Reporter" modelAttribute="reporter" path="/reporters" versionField="Version" z="koKTysniVsZhW5SJv59BuTF3gOQ=">
+        <field:input field="name" id="c_org_kew_rmf_matchconf_Reporter_name" z="EAO84arz1TaEMLKRV3szx8KMI+0="/>
+        <field:input field="delimiter" id="c_org_kew_rmf_matchconf_Reporter_delimiter" z="S+DUZ3A8q10kSvRwvkkmWewi/Po="/>
+        <field:input field="idDelimiter" id="c_org_kew_rmf_matchconf_Reporter_idDelimiter" z="eSAv8F6haM7aOVFngJEGnXF515Q="/>
+        <field:input field="fileName" id="c_org_kew_rmf_matchconf_Reporter_fileName" z="rnp3308B00/govnpQ8EvfrQjUuk="/>
+        <field:input field="packageName" id="c_org_kew_rmf_matchconf_Reporter_packageName" z="OFbyEDYS/HG8viHZRNUTgTyC660="/>
+        <field:input field="className" id="c_org_kew_rmf_matchconf_Reporter_className" z="cTGWt7Mhac+7MmdM5sTb3wygfVM="/>
+        <field:input field="params" id="c_org_kew_rmf_matchconf_Reporter_params" z="MWNCLx4Hp/1CiV4QIqNOSgO+1dk="/>
+        <field:select field="config" id="c_org_kew_rmf_matchconf_Reporter_config" itemValue="id" items="${configurations}" path="/configurations" z="rFtTZ/0LwpzpY9nLTUe5q8U2Q0E="/>
     </form:update>
 </div>

@@ -2,32 +2,32 @@
 <div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
-    <form:update id="fu_org_kew_stringmod_matchconf_Configuration" modelAttribute="configuration" path="/match_configs" versionField="Version" z="ubNHeGZmgmI3ZR7wr1ih1wPj92E=">
-        <field:input field="name" id="c_org_kew_stringmod_matchconf_Configuration_name" z="3vEmBizJ9lnbwGZHjPc2LrnXZUU="/>
-        <field:input field="workDirPath" id="c_org_kew_stringmod_matchconf_Configuration_workDirPath" z="CXfStjcGuxcfE6dfM+7XqPl9Y10="/>
+    <form:update id="fu_org_kew_rmf_matchconf_Configuration" modelAttribute="configuration" path="/match_configs" versionField="Version" z="ubNHeGZmgmI3ZR7wr1ih1wPj92E=">
+        <field:input field="name" id="c_org_kew_rmf_matchconf_Configuration_name" z="3vEmBizJ9lnbwGZHjPc2LrnXZUU="/>
+        <field:input field="workDirPath" id="c_org_kew_rmf_matchconf_Configuration_workDirPath" z="CXfStjcGuxcfE6dfM+7XqPl9Y10="/>
 
-        <field:input field="queryFileName" id="c_org_kew_stringmod_matchconf_Configuration_queryFileName" z="Xe0KyReTb9is0ixh1BzXLN4pV80="/>
-        <field:input field="queryFileEncoding" id="c_org_kew_stringmod_matchconf_Configuration_queryFileEncoding" z="oZk6RExiWZ0ZK/O9Z7gyzq45Qs0="/>
-        <field:input field="queryFileDelimiter" id="c_org_kew_stringmod_matchconf_Configuration_queryFileDelimiter" z="xTUiFAy070C340Xm5+DIXkCFqCI="/>
+        <field:input field="queryFileName" id="c_org_kew_rmf_matchconf_Configuration_queryFileName" z="Xe0KyReTb9is0ixh1BzXLN4pV80="/>
+        <field:input field="queryFileEncoding" id="c_org_kew_rmf_matchconf_Configuration_queryFileEncoding" z="oZk6RExiWZ0ZK/O9Z7gyzq45Qs0="/>
+        <field:input field="queryFileDelimiter" id="c_org_kew_rmf_matchconf_Configuration_queryFileDelimiter" z="xTUiFAy070C340Xm5+DIXkCFqCI="/>
 
-        <field:input field="authorityFileName" id="c_org_kew_stringmod_matchconf_Configuration_authorityFileName" z="d1C88UX0kdcXobRnxlBR+YCiUN4="/>
-        <field:input field="authorityFileEncoding" id="c_org_kew_stringmod_matchconf_Configuration_authorityFileEncoding" z="nIW4RKilaNTPUKc9d5nswIsET3g="/>
-        <field:input field="authorityFileDelimiter" id="c_org_kew_stringmod_matchconf_Configuration_authorityFileDelimiter" z="wdmGp4zNTXYZTlVaoShLBtxJL7E="/>
+        <field:input field="authorityFileName" id="c_org_kew_rmf_matchconf_Configuration_authorityFileName" z="d1C88UX0kdcXobRnxlBR+YCiUN4="/>
+        <field:input field="authorityFileEncoding" id="c_org_kew_rmf_matchconf_Configuration_authorityFileEncoding" z="nIW4RKilaNTPUKc9d5nswIsET3g="/>
+        <field:input field="authorityFileDelimiter" id="c_org_kew_rmf_matchconf_Configuration_authorityFileDelimiter" z="wdmGp4zNTXYZTlVaoShLBtxJL7E="/>
 
-        <field:input field="loadReportFrequency" id="c_org_kew_stringmod_matchconf_Configuration_loadReportFrequency" z="mBoLFpuK1YzFd1H+conojUVjvPo="/>
-        <field:input field="assessReportFrequency" id="c_org_kew_stringmod_matchconf_Configuration_assessReportFrequency" z="kUCN8SWATVpCbwc2GZ1jJZy5FMw="/>
+        <field:input field="loadReportFrequency" id="c_org_kew_rmf_matchconf_Configuration_loadReportFrequency" z="mBoLFpuK1YzFd1H+conojUVjvPo="/>
+        <field:input field="assessReportFrequency" id="c_org_kew_rmf_matchconf_Configuration_assessReportFrequency" z="kUCN8SWATVpCbwc2GZ1jJZy5FMw="/>
 
-        <field:input field="maxSearchResults" id="c_org_kew_stringmod_matchconf_Configuration_maxSearchResults" z=""/>
+        <field:input field="maxSearchResults" id="c_org_kew_rmf_matchconf_Configuration_maxSearchResults" z=""/>
 
-        <field:input field="sortFieldName" id="c_org_kew_stringmod_matchconf_Configuration_sort_field_name" z="eD+yX69x57/KyHPGWkrevkPRNWw="/>
+        <field:input field="sortFieldName" id="c_org_kew_rmf_matchconf_Configuration_sort_field_name" z="eD+yX69x57/KyHPGWkrevkPRNWw="/>
 
-        <field:select field="wiring" disabled="true" id="c_org_kew_stringmod_matchconf_Configuration_wiring" itemValue="id" items="${wiring}" multiple="true" path="dedup_configs/wires" z="dE3AA0t3Tmh2i7gBbxSbT1XvGOk="/>
-        <field:select field="transformers" disabled="true" id="c_org_kew_stringmod_matchconf_Configuration_transformers" itemValue="id" items="${transformers}" multiple="true" path="/dedup_configs/transformers" z="dE3AA0t3Tmh2i7gBbxSbT1XvGOk="/>
-        <field:select field="matchers" disabled="true" id="c_org_kew_stringmod_matchconf_Configuration_matchers" itemValue="id" items="${matchers}" multiple="true" path="dedup_configs/matchers" z="dE3AA0t3Tmh2i7gBbxSbT1XvGOk="/>
-        <field:select field="reporters" disabled="true" id="c_org_kew_stringmod_matchconf_Configuration_reporters" itemValue="id" items="${reporters}" multiple="true" path="dedup_configs/reporters" z=""/>
+        <field:select field="wiring" disabled="true" id="c_org_kew_rmf_matchconf_Configuration_wiring" itemValue="id" items="${wiring}" multiple="true" path="dedup_configs/wires" z="dE3AA0t3Tmh2i7gBbxSbT1XvGOk="/>
+        <field:select field="transformers" disabled="true" id="c_org_kew_rmf_matchconf_Configuration_transformers" itemValue="id" items="${transformers}" multiple="true" path="/dedup_configs/transformers" z="dE3AA0t3Tmh2i7gBbxSbT1XvGOk="/>
+        <field:select field="matchers" disabled="true" id="c_org_kew_rmf_matchconf_Configuration_matchers" itemValue="id" items="${matchers}" multiple="true" path="dedup_configs/matchers" z="dE3AA0t3Tmh2i7gBbxSbT1XvGOk="/>
+        <field:select field="reporters" disabled="true" id="c_org_kew_rmf_matchconf_Configuration_reporters" itemValue="id" items="${reporters}" multiple="true" path="dedup_configs/reporters" z=""/>
 
-        <field:input field="recordFilter" id="c_org_kew_stringmod_matchconf_Configuration_recordFilter" z="UblGjqepwYEnIJ2Qukb4uPwQ6Mw="/>
-        <field:input field="nextConfig" id="c_org_kew_stringmod_matchconf_Configuration_nextConfig" z=""/>
+        <field:input field="recordFilter" id="c_org_kew_rmf_matchconf_Configuration_recordFilter" z="UblGjqepwYEnIJ2Qukb4uPwQ6Mw="/>
+        <field:input field="nextConfig" id="c_org_kew_rmf_matchconf_Configuration_nextConfig" z=""/>
 
     </form:update>
     <script type="text/javascript">

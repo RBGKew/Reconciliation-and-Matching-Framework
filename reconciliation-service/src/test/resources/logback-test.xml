@@ -19,8 +19,8 @@
 	</appender>
 
 	<logger name="org.kew" level="debug" />
-<!-- 	<logger name="org.kew.stringmod.dedupl.lucene.LuceneUtils" level="trace"/> -->
-<!-- 	<logger name="org.kew.stringmod.dedupl.lucene.LuceneDataLoader" level="trace"/> -->
+<!-- 	<logger name="org.kew.rmf.core.lucene.LuceneUtils" level="trace"/> -->
+<!-- 	<logger name="org.kew.rmf.core.lucene.LuceneDataLoader" level="trace"/> -->
 
 	<root level="info">
 		<appender-ref ref="STDOUT" />

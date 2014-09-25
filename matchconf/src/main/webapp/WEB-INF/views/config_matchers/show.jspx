@@ -5,11 +5,11 @@
 
     <div id="config-link">for configuration: <a href="/MatchConf/${ configType }_configs/${ configName }">${ configName }</a></div> <br/>
 
-    <page:show id="ps_org_kew_stringmod_matchconf_Matcher" object="${matcher}" path="/${ configType }_configs/${ configName }/matchers" z="4/jtaUl9pN3dkkckUgPkrF4vxK0=">
-        <field:display field="composedBy" id="s_org_kew_stringmod_matchconf_Matcher_composedBy" object="${matcher}" z="BK+z5MMKm1IyLKc95wYbFDp3qHA="/>
-        <field:display field="name" id="s_org_kew_stringmod_matchconf_Matcher_name" object="${matcher}" z="35d70Ichgmd5vwlnSvA/iRXn5l0="/>
-        <field:display field="packageName" id="s_org_kew_stringmod_matchconf_Matcher_packageName" object="${matcher}" z="R+aWzB84o50VH39h3I7A6FyPi/M="/>
-        <field:display field="className" id="s_org_kew_stringmod_matchconf_Matcher_className" object="${matcher}" z="5YuhCncu9jMk9lbwuSu/6mIXizA="/>
-        <field:display field="params" id="s_org_kew_stringmod_matchconf_Matcher_params" object="${matcher}" z="u3RCOvukwGs+aFb2YZ1xQxEgzr4="/>
+    <page:show id="ps_org_kew_rmf_matchconf_Matcher" object="${matcher}" path="/${ configType }_configs/${ configName }/matchers" z="4/jtaUl9pN3dkkckUgPkrF4vxK0=">
+        <field:display field="composedBy" id="s_org_kew_rmf_matchconf_Matcher_composedBy" object="${matcher}" z="BK+z5MMKm1IyLKc95wYbFDp3qHA="/>
+        <field:display field="name" id="s_org_kew_rmf_matchconf_Matcher_name" object="${matcher}" z="35d70Ichgmd5vwlnSvA/iRXn5l0="/>
+        <field:display field="packageName" id="s_org_kew_rmf_matchconf_Matcher_packageName" object="${matcher}" z="R+aWzB84o50VH39h3I7A6FyPi/M="/>
+        <field:display field="className" id="s_org_kew_rmf_matchconf_Matcher_className" object="${matcher}" z="5YuhCncu9jMk9lbwuSu/6mIXizA="/>
+        <field:display field="params" id="s_org_kew_rmf_matchconf_Matcher_params" object="${matcher}" z="u3RCOvukwGs+aFb2YZ1xQxEgzr4="/>
     </page:show>
 </div>
