@@ -35,17 +35,17 @@ public class WebAppInitializer implements WebApplicationInitializer {
 
 			FilterRegistration.Dynamic cssLinkFilter = servletContext.addFilter("CssLinkFilter",TAG_SWAP_FILTER_CLASS);
 			cssLinkFilter.setInitParameter("include_file_name", "/var/lib/science-apps/web-resources/head.chunk");
-			cssLinkFilter.setInitParameter("tag_name", "<link rel=\"stylesheet\" href=\"/css/default.css\" />");
+			cssLinkFilter.setInitParameter("tag_name", "[KEWCSS]");
 			cssLinkFilter.addMappingForUrlPatterns(null, true, urlPatterns);
 
 			FilterRegistration.Dynamic headerFilter = servletContext.addFilter("HeaderFilter", TAG_SWAP_FILTER_CLASS);
 			headerFilter.setInitParameter("include_file_name", "/var/lib/science-apps/web-resources/bodytop.chunk");
-			headerFilter.setInitParameter("tag_name", "<header id=\"kew-header\" />");
+			headerFilter.setInitParameter("tag_name", "[KEWHEADER]");
 			headerFilter.addMappingForUrlPatterns(null, true, urlPatterns);
 
 			FilterRegistration.Dynamic footerFilter = servletContext.addFilter("FooterFilter", TAG_SWAP_FILTER_CLASS);
 			footerFilter.setInitParameter("include_file_name", "/var/lib/science-apps/web-resources/bodybottom.chunk");
-			footerFilter.setInitParameter("tag_name", "<footer id=\"kew-footer\" />");
+			footerFilter.setInitParameter("tag_name", "[KEWFOOTER]");
 			footerFilter.addMappingForUrlPatterns(null, true, urlPatterns);
 		}
 		catch (ClassNotFoundException e) {

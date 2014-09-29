@@ -14,8 +14,8 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="edge" />
 
-		<!-- Following line replaced by Kew CSS if configured -->
-		<link href="/css/default.css" rel="stylesheet" />
+		<!-- Following line replaced by Kew CSS -->
+		[KEWCSS]
 
 		<title><tiles:insertAttribute name="title"/></title>
 
@@ -29,8 +29,8 @@
 	</head>
 
 	<body>
-		<!-- Following element replaced by Kew header if configured -->
-		<header id='kew-header' />
+		<!-- Following line replaced by Kew header -->
+		[KEWHEADER]
 
 		<spring:url var="index" value="/" />
 		<ul id="breadcrumbs">
@@ -59,7 +59,7 @@
 
 		<tiles:insertAttribute name="header" ignore="true"  />
 
-		<!-- Following element replaced by Kew footer if configured -->
-		<footer id='kew-footer' />
+		<!-- Following line replaced by Kew footer -->
+		[KEWFOOTER]
 	</body>
 </html>
