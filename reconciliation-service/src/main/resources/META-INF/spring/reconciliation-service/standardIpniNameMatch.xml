@@ -338,9 +338,9 @@
 		p:schemaSpace="http://rdf.freebase.com/ns/type.object.id"
 		p:viewUrl="http://ipni.org/urn:lsid:ipni.org:names:{{id}}"
 		p:previewUrl="http://ipni.org/urn:lsid:ipni.org:names:{{id}}"
-		p:previewWidth="600"
-		p:previewHeight="500"
-		p:suggestFlyoutUrl="http://ipni.org/ipni/idPlantNameSearch.do?id={id}&amp;reconcileSuggest">
+		p:previewWidth="400"
+		p:previewHeight="400"
+		p:suggestFlyoutUrl="http://ipni.org/urn:lsid:ipni.org:names:{id}">
 		<property name="defaultTypes">
 			<util:list id="2">
 				<bean class="org.kew.rmf.refine.domain.metadata.Type"
