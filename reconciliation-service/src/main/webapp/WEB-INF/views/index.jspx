@@ -10,12 +10,13 @@
 
 	<h1>Kew Reconciliation Services (preview)</h1>
 
+	<h2>Reconciliation</h2>
+
 	<p>
 		<em>Reconciliation</em> is the semi-automated process of matching text
 		strings (like <i>Quercus alba</i> L.) to entities in databases (like
-		<code>IPNI 295763-1</code>,
-		<code>http://ipni.org/urn:lsid:ipni.org:names:295763-1</code> or
-		<code>http://www.theplantlist.org/tpl1.1/record/kew-171499</code>).
+		<code>IPNI 295763-1</code> or
+		<code>http://ipni.org/urn:lsid:ipni.org:names:295763-1</code>).
 	</p>
 
 	<p>
@@ -25,12 +26,32 @@
 		They can also be more easily integrated into portals like <a href="http://emonocot.org/">eMonocot</a>.
 	</p>
 
+	<h2>Name matching</h2>
+
 	<p>
-		Tools exist to make the reconciliation service straightforward.  The most user-friendly
-		is <em>Open Refine</em> (previously called <em>Google Refine</em>).
-		<abbr title="comma-separated value">CSV</abbr> files can be upload to
+		To ensure good-quality matches a sequence of transformations is configured, specific
+		to each service.  For example, a common error in botanical names is incorrect Latin endings
+		(<em>-us</em> instead of <em>-a</em>).  This service can take account of such
+		problems.
+	</p>
+
+	<h2>Tools</h2>
+
+	<p>
+		Tools exist to make using the reconciliation service straightforward.  The most user-friendly
+		is <em>Open Refine</em> (previously called <em>Google Refine</em>), which provides
+		a spreadsheet interface to reconcile data and extend it using Kew’s resources.
+		See the <a href="${helpUrl}">help page</a> for instructions.
+		Alternatively, <abbr title="comma-separated value">CSV</abbr> files can be uploaded to
 		this website, and will be returned with identifiers added.  Or, a single query
-		can be made.  See the <a href="${helpUrl}">help page</a> for instructions,
-		or the list of <a href="${availableConfigurationsUrl}">available configurations</a>.
+		can be made.
+	</p>
+
+	<h2>Feedback</h2>
+
+	<p>
+		This is a preview service.  We would appreciate feedback on the interface, usage (with OpenRefine
+		or otherwise) and quality of the matches produced.
+		Please send any feedback to <a href="mailto:M.Blissett@kew.org?subject=Reconciliation%20service%20preview">Matthew Blissett</a>.
 	</p>
 </div>

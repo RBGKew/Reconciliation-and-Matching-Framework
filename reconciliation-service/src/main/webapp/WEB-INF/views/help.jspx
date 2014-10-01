@@ -17,9 +17,8 @@
 	<p>
 		<em>Reconciliation</em> is the semi-automated process of matching text
 		strings (like <i>Quercus alba</i> L.) to entities in databases (like
-		<code>IPNI 295763-1</code>,
-		<code>http://ipni.org/urn:lsid:ipni.org:names:295763-1</code> or
-		<code>http://www.theplantlist.org/tpl1.1/record/kew-171499</code>).
+		<code>IPNI 295763-1</code> or
+		<code>http://ipni.org/urn:lsid:ipni.org:names:295763-1</code>).
 	</p>
 
 	<p>
@@ -34,13 +33,9 @@
 	<h1>About Kew’s Reconciliation Services</h1>
 
 	<p>
-		Kew provides several reconciliation services, according to the type of
-		entity (name, publication etc) and the underlying data source.  At
-		present, these include <em>IPNI</em> and <em>The Plant List</em>.  The <em>World
-		Checklist</em> may be added later. Once The Plant List and the World
-		Checklist have themselves been fully reconciled to IPNI (implying that
-		any missing names have been added to IPNI) it will usually be
-		appropriate to reconcile only to IPNI.
+		Kew aims to provide several reconciliation services, according to the type of
+		entity (name, publication etc) and the underlying data source.  Initially,
+		a service for <em><a href="http://ipni.org/">IPNI</a></em> names is available.
 	</p>
 
 	<h2>Using Kew’s Reconciliation Services with Open Refine</h2>
@@ -50,7 +45,8 @@
 	<p>
 		Watch the three introductory videos — these instructions assume some familiarity
 		with Open Refine.  There’s also <a href="http://openrefine.org/documentation.html">written
-		documentation</a>.</p>
+		documentation</a>.
+	</p>
 
 	<ul>
 		<li><a href="https://www.youtube.com/watch?v=B70J_H_zAWM">General introduction, editing messy data</a></li>
@@ -59,18 +55,27 @@
 	</ul>
 
 	<p>
-		<em>Open Refine needs Java to run.  If your computer supports it choose 64-bit Java.</em>
+		<strong>Users at Kew:</strong> OpenRefine has been installed on the network.  Go to <code>X:\apps\OpenRefine\</code>
+		and double-click <code>refine.bat</code>.  When you have finished, press <em>Control C</em>
+		in the black window that pops up to close the program properly.
 	</p>
 
 	<p>
-		Download Open Refine from <a href="http://openrefine.org/download.html">the download page</a>,
-		choose the development version, currently <code>2.6-beta1</code>.
+		<strong>Users elsewhere:</strong>
+		Open Refine needs Java to run.  If your computer supports it choose 64-bit Java — this allows working
+		on larger datasets that consume more memory.
+		A version of OpenRefine including the Kew extension is available
+		<a href="https://github.com/RBGKew/OpenRefine/releases/tag/2.6-beta.1-kew-preview.1">via GitHub</a> (recommended).
+		Alternatively, download Open Refine from <a href="http://openrefine.org/download.html">the download page</a>.
+		Choose the development version, currently <code>2.6-beta1</code>.  This does not include the
+		<a href="https://github.com/RBGKew/OpenRefine-Kew-Extension">Kew extension</a>, so
+		the functionality to extend data using The Plant List will not be available.
 	</p>
 
 	<h3>Data preparation</h3>
 
 	<p>
-		The services are easiest to use if the whole name (or value to be reconciled) is in a sngle column, like
+		The services are easiest to use if the whole name (or value to be reconciled) is in a single column, like
 		<code>Quercus alba L.</code> or
 		<code>Quercus alba f. latiloba Sarg.</code>.  Better results can sometimes be obtained with a column
 		for each necessary part (e.g. generic epithet, species epithet, publication title etc).
@@ -78,14 +83,8 @@
 	</p>
 
 	<p>
-		Optionally, use facets to limit which names you wish to match
-		— for example, to select particular ranks to match (The Plant List only includes
-		species and infraspecies names).
-	</p>
-
-	<p>
-		If you have a lot of names (over 1000) you could star 10 or so
-		names and facet on them, for a trial run.
+		Optionally, use facets to limit which names you wish to match — for example, to select particular ranks to match.
+		If you have a lot of names (over 1000) you could star 10 or so names and facet on them, for a trial run.
 	</p>
 
 	<p>
@@ -94,23 +93,13 @@
 		Note the two <em>endpoints</em>: the Open Refine reconciliation service, and the
 		<abbr title="JavaScript Object Notation">JSON</abbr> web service.  These instructions
 		will assume you have a list of plant names and wish to reconcile them against the
-		<spring:url var="aboutTplNameUrl" value="/about/TplName" />
-		<a href="${aboutTplNameUrl}">TPL Name reconciliation service</a>.
+		<spring:url var="aboutIpniNameUrl" value="/about/IpniName" />
+		<a href="${aboutIpniNameUrl}">IPNI Name reconciliation service</a>.
 	</p>
 
-	<h3>Querying the web service</h3>
+	<h3>Querying the Reconciliation Service</h3>
 
-	<spring:url var="reconcileTplNameUrl" value="/reconcile/TplName" />
-
-	<p>There are two options for querying the Reconciliation Service:</p>
-
-	<h4>Querying as an Open Refine Reconciliation Service</h4>
-
-	<p>
-		This has a better user interface for choosing between multiple
-		matches, but it’s more difficult to access derived data, like
-		whether a reconciled name is known to be a synonym.
-	</p>
+	<spring:url var="reconcileIpniNameUrl" value="/reconcile/IpniName" />
 
 	<ol>
 		<li>
@@ -128,7 +117,7 @@
 			If this is the first time you’ve reconciled against a
 			particular service, you will need to click <em>Add Standard
 			Service</em>. Enter the URL from the Reconciliation Service website,
-			for example <code><a href="${reconcileTplNameUrl}">http://${serverAndPort}${reconcileTplNameUrl}</a></code>,
+			for example <code><a href="${reconcileIpniNameUrl}">http://${serverAndPort}${reconcileIpniNameUrl}</a></code>,
 			and click OK.
 		</li>
 		<li>
@@ -139,7 +128,7 @@
 			If you have columns for genus, species etc fill in the text
 			boxes for <em>Also use relevant details from other columns</em>.
 			The values to fill in come from those listed on the website
-			describing the service (in this case, <code>genus</code>, <code>species</code>
+			describing the service (in this case, <code>epithet_1</code>, <code>epithet_2</code>
 			etc).<br />
 			<spring:url var="img" value="/img/reconciling-select-properties.png"/>
 			<img src="${img}" alt="" />
@@ -152,8 +141,8 @@
 			possibility it will have been automatically selected. Otherwise,
 			you can select the match using the tick boxes.<br />
 			<spring:url var="img" value="/img/reconciling-results.png"/>
-			<img src="${img}" alt="" />
-			It’s likely you will received multiple results where the data source (IPNI, The Plant List) has
+			<img src="${img}" alt="" /><br/>
+			It’s likely you will receive multiple results where IPNI has
 			duplicate names.  We hope to hide the duplicates from IPNI in the near future.
 		</li>
 		<li>
@@ -165,117 +154,37 @@
 		<li>
 			To get the identifiers: click the column, choose <em>Add column based on this column…</em>
 			and use the expression <code>cell.recon.match.id</code>.  To get the name
-			use <code>cell.recon.match.name</code> instead.
+			use <code>cell.recon.match.name</code> instead.  This is a GREL expression — see the
+			<a href="https://github.com/OpenRefine/OpenRefine/wiki/GREL-Functions">GREL Functions Documentation</a>
+			for more information.
 		</li>
 	</ol>
 
-	<h4>Querying as a standard web service</h4>
+	<h3>Extending data using the Metaweb Query Language service</h3>
 
 	<p>
-		This requires fewer steps to retrieve additional data returned
-		by the web service (e.g. taxomic status from TPL), but
-		you must have your names split into columns, and
-		it requires writing some computer code.
+		Data that has already been (partially!) reconciled against IPNI and presented through a
+		<em>MQL</em> service can be added to your data.  At present, only some data from
+		<a href="http://www.theplantlist.org/">The Plant List</a> is available in this way.
 	</p>
 
 	<ol>
-		<spring:url var="matchTplBaseUrl" value="/match/TplName" />
-		<spring:url var="matchTplExampleUrl" value="/match/TplName?genus=Quercus&amp;species=alba&amp;authors=L." />
 		<li>
-			Click a column heading and choose <em>Edit column</em> → <em>Add
-			column by fetching URLs</em>
+			Click a reconciled column heading and choose <em>Edit column</em> → <em>Add
+			column by fetching URLs</em>. 
 		</li>
 		<li>
-			Give the column a name, and <strong>set the <code>Throttle delay</code> to zero</strong>.
-		</li>
-		<li>
-			Use one of the query expressions below, replacing <code>Genus</code>,
-			<code>Species</code> etc with the column headings from your
-			dataset. This constructs a URL like <a href="${matchTplExampleUrl}">this</a>
-			(which you can click on to see the web service response, in <abbr
-			title="JavaScript Object Notation">JSON</abbr> format).
-			<pre>
-<code>"http://${serverAndPort}${matchTplBaseUrl}?genus="+row.cells["Genus"].value.escape('url')
-+forNonBlank(row.cells["Species"].value, v, "&amp;species="+v.escape('url'), "")
-+forNonBlank(row.cells["InfraSpecies"].value, v, "&amp;infraspecies="+v.escape('url'), "")
-+forNonBlank(row.cells["InfraAuthor"].value, v, "&amp;authors="+v.escape('url'),
-	forNonBlank(row.cells["SpeciesAuthor"].value, v, "&amp;authors="+v.escape('url'), "")
-)</code></pre>
-
-			<spring:url var="img" value="/img/reconciling-add-with-webservice.png"/>
+			This shows a list of available properties — choose one or
+			more properties from this list and click OK.
+			<spring:url var="img" value="/img/mql-tpl-example.png"/>
 			<img src="${img}" alt="" />
-		</li>
-
-		<li>
-			Results are returned in <abbr title="JavaScript Object Notation">JSON</abbr>
-			format, and might look something like this (but all on one line):
-			<pre><code>[
-	{
-		"species": "alba",
-		"authors_transf": "l",
-		"genus": "Quercus",
-		"taxonomicStatus": "Accepted",
-		"genus_transf": "Querca",
-		"species_transf": "alba",
-		"id": "kew-171499",
-		"authors": "L.",
-		"acceptedNameID": "kew-171499",
-		"acceptedNameID_transf": "kew-171499",
-		"infraspecies_transf": "",
-		"infraspecies": "",
-		"taxonomicStatus_transf": "Accepted"
-	}
-]</code></pre>
-
-			In <abbr title="JavaScript Object Notation">JSON</abbr> terms,
-			that’s an array (a list, denoted by <code>[ ... ]</code>)
-			containing objects (“things”, that’s the <code>{ ... }</code>) with properties
-			(<code>"a": "b"</code>).
-		</li>
-
-		<li>
-			Probably most match results only contain a single match. You can
-			create a <em>custom text facet</em> with this expression:
-			<pre><code>parseJson(value).length()</code></pre>
-		</li>
-
-		<li>
-			Perhaps after faceting for match results containing only
-			one name, properties of interest can be extracted. Add another
-			column:
-
-			<pre><code>parseJson(value)[0].id</code></pre>
-
-			(The <code>[0]</code>
-			means the “zeroth” object in the list, programming
-			languages often count from zero, like floors in buildings. The
-			<code>.id</code>
-			chooses which property to extract.  With this TPL reconciliation
-			choose <code>.taxonomicStatus</code> to retrieve
-			the accepted/synonym/etc status from TPL.)
-		</li>
-
-		<li>
-			You can also do more complicated things:
-
-			<pre><code>with (parseJson(value)[0],
-      m,
-      if (m.taxonomicStatus == "Accepted",
-          "Accepted",
-          m.taxonomicStatus + " of " + m.acceptedNameID
-      )
-)</code></pre>
-
-			See the <a href="https://github.com/OpenRefine/OpenRefine/wiki/GREL-Functions">GREL Functions Documentation</a>
-			for more information.
 		</li>
 	</ol>
 
 	<h3>Using the results</h3>
 
 	<p>
-		Either way, you can then export the results into CSV (or other
-		standard formats) using the <em>Export</em> menu.
+		You can then export the results into CSV (or other standard formats) using the <em>Export</em> menu.
 	</p>
 
 	<h3>Troubleshooting</h3>
@@ -296,6 +205,6 @@
 	<h3>Source code</h3>
 
 	<p>
-		The source code should be available on <a href="https://github.com/RBGKew/">Kew’s GitHub page</a> soon (probably at some point in October).
+		The source code is available on <a href="https://github.com/RBGKew/Reconciliation-and-Matching-Framework">Kew’s GitHub page</a>.
 	</p>
 </div>
