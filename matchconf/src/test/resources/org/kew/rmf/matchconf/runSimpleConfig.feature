@@ -1,3 +1,5 @@
+# Copyright © 2014 Royal Botanic Gardens, Kew.  See LICENSE.md for details.
+
 Feature: run a simple configuration
     Scenario: run the configuration as set up by createSimpleConfig step
         Given Alecs has set up a simple Configuration resulting in the following config "config_simple-config-to-run.xml":

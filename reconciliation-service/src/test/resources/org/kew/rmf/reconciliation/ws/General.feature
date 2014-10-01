@@ -1,3 +1,5 @@
+# Copyright © 2014 Royal Botanic Gardens, Kew.  See LICENSE.md for details.
+
 Feature: Basic functionality of the application: responding to a match query.
 
 	Scenario: Ensure a standard (non-reconciliation API) query returns a suitable JSON response

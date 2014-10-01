@@ -1,3 +1,5 @@
+# Copyright © 2014 Royal Botanic Gardens, Kew.  See LICENSE.md for details.
+
 Feature: Deduplication with Levenshtein
     As a DataImprover
     In order to use the LevenshteinMatcher

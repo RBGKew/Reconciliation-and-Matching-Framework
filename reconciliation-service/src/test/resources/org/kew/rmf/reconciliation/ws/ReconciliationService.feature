@@ -1,3 +1,5 @@
+# Copyright © 2014 Royal Botanic Gardens, Kew.  See LICENSE.md for details.
+
 Feature: The application exposes reconciliation (matching) functionality as an Open Refine Reconciliation Service.
 
 	Scenario: Ensure appropriate reconciliation metadata is returned

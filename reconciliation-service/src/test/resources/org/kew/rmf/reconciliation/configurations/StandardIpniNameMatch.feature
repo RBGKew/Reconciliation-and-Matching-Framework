@@ -1,3 +1,5 @@
+# Copyright © 2014 Royal Botanic Gardens, Kew.  See LICENSE.md for details.
+
 Feature: Reconcile against IPNI, using a standard configuration (not to lax, not too rigid).
 
 	Background:

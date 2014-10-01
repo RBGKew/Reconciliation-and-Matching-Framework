@@ -1,3 +1,5 @@
+# Copyright © 2014 Royal Botanic Gardens, Kew.  See LICENSE.md for details.
+
 # This is a very high-level test with real domain-specific data.
 # It should maybe not live within the application?
 Feature: Deduplicate Ipni

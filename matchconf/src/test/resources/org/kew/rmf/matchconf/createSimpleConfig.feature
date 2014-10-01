@@ -1,3 +1,5 @@
+# Copyright © 2014 Royal Botanic Gardens, Kew.  See LICENSE.md for details.
+
 Feature: Create a simple configuration
     As a developer
     In order to assure my program works roughly
