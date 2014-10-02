@@ -262,6 +262,15 @@
 					</packagingExcludes>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<configuration>
+					<!-- Propagate arguments when doing a release (necessary for tests using the database) -->
+					<arguments>-Dipni.database.password=${ipni.database.password} -Dipniflat.database.password=${ipniflat.database.password} -Dtpl.database.password=${tpl.database.password}</arguments>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
