@@ -3,172 +3,158 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:spring="http://www.springframework.org/tags" version="2.0">
 	<jsp:output omit-xml-declaration="yes"/>
-	<div>
-		<h3>
-			<span class="glyphicon glyphicon-list-alt"> </span> <strong>${configName}</strong> configuration
-		</h3>
 
-		<c:if test="${reconciliationConfiguration.description != null}">
-			<p>${reconciliationConfiguration.description}</p>
-		</c:if>
+	<c:set var="req" value="${pageContext.request}" />
+	<c:set var="serverAndPort" value="${req.serverName}"/>
+	<c:if test="${req.localPort != 80}">
+		<c:set var="serverAndPort" value="${req.serverName}:${req.localPort}"/>
+	</c:if>
+
+	<spring:url var="reconciliationServiceUrl" value="/reconcile/${configName}" />
+	<spring:url var="matchServiceUrl" value="/match/${configName}" />
+	<spring:url var="fileMatchUrl" value="/filematch/${configName}" />
+
+	<h1>
+		Reconciliation Service <em>${configName}</em>
+	</h1>
+
+	<p>Reconciliation Service URL: <input type="text" class="form-inline" style="border: none; width: 60%" value="http://${serverAndPort}${reconciliationServiceUrl}"/></p>
+
+	<c:if test="${reconciliationConfiguration.description != null}">
+		<h2 id="description">Service description</h2>
+		<p>${reconciliationConfiguration.description}</p>
 
 		<c:if test="${total != null}">
 			<p>Contains <span class="badge">${total}</span> records.</p>
 		</c:if>
+	</c:if>
 
-		<h4>Transformer and matcher detail</h4>
+	<h2 id="detail">Service detail</h2>
 
-		<table class="table table-bordered table-striped table-condensed">
-			<thead>
+	<p>
+		Queries sent as a single field are first split up into <em>Properties</em>.  Each property (both the query and the authoritative value)
+		is transformed by every <em>Transformer</em> in turn.  The results are compared using the <em>Matchers</em>, on every property.
+	</p>
+
+	<table class="table table-bordered table-striped table-condensed">
+		<thead>
+			<tr>
+				<th>Property</th>
+				<th>Transformers</th>
+				<th>Matcher</th>
+			</tr>
+		</thead>
+		<tbody>
+			<c:forEach var="property" items="${properties}">
 				<tr>
-					<th>Property</th>
-					<th>Transformers</th>
-					<th>Matcher</th>
+					<td>${property}</td>
+					<td>
+						<c:forEach var="entry" items="${transformers}">
+							<c:if test="${entry.key == property}">
+								<c:forEach var="t" items="${entry.value}">
+									<c:out value="${t}" />
+									<br />
+								</c:forEach>
+							</c:if>
+						</c:forEach>
+					</td>
+					<td>
+						<c:forEach var="entry" items="${matchers}">
+							<c:if test="${entry.key == property}">
+								<c:out value="${entry.value}" />
+							</c:if>
+						</c:forEach>
+					</td>
 				</tr>
-			</thead>
-			<tbody>
-				<c:forEach var="property" items="${properties}">
-					<tr>
-						<td>${property}</td>
-						<td>
-							<c:forEach var="entry" items="${transformers}">
-								<c:if test="${entry.key == property}">
-									<c:forEach var="t" items="${entry.value}">
-										<c:out value="${t}" />
-										<br />
-									</c:forEach>
-								</c:if>
-							</c:forEach>
-						</td>
-						<td>
-							<c:forEach var="entry" items="${matchers}">
-								<c:if test="${entry.key == property}">
-									<c:out value="${entry.value}" />
-								</c:if>
-							</c:forEach>
-						</td>
-					</tr>
-				</c:forEach>
-			</tbody>
-		</table>
+			</c:forEach>
+		</tbody>
+	</table>
 
-		<c:set var="req" value="${pageContext.request}" />
-		<c:set var="serverAndPort" value="${req.serverName}"/>
-		<c:if test="${req.localPort != 80}">
-			<c:set var="serverAndPort" value="${req.serverName}:${req.localPort}"/>
-		</c:if>
+	<h2 id="properties">Properties</h2>
 
-		<spring:url var="reconciliationServiceUrl" value="/reconcile/${configName}" />
-		<spring:url var="matchServiceUrl" value="/match/${configName}" />
-		<spring:url var="fileMatchUrl" value="/filematch/${configName}" />
+	<p>The Reconciliation Service can determine these automatically, or they can be overridden in the OpenRefine interface.</p>
 
-		<div>
-			<h3>
-				<span class="glyphicon glyphicon-cog"> </span> Open Refine reconciliation service
-			</h3>
-			Endpoint: <span class="badge">http://${serverAndPort}${reconciliationServiceUrl}</span><br />
-			Provide (some of) the following properties:
-			<ul>
-				<c:forEach var="property" items="${properties}">
-					<li>${property}</li>
-				</c:forEach>
-			</ul>
-		</div>
+	<p>For the JSON web service these should be URL-encoded HTTP GET parameters.</p>
 
-		<div>
-			<h3>
-				<span class="glyphicon glyphicon-cog"> </span> JSON web service
-			</h3>
-			Endpoint: <span class="badge">http://${serverAndPort}${matchServiceUrl}</span><br />
-			Provide (some of) the following data as URL-encoded HTTP GET parameters:
-			<ul>
-				<li>id</li>
-				<c:forEach var="property" items="${properties}">
-					<li>${property}</li>
-				</c:forEach>
-			</ul>
-		</div>
+	<p>The CSV file upload must use these properties as header lines.</p>
 
-		<div>
-			<h3>
-				<span class="glyphicon glyphicon-file"> </span> File upload
-			</h3>
-			Provide a CSV file (with a header line), containing the following fields:
-			<ul>
-				<li>id</li>
-				<c:forEach var="property" items="${properties}">
-					<li>${property}</li>
-				</c:forEach>
-			</ul>
+	<ul>
+		<c:forEach var="property" items="${properties}">
+			<li>${property}</li>
+		</c:forEach>
+	</ul>
 
-			<form class="form-inline" method="post" action="${fileMatchUrl}" enctype="multipart/form-data">
+	<h2 id="endpoints">Service endpoints</h2>
+
+	<ul>
+		<li><strong>Open Refine reconciliation service:</strong> <input type="text" class="form-inline" style="border: none; width: 60%" value="http://${serverAndPort}${reconciliationServiceUrl}"/></li>
+
+		<li><strong>JSON web service:</strong> <input type="text" class="form-inline" style="border: none; width: 60%" value="http://${serverAndPort}${matchServiceUrl}"/></li>
+
+		<li>
+			<strong>CSV file upload:</strong> <form class="form-inline" method="post" action="${fileMatchUrl}" enctype="multipart/form-data">
 				<!-- CSV file Button -->
 				<div class="form-group">
-					<label class="sr-only" for="file">CSV file</label>
 					<input id="file" name="file" class="form-control" type="file" />
 				</div>
 				<span> </span>
 				<!-- Submit button -->
 				<button type="submit" class="btn btn-primary">Upload</button>
 			</form>
-		</div>
+		</li>
+	</ul>
 
-		<div id="singleQueryDiv" style="display: none">
-			<h3>
-				<span class="glyphicon glyphicon-search"> </span> Single query
-			</h3>
-			<p>Perform a single reconciliation query using this configuration:</p>
+	<div id="singleQueryDiv" style="display: none">
+		<h2 id="singlequery">Single query</h2>
+		<p>Perform a single reconciliation query using this configuration:</p>
 
-			<form id="singleQuery" class="form-horizontal">
-				<c:forEach var="property" items="${properties}">
-					<div class="form-group">
-						<label class="col-sm-2 control-label" for="${property}">${property}</label>
-						<div class="col-sm-10">
-							<input id="${property}" name="${property}" class="form-control" type="text" />
-						</div>
-					</div>
-				</c:forEach>
-				<!-- Submit button -->
+		<form id="singleQuery" class="form-horizontal">
+			<c:forEach var="property" items="${properties}">
 				<div class="form-group">
-					<div class="col-sm-offset-2 col-sm-10">
-						<button type="submit" class="btn btn-primary">Query</button>
-					</div>
+					<label class="control-label" for="${property}" style="width: 38%;">${property}</label> 
+					<input id="${property}" name="${property}" class="form-control form-inline" type="text" style="width: 60%;" />
 				</div>
-			</form>
-			<table id="singleQueryResultTable" class="table table-bordered table-striped table-condensed"> </table>
-			<pre id="singleQueryResult"> </pre>
+			</c:forEach>
+			<!-- Submit button -->
+			<div class="form-group">
+				<label class="control-label" style="width: 38%;"> </label> 
+				<button type="submit" class="btn btn-primary">Query</button>
+			</div>
+		</form>
+		<table id="singleQueryResultTable" class="table table-bordered table-striped table-condensed"> </table>
 
-			<script><![CDATA[
-				var reconciliationServiceUrl = "${reconciliationServiceUrl}";
-				var viewUrlPattern = "${reconciliationConfiguration.viewUrl}";
+		<p>JSON response:</p>
+		<pre id="singleQueryResult" style="background-color: #efead3; margin: 1ex; padding: 1ex;"> </pre>
 
-				$("#singleQuery").submit(function(event) {
+		<script><![CDATA[
+			var reconciliationServiceUrl = "${reconciliationServiceUrl}";
+			var viewUrlPattern = "${reconciliationConfiguration.viewUrl}";
 
-					var properties = 	$("#singleQuery input").map(function() {
-						return {"pid": this.id, "v": this.value};
-					}).get();
+			$("#singleQuery").submit(function(event) {
 
-					var queryData = {"query":"q1", "properties":properties};
+				var properties = 	$("#singleQuery input").map(function() {
+					return {"pid": this.id, "v": this.value};
+				}).get();
 
-					$.post(reconciliationServiceUrl, { query: JSON.stringify(queryData) }, function( data ) {
-						$( "#singleQueryResult" ).html( JSON.stringify(data, null, 4) );
+				var queryData = {"query":"q1", "properties":properties};
 
-						var headers = "<thead><tr><th>id</th><th>name</th></tr></thead>";
-						var body = "<tbody>" + jQuery.map(data.result, function(r, i) {
-							var viewUrl = viewUrlPattern.replace("{{id}}", r.id);
-							return "<tr><td><a href=\""+viewUrl+"\">"+r.id+"</a></td><td>"+r.name+"</td></tr>";
-						}).join(" ") + "</tbody>";
+				$.post(reconciliationServiceUrl, { query: JSON.stringify(queryData) }, function( data ) {
+					$( "#singleQueryResult" ).html( JSON.stringify(data, null, 4) );
 
-						$("#singleQueryResultTable").html(headers+body);
+					var headers = "<thead><tr><th>id</th><th>name</th></tr></thead>";
+					var body = "<tbody>" + jQuery.map(data.result, function(r, i) {
+						var viewUrl = viewUrlPattern.replace("{{id}}", r.id);
+						return "<tr><td><a href=\""+viewUrl+"\">"+r.id+"</a></td><td>"+r.name+"</td></tr>";
+					}).join(" ") + "</tbody>";
 
-					}, "json");
+					$("#singleQueryResultTable").html(headers+body);
 
-					return false;
-				});
+				}, "json");
 
-				$("#singleQueryDiv").show();
-			]]></script>
+				return false;
+			});
 
-		</div>
+			$("#singleQueryDiv").show();
+		]]></script>
 	</div>
 </div>

@@ -14,6 +14,18 @@
 		<ul>
 			<li><a href="${index}">Introduction</a></li>
 			<li><a href="${about}">Available configurations</a></li>
-			<li><a href="${help}">Help</a></li>
+			<li>
+				<a href="${help}">Usage</a>
+				<ul>
+					<li><a href="${help}#installation">Overview and installation</a></li>
+					<li><a href="${help}#data-preparation">Data preparation</a></li>
+					<li><a href="${help}#reconciling">Querying the Reconciliation Service</a></li>
+					<li><a href="${help}#extending">Extending data using MQL</a></li>
+					<li><a href="${help}#exporting">Exporting data</a></li>
+					<li><a href="${help}#troubleshooting">Troubleshooting</a></li>
+					<li><a href="${help}#advanced">Advanced data manipulation</a></li>
+					<li><a href="${help}#sourcecode">Source code</a></li>
+				</ul>
+			</li>
 		</ul>
 </div>

@@ -156,7 +156,7 @@
 
 	<bean id="config" class="org.kew.rmf.core.configuration.ReconciliationServiceConfiguration"
 		p:name="IpniPublication"
-		p:description="Moderately strict reconciliation configuration matching against publications stored in the International Plant Name Index (IPNI)."
+		p:description="Initial reconciliation configuration matching against publications stored in the International Plant Name Index (IPNI)."
 		p:authorityRecords-ref="authorityFromIpniDatabase"
 		p:properties-ref="columnProperties"
 		p:sortFieldName="id"

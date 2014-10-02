@@ -11,7 +11,7 @@
 
 	<bean id="description" class="java.lang.String"><constructor-arg><value>
 		<![CDATA[
-			Moderately strict reconciliation configuration matching against names stored in the <a href="http://ipni.org/">International Plant Name Index</a> (IPNI).
+			Initial reconciliation service matching scientific names to those in the <a href="http://ipni.org/">International Plant Name Index</a> (IPNI).
 
 			<h4>A note about handling ranks</h4>
 
