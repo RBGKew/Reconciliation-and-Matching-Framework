@@ -25,6 +25,9 @@
 			.scidb h2 { margin-top: 2em; }
 			.scidb ol, .scidb ul { margin-top: 1ex; margin-bottom: 1ex; }
 
+			.scidb table td { font-size: 80%; }
+			.scidb table ol, .scidb table ul { margin-top: 0; margin-bottom: 0; }
+
 			.scidb .form-inline { display: inline; }
 			.scidb .form-inline * { display: inline; }
 

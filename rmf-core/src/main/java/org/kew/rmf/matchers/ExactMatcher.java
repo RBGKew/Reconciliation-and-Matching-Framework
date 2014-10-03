@@ -56,6 +56,9 @@ public class ExactMatcher implements Matcher {
 		return null;
 	}
 	
+	public boolean isBlanksMatch() {
+		return blanksMatch;
+	}
 	public void setBlanksMatch(boolean blanksMatch) {
 		this.blanksMatch = blanksMatch;
 	}

@@ -36,6 +36,9 @@ public class AuthorAbbreviationsMatcher extends AuthorCommonTokensMatcher{
 	
 	private List<Transformer> transformers;
 	
+	public List<Transformer> getTransformers() {
+		return transformers;
+	}
 	public void setTransformers(List<Transformer> transformers){
 		this.transformers = transformers;
 	}

@@ -78,7 +78,7 @@ public class GeneralReconciliationServiceStepdefs extends WebMvcConfigurationSup
 		// TODO: Temporary fix to allow test configuration to have loaded.
 		// Once the ReconciliatioService allows querying for this, this should be replaced.
 		try {
-			Thread.sleep(5L * 1000L);
+			Thread.sleep(2L * 1000L);
 		}
 		catch (InterruptedException e) {}
 	}

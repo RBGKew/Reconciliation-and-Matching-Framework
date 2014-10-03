@@ -60,6 +60,11 @@ public class CsvDictionary implements Dictionary, InitializingBean {
 		return map.entrySet();
 	}
 
+	@Override
+	public String toString() {
+		return getFilePath().substring(getFilePath().lastIndexOf('/')+1) + " (" + entrySet().size() + " entries)";
+	}
+
 	// • Getters and setters • //
 	public String getFileDelimiter() {
 		return fileDelimiter;

@@ -105,6 +105,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 	public UrlBasedViewResolver viewResolver() {
 		UrlBasedViewResolver viewResolver = new UrlBasedViewResolver();
 		viewResolver.setViewClass(TilesView.class);
+		viewResolver.setContentType("text/html;charset=UTF-8");
 		return viewResolver;
 	}
 

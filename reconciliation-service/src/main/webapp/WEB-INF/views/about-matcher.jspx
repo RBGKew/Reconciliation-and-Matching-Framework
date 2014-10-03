@@ -49,21 +49,26 @@
 				<tr>
 					<td>${property}</td>
 					<td>
-						<c:forEach var="entry" items="${transformers}">
-							<c:if test="${entry.key == property}">
-								<c:forEach var="t" items="${entry.value}">
-									<c:out value="${t}" />
-									<br />
-								</c:forEach>
-							</c:if>
-						</c:forEach>
+						<ol id="${property}_transformers">
+							<c:forEach var="t" items="${transformers[property]}">
+								<li>
+									<span title="${t.qualifiedName}">${t.name}</span>
+									<ul>
+										<c:forEach var="c" items="${t.configuration}">
+											<li>${c}</li>
+										</c:forEach>
+									</ul>
+								</li>
+							</c:forEach>
+						</ol>
 					</td>
-					<td>
-						<c:forEach var="entry" items="${matchers}">
-							<c:if test="${entry.key == property}">
-								<c:out value="${entry.value}" />
-							</c:if>
-						</c:forEach>
+					<td id="${property}_matcher">
+						<span title="${matchers[property].qualifiedName}">${matchers[property].name}</span>
+						<ul>
+							<c:forEach var="c" items="${matchers[property].configuration}">
+								<li>${c}</li>
+							</c:forEach>
+						</ul>
 					</td>
 				</tr>
 			</c:forEach>
