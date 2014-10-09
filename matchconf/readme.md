@@ -49,19 +49,19 @@ spring roo, so its very likely that the realisation is badly done.)
 Logically it is obviously similar to the classes used in the
 deduplicator-framework-app (see related readme):
 
- -----------------------------------------------------------
-|                                       [logical datamodel] |
-|   Configuration                                           |
-|         |                                                 |
-|         |---------< Transformer -------< WiredTransformer |
-|         |                                   \/    \/      |
-|         |---------< Matcher                 /     ·       |
-|         |                                  /     ·        |
-|         |---------< Wire ------------------······         |
-|         |                                                 |
-|         `---------< Reporter                              |
-|                                                           |
- -----------------------------------------------------------
+	┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+	┃                                         LOGICAL DATAMODEL ┃
+	┃   Configuration                                           ┃
+	┃         ┃                                                 ┃
+	┃         ┣━━━━━━━━╾< Transformer ╼━━━━━╾< WiredTransformer ┃
+	┃         ┃                                   ╲╱    ╲╱      ┃
+	┃         ┣━━━━━━━━╾< Matcher                 ╱    ╭╯       ┃
+	┃         ┃                                  ╱    ╭╯        ┃
+	┃         ┣━━━━━━━━╾< Wire ╼━━━━━━━━━━━━━━━━━─────╯         ┃
+	┃         ┃                                                 ┃
+	┃         ┗━━━━━━━━╾< Reporter                              ┃
+	┃                                                           ┃
+	┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
 The basic principle is that a Configuration functions as a sandbox, all
 instances of the Transformer, Matcher, Wire (a 'Property' in the deduplicator)
@@ -76,7 +76,7 @@ also, a wire can have 0:n query-transformers and 0:n authority-transformers.
 The sandbox paradigm is not the case for Dictionaries, as they are meant to be
 re-usable by all configurations.
 
-2. Communication deduplicator <-> MatchConf
+2. Communication deduplicator ⟷ MatchConf
 
 ## What it should do
 
@@ -86,11 +86,11 @@ There is currently no front-end testing at all. That is very bad.
 ### Extendibility
 *	org.kew.rmf.matchconf.web.LibraryScanner defines the packages available
 	within the library;
-**		a configuration could have a field where you can add new packages (that
+	*	a configuration could have a field where you can add new packages (that
 		have to be on the classpath) defining them comma-separated in a string
-		("org.a.b.c.*, com.bla.blub.*")
+		("`org.a.b.c.*`, `com.bla.blub.*`")
 
-## known bugs
+## Known bugs
 * the ORM is probably very broken due to my lack of knowledge of JPA/ROO; the
   most annoying bug is that the way the WiredTransformer is implemented, they
   sometimes get orphaned in a deletion process and cause constraint violation

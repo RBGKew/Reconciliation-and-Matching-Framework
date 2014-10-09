@@ -12,18 +12,19 @@ This is a multi-module Maven project.  It consists of:
 * reconciliation-service-model: domain objects for the reconciliation service.
 
 ## Testing
-mvn clean test
+
+`mvn clean test`
 
 ## Local deployment of matchconf
 The following starts a local server on port 8080.
 
-# `mvn clean install`
-# `cd matchconf`
-# `mvn jetty:deploy-war`
+1. `mvn clean install`
+2. `cd matchconf`
+3. `mvn jetty:deploy-war`
 
 ## Detailed information
 Read in the submodules:
 
-* [deduplicator/readme.md](deduplicator/readme.md)
+* [rmf-core/readme.md](rmf-core/readme.md)
 * [matchconf/readme.md](matchconf/readme.md)
 * [reconciliation-service/readme.md](reconciliation-service/readme.md)

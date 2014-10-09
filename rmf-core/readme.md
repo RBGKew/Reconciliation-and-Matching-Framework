@@ -1,9 +1,10 @@
 # Reconciliation and Matching Framework
 
 ## Quick introduction
+
 This project is a generic de-duplication framework using Spring and Lucene.
 
-It runs in two modes - deduplication and match.
+It runs in two modes — deduplication and match.
 
 *	Deduplication:
 	operates on a single data file and looks for duplicate records within it.
@@ -17,10 +18,11 @@ In order to run it needs two know two things:
 	defaults to 'config.xml'
 
 The project is built using maven, so to run on the command-line do:
-`$ mvn clean compile exec:java -Dexec.args="--data-dir <path/to/directory> --config-file <path/to/config>"`
+
+`mvn clean compile exec:java -Dexec.args="--data-dir <path/to/directory> --config-file <path/to/config>"`
 
 For full examples look at the high-level cucumber tests, the simplest one currently
-is at src/test/resources/org/kew/rmf/core/levenshtein_dedup.feature .
+is at [src/test/resources/org/kew/rmf/core/levenshtein_dedup.feature](src/test/resources/org/kew/rmf/core/levenshtein_dedup.feature).
 
 For examples of concrete Matchers/Transformers/etc look at the corresponding unit-tests.
 
@@ -40,30 +42,31 @@ The spring context is split up in three different files:
   way, matchers, transformers, reporters). This is the context that has to
   import the other two.
   A sample configuration can be found at
-  src/test/resources/org/kew/rmf/core/levenshtein_dedup.feature .
+  [src/test/resources/org/kew/rmf/core/levenshtein_dedup.feature](src/test/resources/org/kew/rmf/core/levenshtein_dedup.feature).
 
-### architectural design
-All the work is done by a `DataHandler`, by the <engine> bean in the task
-specific spring context.  The actual configuration is held in the <config> bean
+### Architectural design
+
+All the work is done by a `DataHandler`, by the `<engine>` bean in the task
+specific spring context.  The actual configuration is held in the `<config>` bean
 in the user provided config that wires together all user-configurable elements.
 Besides the file location and file format the most important here are the
 `Properties`: they wire together the name of a column with the desired
-`Transformer(s)` and `Matcher`.
+`Transformer`s and `Matcher`.
 
- -----------------------------------------------------------
-|                                       [logical datamodel] |
-|   Configuration                                           |
-|         |                           -< Transformer        |
-|         |                          /                      |
-|         |---------< Property ------                       |
-|         |           (each col)     \                      |
-|         |                           - Matcher             |
-|         `---------< Reporter                              |
-|                                                           |
- -----------------------------------------------------------
+	┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+	┃                                         LOGICAL DATAMODEL ┃
+	┃   Configuration                                           ┃
+	┃         ┃                          ┏╾< Transformer        ┃
+	┃         ┃                          ┃                      ┃
+	┃         ┣━━━━━━━━╾< Property ╼━━━━━┫                      ┃
+	┃         ┃           (each col)     ┃                      ┃
+	┃         ┃                          ┗╾ Matcher             ┃
+	┃         ┗━━━━━━━━╾< Reporter                              ┃
+	┃                                                           ┃
+	┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
 The Reporter(s) define the output format of the match- and deduplication tasks.
 
 ## Further reading
 
-See the FurtherReading.md for more background info.
+See [FurtherReading.md](FurtherReading.md) for more background info.

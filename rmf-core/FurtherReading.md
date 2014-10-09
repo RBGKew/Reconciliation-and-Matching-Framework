@@ -25,7 +25,7 @@ It runs in two modes — deduplication and match.
 
 The project is built using Maven, so to run:
 
-mvn clean compile exec:java -Dexec.mainClass=org.kew.rmf.core.CoreApp
+`mvn clean compile exec:java -Dexec.mainClass=org.kew.rmf.core.CoreApp`
 
 ## 5 minute introduction
 
@@ -93,7 +93,7 @@ Further work:
 *	Implement some kind of configurable post-processor to false positives
 	(it should be explicit about what it does, eg accept micro/macro pair
 	in configuration).
-*	The Lucene processing could be more efficient - could try using Lucene 4
+*	The Lucene processing could be more efficient — could try using Lucene 4
 	which has greatly improved the performance, particularly on fuzzy
 	matching.
 *	Extend for different datasets by adding new transformers and / or
@@ -107,35 +107,35 @@ Further work:
 
 ```
 select concat(ipniflat.citation_superset.Id
-,'\t', Family
-,'\t', Full_name_without_family_and_authors
-,'\t', Genus
-,'\t', Species
-,'\t', Basionym_author
-,'\t', Publishing_author
-,'\t', Collation
-,' ', case Publication_year when '0' then '' else Publication_year end
-,'\t', Publication)
+	,'\t', Family
+	,'\t', Full_name_without_family_and_authors
+	,'\t', Genus
+	,'\t', Species
+	,'\t', Basionym_author
+	,'\t', Publishing_author
+	,'\t', Collation
+	,' ', case Publication_year when '0' then '' else Publication_year end
+	,'\t', Publication)
 from ipniflat.citation_superset
-where Family IN ('Cyperaceae')
-AND rank = 'spec.'
-AND Hybrid_genus = 'N'
-AND Hybrid = 'N'
+	where Family IN ('Cyperaceae')
+	AND rank = 'spec.'
+	AND Hybrid_genus = 'N'
+	AND Hybrid = 'N'
 ```
 
 1.2. Get Cyperaceae data for species only from WCS:
 
 ```
 SELECT DISTINCT convert(varchar,Plant_Name.Plant_name_id)
-||CHAR(9)|| Plant_Name.Family
-||CHAR(9)|| Plant_Name.Full_epithet
-||CHAR(9)|| Plant_Name.Genus
-||CHAR(9)|| Plant_Name.Species
-||CHAR(9)|| bas_auths.Author
-||CHAR(9)|| pri_auths.Author
-||CHAR(9)|| Plant_Name.Volume_and_page
-||' '|| str_REPLACE(str_REPLACE(str_REPLACE(Plant_Name.First_published, CHAR(10), ''), CHAR(13), ''), CHAR(9), '')
-||CHAR(9)|| str_REPLACE(str_REPLACE(str_REPLACE(Place_of_Publication.Place_of_publication, CHAR(10), ''), CHAR(13), ''), CHAR(9), '')
+	||CHAR(9)|| Plant_Name.Family
+	||CHAR(9)|| Plant_Name.Full_epithet
+	||CHAR(9)|| Plant_Name.Genus
+	||CHAR(9)|| Plant_Name.Species
+	||CHAR(9)|| bas_auths.Author
+	||CHAR(9)|| pri_auths.Author
+	||CHAR(9)|| Plant_Name.Volume_and_page
+	||' '|| str_REPLACE(str_REPLACE(str_REPLACE(Plant_Name.First_published, CHAR(10), ''), CHAR(13), ''), CHAR(9), '')
+	||CHAR(9)|| str_REPLACE(str_REPLACE(str_REPLACE(Place_of_Publication.Place_of_publication, CHAR(10), ''), CHAR(13), ''), CHAR(9), '')
 FROM Plant_Name  
 	INNER JOIN Taxon_Status ON Plant_Name.Taxon_status_id = Taxon_Status.Taxon_status_id
 	INNER JOIN Plant_Author AS pri_auth_link ON pri_auth_link.Plant_name_id = Plant_Name.Plant_name_id
@@ -144,25 +144,25 @@ FROM Plant_Name
 	LEFT JOIN Authors AS bas_auths ON bas_auth_link.Author_id = bas_auths.Author_id
 	INNER JOIN Place_of_Publication ON Plant_Name.Place_of_publication_id = Place_of_Publication.Place_of_publication_id
 WHERE Family IN ('Cyperaceae')
-AND Plant_Name.Infraspecific_rank IS NULL
-AND Plant_Name.Infraspecific_epithet IS NULL
-AND Plant_Name.Species IS NOT NULL
-AND Plant_Name.Species_hybrid_marker IS NULL
-AND Plant_Name.Genus_hybrid_marker IS NULL
-AND Plant_Name.Plant_name_id > 0
-AND pri_auth_link.Author_type_id = 'PRM'
-AND bas_auth_link.Author_type_id = 'PAR'
+	AND Plant_Name.Infraspecific_rank IS NULL
+	AND Plant_Name.Infraspecific_epithet IS NULL
+	AND Plant_Name.Species IS NOT NULL
+	AND Plant_Name.Species_hybrid_marker IS NULL
+	AND Plant_Name.Genus_hybrid_marker IS NULL
+	AND Plant_Name.Plant_name_id > 0
+	AND pri_auth_link.Author_type_id = 'PRM'
+	AND bas_auth_link.Author_type_id = 'PAR'
 ```
 
 2. Configure the dedupl-framework app to match these
 
-Family - must match exactly
-Full epithet - for info only - always match
-Genus - must match exactly
-Species - Levenshtein of 1, initial character the same
-Basionym author - blanks match
-Primary author
-Volume, page and year - must share common tokens
-Publication title - anything goes
+- Family — must match exactly
+- Full epithet — for info only — always match
+- Genus — must match exactly
+- Species — Levenshtein of 1, initial character the same
+- Basionym author — blanks match
+- Primary author
+- Volume, page and year — must share common tokens
+- Publication title — anything goes
 
 Store the data-set with the most data, iterate over the data-set with the least.
