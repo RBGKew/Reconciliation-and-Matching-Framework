@@ -46,17 +46,17 @@ public class WebAppInitializer implements WebApplicationInitializer {
 			String[] urlPatterns = {"/", "/about/*", "/admin", "/filematch/*", "/help"};
 
 			FilterRegistration.Dynamic cssLinkFilter = servletContext.addFilter("CssLinkFilter",TAG_SWAP_FILTER_CLASS);
-			cssLinkFilter.setInitParameter("include_file_name", "/var/lib/science-apps/web-resources/head.chunk");
+			cssLinkFilter.setInitParameter("include_file_name", "/var/lib/science-apps/web-resources/2014/head.chunk");
 			cssLinkFilter.setInitParameter("tag_name", "[KEWCSS]");
 			cssLinkFilter.addMappingForUrlPatterns(null, true, urlPatterns);
 
 			FilterRegistration.Dynamic headerFilter = servletContext.addFilter("HeaderFilter", TAG_SWAP_FILTER_CLASS);
-			headerFilter.setInitParameter("include_file_name", "/var/lib/science-apps/web-resources/bodytop.chunk");
+			headerFilter.setInitParameter("include_file_name", "/var/lib/science-apps/web-resources/2014/bodytop.chunk");
 			headerFilter.setInitParameter("tag_name", "[KEWHEADER]");
 			headerFilter.addMappingForUrlPatterns(null, true, urlPatterns);
 
 			FilterRegistration.Dynamic footerFilter = servletContext.addFilter("FooterFilter", TAG_SWAP_FILTER_CLASS);
-			footerFilter.setInitParameter("include_file_name", "/var/lib/science-apps/web-resources/bodybottom.chunk");
+			footerFilter.setInitParameter("include_file_name", "/var/lib/science-apps/web-resources/2014/bodybottom.chunk");
 			footerFilter.setInitParameter("tag_name", "[KEWFOOTER]");
 			footerFilter.addMappingForUrlPatterns(null, true, urlPatterns);
 		}

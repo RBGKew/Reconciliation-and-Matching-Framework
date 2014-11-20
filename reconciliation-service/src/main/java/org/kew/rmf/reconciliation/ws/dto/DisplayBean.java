@@ -65,21 +65,21 @@ public class DisplayBean<T> {
 							// Recurse for lists
 							else if (Iterable.class.isAssignableFrom(propertyType)) {
 								Iterable<?> l = (Iterable<?>) getter.invoke(javaBean);
-								configurationItem += ": {";
+								configurationItem += ": {\n";
 								for (Object li : l) {
 									DisplayBean<?> dto = new DisplayBean<Object>(li);
-									configurationItem += dto.getName();
+									configurationItem += "\t• " + dto.getName();
 									if (dto.getConfiguration() != null && dto.getConfiguration().size() > 0) {
 										configurationItem += " " + dto.getConfiguration();
 									}
-									configurationItem += "; ";
+									configurationItem += ";\n";
 								}
 								configurationItem = configurationItem.substring(0, configurationItem.length()-2);
-								configurationItem += "}";
+								configurationItem += "\n}";
 							}
 
 							// Dictionaries
-							if (propertyType.equals(Dictionary.class)) {
+							else if (propertyType.equals(Dictionary.class)) {
 								configurationItem += ": \"<code>" + getter.invoke(javaBean) + "</code>\"";
 							}
 

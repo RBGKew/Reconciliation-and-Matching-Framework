@@ -1,4 +1,4 @@
-<div class="one-col float-right content-head-4" id="links-module"
+<div class="sidebar"
 	xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
@@ -10,22 +10,26 @@
 	<spring:url var="about" value="/about" />
 	<spring:url var="help" value="/help" />
 
-		<h2 class="header4 block-margin-bottom">Reconciliation Service</h2>
-		<ul>
-			<li><a href="${index}">Introduction</a></li>
-			<li><a href="${about}">Available configurations</a></li>
-			<li>
-				<a href="${help}">Usage</a>
-				<ul>
-					<li><a href="${help}#installation">Overview and installation</a></li>
-					<li><a href="${help}#data-preparation">Data preparation</a></li>
-					<li><a href="${help}#reconciling">Querying the Reconciliation Service</a></li>
-					<li><a href="${help}#extending">Extending data using MQL</a></li>
-					<li><a href="${help}#exporting">Exporting data</a></li>
-					<li><a href="${help}#troubleshooting">Troubleshooting</a></li>
-					<li><a href="${help}#advanced">Advanced data manipulation</a></li>
-					<li><a href="${help}#sourcecode">Source code</a></li>
-				</ul>
+	<ul class="menu">
+		<li class="first last expanded active-trail active">
+		<a class="active-trail active" href="${index}">Reconciliation Service</a>
+		<ul class="menu">
+			<li class="leaf"><a href="${index}">Introduction</a></li>
+			<li class="active"><a href="${about}">Available configurations</a></li>
+			<li class="first last expanded active-trail active">
+			<a class="" href="${help}">Usage</a>
+			<ul class="menu">
+				<li class="leaf"><a href="${help}#installation">Overview and installation</a></li>
+				<li class="leaf"><a href="${help}#data-preparation">Data preparation</a></li>
+				<li class="leaf"><a href="${help}#reconciling">Querying the Reconciliation Service</a></li>
+				<li class="leaf"><a href="${help}#extending">Extending data using MQL</a></li>
+				<li class="leaf"><a href="${help}#exporting">Exporting data</a></li>
+				<li class="leaf"><a href="${help}#troubleshooting">Troubleshooting</a></li>
+				<li class="leaf"><a href="${help}#advanced">Advanced data manipulation</a></li>
+				<li class="leaf"><a href="${help}#sourcecode">Source code</a></li>
+			</ul>
 			</li>
 		</ul>
+		</li>
+	</ul>
 </div>
