@@ -251,9 +251,35 @@
 
 		<plugins>
 			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
+				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
-				<version>8.1.14.v20131031</version>
+				<version>9.2.2.v20140723</version>
+				<configuration>
+					<webAppConfig>
+						<!-- Jetty adds the WAR overlay itself, and has no way to exclude it. -->
+						<allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
+					</webAppConfig>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.6.1</version>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>src/main/webapp</directory>
+							<includes>
+								<include>WEB-INF/classes/</include>
+								<include>WEB-INF/kew-layouts/</include>
+								<include>WEB-INF/lib/</include>
+								<include>WEB-INF/tags/</include>
+								<include>kewtheme/</include>
+							</includes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>
+				</configuration>
 			</plugin>
 
 			<plugin>
@@ -265,6 +291,32 @@
 						WEB-INF/classes/META-INF/spring/reconciliation-service.properties
 					</packagingExcludes>
 				</configuration>
+				<executions>
+					<execution>
+						<!--
+							Without adding the web templates in-place (in src/main/webapp) the tiles layouts aren't picked up
+							when running tests (using Maven).  Entries in .gitignore exclude the files from source control.
+						-->
+						<id>war-inplace</id>
+						<phase>process-test-resources</phase>
+						<goals>
+							<goal>inplace</goal>
+						</goals>
+						<configuration>
+							<overlays>
+								<overlay />
+								<overlay>
+									<groupId>org.kew.web</groupId>
+									<artifactId>kew-website-templates-war</artifactId>
+									<excludes>
+										<exclude>META-INF/</exclude>
+										<exclude>WEB-INF/lib/*.jar</exclude>
+									</excludes>
+								</overlay>
+							</overlays>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 
 			<plugin>

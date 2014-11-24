@@ -7,3 +7,10 @@ data/
 logs/
 .springBeans
 pom.xml.versionsBackup
+
+# Result of using war:inplace in the build
+reconciliation-service/src/main/webapp/WEB-INF/classes/
+reconciliation-service/src/main/webapp/WEB-INF/kew-layouts/
+reconciliation-service/src/main/webapp/WEB-INF/lib/
+reconciliation-service/src/main/webapp/WEB-INF/tags/
+reconciliation-service/src/main/webapp/kewtheme/
