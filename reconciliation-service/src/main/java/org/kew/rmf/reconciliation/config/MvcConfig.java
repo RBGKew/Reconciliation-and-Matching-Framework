@@ -23,12 +23,18 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.ui.context.ThemeSource;
+import org.springframework.ui.context.support.ResourceBundleThemeSource;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.ThemeResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.theme.CookieThemeResolver;
+import org.springframework.web.servlet.theme.ThemeChangeInterceptor;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import org.springframework.web.servlet.view.tiles2.TilesConfigurer;
 import org.springframework.web.servlet.view.tiles2.TilesView;
@@ -37,7 +43,7 @@ import org.springframework.web.servlet.view.tiles2.TilesView;
 @EnableWebMvc
 @ComponentScan(basePackageClasses = {
 		org.kew.rmf.reconciliation.service.ReconciliationService.class,
-		org.kew.rmf.reconciliation.ws.MatchController.class
+		org.kew.rmf.reconciliation.ws.BaseController.class
 })
 @EnableAspectJAutoProxy
 public class MvcConfig extends WebMvcConfigurerAdapter {
@@ -85,12 +91,43 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 	}
 
 	/**
+	 * Theme source
+	 */
+	@Bean
+	public ThemeSource themeSource() {
+		ResourceBundleThemeSource themeSource = new ResourceBundleThemeSource();
+		themeSource.setBasenamePrefix("kew2014-");
+		return themeSource;
+	}
+
+	/**
+	 * Theme resolver
+	 */
+	@Bean
+	public ThemeResolver themeResolver() {
+		CookieThemeResolver themeResolver = new CookieThemeResolver();
+		themeResolver.setDefaultThemeName("default");
+		return themeResolver;
+	}
+
+	/**
+	 * Theme interceptor (optional, without it the theme won't be changed).
+	 */
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		ThemeChangeInterceptor themeChangeInterceptor = new ThemeChangeInterceptor();
+		themeChangeInterceptor.setParamName("theme");
+		registry.addInterceptor(themeChangeInterceptor);
+	}
+
+	/**
 	 * Tiles2 views configuration.
 	 */
 	@Bean
 	public TilesConfigurer tilesConfigurer() {
 		TilesConfigurer tilesConfig = new TilesConfigurer();
 		tilesConfig.setDefinitions(new String[] {
+				"/WEB-INF/kew-layouts/layouts.xml",
 				"/WEB-INF/layouts/layouts.xml",
 				"/WEB-INF/views/**/views.xml"
 		});

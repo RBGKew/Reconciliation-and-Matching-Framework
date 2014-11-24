@@ -19,11 +19,9 @@
 		<mysql.version>5.1.31</mysql.version>
 		<postgresql.version>9.3-1100-jdbc41</postgresql.version>
 		<tiles.version>2.2.2</tiles.version>
-		<servlet-filters.version>20140923</servlet-filters.version>
 	</properties>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>org.kew.rmf</groupId>
 			<artifactId>rmf-core</artifactId>
@@ -76,8 +74,14 @@
 
 		<dependency>
 			<groupId>org.kew.web</groupId>
-			<artifactId>servlet-filter</artifactId>
-			<version>${servlet-filters.version}</version>
+			<artifactId>kew-website-templates-model</artifactId>
+			<version>0.1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.kew.web</groupId>
+			<artifactId>kew-website-templates-war</artifactId>
+			<version>0.1.0-SNAPSHOT</version>
+			<type>war</type>
 		</dependency>
 
 		<!-- file upload -->

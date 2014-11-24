@@ -12,6 +12,7 @@
  */
 package org.kew.rmf.reconciliation.ws;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,13 +25,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class OtherController {
 	//private static Logger logger = LoggerFactory.getLogger(OtherController.class);
 
+	@Autowired
+	private BaseController baseController;
+
 	@RequestMapping(produces="text/html", value = "/", method = RequestMethod.GET)
 	public String doWelcome(Model model) {
+		baseController.menuAndBreadcrumbs("/", model);
 		return "index";
 	}
 
 	@RequestMapping(produces="text/html", value = "/help", method = RequestMethod.GET)
 	public String doHelp(Model model) {
+		baseController.menuAndBreadcrumbs("/help", model);
 		return "help";
 	}
 }

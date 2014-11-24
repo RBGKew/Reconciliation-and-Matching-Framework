@@ -1,7 +1,7 @@
 <div xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:spring="http://www.springframework.org/tags" version="2.0">
+	xmlns:spring="http://www.springframework.org/tags">
 	<jsp:output omit-xml-declaration="yes"/>
 
 	<c:set var="req" value="${pageContext.request}" />
@@ -21,7 +21,7 @@
 	<p>Reconciliation Service URL: <input type="text" class="form-inline" style="border: none; width: 60%" value="http://${serverAndPort}${reconciliationServiceUrl}"/></p>
 
 	<c:if test="${reconciliationConfiguration.description != null}">
-		<h2 id="description">Service description</h2>
+		<h2 id="description"><a href="#description">Service description</a></h2>
 		<p>${reconciliationConfiguration.description}</p>
 
 		<c:if test="${total != null}">
@@ -29,7 +29,7 @@
 		</c:if>
 	</c:if>
 
-	<h2 id="detail">Service detail</h2>
+	<h2 id="detail"><a href="#detail">Service detail</a></h2>
 
 	<p>
 		Queries sent as a single field are first split up into <em>Properties</em>.  Each property (both the query and the authoritative value)
@@ -75,7 +75,7 @@
 		</tbody>
 	</table>
 
-	<h2 id="properties">Properties</h2>
+	<h2 id="properties"><a href="#properties">Properties</a></h2>
 
 	<p>The Reconciliation Service can determine these automatically, or they can be overridden in the OpenRefine interface.</p>
 
@@ -89,7 +89,7 @@
 		</c:forEach>
 	</ul>
 
-	<h2 id="endpoints">Service endpoints</h2>
+	<h2 id="endpoints"><a href="#endpoints">Service endpoints</a></h2>
 
 	<ul>
 		<li><strong>Open Refine reconciliation service:</strong> <input type="text" class="form-inline" style="border: none; width: 60%" value="http://${serverAndPort}${reconciliationServiceUrl}"/></li>
@@ -110,7 +110,7 @@
 	</ul>
 
 	<div id="singleQueryDiv" style="display: none">
-		<h2 id="singlequery">Single query</h2>
+		<h2 id="singlequery"><a href="#singlequery">Single query</a></h2>
 		<p>Perform a single reconciliation query using this configuration:</p>
 
 		<form id="singleQuery" class="form-horizontal">
@@ -126,10 +126,12 @@
 				<button type="submit" class="btn btn-primary">Query</button>
 			</div>
 		</form>
-		<table id="singleQueryResultTable" class="table table-bordered table-striped table-condensed"> </table>
+		<table id="singleQueryResultTable" class="table table-listing">
+			<caption>Query results</caption>
+		</table>
 
 		<p>JSON response:</p>
-		<pre id="singleQueryResult" style="background-color: #efead3; margin: 1ex; padding: 1ex;"> </pre>
+		<pre id="singleQueryResult" style="background-color: #f4f4f4; border: 1px solid #909090; margin: 1ex; padding: 1ex;"> </pre>
 
 		<script><![CDATA[
 			var reconciliationServiceUrl = "${reconciliationServiceUrl}";
@@ -146,7 +148,7 @@
 				$.post(reconciliationServiceUrl, { query: JSON.stringify(queryData) }, function( data ) {
 					$( "#singleQueryResult" ).html( JSON.stringify(data, null, 4) );
 
-					var headers = "<thead><tr><th>id</th><th>name</th></tr></thead>";
+					var headers = "<caption>Query results</caption><thead><tr><th>id</th><th>name</th></tr></thead>";
 					var body = "<tbody>" + jQuery.map(data.result, function(r, i) {
 						var viewUrl = viewUrlPattern.replace("{{id}}", r.id);
 						return "<tr><td><a href=\""+viewUrl+"\">"+r.id+"</a></td><td>"+r.name+"</td></tr>";

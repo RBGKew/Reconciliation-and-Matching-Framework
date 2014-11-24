@@ -52,6 +52,9 @@ public class ConfigurationController {
 	@Autowired
 	private ReconciliationService reconciliationService;
 
+	@Autowired
+	private BaseController baseController;
+
 	@RequestMapping(produces="text/html", value = "/admin", method = RequestMethod.GET)
 	public String doConfigurationAdmin(Model model) throws ReconciliationServiceException {
 		logger.info("Request for configuration admin page");
@@ -67,6 +70,7 @@ public class ConfigurationController {
 
 		model.addAttribute("configurations", configurations);
 
+		baseController.menuAndBreadcrumbs("/admin", model);
 		return "configuration-admin";
 	}
 
@@ -110,6 +114,7 @@ public class ConfigurationController {
 	@RequestMapping(produces="text/html", value = "/about", method = RequestMethod.GET)
 	public String doWelcome(Model model) {
 		model.addAttribute("availableMatchers", reconciliationService.getMatchers().keySet());
+		baseController.menuAndBreadcrumbs("/about", model);
 		return "about-general";
 	}
 
@@ -126,8 +131,7 @@ public class ConfigurationController {
 			configuration = reconciliationService.getReconciliationServiceConfiguration(configName);
 		}
 		catch (MatchExecutionException e) {
-			// TODO: Make a 404.
-			return "about-matcher";
+			configuration = null;
 		}
 
 		if (configuration != null) {
@@ -151,7 +155,13 @@ public class ConfigurationController {
 			model.addAttribute("matchers", p_matchers);
 			model.addAttribute("transformers", p_transformers);
 		}
+		else {
+			// TODO: Make a 404.
+			baseController.menuAndBreadcrumbs("/about", model);
+			return "about-general";
+		}
 
+		baseController.menuAndBreadcrumbs("/about/"+configName, model);
 		return "about-matcher";
 	}
 }

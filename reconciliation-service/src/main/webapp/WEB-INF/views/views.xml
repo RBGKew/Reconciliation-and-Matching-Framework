@@ -6,33 +6,33 @@
 <tiles-definitions>
 
 	<definition name="about-general" extends="default">
-		<put-attribute name="title" value="Available configurations — Kew Reconciliation Services" />
-		<put-attribute name="body" value="/WEB-INF/views/about-general.jspx" />
+		<put-attribute name="kewTitle" value="Available configurations — Kew Reconciliation Services" />
+		<put-attribute name="kewBody" value="/WEB-INF/views/about-general.jspx" />
 	</definition>
 
 	<definition name="about-matcher" extends="default">
-		<put-attribute name="title" value="Configuration detail — Kew Reconciliation Services" />
-		<put-attribute name="body" value="/WEB-INF/views/about-matcher.jspx" />
+		<put-attribute name="kewTitle" value="Configuration detail — Kew Reconciliation Services" />
+		<put-attribute name="kewBody" value="/WEB-INF/views/about-matcher.jspx" />
 	</definition>
 
 	<definition name="configuration-admin" extends="default">
-		<put-attribute name="title" value="Configuration admininstration — Kew Reconciliation Services" />
-		<put-attribute name="body" value="/WEB-INF/views/configuration-admin.jspx" />
+		<put-attribute name="kewTitle" value="Configuration admininstration — Kew Reconciliation Services" />
+		<put-attribute name="kewBody" value="/WEB-INF/views/configuration-admin.jspx" />
 	</definition>
 
 	<definition name="file-matcher-results" extends="default">
-		<put-attribute name="title" value="Match results — Kew Reconciliation Services" />
-		<put-attribute name="body" value="/WEB-INF/views/file-matcher-results.jspx" />
+		<put-attribute name="kewTitle" value="Match results — Kew Reconciliation Services" />
+		<put-attribute name="kewBody" value="/WEB-INF/views/file-matcher-results.jspx" />
 	</definition>
 
 	<definition name="help" extends="default">
-		<put-attribute name="title" value="Help — Kew Reconciliation Services" />
-		<put-attribute name="body" value="/WEB-INF/views/help.jspx" />
+		<put-attribute name="kewTitle" value="Help — Kew Reconciliation Services" />
+		<put-attribute name="kewBody" value="/WEB-INF/views/help.jspx" />
 	</definition>
 
 	<definition name="index" extends="default">
-		<put-attribute name="title" value="Introduction — Kew Reconciliation Services" />
-		<put-attribute name="body" value="/WEB-INF/views/index.jspx" />
+		<put-attribute name="kewTitle" value="Introduction — Kew Reconciliation Services" />
+		<put-attribute name="kewBody" value="/WEB-INF/views/index.jspx" />
 	</definition>
 
 </tiles-definitions>

@@ -1,7 +1,7 @@
 <div xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:spring="http://www.springframework.org/tags" version="2.0">
+	xmlns:spring="http://www.springframework.org/tags">
 	<jsp:output omit-xml-declaration="yes"/>
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 
@@ -23,7 +23,7 @@
 		matches, or no match at all.
 	</p>
 
-	<h2 id="installation">Software overview and installation</h2>
+	<h2 id="installation"><a href="#installation">Software overview and installation</a></h2>
 
 	<p>
 		Watch the three introductory videos — these instructions assume some familiarity
@@ -55,7 +55,7 @@
 		the functionality to extend data using The Plant List will not be available.
 	</p>
 
-	<h2 id="data-preparation">Data preparation</h2>
+	<h2 id="data-preparation"><a href="#data-preparation">Data preparation</a></h2>
 
 	<p>
 		The services are easiest to use if the whole name (or value to be reconciled) is in a single column, like
@@ -80,7 +80,7 @@
 		<a href="${aboutIpniNameUrl}">IPNI Name reconciliation service</a>.
 	</p>
 
-	<h2 id="reconciling">Querying the Reconciliation Service</h2>
+	<h2 id="reconciling"><a href="#reconciling">Querying the Reconciliation Service</a></h2>
 
 	<spring:url var="reconcileIpniNameUrl" value="/reconcile/IpniName" />
 
@@ -143,7 +143,7 @@
 		</li>
 	</ol>
 
-	<h2 id="extending">Extending data using the Metaweb Query Language service</h2>
+	<h2 id="extending"><a href="#extending">Extending data using the Metaweb Query Language service</a></h2>
 
 	<p>
 		Data that has already been (partially!) reconciled against IPNI and presented through a
@@ -164,20 +164,20 @@
 		</li>
 	</ol>
 
-	<h2 id="exporting">Using the results</h2>
+	<h2 id="exporting"><a href="#exporting">Using the results</a></h2>
 
 	<p>
 		You can then export the results into CSV (or other standard formats) using the <em>Export</em> menu.
 	</p>
 
-	<h2 id="troubleshooting">Troubleshooting</h2>
+	<h2 id="troubleshooting"><a href="#troubleshooting">Troubleshooting</a></h2>
 
 	<p>
 		This section will be completed as we discover problems — <a href="mailto:M.Blissett@kew.org?subject=Reconciliation%20service%20preview">please let us know!</a>.
 		Allocating more memory may help, refer to the <a href="https://github.com/OpenRefine/OpenRefine/wiki/FAQ:-Allocate-More-Memory">OpenRefine documentation</a> on this.
 	</p>
 
-	<h2 id="advanced">Advanced data preparation / manipulation</h2>
+	<h2 id="advanced"><a href="#advanced">Advanced data preparation / manipulation</a></h2>
 
 	<p>
 		It's possible to use some of the transformers that are behind these reconciliation services to prepare your data.  For example, you may wish to
@@ -185,7 +185,7 @@
 		for how to do this.
 	</p>
 
-	<h2 id="sourcecode">Source code</h2>
+	<h2 id="sourcecode"><a href="#sourcecode">Source code</a></h2>
 
 	<p>
 		The source code is available on <a href="https://github.com/RBGKew/Reconciliation-and-Matching-Framework">Kew’s GitHub page</a>.

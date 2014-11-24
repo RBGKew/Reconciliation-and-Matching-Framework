@@ -5,7 +5,6 @@
 	<jsp:output omit-xml-declaration="yes"/>
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 
-	<br/>
 	<footer>
 		<p style="color: grey; font-size: 0.6em">
 			Version <jsp:expression>org.kew.rmf.Version.getVersion()</jsp:expression>.
