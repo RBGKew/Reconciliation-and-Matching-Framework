@@ -28,7 +28,7 @@ public class Version {
 
 	static {
 		try {
-			InputStream is = Version.class.getResourceAsStream("/META-INF/maven/org.kew.rmf/deduplicator/pom.properties");
+			InputStream is = Version.class.getResourceAsStream("/META-INF/maven/org.kew.rmf/rmf-core/pom.properties");
 
 			if (is == null) {
 				logger.info("Could not load Maven properties file — probably a development execution.");
