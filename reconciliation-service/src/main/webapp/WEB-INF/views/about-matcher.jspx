@@ -81,9 +81,10 @@
 
 	<p>For the JSON web service these should be URL-encoded HTTP GET parameters.</p>
 
-	<p>The CSV file upload must use these properties as header lines.</p>
+	<p>The CSV file uploaded must be in UTF-8 encoding, and must use these properties as header lines.</p>
 
 	<ul>
+		<li>id</li>
 		<c:forEach var="property" items="${properties}">
 			<li>${property}</li>
 		</c:forEach>
@@ -99,9 +100,18 @@
 		<li>
 			<strong>CSV file upload:</strong> <form class="form-inline" method="post" action="${fileMatchUrl}" enctype="multipart/form-data">
 				<!-- CSV file Button -->
-				<div class="form-group">
-					<input id="file" name="file" class="form-control" type="file" />
-				</div>
+				<input id="file" name="file" class="form-control" type="file" />
+				<span> </span>
+				<select id="charset" name="charset" class="form-control">
+					<c:forEach var="charsetName" items="${charsetNames}">
+						<c:if test="${charsetName eq 'UTF-8'}">
+							<option value="${charsetName}" selected="selected">${charsetName}</option>
+						</c:if>
+						<c:if test="${charsetName ne 'UTF-8'}">
+							<option style="display: block;" value="${charsetName}">${charsetName}</option><br/>
+						</c:if>
+					</c:forEach>
+				</select>
 				<span> </span>
 				<!-- Submit button -->
 				<button type="submit" class="btn btn-primary">Upload</button>

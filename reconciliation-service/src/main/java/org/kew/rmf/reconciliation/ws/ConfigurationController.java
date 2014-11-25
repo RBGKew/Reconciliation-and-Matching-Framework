@@ -13,6 +13,7 @@
 package org.kew.rmf.reconciliation.ws;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +55,17 @@ public class ConfigurationController {
 
 	@Autowired
 	private BaseController baseController;
+
+	private List<String> charsetNames = new ArrayList<>();
+
+	public ConfigurationController() {
+		// Initialise the list of available character sets.
+		for (String charsetName : Charset.availableCharsets().keySet()) {
+			if (!charsetName.startsWith("x-") && !charsetName.startsWith("X-")) {
+				charsetNames.add(charsetName);
+			}
+		}
+	}
 
 	@RequestMapping(produces="text/html", value = "/admin", method = RequestMethod.GET)
 	public String doConfigurationAdmin(Model model) throws ReconciliationServiceException {
@@ -154,6 +166,7 @@ public class ConfigurationController {
 			model.addAttribute("properties", properties);
 			model.addAttribute("matchers", p_matchers);
 			model.addAttribute("transformers", p_transformers);
+			model.addAttribute("charsetNames", charsetNames);
 		}
 		else {
 			// TODO: Make a 404.

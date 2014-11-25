@@ -5,15 +5,31 @@
 	<jsp:output omit-xml-declaration="yes"/>
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 
+	<h1>CSV Match Results</h1>
+
 	<c:set var="numberOfMatches" value="0"/>
 	<c:forEach var="entry" items="${matches}">
 		<c:if test="${fn:length(entry.value) &gt; 0}">
 			<c:set var="numberOfMatches" value="${numberOfMatches+1}"/>
 		</c:if>
 	</c:forEach>
+
 	<spring:url var="downloadLink" value="/download/${resultsFile}" />
 
-	Processed ${fn:length(matches)} records, found ${numberOfMatches} matches.  <a id="downloadLink" href="${downloadLink}">Download results as CSV</a> (UTF-8 encoding).
+	<p>
+		Input file was ${charset} with ${userLineEnding} line endings.
+
+		<c:if test="${fn:length(unusedCsvFields) &gt; 0}"><span class="error">
+			Unused CSV fields:
+			<c:forEach var="field" items="${unusedCsvFields}">
+				${field}
+			</c:forEach>
+		</span></c:if>
+	</p>
+
+	<p>Processed ${fn:length(matches)} records, found ${numberOfMatches} matches.</p>
+
+	<p><a id="downloadLink" href="${downloadLink}">Download results as CSV</a> (UTF-8 encoding, ${userLineEnding} line endings).</p>
 
 	<table class="table">
 	<thead>
@@ -29,10 +45,7 @@
 			<c:set var="id" value="${suppliedRecord['id']}"/>
 			<c:if test="${fn:length(matches[id]) &gt; 0}">
 				<tr class="supplied">
-					<td style="background-color: lightgray;">
-					${id}
-					<!--a href="http://www.ipni.org/ipni/idPlantNameSearch.do?id=${id}">${id}</a-->
-					</td>
+					<td style="background-color: lightgray;">${id}</td>
 					<c:forEach var="property" items="${properties}">
 						<td style="background-color: lightgray;">${suppliedRecord[property]}</td>
 					</c:forEach>
@@ -40,12 +53,7 @@
 				<c:set var="matchedRecords" value="${matches[id]}"/>
 				<c:forEach var="match" items="${matchedRecords}">
 					<tr class="linked">
-						<td class="linked">
-						<span class="glyphicon glyphicon-link">
-						${match['id']}
-						</span>
-						<!--a href="http://data.rbge.org.uk/herb/${match['id']}">${match['id']}</a></span-->
-						</td>
+						<td class="linked">${match['id']}</td>
 						<c:forEach var="property" items="${properties}">
 							<td>${match[property]}</td>
 						</c:forEach>

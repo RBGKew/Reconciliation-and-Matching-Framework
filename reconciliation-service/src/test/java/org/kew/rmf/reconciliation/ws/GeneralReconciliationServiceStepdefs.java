@@ -220,7 +220,8 @@ public class GeneralReconciliationServiceStepdefs extends WebMvcConfigurationSup
 		MockMultipartFile multipartFile = new MockMultipartFile("file", allRows.getBytes());
 
 		result = mockMvc.perform(MockMvcRequestBuilders.fileUpload("/filematch/generalTest/")
-				.file(multipartFile))
+				.file(multipartFile)
+				.param("charset", "UTF-8"))
 				.andExpect(status().is(200))
 				.andReturn();
 	}
