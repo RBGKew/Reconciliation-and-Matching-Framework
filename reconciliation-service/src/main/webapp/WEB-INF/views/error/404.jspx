@@ -1,0 +1,16 @@
+<div xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:spring="http://www.springframework.org/tags">
+	<jsp:output omit-xml-declaration="yes"/>
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+
+	<h1>Reconciliation Service Not Found (404)</h1>
+
+	<p>
+		We are sorry, this configuration does not exist, or has not been loaded.  Check you are using the correct URL.
+		Contact ${contactemail} for assistance if required.  Include details of what you were doing, and the information below.  Thank you.
+	</p>
+
+	<jsp:include page="details.jspx"/>
+</div>

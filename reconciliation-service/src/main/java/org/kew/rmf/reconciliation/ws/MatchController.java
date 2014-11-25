@@ -18,6 +18,7 @@ import java.util.Map;
 
 import org.kew.rmf.core.exception.MatchExecutionException;
 import org.kew.rmf.core.exception.TooManyMatchesException;
+import org.kew.rmf.reconciliation.exception.UnknownReconciliationServiceException;
 import org.kew.rmf.reconciliation.service.ReconciliationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +46,7 @@ public class MatchController {
 	 * Performs a single match query.
 	 */
 	@RequestMapping(value = "/match/{configName}", method = RequestMethod.GET)
-	public ResponseEntity<List<Map<String,String>>> doMatch (@PathVariable String configName, @RequestParam Map<String,String> requestParams, Model model) {
+	public ResponseEntity<List<Map<String,String>>> doMatch (@PathVariable String configName, @RequestParam Map<String,String> requestParams, Model model) throws UnknownReconciliationServiceException {
 		logger.info("{}: Match query {}", configName, requestParams);
 
 		// Build a map by looping over each property in the config, reading its value from the

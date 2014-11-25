@@ -1,0 +1,15 @@
+<div xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:spring="http://www.springframework.org/tags">
+	<jsp:output omit-xml-declaration="yes"/>
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+
+	<h1>Reconciliation Server Error (500)</h1>
+
+	<p>
+		We are sorry, there is an error.  Please contact ${contactemail} for assistance.  Include details of what you were doing, and the information below.  Thank you.
+	</p>
+
+	<jsp:include page="details.jspx"/>
+</div>

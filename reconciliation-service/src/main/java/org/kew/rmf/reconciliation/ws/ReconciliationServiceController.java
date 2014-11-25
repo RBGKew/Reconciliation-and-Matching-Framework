@@ -29,6 +29,7 @@ import org.codehaus.jackson.type.TypeReference;
 import org.kew.rmf.core.configuration.Property;
 import org.kew.rmf.core.exception.MatchExecutionException;
 import org.kew.rmf.core.exception.TooManyMatchesException;
+import org.kew.rmf.reconciliation.exception.UnknownReconciliationServiceException;
 import org.kew.rmf.reconciliation.queryextractor.QueryStringToPropertiesExtractor;
 import org.kew.rmf.reconciliation.service.ReconciliationService;
 import org.kew.rmf.refine.domain.metadata.Metadata;
@@ -84,8 +85,11 @@ public class ReconciliationServiceController {
 		try {
 			metadata = reconciliationService.getMetadata(configName);
 		}
-		catch (MatchExecutionException e) {
+		catch (UnknownReconciliationServiceException e) {
 			return new ResponseEntity<String>(e.toString(), HttpStatus.NOT_FOUND);
+		}
+		catch (MatchExecutionException e) {
+			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 		if (metadata != null) {
@@ -160,8 +164,11 @@ public class ReconciliationServiceController {
 		catch (IOException e) {
 			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		catch (MatchExecutionException e) {
+		catch (UnknownReconciliationServiceException e) {
 			return new ResponseEntity<String>(e.toString(), HttpStatus.NOT_FOUND);
+		}
+		catch (MatchExecutionException e) {
+			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		catch (TooManyMatchesException e) {
 			return new ResponseEntity<String>(e.toString(), HttpStatus.CONFLICT);
@@ -225,8 +232,11 @@ public class ReconciliationServiceController {
 		catch (IOException e) {
 			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		catch (MatchExecutionException e) {
+		catch (UnknownReconciliationServiceException e) {
 			return new ResponseEntity<String>(e.toString(), HttpStatus.NOT_FOUND);
+		}
+		catch (MatchExecutionException e) {
+			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 		return new ResponseEntity<String>(wrapResponse(callback, jsonres), HttpStatus.OK);
@@ -258,8 +268,11 @@ public class ReconciliationServiceController {
 			logger.warn(configName + ": Error in type flyout for id "+id, e);
 			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		catch (MatchExecutionException | NullPointerException e) {
+		catch (UnknownReconciliationServiceException e) {
 			return new ResponseEntity<String>(e.toString(), HttpStatus.NOT_FOUND);
+		}
+		catch (MatchExecutionException | NullPointerException e) {
+			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -306,8 +319,8 @@ public class ReconciliationServiceController {
 		catch (IOException e) {
 			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		catch (MatchExecutionException e) {
-			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+		catch (UnknownReconciliationServiceException e) {
+			return new ResponseEntity<String>(e.toString(), HttpStatus.NOT_FOUND);
 		}
 
 		return new ResponseEntity<String>(wrapResponse(callback, jsonres), HttpStatus.OK);
@@ -347,8 +360,7 @@ public class ReconciliationServiceController {
 		try {
 			targetUrl = reconciliationService.getReconciliationServiceConfiguration(configName).getSuggestFlyoutUrl();
 		}
-		catch (MatchExecutionException | NullPointerException e) {
-			logger.info(configName + ": Not found when retrieving URL for id "+id, e);
+		catch (UnknownReconciliationServiceException e) {
 			return new ResponseEntity<String>(e.toString(), HttpStatus.NOT_FOUND);
 		}
 
@@ -403,7 +415,10 @@ public class ReconciliationServiceController {
 				logger.debug("JSON response is {}", wrapResponse(callback, jsonMapper.writeValueAsString(jsonWrappedHtml)));
 				return new ResponseEntity<String>(wrapResponse(callback, jsonMapper.writeValueAsString(jsonWrappedHtml)), HttpStatus.OK);
 			}
-			catch (IOException| MatchExecutionException e) {
+			catch (UnknownReconciliationServiceException e) {
+				return new ResponseEntity<String>(e.toString(), HttpStatus.NOT_FOUND);
+			}
+			catch (IOException e) {
 				logger.warn(configName + ": Exception creating entity flyout for id "+id, e);
 				return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
@@ -425,7 +440,7 @@ public class ReconciliationServiceController {
 	/**
 	 * Perform match query against specified configuration.
 	 */
-	private QueryResult[] doQuery(Query q, String configName) throws TooManyMatchesException, MatchExecutionException {
+	private QueryResult[] doQuery(Query q, String configName) throws TooManyMatchesException, MatchExecutionException, UnknownReconciliationServiceException {
 		ArrayList<QueryResult> qr = new ArrayList<QueryResult>();
 
 		org.kew.rmf.refine.domain.query.Property[] properties = q.getProperties();

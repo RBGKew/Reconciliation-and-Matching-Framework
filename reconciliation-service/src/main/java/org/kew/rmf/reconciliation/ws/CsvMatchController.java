@@ -33,6 +33,7 @@ import org.kew.rmf.core.configuration.Property;
 import org.kew.rmf.core.exception.MatchExecutionException;
 import org.kew.rmf.core.exception.TooManyMatchesException;
 import org.kew.rmf.core.lucene.LuceneMatcher;
+import org.kew.rmf.reconciliation.exception.UnknownReconciliationServiceException;
 import org.kew.rmf.reconciliation.service.ReconciliationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +70,7 @@ public class CsvMatchController {
 	 * Results are put into a temporary file (available for download) and also shown in the web page.
 	 */
 	@RequestMapping(value = "/filematch/{configName}", method = RequestMethod.POST)
-	public String doFileMatch (@PathVariable String configName, @RequestParam("file") MultipartFile file, @RequestParam("charset") String charset, HttpServletResponse response, Model model) {
+	public String doFileMatch (@PathVariable String configName, @RequestParam("file") MultipartFile file, @RequestParam("charset") String charset, HttpServletResponse response, Model model) throws UnknownReconciliationServiceException, IOException {
 		logger.info("{}: File match query {}, {}", configName, file, charset);
 
 		if (file.isEmpty()) {
@@ -80,23 +81,7 @@ public class CsvMatchController {
 		}
 
 		logger.debug("Looking for: {}", configName);
-		LuceneMatcher matcher;
-		try {
-			matcher = reconciliationService.getMatcher(configName);
-		}
-		catch (MatchExecutionException e) {
-			logger.error("Problem retrieving matcher "+configName, e);
-			baseController.menuAndBreadcrumbs("/filematch/"+configName, model);
-			model.addAttribute("error", "Matcher "+configName+" not found or not available.");
-			response.setStatus(HttpStatus.NOT_FOUND.value());
-			return "file-matcher-error";
-		}
-		if (matcher == null) {
-			baseController.menuAndBreadcrumbs("/filematch/"+configName, model);
-			model.addAttribute("error", "Matcher "+configName+" not found or not available.");
-			response.setStatus(HttpStatus.NOT_FOUND.value());
-			return "file-matcher-error";
-		}
+		LuceneMatcher matcher = reconciliationService.getMatcher(configName);
 
 		// Map of matches
 		// Key is the ID of supplied records
@@ -118,89 +103,79 @@ public class CsvMatchController {
 			properties.add(p.getQueryColumnName());
 		}
 
-		try {
-			// Open file and read first line to determine line ending
-			BufferedReader fileReader = new BufferedReader(new InputStreamReader(file.getInputStream(), Charset.forName(charset)));
-			String lineEnding;
-			String userLineEnding;
-			boolean crlf = useCrLfEndings(fileReader);
-			lineEnding = crlf ? "\r\n" : "\n";
-			userLineEnding = crlf ? "Windows (CR+LF)" : "Linux/Mac (LF)";
+		// Open file and read first line to determine line ending
+		BufferedReader fileReader = new BufferedReader(new InputStreamReader(file.getInputStream(), Charset.forName(charset)));
+		String lineEnding;
+		String userLineEnding;
+		boolean crlf = useCrLfEndings(fileReader);
+		lineEnding = crlf ? "\r\n" : "\n";
+		userLineEnding = crlf ? "Windows (CR+LF)" : "Linux/Mac (LF)";
 
-			// Read CSV from file
-			CsvPreference customCsvPref = new CsvPreference.Builder('"', ',', lineEnding).build(); // lineEnding is only used for writing anyway.
-			CsvMapReader mr = new CsvMapReader(fileReader, customCsvPref);
-			final String[] header = mr.getHeader(true);
+		// Read CSV from file
+		CsvPreference customCsvPref = new CsvPreference.Builder('"', ',', lineEnding).build(); // lineEnding is only used for writing anyway.
+		CsvMapReader mr = new CsvMapReader(fileReader, customCsvPref);
+		final String[] header = mr.getHeader(true);
 
-			// Check CSV file has appropriate headers
-			// Need "id" and at least one from properties
-			if (!validateCsvFields(header, properties, unusedCsvFields)) {
-				mr.close();
-				fileReader.close();
-
-				logger.warn("Uploaded CSV doesn't contain id column.");
-				baseController.menuAndBreadcrumbs("/filematch/"+configName, model);
-				model.addAttribute("error", "CSV file doesn't contain 'id' column, or is corrupt.");
-				response.setStatus(HttpStatus.BAD_REQUEST.value());
-				return "file-matcher-error";
-			}
-
-			// Open results file and write header
-			resultsFile = File.createTempFile("match-results-", ".csv");
-			resultsFileWriter = new OutputStreamWriter(new FileOutputStream(resultsFile), "UTF-8");
-			resultsFileWriter.write("queryId,matchId");
-			resultsFileWriter.write(lineEnding);
-
-			// Process each line of the input CSV, append results to output file
-			Map<String, String> record = null;
-			while ((record = mr.read(header)) != null) {
-				logger.debug("Next record is {}", record);
-				suppliedData.add(record);
-				try {
-					List<Map<String,String>> theseMatches = matcher.getMatches(record);
-					if (theseMatches != null) {
-						logger.debug("Record ID {}, matched: {}", record.get(Configuration.ID_FIELD_NAME), theseMatches.size());
-					}
-					else {
-						logger.debug("Record ID {}, matched: null", record.get(Configuration.ID_FIELD_NAME));
-					}
-					matches.put(record.get(Configuration.ID_FIELD_NAME), theseMatches);
-
-					// Append match results to file
-					StringBuilder sb = new StringBuilder();
-					for (Map<String,String> result : theseMatches) {
-						if (sb.length() > 0) sb.append('|');
-						sb.append(result.get(Configuration.ID_FIELD_NAME));
-					}
-					sb.insert(0, ',').insert(0, record.get(Configuration.ID_FIELD_NAME)).append(lineEnding);
-					resultsFileWriter.write(sb.toString());
-				}
-				catch (TooManyMatchesException | MatchExecutionException e) {
-					logger.error("Problem handling match", e);
-				}
-			}
-
-			// Close file etc
+		// Check CSV file has appropriate headers
+		// Need "id" and at least one from properties
+		if (!validateCsvFields(header, properties, unusedCsvFields)) {
 			mr.close();
-			resultsFileWriter.close();
+			fileReader.close();
 
-			model.addAttribute("resultsFile", resultsFile.getName());
-			response.setHeader("X-File-Download", resultsFile.getName()); // Putting this in a header saves the unit tests from needing to parse the HTML.
-
-			model.addAttribute("suppliedData", suppliedData);
-			model.addAttribute("matches", matches);
-			model.addAttribute("properties", properties);
-			model.addAttribute("unusedCsvFields", unusedCsvFields);
-			model.addAttribute("userLineEnding", userLineEnding);
-			model.addAttribute("charset", charset);
-		}
-		catch (Exception e) {
-			logger.error("Problem reading CSV file", e);
+			logger.warn("Uploaded CSV doesn't contain id column.");
 			baseController.menuAndBreadcrumbs("/filematch/"+configName, model);
-			model.addAttribute("error", "Problem reading CSV file: "+e.getMessage());
-			response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			model.addAttribute("error", "CSV file doesn't contain 'id' column, or is corrupt.");
 			return "file-matcher-error";
 		}
+
+		// Open results file and write header
+		resultsFile = File.createTempFile("match-results-", ".csv");
+		resultsFileWriter = new OutputStreamWriter(new FileOutputStream(resultsFile), "UTF-8");
+		resultsFileWriter.write("queryId,matchId");
+		resultsFileWriter.write(lineEnding);
+
+		// Process each line of the input CSV, append results to output file
+		Map<String, String> record = null;
+		while ((record = mr.read(header)) != null) {
+			logger.debug("Next record is {}", record);
+			suppliedData.add(record);
+			try {
+				List<Map<String,String>> theseMatches = matcher.getMatches(record);
+				if (theseMatches != null) {
+					logger.debug("Record ID {}, matched: {}", record.get(Configuration.ID_FIELD_NAME), theseMatches.size());
+				}
+				else {
+					logger.debug("Record ID {}, matched: null", record.get(Configuration.ID_FIELD_NAME));
+				}
+				matches.put(record.get(Configuration.ID_FIELD_NAME), theseMatches);
+
+				// Append match results to file
+				StringBuilder sb = new StringBuilder();
+				for (Map<String,String> result : theseMatches) {
+					if (sb.length() > 0) sb.append('|');
+					sb.append(result.get(Configuration.ID_FIELD_NAME));
+				}
+				sb.insert(0, ',').insert(0, record.get(Configuration.ID_FIELD_NAME)).append(lineEnding);
+				resultsFileWriter.write(sb.toString());
+			}
+			catch (TooManyMatchesException | MatchExecutionException e) {
+				logger.warn("Problem handling match", e);
+			}
+		}
+
+		// Close file etc
+		mr.close();
+		resultsFileWriter.close();
+
+		model.addAttribute("resultsFile", resultsFile.getName());
+		response.setHeader("X-File-Download", resultsFile.getName()); // Putting this in a header saves the unit tests from needing to parse the HTML.
+
+		model.addAttribute("suppliedData", suppliedData);
+		model.addAttribute("matches", matches);
+		model.addAttribute("properties", properties);
+		model.addAttribute("unusedCsvFields", unusedCsvFields);
+		model.addAttribute("userLineEnding", userLineEnding);
+		model.addAttribute("charset", charset);
 
 		baseController.menuAndBreadcrumbs("/filematch/"+configName, model);
 		return "file-matcher-results";

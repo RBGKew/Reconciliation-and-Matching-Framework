@@ -1,0 +1,15 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:spring="http://www.springframework.org/tags" version="2.0">
+	<jsp:output omit-xml-declaration="yes"/>
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+
+	<pre style="background-color: #f4f4f4; border: 1px solid #909090; margin: 1ex; padding: 1ex; font-size: 0.6rem; line-height: 0.6rem; overflow: hidden;"
+>Request for page ${url}.<br
+/>Date and time (server timezone): ${datetime}.<br
+/><br
+/>${exception}<br
+/><c:forEach items="${exception.stackTrace}" var="ste">	${ste}<br/></c:forEach
+></pre>
+</jsp:root>

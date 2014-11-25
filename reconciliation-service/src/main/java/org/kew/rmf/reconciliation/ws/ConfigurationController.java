@@ -26,11 +26,11 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.kew.rmf.core.configuration.Property;
 import org.kew.rmf.core.configuration.ReconciliationServiceConfiguration;
-import org.kew.rmf.core.exception.MatchExecutionException;
 import org.kew.rmf.matchers.Matcher;
+import org.kew.rmf.reconciliation.exception.ReconciliationServiceException;
+import org.kew.rmf.reconciliation.exception.UnknownReconciliationServiceException;
 import org.kew.rmf.reconciliation.service.ReconciliationService;
 import org.kew.rmf.reconciliation.service.ReconciliationService.ConfigurationStatus;
-import org.kew.rmf.reconciliation.service.ReconciliationServiceException;
 import org.kew.rmf.reconciliation.ws.dto.DisplayBean;
 import org.kew.rmf.transformers.Transformer;
 import org.slf4j.Logger;
@@ -131,48 +131,35 @@ public class ConfigurationController {
 	}
 
 	@RequestMapping(produces="text/html", value = "/about/{configName}", method = RequestMethod.GET)
-	public String doAbout(@PathVariable String configName, Model model) {
+	public String doAbout(@PathVariable String configName, Model model) throws UnknownReconciliationServiceException {
 		logger.info("Request for about page for {}", configName);
 
 		List<String> properties = new ArrayList<String>();
 		Map<String,DisplayBean<Matcher>> p_matchers = new HashMap<>();
 		Map<String,List<DisplayBean<Transformer>>> p_transformers = new HashMap<>();
 
-		ReconciliationServiceConfiguration configuration;
-		try {
-			configuration = reconciliationService.getReconciliationServiceConfiguration(configName);
-		}
-		catch (MatchExecutionException e) {
-			configuration = null;
-		}
+		ReconciliationServiceConfiguration configuration = reconciliationService.getReconciliationServiceConfiguration(configName);
 
-		if (configuration != null) {
-			model.addAttribute("reconciliationConfiguration", configuration);
+		model.addAttribute("reconciliationConfiguration", configuration);
 
-			for (Property p : configuration.getProperties()) {
-				properties.add(p.getQueryColumnName());
+		for (Property p : configuration.getProperties()) {
+			properties.add(p.getQueryColumnName());
 
-				p_matchers.put(p.getQueryColumnName(), new DisplayBean<Matcher>(p.getMatcher()));
+			p_matchers.put(p.getQueryColumnName(), new DisplayBean<Matcher>(p.getMatcher()));
 
-				List<DisplayBean<Transformer>> p_t = new ArrayList<>();
-				for (Transformer t : p.getQueryTransformers()) {
-					p_t.add(new DisplayBean<Transformer>(t));
-				}
-				p_transformers.put(p.getQueryColumnName(), p_t);
+			List<DisplayBean<Transformer>> p_t = new ArrayList<>();
+			for (Transformer t : p.getQueryTransformers()) {
+				p_t.add(new DisplayBean<Transformer>(t));
 			}
+			p_transformers.put(p.getQueryColumnName(), p_t);
+		}
 
-			model.addAttribute("total", reconciliationService.getTotals().get(configName));
-			model.addAttribute("configName", configName);
-			model.addAttribute("properties", properties);
-			model.addAttribute("matchers", p_matchers);
-			model.addAttribute("transformers", p_transformers);
-			model.addAttribute("charsetNames", charsetNames);
-		}
-		else {
-			// TODO: Make a 404.
-			baseController.menuAndBreadcrumbs("/about", model);
-			return "about-general";
-		}
+		model.addAttribute("total", reconciliationService.getTotals().get(configName));
+		model.addAttribute("configName", configName);
+		model.addAttribute("properties", properties);
+		model.addAttribute("matchers", p_matchers);
+		model.addAttribute("transformers", p_transformers);
+		model.addAttribute("charsetNames", charsetNames);
 
 		baseController.menuAndBreadcrumbs("/about/"+configName, model);
 		return "about-matcher";

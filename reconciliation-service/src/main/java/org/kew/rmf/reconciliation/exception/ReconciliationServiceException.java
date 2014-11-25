@@ -10,7 +10,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kew.rmf.reconciliation.service;
+package org.kew.rmf.reconciliation.exception;
 
 public class ReconciliationServiceException extends Exception {
 	private static final long serialVersionUID = 1L;

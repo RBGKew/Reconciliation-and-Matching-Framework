@@ -25,6 +25,11 @@
 		<put-attribute name="kewBody" value="/WEB-INF/views/file-matcher-results.jspx" />
 	</definition>
 
+	<definition name="file-matcher-error" extends="default">
+		<put-attribute name="kewTitle" value="CSV error — Kew Reconciliation Services" />
+		<put-attribute name="kewBody" value="/WEB-INF/views/file-matcher-error.jspx" />
+	</definition>
+
 	<definition name="help" extends="default">
 		<put-attribute name="kewTitle" value="Help — Kew Reconciliation Services" />
 		<put-attribute name="kewBody" value="/WEB-INF/views/help.jspx" />
@@ -33,6 +38,16 @@
 	<definition name="index" extends="default">
 		<put-attribute name="kewTitle" value="Introduction — Kew Reconciliation Services" />
 		<put-attribute name="kewBody" value="/WEB-INF/views/index.jspx" />
+	</definition>
+
+	<definition name="500" extends="default">
+		<put-attribute name="kewTitle" value="500 Internal Server Error — Kew Reconciliation Services" />
+		<put-attribute name="kewBody" value="/WEB-INF/views/error/500.jspx" />
+	</definition>
+
+	<definition name="404" extends="default">
+		<put-attribute name="kewTitle" value="404 Not Found — Kew Reconciliation Services" />
+		<put-attribute name="kewBody" value="/WEB-INF/views/error/404.jspx" />
 	</definition>
 
 </tiles-definitions>

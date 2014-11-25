@@ -12,7 +12,10 @@
  */
 package org.kew.rmf.reconciliation.config;
 
+import java.util.Properties;
+
 import org.codehaus.jackson.map.ObjectMapper;
+import org.kew.rmf.reconciliation.ws.ReconciliationExceptionResolver;
 import org.perf4j.slf4j.aop.TimingAspect;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -33,6 +36,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.springframework.web.servlet.theme.CookieThemeResolver;
 import org.springframework.web.servlet.theme.ThemeChangeInterceptor;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
@@ -164,5 +168,24 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 	@Bean
 	public TimingAspect timingAspect() {
 		return new TimingAspect();
+	}
+
+	/**
+	 * Generate error pages for unhandled exceptions.
+	 */
+	@Bean
+	public SimpleMappingExceptionResolver simpleMappingExceptionResolver() {
+		ReconciliationExceptionResolver r = new ReconciliationExceptionResolver();
+
+		Properties mappings = new Properties();
+		mappings.setProperty("UnknownReconciliationServiceException", "404");
+
+		r.setExceptionMappings(mappings);
+		r.setDefaultErrorView("500");
+		r.setDefaultStatusCode(500);
+		r.setPreventResponseCaching(true);
+		r.setWarnLogCategory("org.kew.rmf.reconciliation.error");
+
+		return r;
 	}
 }
