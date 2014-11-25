@@ -58,7 +58,7 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
     protected MatchConfiguration matchConfig;
 
 	@Override // from DataHandler
-	public void loadData() throws DataLoadException {
+	public void loadData() throws DataLoadException, InterruptedException {
 		this.dataLoader.setConfig(this.getConfig());
 		this.dataLoader.load();
 	}

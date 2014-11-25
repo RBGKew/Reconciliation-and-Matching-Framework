@@ -74,7 +74,7 @@ public class LuceneDataLoader implements DataLoader {
 	 * Load the authority data into Lucene.
 	 */
 	@Override
-	public void load() throws DataLoadException {
+	public void load() throws DataLoadException, InterruptedException {
 		try {
 			indexWriter = openIndex();
 
@@ -162,7 +162,7 @@ public class LuceneDataLoader implements DataLoader {
 		return indexWriter;
 	}
 
-	private void load(DatabaseRecordSource recordSource) throws DataLoadException {
+	private void load(DatabaseRecordSource recordSource) throws DataLoadException, InterruptedException {
         int i = 0;
         int errors = 0;
 
@@ -214,10 +214,21 @@ public class LuceneDataLoader implements DataLoader {
                     logger.info("{}: Indexed {} documents", configName, i);
                     logger.debug("{}: Most recent indexed document was {}", configName, doc);
                 }
+
+                // Check for interrupt
+                if (i % 10000 == 0 && Thread.interrupted()) {
+                    recordSource.close();
+                    indexWriter.commit();
+                    logger.info("{}: Loader interrupted after indexing {} records", configName, i);
+                    throw new InterruptedException("Interrupted while loading data");
+                }
             }
             recordSource.close();
 
             indexWriter.commit();
+        }
+        catch (InterruptedException e) {
+            throw e;
         }
         catch (Exception e) {
             throw new DataLoadException(configName + ": Error "+e.getMessage()+" loading records at row " + i, e);
@@ -225,7 +236,7 @@ public class LuceneDataLoader implements DataLoader {
         logger.info("{}: Indexed {} records", configName, i);
     }
 
-    private void load(File file) throws DataLoadException {
+    private void load(File file) throws DataLoadException, InterruptedException {
         int i = 0;
         int errors = 0;
 
@@ -269,6 +280,13 @@ public class LuceneDataLoader implements DataLoader {
                     logger.debug("{}: Most recent indexed document was {}", configName, doc);
                 }
 
+                // Check for interrupt
+                if (i % 10000 == 0 && Thread.interrupted()) {
+                    indexWriter.commit();
+                    logger.info("{}: Loader interrupted after indexing {} records", configName, i);
+                    throw new InterruptedException("Interrupted while loading data");
+                }
+
                 // Read next record from CSV/datasource
                 try {
                     record = mr.read(header);
@@ -286,6 +304,9 @@ public class LuceneDataLoader implements DataLoader {
             }
 
             indexWriter.commit();
+        }
+        catch (InterruptedException e) {
+            throw e;
         }
         catch (Exception e) {
             throw new DataLoadException(configName + ": Error "+e.getMessage()+" loading records at line " + i, e);

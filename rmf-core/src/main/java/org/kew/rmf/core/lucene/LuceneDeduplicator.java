@@ -44,7 +44,7 @@ public class LuceneDeduplicator extends LuceneHandler<DeduplicationConfiguration
 	 * Uses the {@link DataLoader} in a dedup specific way
 	 */
 	@Override // from DataHandler
-	public void loadData() throws DataLoadException {
+	public void loadData() throws DataLoadException, InterruptedException {
 		this.dataLoader.setConfig(this.getConfig());
 		this.dataLoader.load();
 	}

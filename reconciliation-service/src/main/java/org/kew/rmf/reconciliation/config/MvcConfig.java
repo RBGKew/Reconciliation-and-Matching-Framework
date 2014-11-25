@@ -154,6 +154,9 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 		ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
 		taskExecutor.setCorePoolSize(2);
 		taskExecutor.setMaxPoolSize(2);
+		// Wait up to 30 seconds for the tasks to exit themselves, after receiving an interrupt from the executor.
+		taskExecutor.setDaemon(true);
+		taskExecutor.setAwaitTerminationSeconds(30);
 		taskExecutor.initialize();
 		return taskExecutor;
 	}
