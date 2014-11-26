@@ -8,8 +8,8 @@
 	<pre style="background-color: #f4f4f4; border: 1px solid #909090; margin: 1ex; padding: 1ex; font-size: 0.6rem; line-height: 0.6rem; overflow: hidden;"
 >Request for page ${url}.<br
 />Date and time (server timezone): ${datetime}.<br
-/><br
+/><c:if test="${exception != null}"><br
 />${exception}<br
 /><c:forEach items="${exception.stackTrace}" var="ste">	${ste}<br/></c:forEach
-></pre>
+></c:if></pre>
 </jsp:root>

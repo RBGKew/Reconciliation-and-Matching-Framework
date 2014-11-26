@@ -10,4 +10,9 @@
 		<env-entry-type>java.lang.String</env-entry-type>
 		<env-entry-value>reconciliation-service</env-entry-value>
 	</env-entry>
+
+	<error-page>
+		<location>/error</location>
+	</error-page>
+
 </web-app>

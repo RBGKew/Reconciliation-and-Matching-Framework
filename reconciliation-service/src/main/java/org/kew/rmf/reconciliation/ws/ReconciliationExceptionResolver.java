@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
@@ -39,6 +40,8 @@ public class ReconciliationExceptionResolver extends SimpleMappingExceptionResol
 		mav.addObject("url", request.getRequestURL());
 		mav.addObject("datetime", simpleDateFormat.format(new Date()));
 		mav.addObject("contactemail", "apps-support@kew.org");
+		mav.addObject("statusCode", response.getStatus());
+		mav.addObject("statusMessage", HttpStatus.valueOf(response.getStatus()).getReasonPhrase());
 		baseController.menuAndBreadcrumbs("/#", mav);
 
 		return mav;

@@ -5,10 +5,11 @@
 	<jsp:output omit-xml-declaration="yes"/>
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 
-	<h1>Reconciliation Server Error (500)</h1>
+	<h1>Reconciliation Service: ${statusCode} ${statusMessage}</h1>
 
 	<p>
-		We are sorry, there is an error.  Please contact ${contactemail} for assistance.  Include details of what you were doing, and the information below.  Thank you.
+		We are sorry, there is an error.  Please contact ${contactemail} for assistance.  Include details of what you tried to do, whether this
+		has happened before, and the information below.  Thank you.
 	</p>
 
 	<jsp:include page="details.jspx"/>
