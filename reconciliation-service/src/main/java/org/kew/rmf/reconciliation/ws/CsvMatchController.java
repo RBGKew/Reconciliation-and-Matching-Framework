@@ -110,6 +110,7 @@ public class CsvMatchController {
 		boolean crlf = useCrLfEndings(fileReader);
 		lineEnding = crlf ? "\r\n" : "\n";
 		userLineEnding = crlf ? "Windows (CR+LF)" : "Linux/Mac (LF)";
+		logger.debug("Line endings are {}", userLineEnding);
 
 		// Read CSV from file
 		CsvPreference customCsvPref = new CsvPreference.Builder('"', ',', lineEnding).build(); // lineEnding is only used for writing anyway.
@@ -189,8 +190,10 @@ public class CsvMatchController {
 			try {
 				inputStream.mark(4096);
 				int i = 0;
-				while(i < 4096) {
-					int c = inputStream.read();
+				int c;
+				while(i++ < 4096
+						&& inputStream.ready()
+						&& ((c = inputStream.read()) > 0)) {
 
 					if (c == '\n') {
 						inputStream.reset();
@@ -222,6 +225,9 @@ public class CsvMatchController {
 	 */
 	private boolean validateCsvFields(String[] fields, List<String> properties, List<String> unusedFields) {
 		boolean containsId = false;
+
+		if (fields == null) return false;
+
 		for (String f : fields) {
 			if (Configuration.ID_FIELD_NAME.equals(f)) {
 				containsId = true;

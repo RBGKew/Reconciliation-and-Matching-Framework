@@ -5,10 +5,12 @@
 	<jsp:output omit-xml-declaration="yes"/>
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 
-	<h1>CSV Match Results</h1>
+	<h1>CSV Results: Error</h1>
 
 	<p>
-		The CSV file wasn’t suitable for use with this service.  Adjust it, and try again.
+		The CSV file wasn’t suitable for use with this service.  Adjust it, and try again.  Check the header line includes the
+		necessary columns and that the data is separated with commas and quoted correctly.
+		Check you set the correct encoding, common encodings are <code>UTF-8</code>, <code>ISO-8859-1</code> and <code>windows-1252</code>.
 	</p>
 
 	<p class="error">${error}</p>
