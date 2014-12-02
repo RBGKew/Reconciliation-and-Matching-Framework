@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+
+	<bean id="preferencePlaceHolder" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="lucene_directory" class="java.lang.String">
+		<constructor-arg value="/tmp/matchconf/lucene_directory/"/>
+	</bean>
+
+	<bean id="sourcefile" class="java.io.File">
+		<constructor-arg value="/mnt/t_drive/Development/SHS Project/Data Improvement/Matching_WCS/final_matching/WCS_match0_output.txt" />
+	</bean>
+	<bean id="lookupfile" class="java.io.File">
+		<constructor-arg value="/mnt/t_drive/Development/SHS Project/Data Improvement/Matching_WCS/final_matching/NOL_IPNI_topcopies.txt" />
+	</bean>
+
+	<bean id="rank_dictionary" class="org.kew.rmf.utils.CsvDictionary"
+		p:fileDelimiter="&#09;"
+		p:filePath="src/main/resources/META-INF/spring/rmf-configurations/wcs-ipni-match/dictionaries/rank_dictionary.csv" />
+	<bean id="author_dictionary" class="org.kew.rmf.utils.CsvDictionary"
+		p:fileDelimiter="&#09;"
+		p:filePath="src/main/resources/META-INF/spring/rmf-configurations/wcs-ipni-match/dictionaries/author_dictionary.csv" />
+	<bean id="publication_dictionary" class="org.kew.rmf.utils.CsvDictionary"
+		p:fileDelimiter="&#09;"
+		p:filePath="src/main/resources/META-INF/spring/rmf-configurations/wcs-ipni-match/dictionaries/publication_dictionary.csv" />
+	<bean id="unsafe_family_dictionary" class="org.kew.rmf.utils.CsvDictionary"
+		p:fileDelimiter="&#09;"
+		p:filePath="src/main/resources/META-INF/spring/rmf-configurations/wcs-ipni-match/dictionaries/unsafe_family_dictionary.csv" />
+
+	<bean id="AlwaysMatchingMatcher" class="org.kew.rmf.matchers.AlwaysMatchingMatcher" />
+	<bean id="AuthorCommonTokensMatcher" class="org.kew.rmf.matchers.AuthorCommonTokensMatcher"
+		p:minRatio="0.5"/>
+	<bean id="CapitalLettersMatcher05" class="org.kew.rmf.matchers.CapitalLettersMatcher"
+		p:minRatio="0.5"/>
+	<bean id="ExactMatcher" class="org.kew.rmf.matchers.ExactMatcher" />
+	<bean id="NumberMatcher05" class="org.kew.rmf.matchers.NumberMatcher"
+		p:minRatio="0.5"/>
+	<bean id="capitalLettersMatcher1" class="org.kew.rmf.matchers.CapitalLettersMatcher"
+		p:minRatio="1"/>
+	<bean id="levenshteinMatcherLD1" class="org.kew.rmf.matchers.LevenshteinMatcher"
+		p:maxDistance="1"/>
+	<bean id="numberMatcher1" class="org.kew.rmf.matchers.NumberMatcher"
+		p:minRatio="1"/>
+
+	<bean id="HyphenToNothing" class="org.kew.rmf.transformers.A2BTransformer"
+		p:a="-"
+		p:b=""/>
+	<bean id="authorDictionaryTransformer" class="org.kew.rmf.transformers.DictionaryTransformer"
+		p:dictionary-ref="author_dictionary"/>
+	<bean id="fakeHybridSignCleaner" class="org.kew.rmf.transformers.botany.FakeHybridSignCleaner" />
+	<bean id="familyDictionaryTransformer" class="org.kew.rmf.transformers.DictionaryTransformer"
+		p:dictionary-ref="unsafe_family_dictionary"/>
+	<bean id="publicationDictionaryTransformer" class="org.kew.rmf.transformers.DictionaryTransformer"
+		p:dictionary-ref="publication_dictionary"/>
+	<bean id="rankDictionaryTransformer" class="org.kew.rmf.transformers.DictionaryTransformer"
+		p:dictionary-ref="rank_dictionary"/>
+	<bean id="removeBracketedTextTransformer" class="org.kew.rmf.transformers.RemoveBracketedTextTransformer" />
+	<bean id="romanNumeralTransformer" class="org.kew.rmf.transformers.RomanNumeralTransformer" />
+	<bean id="safeStripNonAlphaNumericsTransformer" class="org.kew.rmf.transformers.StripNonAlphanumericCharactersTransformer" />
+	<bean id="safeStripNonAlphasTransformer_nothing" class="org.kew.rmf.transformers.StripNonAlphabeticCharactersTransformer"
+		p:replacement=""/>
+	<bean id="safeStripNonAlphasTransformer_space" class="org.kew.rmf.transformers.StripNonAlphabeticCharactersTransformer" />
+	<bean id="shrunkAuthors3" class="org.kew.rmf.transformers.authors.ShrunkAuthors"
+		p:shrinkTo="3"/>
+	<bean id="shrunkPubAuthors3" class="org.kew.rmf.transformers.authors.ShrunkPubAuthors"
+		p:shrinkTo="3"/>
+	<bean id="surnameExtractor" class="org.kew.rmf.transformers.authors.SurnameExtractor" />
+	<bean id="stripBracketToSpace" class="org.kew.rmf.transformers.A2BTransformer"
+		p:a="("
+		p:b=" "/>
+	<bean id="stripNonNumericCharactersTransformer" class="org.kew.rmf.transformers.StripNonNumericCharactersTransformer" />
+	<util:list id="reporters">
+		<bean class="org.kew.rmf.reporters.MatchReporter"
+			p:name="MatchReporter"
+			p:configName="WCS_match1"
+			p:delimiter="&#09;"
+			p:idDelimiter="|">
+			<property name="file">
+				<bean class="java.io.File">
+					<constructor-arg value="/mnt/t_drive/Development/SHS Project/Data Improvement/Matching_WCS/final_matching//WCS_match1_output.txt" />
+				</bean>
+			</property>
+		</bean>
+	</util:list>
+
+	<util:list id="columnProperties">
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="wcs_gen"
+			p:authorityColumnName="ipni_gen"
+			p:useInSelect="true"
+			p:addOriginalQueryValue="true"
+			p:addOriginalAuthorityValue="true"
+			p:addTransformedQueryValue="true"
+			p:addTransformedAuthorityValue="true"
+			p:matcher-ref="ExactMatcher">
+			<property name="queryTransformers">
+				<util:list id="1">
+					<ref bean="safeStripNonAlphasTransformer_nothing"/>
+					<ref bean="fakeHybridSignCleaner"/>
+				</util:list>
+			</property>
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<ref bean="safeStripNonAlphasTransformer_nothing"/>
+					<ref bean="fakeHybridSignCleaner"/>
+				</util:list>
+			</property>
+		</bean>
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="wcs_spec"
+			p:authorityColumnName="ipni_spec"
+			p:useInSelect="true"
+			p:addOriginalQueryValue="true"
+			p:addOriginalAuthorityValue="true"
+			p:addTransformedQueryValue="true"
+			p:addTransformedAuthorityValue="true"
+			p:matcher-ref="ExactMatcher">
+			<property name="queryTransformers">
+				<util:list id="1">
+					<ref bean="safeStripNonAlphasTransformer_nothing"/>
+					<ref bean="fakeHybridSignCleaner"/>
+				</util:list>
+			</property>
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<ref bean="safeStripNonAlphasTransformer_nothing"/>
+					<ref bean="fakeHybridSignCleaner"/>
+				</util:list>
+			</property>
+		</bean>
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="wcs_infrasp"
+			p:authorityColumnName="ipni_infrasp"
+			p:addOriginalQueryValue="true"
+			p:addOriginalAuthorityValue="true"
+			p:addTransformedQueryValue="true"
+			p:addTransformedAuthorityValue="true"
+			p:matcher-ref="ExactMatcher">
+			<property name="queryTransformers">
+				<util:list id="1">
+					<ref bean="safeStripNonAlphasTransformer_nothing"/>
+					<ref bean="fakeHybridSignCleaner"/>
+				</util:list>
+			</property>
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<ref bean="safeStripNonAlphasTransformer_nothing"/>
+					<ref bean="fakeHybridSignCleaner"/>
+				</util:list>
+			</property>
+		</bean>
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="wcs_rank"
+			p:authorityColumnName="ipni_rank"
+			p:useInSelect="true"
+			p:addOriginalQueryValue="true"
+			p:addOriginalAuthorityValue="true"
+			p:addTransformedQueryValue="true"
+			p:addTransformedAuthorityValue="true"
+			p:matcher-ref="ExactMatcher">
+			<property name="queryTransformers">
+				<util:list id="1">
+					<ref bean="rankDictionaryTransformer"/>
+					<ref bean="safeStripNonAlphasTransformer_nothing"/>
+				</util:list>
+			</property>
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<ref bean="rankDictionaryTransformer"/>
+					<ref bean="safeStripNonAlphasTransformer_nothing"/>
+				</util:list>
+			</property>
+		</bean>
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="wcs_bas_author"
+			p:authorityColumnName="ipni_bas_author"
+			p:blanksMatch="true"
+			p:addOriginalQueryValue="true"
+			p:addOriginalAuthorityValue="true"
+			p:addTransformedQueryValue="true"
+			p:addTransformedAuthorityValue="true"
+			p:matcher-ref="ExactMatcher">
+			<property name="queryTransformers">
+				<util:list id="1">
+					<ref bean="authorDictionaryTransformer"/>
+					<ref bean="surnameExtractor"/>
+					<ref bean="safeStripNonAlphasTransformer_space"/>
+				</util:list>
+			</property>
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<ref bean="authorDictionaryTransformer"/>
+					<ref bean="surnameExtractor"/>
+					<ref bean="safeStripNonAlphasTransformer_space"/>
+				</util:list>
+			</property>
+		</bean>
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="wcs_pub_author"
+			p:authorityColumnName="ipni_pub_author"
+			p:addOriginalQueryValue="true"
+			p:addOriginalAuthorityValue="true"
+			p:addTransformedQueryValue="true"
+			p:addTransformedAuthorityValue="true"
+			p:matcher-ref="ExactMatcher">
+			<property name="queryTransformers">
+				<util:list id="1">
+					<ref bean="authorDictionaryTransformer"/>
+					<ref bean="surnameExtractor"/>
+					<ref bean="safeStripNonAlphasTransformer_space"/>
+				</util:list>
+			</property>
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<ref bean="authorDictionaryTransformer"/>
+					<ref bean="surnameExtractor"/>
+					<ref bean="safeStripNonAlphasTransformer_space"/>
+				</util:list>
+			</property>
+		</bean>
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="wcs_publication"
+			p:authorityColumnName="ipni_publication"
+			p:addOriginalQueryValue="true"
+			p:addOriginalAuthorityValue="true"
+			p:addTransformedQueryValue="true"
+			p:addTransformedAuthorityValue="true"
+			p:matcher-ref="capitalLettersMatcher1">
+			<property name="queryTransformers">
+				<util:list id="1">
+					<ref bean="publicationDictionaryTransformer"/>
+					<ref bean="removeBracketedTextTransformer"/>
+					<ref bean="safeStripNonAlphaNumericsTransformer"/>
+				</util:list>
+			</property>
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<ref bean="publicationDictionaryTransformer"/>
+					<ref bean="removeBracketedTextTransformer"/>
+					<ref bean="safeStripNonAlphaNumericsTransformer"/>
+				</util:list>
+			</property>
+		</bean>
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="wcs_collation"
+			p:authorityColumnName="collation"
+			p:addOriginalQueryValue="true"
+			p:addOriginalAuthorityValue="true"
+			p:addTransformedQueryValue="true"
+			p:addTransformedAuthorityValue="true"
+			p:matcher-ref="numberMatcher1">
+			<property name="queryTransformers">
+				<util:list id="1">
+					<ref bean="removeBracketedTextTransformer"/>
+					<ref bean="romanNumeralTransformer"/>
+				</util:list>
+			</property>
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<ref bean="removeBracketedTextTransformer"/>
+					<ref bean="romanNumeralTransformer"/>
+				</util:list>
+			</property>
+		</bean>
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="DIT_year_wcs"
+			p:authorityColumnName="DIT_year_ipni"
+			p:addOriginalQueryValue="true"
+			p:addOriginalAuthorityValue="true"
+			p:matcher-ref="AlwaysMatchingMatcher">
+		</bean>
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="wcs_pub_author2"
+			p:authorityColumnName="ipni_pub_author2"
+			p:addOriginalQueryValue="true"
+			p:addOriginalAuthorityValue="true"
+			p:addTransformedQueryValue="true"
+			p:addTransformedAuthorityValue="true"
+			p:matcher-ref="AlwaysMatchingMatcher">
+			<property name="queryTransformers">
+				<util:list id="1">
+					<ref bean="authorDictionaryTransformer"/>
+					<ref bean="stripBracketToSpace"/>
+					<ref bean="shrunkPubAuthors3"/>
+				</util:list>
+			</property>
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<ref bean="authorDictionaryTransformer"/>
+					<ref bean="stripBracketToSpace"/>
+					<ref bean="shrunkPubAuthors3"/>
+				</util:list>
+			</property>
+		</bean>
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="wcs_full_name"
+			p:authorityColumnName="ipni_full_name"
+			p:addOriginalQueryValue="true"
+			p:addOriginalAuthorityValue="true"
+			p:addTransformedQueryValue="true"
+			p:addTransformedAuthorityValue="true"
+			p:matcher-ref="AlwaysMatchingMatcher">
+			<property name="queryTransformers">
+				<util:list id="1">
+					<ref bean="HyphenToNothing"/>
+					<ref bean="safeStripNonAlphasTransformer_space"/>
+					<ref bean="fakeHybridSignCleaner"/>
+				</util:list>
+			</property>
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<ref bean="HyphenToNothing"/>
+					<ref bean="safeStripNonAlphasTransformer_space"/>
+					<ref bean="fakeHybridSignCleaner"/>
+				</util:list>
+			</property>
+		</bean>
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="wcs_family"
+			p:authorityColumnName="Family_DIT"
+			p:addOriginalQueryValue="true"
+			p:addOriginalAuthorityValue="true"
+			p:addTransformedAuthorityValue="true"
+			p:matcher-ref="AlwaysMatchingMatcher">
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<ref bean="familyDictionaryTransformer"/>
+				</util:list>
+			</property>
+		</bean>
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="wcs_remarks"
+			p:authorityColumnName="ipni_remarks"
+			p:addOriginalQueryValue="true"
+			p:addOriginalAuthorityValue="true"
+			p:matcher-ref="AlwaysMatchingMatcher">
+		</bean>
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="wcs_ref_remarks"
+			p:authorityColumnName="ipni_ref_remarks"
+			p:addOriginalQueryValue="true"
+			p:addOriginalAuthorityValue="true"
+			p:matcher-ref="AlwaysMatchingMatcher">
+		</bean>
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="wcs_nol_id"
+			p:authorityColumnName="ipni_nol_id"
+			p:addOriginalQueryValue="true"
+			p:addOriginalAuthorityValue="true"
+			p:matcher-ref="AlwaysMatchingMatcher">
+		</bean>
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="wcs_version"
+			p:authorityColumnName="ipni_version"
+			p:addOriginalQueryValue="true"
+			p:addOriginalAuthorityValue="true"
+			p:matcher-ref="AlwaysMatchingMatcher">
+		</bean>
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="wcs_gen_init"
+			p:authorityColumnName="ipni_gen_init"
+			p:addOriginalQueryValue="true"
+			p:addOriginalAuthorityValue="true"
+			p:matcher-ref="AlwaysMatchingMatcher">
+		</bean>
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="wcs_name_status"
+			p:authorityColumnName="ipni_name_status"
+			p:addOriginalQueryValue="true"
+			p:addOriginalAuthorityValue="true"
+			p:matcher-ref="AlwaysMatchingMatcher">
+		</bean>
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="wcs_bas_author2"
+			p:authorityColumnName="ipni_bas_author2"
+			p:addOriginalQueryValue="true"
+			p:addOriginalAuthorityValue="true"
+			p:addTransformedQueryValue="true"
+			p:addTransformedAuthorityValue="true"
+			p:matcher-ref="AlwaysMatchingMatcher">
+			<property name="queryTransformers">
+				<util:list id="1">
+					<ref bean="authorDictionaryTransformer"/>
+					<ref bean="shrunkPubAuthors3"/>
+				</util:list>
+			</property>
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<ref bean="authorDictionaryTransformer"/>
+					<ref bean="shrunkPubAuthors3"/>
+				</util:list>
+			</property>
+		</bean>
+	</util:list>
+
+	<bean id="config" class="org.kew.rmf.core.configuration.MatchConfiguration"
+		p:queryFile-ref="sourcefile"
+		p:queryFileEncoding="UTF8"
+		p:queryFileDelimiter="&#09;"
+		p:authorityFile-ref="lookupfile"
+		p:authorityFileEncoding="UTF8"
+		p:authorityFileDelimiter="&#09;"
+		p:properties-ref="columnProperties"
+		p:sortFieldName="id"
+		p:loadReportFrequency="50000"
+		p:assessReportFrequency="100"
+		p:maxSearchResults="100000"
+		p:recordFilter="record.total_matches == 0"
+		p:reporters-ref="reporters"/>
+
+	<!-- import the generic application-context (equal for dedup/match configurations) -->
+	<import resource="classpath*:application-context.xml"/>
+	<!-- add the matching-specific bit -->
+	<import resource="classpath*:application-context-match.xml"/>
+</beans>

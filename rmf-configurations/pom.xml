@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.kew.rmf</groupId>
+		<artifactId>reconciliation-and-matching-framework</artifactId>
+		<version>0.2.2-SNAPSHOT</version>
+	</parent>
+	<artifactId>rmf-configurations</artifactId>
+
+	<name>Reconciliation and Matching Configurations</name>
+	<description>
+		Configurations using the RMF Core.
+	</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.kew.rmf</groupId>
+			<artifactId>rmf-core</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2.1</version>
+				<configuration>
+					<mainClass>org.kew.rmf.core.CoreApp</mainClass>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
