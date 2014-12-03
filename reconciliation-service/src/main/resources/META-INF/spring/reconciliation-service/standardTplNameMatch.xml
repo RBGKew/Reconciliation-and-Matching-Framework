@@ -36,6 +36,7 @@
 
 	<bean id="fakeHybridSignCleaner" class="org.kew.rmf.transformers.botany.FakeHybridSignCleaner" />
 	<bean id="stripNonAlphabetic" class="org.kew.rmf.transformers.StripNonAlphabeticCharactersTransformer" p:replacement=""/>
+	<bean id="doubleLettersTransformer" class="org.kew.rmf.transformers.RegexTransformer" p:pattern="(\p{L})\1+" p:replacement="$1"/>
 
 	<bean id="surnameExtractor" class="org.kew.rmf.transformers.authors.SurnameExtractor"/>
 	<bean id="stripBasionymAuthor" class="org.kew.rmf.transformers.authors.StripBasionymAuthorTransformer"/>
@@ -49,14 +50,6 @@
 			<bean class="org.kew.rmf.utils.CsvDictionary"
 				p:fileDelimiter="&#09;"
 				p:filePath="${dataDir}/dictionaries/authorDictionary.tsv" />
-		</property>
-	</bean>
-
-	<bean id="doubleLettersTransformer" class="org.kew.rmf.transformers.DictionaryRegexTransformer">
-		<property name="dictionary">
-			<bean class="org.kew.rmf.utils.CsvDictionary"
-				p:fileDelimiter="&#09;"
-				p:filePath="${dataDir}/dictionaries/doubleLettersDictionary.tsv" />
 		</property>
 	</bean>
 

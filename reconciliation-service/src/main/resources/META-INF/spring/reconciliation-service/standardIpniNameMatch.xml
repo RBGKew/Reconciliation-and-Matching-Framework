@@ -114,6 +114,7 @@
 	<bean id="stripNonAlphas" class="org.kew.rmf.transformers.StripNonAlphabeticCharactersTransformer" p:replacement=""/>
 	<bean id="epithetTransformer" class="org.kew.rmf.transformers.botany.EpithetTransformer"/>
 	<bean id="fakeHybridSignCleaner" class="org.kew.rmf.transformers.botany.FakeHybridSignCleaner" />
+	<bean id="doubleLettersTransformer" class="org.kew.rmf.transformers.RegexTransformer" p:pattern="(\p{L})\1+" p:replacement="$1"/>
 
 	<bean id="stripInAuthor" class="org.kew.rmf.transformers.authors.StripInAuthorTransformer"/>
 	<bean id="stripExAuthor" class="org.kew.rmf.transformers.authors.StripExAuthorTransformer"/>
@@ -127,14 +128,6 @@
 			<bean class="org.kew.rmf.utils.CsvDictionary"
 				p:fileDelimiter="&#09;"
 				p:filePath="${dataDir}/dictionaries/authorDictionary.tsv" />
-		</property>
-	</bean>
-
-	<bean id="doubleLettersTransformer" class="org.kew.rmf.transformers.DictionaryRegexTransformer">
-		<property name="dictionary">
-			<bean class="org.kew.rmf.utils.CsvDictionary"
-				p:fileDelimiter="&#09;"
-				p:filePath="${dataDir}/dictionaries/doubleLettersDictionary.tsv" />
 		</property>
 	</bean>
 
