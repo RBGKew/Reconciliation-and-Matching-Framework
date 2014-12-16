@@ -18,7 +18,7 @@
 		Reconciliation Service <em>${configName}</em>
 	</h1>
 
-	<p>Reconciliation Service URL: <input type="text" class="form-inline" style="border: none; width: 60%" value="http://${serverAndPort}${reconciliationServiceUrl}"/></p>
+	<p>Reconciliation Service URL: <input tabindex="1" type="text" class="form-inline" style="border: none; width: 60%" value="http://${serverAndPort}${reconciliationServiceUrl}"/></p>
 
 	<c:if test="${reconciliationConfiguration.description != null}">
 		<h2 id="description"><a href="#description">Service description</a></h2>
@@ -100,9 +100,9 @@
 		<li>
 			<strong>CSV file upload:</strong> <form class="form-inline" method="post" action="${fileMatchUrl}" enctype="multipart/form-data">
 				<!-- CSV file Button -->
-				<input id="file" name="file" class="form-control" type="file" />
+				<input id="file" tabindex="2" name="file" class="form-control" type="file" />
 				<span> </span>
-				<select id="charset" name="charset" class="form-control">
+				<select id="charset" tabindex="3" name="charset" class="form-control">
 					<c:forEach var="charsetName" items="${charsetNames}">
 						<c:if test="${charsetName eq 'UTF-8'}">
 							<option value="${charsetName}" selected="selected">${charsetName}</option>
@@ -114,31 +114,43 @@
 				</select>
 				<span> </span>
 				<!-- Submit button -->
-				<button type="submit" class="btn btn-primary">Upload</button>
+				<button tabindex="4" type="submit" class="btn btn-primary">Upload</button>
 			</form>
 		</li>
 	</ul>
 
 	<div id="singleQueryDiv" style="display: none">
 		<h2 id="singlequery"><a href="#singlequery">Single query</a></h2>
-		<p>Perform a single reconciliation query using this configuration:</p>
+		<p>Perform a single reconciliation query using this configuration, either with a single text string or split into properties:</p>
 
 		<form id="singleQuery" class="form-horizontal">
-			<c:forEach var="property" items="${properties}">
-				<div class="form-group">
-					<label class="control-label" for="${property}" style="width: 38%;">${property}</label> 
-					<input id="${property}" name="${property}" class="form-control form-inline" type="text" style="width: 60%;" />
-				</div>
-			</c:forEach>
+			<div class="form-group">
+				<label class="control-label" for="unatomized" style="width: 38%;">all-in-one</label> 
+				<input id="unatomized" tabindex="5" name="unatomized" class="form-control form-inline" type="text" style="width: 56%;" />
+			</div>
+
+			<div id="atomizedProperties">
+				<c:forEach var="property" items="${properties}">
+					<div class="form-group">
+						<label class="control-label" for="${property}" style="width: 38%;">${property}</label> 
+						<input id="${property}" tabindex="6" name="${property}" class="form-control form-inline" type="text" style="width: 56%;" />
+					</div>
+				</c:forEach>
+			</div>
 			<!-- Submit button -->
 			<div class="form-group">
 				<label class="control-label" style="width: 38%;"> </label> 
-				<button type="submit" class="btn btn-primary">Query</button>
+				<button id="reset" tabindex="8" type="reset" class="btn">Reset</button>
+				<label class="control-label" style="width: 38%;"> </label> 
+				<button type="submit" tabindex="7" class="btn btn-primary">Query</button>
 			</div>
 		</form>
 		<table id="singleQueryResultTable" class="table table-listing">
 			<caption>Query results</caption>
 		</table>
+
+		<p>JSON request:</p>
+		<pre id="singleQueryRequest" style="background-color: #f4f4f4; border: 1px solid #909090; margin: 1ex; padding: 1ex;"> </pre>
 
 		<p>JSON response:</p>
 		<pre id="singleQueryResult" style="background-color: #f4f4f4; border: 1px solid #909090; margin: 1ex; padding: 1ex;"> </pre>
@@ -149,11 +161,24 @@
 
 			$("#singleQuery").submit(function(event) {
 
-				var properties = 	$("#singleQuery input").map(function() {
-					return {"pid": this.id, "v": this.value};
-				}).get();
+				var properties;
+				var query;
+				var queryData;
 
-				var queryData = {"query":"q1", "properties":properties};
+				// If unatomized field is blank use atomized properties
+				if ($.trim($("#unatomized").val()) == '') {
+					query = "web1";
+					properties = $("#atomizedProperties input").map(function() {
+						return {"pid": this.id, "v": this.value};
+					}).get();
+					var queryData = {"query":query, "properties":properties};
+				}
+				else {
+					query = $.trim($("#unatomized").val());
+					var queryData = {"query":query};
+				}
+
+				$("#singleQueryRequest").html(JSON.stringify(queryData, null, 4));
 
 				$.post(reconciliationServiceUrl, { query: JSON.stringify(queryData) }, function( data ) {
 					$( "#singleQueryResult" ).html( JSON.stringify(data, null, 4) );
@@ -172,6 +197,18 @@
 			});
 
 			$("#singleQueryDiv").show();
+
+			// Hide atomized fields if unatomized filled in and vice-versa.
+			$("#unatomized").keyup(toggleFields);
+			$("#atomizedProperties input").keyup(toggleFields);
+			$("#singleQuery").on('reset', function() { setTimeout(toggleFields);});
+
+			function toggleFields() {
+				$("#atomizedProperties input").prop("disabled", $("#unatomized").val() != '');
+				$("#unatomized").prop("disabled", $.grep($("#atomizedProperties input"), function(i) {
+					return i.value != '';
+				}).length > 0);
+			}
 		]]></script>
 	</div>
 </div>
