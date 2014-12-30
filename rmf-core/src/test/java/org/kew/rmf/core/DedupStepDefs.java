@@ -105,7 +105,6 @@ public class DedupStepDefs {
 
 	private void checkDataInFile(DataTable expectedOutput, Path path) throws Exception {
 		List<List<String>> expectedOutputList = expectedOutput.cells(0);
-		@SuppressWarnings("unchecked")
 		List<String> lines = FileUtils.readLines(path.toFile(), "UTF-8");
 
 		for (int i = 0; i < lines.size(); i++) {

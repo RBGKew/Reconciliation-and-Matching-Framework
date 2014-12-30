@@ -26,7 +26,7 @@ public class NumberMatcherTest {
 				"Abraham Lincoln came 1934 to Ealing, 4 times in a row, riding 23 horses"));
 		// Also true would be:
 		assertTrue(matcher.matches("Abraham Lincoln came 1834 to Ealing, 4 times in a row",
-				"1834 was the year of the goose in chinese calendar. 4 gueese where beatified."));
+				"1834 was the year of the goose in Chinese calendar. 4 geese where beatified."));
 	}
 
 	@Test

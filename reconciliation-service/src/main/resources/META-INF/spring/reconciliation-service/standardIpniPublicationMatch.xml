@@ -42,7 +42,7 @@
 	<!-- Matchers -->
 	<bean id="exactMatchBlanksOk" class="org.kew.rmf.matchers.ExactMatcher" p:blanksMatch="true" />
 	<bean id="aCommonTokenMatcher" class="org.kew.rmf.matchers.CommonTokensMatcher" p:minRatio="0.1"/>
-	<bean id="commonTokensMatcher" class="org.kew.rmf.matchers.CommonTokensMatcher" p:minRatio="0.6"/>
+	<bean id="commonTokensMatcher" class="org.kew.rmf.matchers.CommonTokensMatcher" p:minRatio="0.8"/>
 	<bean id="ld2Match" class="org.kew.rmf.matchers.LevenshteinMatcher" p:maxDistance="2"/>
 	<bean id="numberInRangeMatcher" class="org.kew.rmf.matchers.NumberInRangeMatcher" />
 

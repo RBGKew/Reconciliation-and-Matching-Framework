@@ -35,15 +35,14 @@ public class NumberMatcher extends CommonTokensMatcher {
 	@Override
 	public boolean matches(String s1, String s2) {
 		if (s1 == null && s2 == null) return true;
-		String no1 = doConvert(s1);
-		String no2 = doConvert(s2);
+		String no1 = removeNumbers.transform(s1);
+		String no2 = removeNumbers.transform(s2);
 		if (noNumbersRequireRestMatch && no1.length() == 0 && no2.length() == 0) {
 			return (s1.equals(s2));
-		} else return super.matches(no1, no2);
-	}
-
-	private String doConvert(String s) {
-		return this.removeNumbers.transform(s);
+		}
+		else {
+			return super.matches(no1, no2);
+		}
 	}
 
 	@Override
@@ -56,15 +55,9 @@ public class NumberMatcher extends CommonTokensMatcher {
 		return null;
 	}
 
-	public static void main(String[] args) throws Exception {
-		NumberMatcher m = new NumberMatcher();
-		System.out.println(m.matches("7: 139", "7: 139 (-140)"));
-	}
-
 	public boolean isNoNumbersRequireRestMatch() {
 		return noNumbersRequireRestMatch;
 	}
-
 	public void setNoNumbersRequireRestMatch(boolean noNumbersRequireRestMatch) {
 		this.noNumbersRequireRestMatch = noNumbersRequireRestMatch;
 	}

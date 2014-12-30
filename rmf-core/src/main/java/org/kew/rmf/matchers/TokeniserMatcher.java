@@ -14,31 +14,57 @@ package org.kew.rmf.matchers;
 
 import java.util.Arrays;
 
-
 /**
- * This matcher calculates how many tokens are shared between two strings, the tokens
- * If the calculated ratio is above the `minRatio` it returns true.
- * @author nn00kg
- *
+ * Abstract {@link Matcher} to split a string into delimited tokens before matching.
+ * <br/>
+ * By default with {@link #minLength} <code>1</code>, empty tokens are ignored.
  */
 public abstract class TokeniserMatcher implements Matcher {
 
-    private String delimiter = " ";
+	private String delimiter = " ";
+	protected int minLength = 1;
 
-    protected String[] convToArray(String s){
-        String[] a = s.split(this.delimiter);
-        // if delimiter is blank we want every element to be represented as one item in the array;
-        // however, the first element would be blank, which we correct here.
-        if (this.getDelimiter() == "") a = Arrays.copyOfRange(a, 1, a.length);
-        return a;
-    }
+	protected String[] convToArray(String s) {
+		if (s == null) { return new String[0]; }
 
-    public String getDelimiter() {
-        return delimiter;
-    }
+		String[] a = s.split(this.delimiter, -1);
 
-    public void setDelimiter(String delimiter) {
-        this.delimiter = delimiter;
-    }
+		// if delimiter is blank we want every element to be represented as one item in the array;
+		// however, the first and last element swould be blank, which we correct here.
+		if (this.getDelimiter().isEmpty()) a = Arrays.copyOfRange(a, 1, a.length -1);
 
+		// remove elements that are too short
+		if (minLength > 0) {
+			int bi = 0;
+			String[] b = new String[a.length];
+			for (int ai = 0; ai < a.length; ai++) {
+				if (a[ai].length() >= minLength) {
+					b[bi++] = a[ai];
+				}
+			}
+			a = Arrays.copyOf(b, bi);
+		}
+		return a;
+	}
+
+	public String getDelimiter() {
+		return delimiter;
+	}
+	/**
+	 * Set the delimiter.  The default is " " (a space).
+	 */
+	public void setDelimiter(String delimiter) {
+		this.delimiter = delimiter;
+	}
+
+	public int getMinLength() {
+		return minLength;
+	}
+	/**
+	 * Set the minimum token length.  To preserve empty tokens (caused by adjacent delimiters)
+	 * set this to zero.
+	 */
+	public void setMinLength(int minLength) {
+		this.minLength = minLength;
+	}
 }

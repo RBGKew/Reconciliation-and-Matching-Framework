@@ -31,7 +31,13 @@ public class CapitalLettersMatcherTest {
 	@Test
 	public void testSameWordsDifferentCapitals () throws Exception {
 		CapitalLettersMatcher matcher = new CapitalLettersMatcher();
-		assertFalse(matcher.matches("My horse has MANY BIG teeth!", "My horse has many big teeth!"));
+		assertTrue(matcher.matches("My horse has MANY big teeth!", "My horse has many big teeth!"));
+		matcher.setDelimiter("");
+		assertFalse(matcher.matches("My horse has MANY big teeth!", "My horse has many big teeth!"));
+
+		assertTrue(matcher.matches("A A A A B C", "A A A A D E"));
+		matcher.setDeduplicateTokens(true);
+		assertFalse(matcher.matches("A A A A B C", "A A A A D E"));
 	}
 
 	@Test
