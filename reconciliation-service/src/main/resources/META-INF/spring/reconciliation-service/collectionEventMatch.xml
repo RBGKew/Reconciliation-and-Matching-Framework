@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+
+	<!-- • COLLECTION EVENT MATCH CONFIGURATION • -->
+
+	<bean id="description" class="java.lang.String"><constructor-arg><value>
+		<![CDATA[
+			Initial reconciliation service matching collection events to those from the Kew, Edinburgh and ___ herbaria.
+
+			<h4>Presence or absence of fields</h4>
+
+			<ul>
+				<li><code>recorded_by</code> is TBC.</li>
+				<li><code>field_number</code> is TBC.</li>
+				<li><code>event_date</code> is TBC.</li>
+				<li><code>locality</code> is TBC.</li>
+				<li><code>country</code> is TBC.</li>
+				<li><code>institution_code</code> is TBC.</li>
+			</ul>
+		]]>
+	</value></constructor-arg></bean>
+
+	<!-- Authority data -->
+	<bean id="authorityData" class="java.io.File">
+		<constructor-arg value="${dataDir}/data/all-collectors.csv" />
+	</bean>
+
+	<!-- Transformers -->
+	<bean id="stripNonAlphaNumerics" class="org.kew.rmf.transformers.StripNonAlphanumericCharactersTransformer"/>
+	<bean id="stripNonAlphabetics" class="org.kew.rmf.transformers.StripNonAlphabeticCharactersTransformer" p:replacement=""/>
+	<bean id="stripNonNumerics" class="org.kew.rmf.transformers.StripNonNumericCharactersTransformer" p:replacement=""/>
+	<bean id="stripNulls" class="org.kew.rmf.transformers.A2BTransformer" p:a="NULL" p:b=""/>
+	<bean id="spaceNonAlphabetics" class="org.kew.rmf.transformers.StripNonAlphabeticCharactersTransformer" p:replacement=" "/>
+	<bean id="zeroToBlank" class="org.kew.rmf.transformers.ZeroToBlankTransformer" />
+	<bean id="surnameExtractor" class="org.kew.rmf.transformers.authors.SurnameExtractor"/>
+	<bean id="yearShrinker" class="org.kew.rmf.transformers.StringShrinkerTransformer" p:length="4"/>
+	<bean id="upperCase" class="org.kew.rmf.transformers.UpperCaseTransformer"/>
+	<bean id="lowerCase" class="org.kew.rmf.transformers.LowerCaseTransformer"/>
+
+	<!-- Dictionary transformers -->
+	<bean id="isoCountryTransformer" class="org.kew.rmf.transformers.DictionaryTransformer">
+		<property name="dictionary">
+			<bean class="org.kew.rmf.utils.CsvDictionary"
+				p:fileDelimiter="&#09;"
+				p:filePath="${dataDir}/dictionaries/iso-3166-1-alpha-2-countries.tsv" />
+		</property>
+	</bean>
+
+	<!-- Matchers -->
+	<bean id="exactMatch" class="org.kew.rmf.matchers.ExactMatcher" p:blanksMatch="false"/>
+	<bean id="exactMatchBlanksOk" class="org.kew.rmf.matchers.ExactMatcher" p:blanksMatch="true"/>
+
+	<bean id="alwaysMatch" class="org.kew.rmf.matchers.AlwaysMatchingMatcher"/>
+	<bean id="neverMatch" class="org.kew.rmf.matchers.NeverMatchingMatcher"/>
+
+	<bean id="longNameMatch" class="org.kew.rmf.matchers.CommonTokensMatcher" p:delimiter=" " p:minRatio="0.33" p:minLength="4"/>
+	<bean id="ngramMatchColl" class="org.kew.rmf.matchers.NGramMatcher" p:nGramLength="2" p:minRatio="0.15"/>
+
+	<bean id="ngramMatchLocality" class="org.kew.rmf.matchers.NGramMatcher" p:nGramLength="2" p:minRatio="0.2"/>
+
+	<bean id="ngramAndCapitalsMatch" class="org.kew.rmf.matchers.CompositeAllMatcher">
+		<property name="matchers">
+			<util:list>
+				<ref bean="longNameMatch"/>
+				<ref bean="ngramMatchColl"/>
+			</util:list>
+		</property>
+	</bean>
+
+	<bean id="aCommonToken" class="org.kew.rmf.matchers.CommonTokensMatcher" p:minRatio="0.01"/>
+
+	<util:list id="reporters"/>
+
+	<!-- Have: Collector Name, Collection Date, Collector Number, Country, Locality -->
+
+	<util:list id="columnProperties">
+		<!-- Collector Name -->
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="recorded_by"
+			p:authorityColumnName="recorded_by"
+			p:useInSelect="false"
+			p:blanksMatch="false"
+			p:matcher-ref="ngramAndCapitalsMatch"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
+			<property name="queryTransformers">
+				<util:list id="1">
+					<ref bean="surnameExtractor" />
+					<ref bean="spaceNonAlphabetics"/>
+				</util:list>
+			</property>
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<ref bean="surnameExtractor" />
+					<ref bean="spaceNonAlphabetics"/>
+				</util:list>
+			</property>
+		</bean>
+
+		<!-- Collector Number -->
+		<!-- If this is blank there's no point looking for a match. -->
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="field_number"
+			p:authorityColumnName="field_number"
+			p:useInSelect="true"
+			p:blanksMatch="false"
+			p:matcher-ref="exactMatch"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
+			<property name="queryTransformers">
+				<util:list id="1">
+					<ref bean="stripNonNumerics" />
+					<ref bean="zeroToBlank" />
+				</util:list>
+			</property>
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<ref bean="stripNonNumerics" />
+					<ref bean="zeroToBlank" />
+				</util:list>
+			</property>
+		</bean>
+
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="event_date"
+			p:authorityColumnName="event_date"
+			p:useInSelect="true"
+			p:blanksMatch="false"
+			p:matcher-ref="exactMatchBlanksOk"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
+			<property name="queryTransformers">
+				<util:list id="1">
+					<ref bean="stripNonNumerics" />
+					<ref bean="yearShrinker" />
+				</util:list>
+			</property>
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<ref bean="stripNonNumerics" />
+					<ref bean="yearShrinker" />
+				</util:list>
+			</property>
+		</bean>
+
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="locality"
+			p:authorityColumnName="locality"
+			p:useInSelect="false"
+			p:blanksMatch="true"
+			p:matcher-ref="ngramMatchLocality"
+			p:addOriginalAuthorityValue="false"
+			p:addOriginalQueryValue="false">
+			<property name="queryTransformers">
+				<util:list id="1">
+					<ref bean="stripNonAlphaNumerics" />
+					<ref bean="lowerCase" />
+				</util:list>
+			</property>
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<ref bean="stripNonAlphaNumerics" />
+					<ref bean="lowerCase" />
+				</util:list>
+			</property>
+		</bean>
+
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="country"
+			p:authorityColumnName="country"
+			p:useInSelect="true"
+			p:matcher-ref="exactMatchBlanksOk"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
+			<property name="queryTransformers">
+				<util:list id="1">
+					<ref bean="stripNonAlphabetics" />
+					<ref bean="isoCountryTransformer" />
+				</util:list>
+			</property>
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<ref bean="stripNonAlphabetics" />
+					<ref bean="isoCountryTransformer" />
+				</util:list>
+			</property>
+		</bean>
+
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="institution_code"
+			p:authorityColumnName="institution_code"
+			p:useInSelect="false"
+			p:matcher-ref="aCommonToken"
+			p:blanksMatch="true"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
+			<property name="queryTransformers">
+				<util:list id="1">
+					<ref bean="spaceNonAlphabetics" />
+					<ref bean="upperCase" />
+				</util:list>
+			</property>
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<ref bean="spaceNonAlphabetics" />
+					<ref bean="upperCase" />
+				</util:list>
+			</property>
+		</bean>
+	</util:list>
+
+	<bean id="collectionCitationToPropertiesConverter" class="org.kew.rmf.reconciliation.queryextractor.SpecimenCitationToPropertiesConverter" />
+
+	<bean id="reconciliationResultFormat" class="org.kew.rmf.reconciliation.service.resultformatter.ReconciliationResultPropertyFormatter"
+		p:format="%s %s, %s; %s %s; (%s)"
+		p:stripRepeats=" ">
+		<property name="properties">
+			<util:list id="1">
+				<value>recorded_by</value>
+				<value>field_number</value>
+				<value>event_date</value>
+				<value>locality</value>
+				<value>country</value>
+				<value>institution_code</value>
+			</util:list>
+		</property>
+	</bean>
+
+	<!--
+		p:identifierSpace="http://ipni.org/urn:lsid:ipni.org:names:"
+		p:previewUrl="http://ipni.org/urn:lsid:ipni.org:names:{{id}}"
+		p:previewWidth="400"
+		p:previewHeight="400"
+		p:suggestFlyoutUrl="http://ipni.org/urn:lsid:ipni.org:names:{id}"
+		-->
+	<bean id="config" class="org.kew.rmf.core.configuration.ReconciliationServiceConfiguration"
+		p:name="CollectionEvent"
+		p:description-ref="description"
+		p:authorityFile-ref="authorityData"
+		p:authorityFileEncoding="UTF-8"
+		p:authorityFileDelimiter=","
+		p:authorityFileQuoteChar="&quot;"
+		p:properties-ref="columnProperties"
+		p:sortFieldName="id"
+		p:loadReportFrequency="25000"
+		p:assessReportFrequency="1000"
+		p:maxSearchResults="10000"
+		p:recordFilter=""
+		p:maximumLoadErrors="0"
+		p:reuseIndex="true"
+		p:queryStringToPropertiesExtractor-ref="collectionCitationToPropertiesConverter"
+		p:reconciliationResultFormatter-ref="reconciliationResultFormat"
+
+		p:title="Collection Event Reconciliation Service"
+		p:schemaSpace="http://rdf.freebase.com/ns/type.object.id"
+		p:viewUrl="{{id}}"
+		>
+		<property name="defaultTypes">
+			<util:list id="2">
+				<bean class="org.kew.rmf.refine.domain.metadata.Type"
+					p:id="http://rs.tdwg.org/dwc/terms/Event"
+					p:name="Collection event"/>
+			</util:list>
+		</property>
+	</bean>
+
+	<!-- import the generic application-context (equal for dedup/match configurations) -->
+	<import resource="classpath:/META-INF/spring/reconciliation-service/generic.xml" />
+	<!-- add the matching-specific bit -->
+	<import resource="classpath:/META-INF/spring/reconciliation-service/match.xml" />
+</beans>
