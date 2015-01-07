@@ -235,8 +235,10 @@ Feature: Match WCS against Ipni
                     p:sortFieldName="id"
                     p:queryFileEncoding="UTF-8"
                     p:queryFileDelimiter="&#09;"
+                    p:queryFileQuoteChar="&quot;"
                     p:authorityFileEncoding="UTF-8"
                     p:authorityFileDelimiter="&#09;"
+                    p:authorityFileQuoteChar="&quot;"
                     p:loadReportFrequency="50000"
                     p:assessReportFrequency="100"
                     p:reporters-ref="reporters"/>

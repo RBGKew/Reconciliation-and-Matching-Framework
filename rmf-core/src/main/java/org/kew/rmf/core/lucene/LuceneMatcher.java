@@ -183,13 +183,15 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
 
         this.loadData(); // writes the index according to the configuration
 
-        // TODO: either make quote characters and line break characters configurable or simplify even more?
-        CsvPreference csvPref = new CsvPreference.Builder(
-                '"', this.getConfig().getQueryFileDelimiter().charAt(0), "\n").build();
+        char delimiter = this.config.getQueryFileDelimiter().charAt(0);
+        char quote = this.config.getQueryFileQuoteChar().charAt(0);
+        CsvPreference csvPref = new CsvPreference.Builder(quote, delimiter, "\n").build();
+        logger.info("Reading CSV from {} with delimiter '{}' and quote '{}'", this.getConfig().getQueryFile(), delimiter, quote);
+
         int i = 0;
         try (MatchConfiguration config = this.getConfig();
-             IndexReader indexReader= this.getIndexReader();
-             CsvMapReader mr = new CsvMapReader(new InputStreamReader(new FileInputStream(this.getConfig().getQueryFile()), this.getConfig().getQueryFileEncoding()), csvPref)) {
+            IndexReader indexReader= this.getIndexReader();
+            CsvMapReader mr = new CsvMapReader(new InputStreamReader(new FileInputStream(this.getConfig().getQueryFile()), this.getConfig().getQueryFileEncoding()), csvPref)) {
 
             this.prepareEnvs();
 

@@ -38,6 +38,7 @@ public abstract class Configuration implements AutoCloseable {
 	private File queryFile;
 	private String queryFileEncoding = "UTF-8";
 	private String queryFileDelimiter;
+	private String queryFileQuoteChar;
 
     private String recordFilter = "";
 
@@ -66,6 +67,7 @@ public abstract class Configuration implements AutoCloseable {
 	private File authorityFile;
 	private String authorityFileEncoding = "UTF-8";
 	private String authorityFileDelimiter;
+	private String authorityFileQuoteChar;
 	private DatabaseRecordSource authorityRecords;
 
 	private boolean outputAllMatches;
@@ -145,6 +147,9 @@ public abstract class Configuration implements AutoCloseable {
 		this.authorityFileEncoding = authorityFileEncoding;
 	}
 
+	/**
+	 * The delimiter (usually tab or comma) for delimiter-separated-value authority files.
+	 */
 	public String getAuthorityFileDelimiter() {
 		return authorityFileDelimiter;
 	}
@@ -152,7 +157,17 @@ public abstract class Configuration implements AutoCloseable {
 		this.authorityFileDelimiter = authorityFileDelimiter;
 	}
 
-    public List<Property> getProperties() {
+	/**
+	 * The quote character (usually &quot; or nothing) for delimiter-separated-value files.
+	 */
+	public String getAuthorityFileQuoteChar() {
+		return authorityFileQuoteChar;
+	}
+	public void setAuthorityFileQuoteChar(String authorityFileQuoteChar) {
+		this.authorityFileQuoteChar = authorityFileQuoteChar;
+	}
+
+	public List<Property> getProperties() {
         return properties;
     }
     public void setProperties(List<Property> properties) {
@@ -194,6 +209,9 @@ public abstract class Configuration implements AutoCloseable {
         this.writeComparisonReport = writeComparisonReport;
     }
 
+	/**
+	 * The delimiter (usually tab or comma) for delimiter-separated-value query files.
+	 */
 	public String getQueryFileDelimiter() {
 		return queryFileDelimiter;
 	}
@@ -201,7 +219,17 @@ public abstract class Configuration implements AutoCloseable {
 		this.queryFileDelimiter = queryFileDelimiter;
 	}
 
-    public boolean isWriteDelimitedReport() {
+	/**
+	 * The quote character (usually &quot; or nothing) for delimiter-separated-value files.
+	 */
+	public String getQueryFileQuoteChar() {
+		return queryFileQuoteChar;
+	}
+	public void setQueryFileQuoteChar(String queryFileQuoteChar) {
+		this.queryFileQuoteChar = queryFileQuoteChar;
+	}
+
+	public boolean isWriteDelimitedReport() {
         return writeDelimitedReport;
     }
     public void setWriteDelimitedReport(boolean writeDelimitedReport) {

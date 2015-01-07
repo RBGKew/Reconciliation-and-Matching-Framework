@@ -179,6 +179,7 @@
 		p:authorityFile-ref="authorityfile"
 		p:authorityFileEncoding="UTF8"
 		p:authorityFileDelimiter="&#09;"
+		p:authorityFileQuoteChar="&quot;"
 		p:properties-ref="columnProperties"
 		p:sortFieldName="id"
 		p:loadReportFrequency="5000"

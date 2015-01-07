@@ -100,6 +100,7 @@ public class LuceneDataLoader implements DataLoader {
 					config.setAuthorityFile(config.getQueryFile());
 					config.setAuthorityFileEncoding(config.getQueryFileEncoding());
 					config.setAuthorityFileDelimiter(config.getQueryFileDelimiter());
+					config.setAuthorityFileQuoteChar(config.getQueryFileQuoteChar());
 				}
 				this.load(config.getAuthorityFile());
 			}
@@ -240,8 +241,10 @@ public class LuceneDataLoader implements DataLoader {
         int i = 0;
         int errors = 0;
 
-        // TODO: either make quote characters and line break characters configurable or simplify even more?
-        CsvPreference customCsvPref = new CsvPreference.Builder('"', this.config.getAuthorityFileDelimiter().charAt(0), "\n").build();
+        char delimiter = this.config.getAuthorityFileDelimiter().charAt(0);
+        char quote = this.config.getAuthorityFileQuoteChar().charAt(0);
+        CsvPreference customCsvPref = new CsvPreference.Builder(quote, delimiter, "\n").build();
+        logger.info("Reading CSV from {} with delimiter {} and quote {}", file, delimiter, quote);
 
         try (CsvMapReader mr = new CsvMapReader(new InputStreamReader(new FileInputStream(file), "UTF-8"), customCsvPref)) {
 
@@ -256,6 +259,7 @@ public class LuceneDataLoader implements DataLoader {
             if (!headerList.contains(idFieldName)) throw new DataLoadException(String.format("%s: Id field name not found in header, should be %s!", this.config.getAuthorityFile().getPath(), idFieldName));
             Map<String, String> record;
             record = mr.read(header);
+            logger.debug("{}: First read record is {}", configName, record);
 
             Document doc = null;
             while (record != null) {
