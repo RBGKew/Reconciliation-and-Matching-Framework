@@ -81,8 +81,8 @@
 			<ul>
 				<li><code>epithet_1</code> is mandatory.</li>
 				<li><code>epithet_2</code> and <code>epithet_3</code>, if present in the query, will be present in all results.  If not in the query only names without a second or third epithet will be returned.</li>
-				<li><code>basionym_author</code> and <code>publishing_author</code> will be matched (on either side) by a blank field.</li>
 				<li><code>full_name</code> is ignored, it’s there due to a limitation of the software at present.</li>
+				<li>Other fields will be matched (on either side) by a blank field.</li>
 			</ul>
 		]]>
 	</value></constructor-arg></bean>
