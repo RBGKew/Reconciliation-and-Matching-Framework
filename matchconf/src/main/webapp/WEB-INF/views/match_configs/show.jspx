@@ -9,6 +9,7 @@
         <field:display field="queryFileName" id="s_org_kew_rmf_matchconf_Configuration_queryFileName" object="${configuration}" z="XRT7QNy33yx8cChzEZ/gjVTZRfY="/>
         <field:display field="queryFileEncoding" id="s_org_kew_rmf_matchconf_Configuration_queryFileEncoding" object="${configuration}" z="ziwp56OUaxF5BYYtTwHBV8AVJ7s="/>
         <field:display field="queryFileDelimiter" id="s_org_kew_rmf_matchconf_Configuration_queryFileDelimiter" object="${configuration}" z="e4PmInWM3OvfJ0NFdIp89OlJbT0="/>
+        <field:display field="queryFileQuoteChar" id="s_org_kew_rmf_matchconf_Configuration_queryFileQuoteChar" object="${configuration}" z="user-managed"/>
 
         <field:display field="authorityFileName" id="s_org_kew_rmf_matchconf_Configuration_authorityFileName" object="${configuration}" z="0fGCfQrxrvpn/N7tJswfKPjphEo="/>
         <field:display field="authorityFileEncoding" id="s_org_kew_rmf_matchconf_Configuration_authorityFileEncoding" object="${configuration}" z="KVyZkxujx0RUYwN234g83IooD0g="/>

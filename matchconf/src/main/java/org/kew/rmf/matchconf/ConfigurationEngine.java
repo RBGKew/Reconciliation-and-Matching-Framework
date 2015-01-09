@@ -124,6 +124,7 @@ public class ConfigurationEngine {
         outXML.add(String.format("%s%sp:queryFile-ref=\"queryfile\"", shift, shift));
         outXML.add(String.format("%s%sp:queryFileEncoding=\"%s\"", shift, shift, this.config.getQueryFileEncoding()));
         outXML.add(String.format("%s%sp:queryFileDelimiter=\"%s\"", shift, shift, this.config.getQueryFileDelimiter()));
+        outXML.add(String.format("%s%sp:queryFileQuoteChar=\"%s\"", shift, shift, this.config.getQueryFileQuoteChar()));
         if (this.config.getClassName().equals("MatchConfiguration")) {
             outXML.add(String.format("%s%sp:authorityFile-ref=\"authorityfile\"", shift, shift));
             outXML.add(String.format("%s%sp:authorityFileEncoding=\"%s\"", shift, shift, this.config.getAuthorityFileEncoding()));

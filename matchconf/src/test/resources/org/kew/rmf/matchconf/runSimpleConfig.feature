@@ -74,6 +74,7 @@ Feature: run a simple configuration
                     p:sortFieldName="id"
                     p:queryFileEncoding="UTF-8"
                     p:queryFileDelimiter="&#09;"
+                    p:queryFileQuoteChar="&quot;"
                     p:loadReportFrequency="50000"
                     p:assessReportFrequency="100"
                     p:reporters-ref="reporters"/>

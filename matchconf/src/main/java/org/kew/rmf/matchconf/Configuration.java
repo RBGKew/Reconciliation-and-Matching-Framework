@@ -59,6 +59,7 @@ public class Configuration extends CloneMe<Configuration> {
 		"packageName",
 		"recordFilter",
 		"sortFieldName",
+		"queryFileQuoteChar",
 		"queryFileDelimiter",
 		"queryFileEncoding",
 		"queryFileName",
@@ -70,6 +71,7 @@ public class Configuration extends CloneMe<Configuration> {
 	private String queryFileName = "query.tsv";
 	private String queryFileEncoding = "UTF-8";
 	private String queryFileDelimiter = "&#09;";
+	private String queryFileQuoteChar = "&quot;";
 
 	private String recordFilter = "";
 

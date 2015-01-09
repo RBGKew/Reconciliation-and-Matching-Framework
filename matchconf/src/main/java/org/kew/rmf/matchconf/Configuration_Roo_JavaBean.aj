@@ -47,6 +47,14 @@ privileged aspect Configuration_Roo_JavaBean {
         this.queryFileDelimiter = queryFileDelimiter;
     }
     
+    public String Configuration.getQueryFileQuoteChar() {
+        return this.queryFileQuoteChar;
+    }
+    
+    public void Configuration.setQueryFileQuoteChar(String queryFileQuoteChar) {
+        this.queryFileQuoteChar = queryFileQuoteChar;
+    }
+    
     public String Configuration.getRecordFilter() {
         return this.recordFilter;
     }

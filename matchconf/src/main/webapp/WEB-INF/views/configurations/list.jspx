@@ -9,6 +9,7 @@
             <table:column id="c_org_kew_rmf_matchconf_Configuration_queryFileName" property="queryFileName" z="PVAHItsFsqfMBVmt51Af0MKn2wU="/>
             <table:column id="c_org_kew_rmf_matchconf_Configuration_queryFileEncoding" property="queryFileEncoding" z="8uhL2Ka7ZeD/Nm1ouNLckt9oQec="/>
             <table:column id="c_org_kew_rmf_matchconf_Configuration_queryFileDelimiter" property="queryFileDelimiter" z="h+NCQLLdD7glEOqoQymapBi6/TU="/>
+            <table:column id="c_org_kew_rmf_matchconf_Configuration_queryFileQuoteChar" property="queryFileQuoteChar" z="user-managed"/>
             <table:column id="c_org_kew_rmf_matchconf_Configuration_recordFilter" property="recordFilter" z="E1sMPc8Q/mK/sR3/4bYBoLGyYbw="/>
         </table:table>
     </page:list>

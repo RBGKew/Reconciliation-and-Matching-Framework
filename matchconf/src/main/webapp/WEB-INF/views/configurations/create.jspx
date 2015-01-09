@@ -8,6 +8,7 @@
         <field:input field="queryFileName" id="c_org_kew_rmf_matchconf_Configuration_queryFileName" z="O0QJEJOmvdAhy+5Ez9eAjJzLK48="/>
         <field:input field="queryFileEncoding" id="c_org_kew_rmf_matchconf_Configuration_queryFileEncoding" z="h1ZBIx1GfNSV8/iCrc4qHLE8ed0="/>
         <field:input field="queryFileDelimiter" id="c_org_kew_rmf_matchconf_Configuration_queryFileDelimiter" z="BtWPHbWqbHb+I7gHnq38PcVpCbc="/>
+        <field:input field="queryFileQuoteChar" id="c_org_kew_rmf_matchconf_Configuration_queryFileQuoteChar" z="user-managed"/>
         <field:input field="recordFilter" id="c_org_kew_rmf_matchconf_Configuration_recordFilter" z="7isHBYKuYsRPFqBrjztzoejBl+4="/>
         <field:input field="nextConfig" id="c_org_kew_rmf_matchconf_Configuration_nextConfig" z="aKD9NtmnJRP4Rbz2Rauvq3SxowA="/>
         <field:input field="authorityFileName" id="c_org_kew_rmf_matchconf_Configuration_authorityFileName" z="KwXJSB1Tu6cxL0epVrUtwhCNaVo="/>
