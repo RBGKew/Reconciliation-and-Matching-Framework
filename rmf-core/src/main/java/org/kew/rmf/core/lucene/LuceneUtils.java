@@ -13,6 +13,7 @@
 package org.kew.rmf.core.lucene;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +25,9 @@ import org.apache.lucene.index.IndexableField;
 import org.kew.rmf.core.configuration.Configuration;
 import org.kew.rmf.core.configuration.Property;
 import org.kew.rmf.matchers.MatchException;
+import org.kew.rmf.transformers.TransformationException;
+import org.kew.rmf.transformers.Transformer;
+import org.kew.rmf.transformers.WeightedTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -181,5 +185,104 @@ public class LuceneUtils {
 			}
 		}
 		return recordMatch;
+	}
+
+	public static double recordsMatchScore(Map<String,String> queryRecord, Document authorityRecord, List<Property> properties) throws MatchException, TransformationException {
+		if (logger.isTraceEnabled()) {
+			logger.trace("Scoring comparison of records: Q:{} A:{}", queryRecord.get(Configuration.ID_FIELD_NAME), authorityRecord.get(Configuration.ID_FIELD_NAME));
+		}
+
+		double recordScore = 0.0;
+
+		// Need to go through each property.
+		// To calculate the score for a property match, start from 1.0 and reduce by the weight of each transformer
+		// as it needs to be applied (in order).
+		for (Property p : properties) {
+			String queryName = p.getQueryColumnName();
+			String authorityName = p.getAuthorityColumnName();
+
+			String query = queryRecord.get(queryName);
+			query = (query != null) ? query : "";
+
+			String authority = authorityRecord.get(authorityName);
+			authority = (authority != null) ? authority : "";
+
+			//logger.trace("Calculating score for property {}: Q:{}, A:{}", p.getQueryColumnName(), query, authority);
+
+			boolean fieldMatch = false;
+			double fieldScore = 1.0;
+
+			// Apply each transformation in order, compare the match after that.
+			// Decrease current score as necessary.
+
+			Iterator<Transformer> queryTransformers = p.getQueryTransformers().iterator();
+			Transformer nextQueryTransformer = queryTransformers.hasNext() ? queryTransformers.next() : null;
+
+			Iterator<Transformer> authorityTransformers = p.getAuthorityTransformers().iterator();
+			Transformer nextAuthorityTransformer = authorityTransformers.hasNext() ? authorityTransformers.next() : null;
+
+			int transformerIndex = 0;
+
+			while (nextQueryTransformer != null && authorityTransformers != null) {
+
+				//logger.trace("Applying transforms with order < {}", transformerIndex);
+				// Apply query transformers
+				while (nextQueryTransformer != null
+						&& (nextQueryTransformer instanceof WeightedTransformer
+								&& ((WeightedTransformer)nextQueryTransformer).getOrder() < transformerIndex
+								|| !(nextQueryTransformer instanceof WeightedTransformer))) {
+					query = nextQueryTransformer.transform(query);
+					// Take account of weight (score cost) of this transformation
+					if (nextQueryTransformer instanceof WeightedTransformer) {
+						fieldScore -= ((WeightedTransformer)nextQueryTransformer).getWeight();
+					}
+					nextQueryTransformer = queryTransformers.hasNext() ? queryTransformers.next() : null;
+				}
+
+				// Apply authority transformers
+				while (nextAuthorityTransformer != null
+						&& (nextAuthorityTransformer instanceof WeightedTransformer
+								&& ((WeightedTransformer)nextAuthorityTransformer).getOrder() < transformerIndex
+								|| !(nextAuthorityTransformer instanceof WeightedTransformer))) {
+					authority = nextAuthorityTransformer.transform(authority);
+					// Take account of weight (score cost) of this transformation
+					if (nextAuthorityTransformer instanceof WeightedTransformer) {
+						fieldScore -= ((WeightedTransformer)nextAuthorityTransformer).getWeight();
+					}
+					nextAuthorityTransformer = authorityTransformers.hasNext() ? authorityTransformers.next() : null;
+				}
+
+				transformerIndex++;
+
+				// Test for matches
+				if (p.isBlanksMatch()) {
+					// Note that a transformation could make the field blank, so it's necessary to test this each time
+					if (StringUtils.isBlank(query)) {
+						fieldMatch = true;
+						logger.trace("Q:'' ? A:'{}' → true (blank query)", authority);
+					}
+					else if (StringUtils.isBlank(authority)) {
+						fieldMatch = true;
+						logger.trace("Q:'{}' ? A:'' → true (blank authority)", query);
+					}
+				}
+
+				if (!fieldMatch) {
+					fieldMatch = p.getMatcher().matches(query, authority);
+					logger.trace("Q:'{}' ? A:'{}' → {}", query, authority, fieldMatch);
+				}
+
+				if (fieldMatch) {
+					logger.trace("Matched on {}, score {}", queryName, fieldScore);
+					break;
+				}
+				else {
+					logger.trace("Failed on {}", queryName);
+				}
+			}
+
+			recordScore += fieldScore / properties.size();
+		}
+		return recordScore;
 	}
 }

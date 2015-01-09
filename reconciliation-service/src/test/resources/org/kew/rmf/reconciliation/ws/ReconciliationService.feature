@@ -258,11 +258,11 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 			}
 			"""
 
-	Scenario: Match score should be 100/(number of results), and match result false if there's more than one.
+	Scenario: Match score should be related to the closeness of the match, and match result false if there's more than one.
 		When I make the reconciliation query:
 			"""
 			{
-				"query" : "Congea villosa"
+				"query" : "Congea villosus"
 			}
 			"""
 		Then I receive the following reconciliation response:
@@ -272,7 +272,7 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 					{
 						"match" : false,
 						"name" : "Congea villosa Voigt (Synonym)",
-						"score" : 50.0,
+						"score" : 83.33,
 						"type" : [
 							{
 								"id" : "/biology/organism_classification/scientific_name",
@@ -284,7 +284,7 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 					{
 						"match" : false,
 						"name" : "Congea villosa Wight (Synonym)",
-						"score" : 50.0,
+						"score" : 83.33,
 						"type" : [
 							{
 								"id" : "/biology/organism_classification/scientific_name",

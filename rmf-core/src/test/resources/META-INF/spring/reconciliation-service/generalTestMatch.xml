@@ -11,6 +11,10 @@
 
 	<!-- • TEST CONFIGURATION • Used for cucumber tests • -->
 
+	<bean id="lucene_directory" class="java.lang.String">
+		<constructor-arg value="target/deduplicator" />
+	</bean>
+
 	<bean id="authorityfile" class="java.io.File">
 		<constructor-arg value="src/test/resources/TPL-Congea.tsv" />
 	</bean>
@@ -157,25 +161,8 @@
 		</bean>
 	</util:list>
 
-	<bean id="genusSpeciesInfraspeciesToPropertiesConverter" class="org.kew.rmf.reconciliation.queryextractor.GenusSpeciesInfraspeciesToPropertiesConverter" />
-
-	<bean id="reconciliationResultFormat" class="org.kew.rmf.reconciliation.service.resultformatter.ReconciliationResultPropertyFormatter"
-		p:format="%s %s %s %s (%s)"
-		p:stripRepeats=" ">
-		<property name="properties">
-			<util:list id="1">
-				<value>genus</value>
-				<value>species</value>
-				<value>infraspecies</value>
-				<value>authors</value>
-				<value>taxonomicStatus</value>
-			</util:list>
-		</property>
-	</bean>
-
-	<bean id="config" class="org.kew.rmf.core.configuration.ReconciliationServiceConfiguration"
+	<bean id="config" class="org.kew.rmf.core.configuration.MatchConfiguration"
 		p:name="generalTest"
-		p:description="Configuration for testing during development."
 		p:authorityFile-ref="authorityfile"
 		p:authorityFileEncoding="UTF8"
 		p:authorityFileDelimiter="&#09;"
@@ -187,29 +174,10 @@
 		p:maxSearchResults="10000"
 		p:recordFilter=""
 		p:maximumLoadErrors="0"
-		p:reuseIndex="false"
-		p:queryStringToPropertiesExtractor-ref="genusSpeciesInfraspeciesToPropertiesConverter"
-		p:reconciliationResultFormatter-ref="reconciliationResultFormat"
-
-		p:title="General Test Match Reconciliation Service"
-		p:identifierSpace="http://www.theplantlist.org/tpl1.1/record/"
-		p:schemaSpace="http://rdf.freebase.com/ns/type.object.id"
-		p:viewUrl="http://www.theplantlist.org/tpl1.1/record/{{id}}?reconcileView"
-		p:previewUrl="http://www.theplantlist.org/tpl1.1/record/{{id}}?reconcilePreview"
-		p:previewWidth="400"
-		p:previewHeight="400"
-		p:suggestFlyoutUrl="http://www.theplantlist.org/tpl1.1/record/{id}?reconcileSuggest">
-		<property name="defaultTypes">
-			<util:list id="2">
-				<bean class="org.kew.rmf.refine.domain.metadata.Type"
-					p:id="/biology/organism_classification/scientific_name"
-					p:name="Scientific name"/>
-			</util:list>
-		</property>
-	</bean>
+		p:reuseIndex="false"/>
 
 	<!-- import the generic application-context (equal for dedup/match configurations) -->
-	<import resource="classpath:/META-INF/spring/reconciliation-service/generic.xml" />
-	<!-- add the matching-specific bit -->
-	<import resource="classpath:/META-INF/spring/reconciliation-service/match.xml" />
+	<import resource="classpath*:application-context.xml" />
+	<!-- add the match-specific bit -->
+	<import resource="classpath*:application-context-match.xml" />
 </beans>

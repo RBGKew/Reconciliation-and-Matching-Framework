@@ -26,6 +26,7 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.kew.rmf.core.configuration.Configuration;
 import org.kew.rmf.core.configuration.Property;
 import org.kew.rmf.core.exception.MatchExecutionException;
 import org.kew.rmf.core.exception.TooManyMatchesException;
@@ -494,8 +495,8 @@ public class ReconciliationServiceController {
 			res.setId(match.get("id"));
 			// Set match to true if there's only one (which allows Open Refine to autoselect it), false otherwise
 			res.setMatch(matches.size() == 1);
-			// Set score to 100/(number of matches)
-			res.setScore(100/matches.size());
+			// Set score to 100 * match score (which is in range 0..1)
+			res.setScore(100 * Double.parseDouble(match.get(Configuration.MATCH_SCORE)));
 			// Set name according to format
 			res.setName(reconciliationService.getReconciliationResultFormatter(configName).formatResult(match));
 			// Set type to default type

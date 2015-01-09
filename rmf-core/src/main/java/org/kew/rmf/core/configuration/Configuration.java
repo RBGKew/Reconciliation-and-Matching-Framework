@@ -63,6 +63,7 @@ public abstract class Configuration implements AutoCloseable {
     public static final String LENGTH_SUFFIX="_length";
     public static final String TRANSFORMED_SUFFIX="_transf";
     public static final String INITIAL_SUFFIX="_init";
+    public static final String MATCH_SCORE = "_score";
 
 	private File authorityFile;
 	private String authorityFileEncoding = "UTF-8";

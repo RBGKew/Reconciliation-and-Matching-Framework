@@ -81,7 +81,8 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
         catch (ScriptException e) {
             throw new MatchExecutionException("Error evaluating recordFilter on record "+record, e);
         }
-        // transform fields where required
+
+        // transform query properties
         for (Property prop:config.getProperties()) {
             String fName = prop.getQueryColumnName();
             String fValue = record.get(fName);
@@ -99,17 +100,16 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
             record.put(fName + Configuration.TRANSFORMED_SUFFIX, fValue);
         }
 
-        String fromId = record.get(Configuration.ID_FIELD_NAME);
         // Use the properties to select a set of documents which may contain matches
+        String fromId = record.get(Configuration.ID_FIELD_NAME);
         String querystr = LuceneUtils.buildQuery(config.getProperties(), record, false);
         // If the query for some reasons results being empty we pipe the record directly through to the output
-        // TODO: create a log-file that stores critical log messages?
         if (querystr.equals("")) {
             logger.warn("Empty query for record {}", record);
             return new ArrayList<>();
         }
 
-        // Perform the match
+        // Perform the Lucene query
         TopDocs td;
         try {
             td = queryLucene(querystr, this.getIndexSearcher(), config.getMaxSearchResults());
@@ -123,6 +123,7 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
             throw new MatchExecutionException("Error querying Lucene on query "+record, e);
         }
 
+        // Run the detailed match against the possibilities returned by Lucene
         List<Map<String, String>> matches = new ArrayList<>();
 
         for (ScoreDoc sd : td.scoreDocs){
@@ -130,9 +131,16 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
                 Document toDoc = getFromLucene(sd.doc);
                 if (LuceneUtils.recordsMatch(record, toDoc, config.getProperties())) {
                     Map<String,String> toDocAsMap = LuceneUtils.doc2Map(toDoc);
+
+                    double matchScore = LuceneUtils.recordsMatchScore(record, toDoc, config.getProperties());
+                    toDocAsMap.put(Configuration.MATCH_SCORE, String.format("%5.4f", matchScore));
+
                     matches.add(toDocAsMap);
                     logger.info("Match is {}", toDocAsMap);
                 }
+            }
+            catch (TransformationException e) {
+                throw new MatchExecutionException("Error evaluating transformer while scoring record "+record, e);
             }
             catch (MatchException e) {
                 throw new MatchExecutionException("Error running matcher for "+record, e);

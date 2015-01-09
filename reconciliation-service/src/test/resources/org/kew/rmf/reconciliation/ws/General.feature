@@ -20,7 +20,8 @@ Feature: Basic functionality of the application: responding to a match query.
 					"species" : "chinensis",
 					"acceptedNameID" : "kew-46537",
 					"infraspecies_transf" : "",
-					"acceptedNameID_transf" : "kew-46537"
+					"acceptedNameID_transf" : "kew-46537",
+					"_score" : "1.0000",
 				}
 			]
 			"""
