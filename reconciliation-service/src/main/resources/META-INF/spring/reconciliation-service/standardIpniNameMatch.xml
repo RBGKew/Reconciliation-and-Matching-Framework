@@ -156,7 +156,7 @@
 	</bean>
 
 	<!-- Matchers -->
-	<bean id="exactMatch" class="org.kew.rmf.matchers.ExactMatcher" p:blanksMatch="false" />
+	<bean id="exactMatch" class="org.kew.rmf.matchers.ExactMatcher"/>
 	<bean id="commonTokensMatcher" class="org.kew.rmf.matchers.CommonTokensMatcher" p:minRatio="0.5"/>
 	<bean id="alwaysMatch" class="org.kew.rmf.matchers.AlwaysMatchingMatcher"/>
 	<bean id="ld1Match" class="org.kew.rmf.matchers.LevenshteinMatcher" p:maxDistance="1"/>

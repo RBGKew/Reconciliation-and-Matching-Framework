@@ -25,8 +25,7 @@ Feature: run a simple configuration
                 <bean id="queryfile" class="java.io.File">
                     <constructor-arg value="REPLACE_WITH_TMPDIR/query.tsv" />
                 </bean>
-                <bean id="matchExactly" class="org.kew.rmf.matchers.ExactMatcher"
-                    p:blanksMatch="false"/>
+                <bean id="matchExactly" class="org.kew.rmf.matchers.ExactMatcher" />
                 <bean id="a2BTransformer" class="org.kew.rmf.transformers.A2BTransformer"
                     p:a="a"
                     p:b="" />

@@ -32,20 +32,10 @@
 	<bean id="shrunkAuthor" class="org.kew.rmf.transformers.authors.ShrunkAuthors" p:shrinkTo="3"/>
 
 	<!-- Matchers -->
-	<bean id="exactMatch" class="org.kew.rmf.matchers.ExactMatcher" p:blanksMatch="false" />
-	<bean id="exactMatchBlanksOk" class="org.kew.rmf.matchers.ExactMatcher" p:blanksMatch="true" />
+	<bean id="exactMatch" class="org.kew.rmf.matchers.ExactMatcher" />
 	<bean id="commonTokensMatcher" class="org.kew.rmf.matchers.CommonTokensMatcher" p:minRatio="0.5"/>
 	<bean id="alwaysMatch" class="org.kew.rmf.matchers.AlwaysMatchingMatcher"/>
 	<bean id="ld1Match" class="org.kew.rmf.matchers.LevenshteinMatcher" p:maxDistance="1"/>
-
-	<bean id="commonTokensOrBlankMatcher" class="org.kew.rmf.matchers.CompositeAnyMatcher">
-		<property name="matchers">
-			<util:list>
-				<ref bean="commonTokensMatcher"/>
-				<ref bean="exactMatchBlanksOk"/>
-			</util:list>
-		</property>
-	</bean>
 
 	<!-- Reporters -->
 	<util:list id="reporters"/>
@@ -125,7 +115,8 @@
 			p:queryColumnName="authors"
 			p:authorityColumnName="authors"
 			p:useInSelect="false"
-			p:matcher-ref="commonTokensOrBlankMatcher"
+			p:matcher-ref="commonTokensMatcher"
+			p:blanksMatch="true"
 			p:addOriginalAuthorityValue="true"
 			p:addOriginalQueryValue="true"
 			p:addTransformedQueryValue="true"

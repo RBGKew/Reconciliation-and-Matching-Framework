@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kew.rmf.core.configuration.Configuration;
 import org.kew.rmf.core.configuration.Property;
+import org.kew.rmf.matchers.AlwaysMatchingMatcher;
 import org.kew.rmf.matchers.ExactMatcher;
 import org.kew.rmf.matchers.MatchException;
 import org.kew.rmf.transformers.StripNonAlphabeticCharactersTransformer;
@@ -40,6 +41,8 @@ public class LuceneUtilsTest {
 
 	List<Property> genusOnly;
 	List<Property> genusAndAuthor;
+	List<Property> fullNameBlanksMatchOnly;
+	List<Property> fullNameBlanksDifferOnly;
 
 	@Before
 	public void setUpConfigurations() {
@@ -48,7 +51,7 @@ public class LuceneUtilsTest {
 		StripNonAlphabeticCharactersTransformer stripNonAlphabetic = new StripNonAlphabeticCharactersTransformer();
 		stripNonAlphabetic.setReplacement("");
 		Transformer epithetTransformer = new EpithetTransformer();
-		
+
 		Transformer stripBasionymAuthor = new StripBasionymAuthorTransformer();
 		ShrunkAuthors shrunkAuthor = new ShrunkAuthors();
 		shrunkAuthor.setShrinkTo(4);
@@ -58,7 +61,7 @@ public class LuceneUtilsTest {
 		genusQueryTransformers.add(new WeightedTransformer(fakeHybridSignCleaner, 0.1, 1));
 		genusQueryTransformers.add(new WeightedTransformer(stripNonAlphabetic, 0.05, 3));
 		genusQueryTransformers.add(new WeightedTransformer(epithetTransformer, 0.4, 5));
-		
+
 		List<Transformer> genusAuthorityTransformers = new ArrayList<>();
 		genusAuthorityTransformers.add(new WeightedTransformer(stripNonAlphabetic, 0.15, 2));
 		genusAuthorityTransformers.add(new WeightedTransformer(epithetTransformer, 0.3, 4));
@@ -69,23 +72,37 @@ public class LuceneUtilsTest {
 		genus.setMatcher(new ExactMatcher());
 		genus.setQueryTransformers(genusQueryTransformers);
 		genus.setAuthorityTransformers(genusAuthorityTransformers);
-		
+
 		// Configure author property
 		List<Transformer> authorQueryTransformers = new ArrayList<>();
 		authorQueryTransformers.add(new WeightedTransformer(stripBasionymAuthor, 0.0, -1));
 		authorQueryTransformers.add(new WeightedTransformer(shrunkAuthor, 0.5, 1));
-		
+
 		List<Transformer> authorAuthorityTransformers = new ArrayList<>();
 		authorAuthorityTransformers.add(new WeightedTransformer(stripBasionymAuthor, 0.0, -1));
 		authorAuthorityTransformers.add(new WeightedTransformer(shrunkAuthor, 0.5, 1));
-		
+
 		Property authors = new Property();
 		authors.setQueryColumnName("authors");
 		authors.setAuthorityColumnName("authors");
 		authors.setMatcher(new ExactMatcher());
+		authors.setBlanksMatch(true);
 		authors.setQueryTransformers(authorQueryTransformers);
 		authors.setAuthorityTransformers(authorAuthorityTransformers);
-		
+
+		// Configure fullName property
+		Property fullNameBlanksMatch = new Property();
+		fullNameBlanksMatch.setQueryColumnName("full_name");
+		fullNameBlanksMatch.setAuthorityColumnName("full_name");
+		fullNameBlanksMatch.setMatcher(new AlwaysMatchingMatcher());
+		fullNameBlanksMatch.setBlanksMatch(true);
+
+		Property fullNameBlanksDiffer = new Property();
+		fullNameBlanksDiffer.setQueryColumnName("full_name");
+		fullNameBlanksDiffer.setAuthorityColumnName("full_name");
+		fullNameBlanksDiffer.setMatcher(new AlwaysMatchingMatcher());
+		fullNameBlanksDiffer.setBlanksMatch(false);
+
 		// Set up configurations
 		genusOnly = new ArrayList<>();
 		genusOnly.add(genus);
@@ -93,8 +110,14 @@ public class LuceneUtilsTest {
 		genusAndAuthor = new ArrayList<>();
 		genusAndAuthor.add(genus);
 		genusAndAuthor.add(authors);
+
+		fullNameBlanksMatchOnly = new ArrayList<>();
+		fullNameBlanksMatchOnly.add(fullNameBlanksMatch);
+
+		fullNameBlanksDifferOnly = new ArrayList<>();
+		fullNameBlanksDifferOnly.add(fullNameBlanksDiffer);
 	}
-	
+
 	@Test
 	public void checkSinglePropertyScores() {
 
@@ -109,7 +132,7 @@ public class LuceneUtilsTest {
 		authorityRecord.put("genus", "Quercus");
 		test(false, queryRecord, authorityRecord, genusOnly);
 		test(0.0, queryRecord, authorityRecord, genusOnly);
-		
+
 		// Check an exact match has a score of 1.
 		queryRecord.put("genus", "Quercus");
 		authorityRecord.put("genus", "Quercus");
@@ -176,7 +199,7 @@ public class LuceneUtilsTest {
 		test(true, queryRecord, authorityRecord, genusAndAuthor);
 		test(0.95, queryRecord, authorityRecord, genusAndAuthor);
 	}
-	
+
 	@Test
 	public void checkWithBlankPropertyMatchScores() {
 
@@ -186,31 +209,71 @@ public class LuceneUtilsTest {
 		queryRecord.put("id", "q");
 		authorityRecord.put("id", "a");
 
-		// Blank author in the query
 		queryRecord.put("genus", "Quercus");
 		authorityRecord.put("genus", "Quercus");
-		queryRecord.put("authors", "");
+
+		// Exact author in the query
 		authorityRecord.put("authors", "L.");
+		queryRecord.put("authors", "L.");
 		test(true, queryRecord, authorityRecord, genusAndAuthor);
-//		test(0.85, queryRecord, authorityRecord, genusAndAuthor); // Don't want this score so high.
+		test(1.0, queryRecord, authorityRecord, genusAndAuthor);
+
+		// Close author in the query
+		authorityRecord.put("authors", "L.");
+		queryRecord.put("authors", "l");
+		test(true, queryRecord, authorityRecord, genusAndAuthor);
+		test(0.5, queryRecord, authorityRecord, genusAndAuthor);
+
+		// Blank author in the query
+		authorityRecord.put("authors", "L.");
+		queryRecord.put("authors", "");
+		test(true, queryRecord, authorityRecord, genusAndAuthor);
+		test(0.75, queryRecord, authorityRecord, genusAndAuthor);
 
 		// Blank author in the authority
-		queryRecord.put("genus", "Quercus");
-		authorityRecord.put("genus", "Quercus");
-		queryRecord.put("authors", "L.");
 		authorityRecord.put("authors", "");
+		queryRecord.put("authors", "L.");
 		test(true, queryRecord, authorityRecord, genusAndAuthor);
-//		test(0.85, queryRecord, authorityRecord, genusAndAuthor); // Don't want this score so high.
+		test(0.75, queryRecord, authorityRecord, genusAndAuthor);
 
 		// Blank author on both sides
-		queryRecord.put("genus", "Quercus");
-		authorityRecord.put("genus", "Quercus");
 		queryRecord.put("authors", "");
 		authorityRecord.put("authors", "");
 		test(true, queryRecord, authorityRecord, genusAndAuthor);
-//		test(0.85, queryRecord, authorityRecord, genusAndAuthor); // Don't want this score so high.
+		test(0.875, queryRecord, authorityRecord, genusAndAuthor);
 	}
-	
+
+	@Test
+	public void noDetrimentForBlankIfItMatchesAnyway() {
+		// Set up test records
+		Map<String,String> queryRecord = new HashMap<>();
+		Map<String,String> authorityRecord = new HashMap<>();
+		queryRecord.put("id", "q");
+		authorityRecord.put("id", "a");
+
+		authorityRecord.put("full_name", "Quercus alba L.");
+
+		// Non-blank, but always matches
+		queryRecord.put("full_name", "Anything");
+		test(true, queryRecord, authorityRecord, fullNameBlanksMatchOnly);
+		test(1.0, queryRecord, authorityRecord, fullNameBlanksMatchOnly);
+
+		// Blank, so blanksMatch catches it and reduces the score
+		queryRecord.put("full_name", "");
+		test(true, queryRecord, authorityRecord, fullNameBlanksMatchOnly);
+		test(0.5, queryRecord, authorityRecord, fullNameBlanksMatchOnly);
+
+		// Non-blank, but always matches
+		queryRecord.put("full_name", "Anything");
+		test(true, queryRecord, authorityRecord, fullNameBlanksDifferOnly);
+		test(1.0, queryRecord, authorityRecord, fullNameBlanksDifferOnly);
+
+		// Blank, but !blanksMatch so the AlwaysMatcher gets this and maintains the score
+		queryRecord.put("full_name", "");
+		test(true, queryRecord, authorityRecord, fullNameBlanksDifferOnly);
+		test(1.0, queryRecord, authorityRecord, fullNameBlanksDifferOnly);
+	}
+
 	private void test(boolean expectedResult, Map<String,String> queryRecord, Map<String,String> authorityRecord, List<Property> properties) {
 		logger.info("Testing Q:{} and A:{}, expecting {}", queryRecord, authorityRecord, expectedResult);
 		try {

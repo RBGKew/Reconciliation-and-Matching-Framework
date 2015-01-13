@@ -272,7 +272,7 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 					{
 						"match" : false,
 						"name" : "Congea villosa Voigt (Synonym)",
-						"score" : 83.33,
+						"score" : 75.0,
 						"type" : [
 							{
 								"id" : "/biology/organism_classification/scientific_name",
@@ -284,7 +284,7 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 					{
 						"match" : false,
 						"name" : "Congea villosa Wight (Synonym)",
-						"score" : 83.33,
+						"score" : 75.0,
 						"type" : [
 							{
 								"id" : "/biology/organism_classification/scientific_name",

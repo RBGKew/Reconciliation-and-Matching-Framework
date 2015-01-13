@@ -175,7 +175,9 @@ public class LuceneUtils {
 
 			if (!fieldMatch) {
 				fieldMatch = p.getMatcher().matches(query, authority);
-				logger.trace("Q:'{}' ? A:'{}' → {}", query, authority, fieldMatch);
+				if (logger.isTraceEnabled()) {
+					logger.trace("{} Q:'{}' ? A:'{}' → {}", p.getMatcher().getClass().getSimpleName(), query, authority, fieldMatch);
+				}
 			}
 
 			recordMatch = fieldMatch;
@@ -207,7 +209,9 @@ public class LuceneUtils {
 			String authority = authorityRecord.get(authorityName);
 			authority = (authority != null) ? authority : "";
 
-			//logger.trace("Calculating score for property {}: Q:{}, A:{}", p.getQueryColumnName(), query, authority);
+			if (logger.isTraceEnabled()) {
+				logger.trace("Calculating score for property {}: Q:{}, A:{}", p.getQueryColumnName(), query, authority);
+			}
 
 			boolean fieldMatch = false;
 			double fieldScore = 1.0;
@@ -223,7 +227,9 @@ public class LuceneUtils {
 
 			int transformerIndex = 0;
 
-			while (nextQueryTransformer != null && authorityTransformers != null) {
+			while (transformerIndex == 0 || // Must still go once through the loop even if there are no transformers
+					nextQueryTransformer != null ||
+					nextAuthorityTransformer != null) {
 
 				//logger.trace("Applying transforms with order < {}", transformerIndex);
 				// Apply query transformers
@@ -257,12 +263,19 @@ public class LuceneUtils {
 				// Test for matches
 				if (p.isBlanksMatch()) {
 					// Note that a transformation could make the field blank, so it's necessary to test this each time
-					if (StringUtils.isBlank(query)) {
+					if (StringUtils.isBlank(query) && StringUtils.isBlank(authority)) {
 						fieldMatch = true;
+						fieldScore *= 0.75;
+						logger.trace("Q:'' ? A:'' → true (blank query and authority)");
+					}
+					else if (StringUtils.isBlank(query)) {
+						fieldMatch = true;
+						fieldScore *= 0.5;
 						logger.trace("Q:'' ? A:'{}' → true (blank query)", authority);
 					}
 					else if (StringUtils.isBlank(authority)) {
 						fieldMatch = true;
+						fieldScore *= 0.5;
 						logger.trace("Q:'{}' ? A:'' → true (blank authority)", query);
 					}
 				}
@@ -283,6 +296,8 @@ public class LuceneUtils {
 
 			recordScore += fieldScore / properties.size();
 		}
+
+		logger.trace("Overall score is {}", recordScore);
 		return recordScore;
 	}
 }

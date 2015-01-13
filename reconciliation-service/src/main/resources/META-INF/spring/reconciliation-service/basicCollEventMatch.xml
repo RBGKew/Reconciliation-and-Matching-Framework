@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
-	xmlns:p="http://www.springframework.org/schema/p" xmlns:c="http://www.springframework.org/schema/c"
-	xsi:schemaLocation="
-                    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-                    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
 	<bean id="authorityfile" class="java.io.File">
 		<constructor-arg value="${dataDir}/all-collectors.csv" />
 	</bean>
-	
+
 	<bean id="stripNonAlphaNumerics"
 		class="org.kew.rmf.transformers.StripNonAlphanumericCharactersTransformer"/>
 	<bean id="stripNulls"
 		class="org.kew.rmf.transformers.A2BTransformer" p:a="NULL" p:b="" />
 	<bean id="whiteSpaceNormaliser"
 		class="org.kew.rmf.transformers.A2BTransformer" p:a="" p:b="" p:removeMultipleWhitespaces="true"/>
-		
+
 	<!--bean id="stripSoloCapitals"
 		class="org.kew.rmf.transformers.RegexExtractorTransformer" p:regex="[A-Z][a-z]+ " /-->
 	<bean id="surnameExtractor"
@@ -26,11 +27,8 @@
 	<bean id="countryShrinker"
 		class="org.kew.rmf.transformers.StringShrinker" c:shrinkTo="2"/>
 
-	<bean id="exactMatch" class="org.kew.rmf.matchers.ExactMatcher"
-		p:blanksMatch="false" />
-	<bean id="exactMatchBlanksOk" class="org.kew.rmf.matchers.ExactMatcher"
-		p:blanksMatch="true" />
-	
+	<bean id="exactMatch" class="org.kew.rmf.matchers.ExactMatcher"/>
+
 	<bean id="alwaysMatch" class="org.kew.rmf.matchers.AlwaysMatchingMatcher"/>
 	<bean id="neverMatch" class="org.kew.rmf.matchers.NeverMatchingMatcher"/>
 	
@@ -43,7 +41,7 @@
 	<bean id="localityCompositeMatcher" class="org.kew.rmf.matchers.CompositeAnyMatcher">
 		<property name="matchers">
 			<util:list id="comp1">
-				<ref bean="exactMatchBlanksOk" />
+				<ref bean="exactMatch" />
 				<ref bean="commonTokensLocality" />
 			</util:list>
 		</property>
@@ -51,14 +49,17 @@
 		
 	<util:list id="columnProperties">
 		<bean class="org.kew.rmf.core.configuration.Property"
-			p:queryColumnName="recordedBy" p:authorityColumnName="recordedBy"
-			p:useInSelect="false" p:matcher-ref="commonTokensCollector"
-			p:addOriginalAuthorityValue="true" p:addOriginalQueryValue="true">
+			p:queryColumnName="recordedBy"
+			p:authorityColumnName="recordedBy"
+			p:useInSelect="false"
+			p:matcher-ref="commonTokensCollector"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
 			<property name="queryTransformers">
 				<util:list id="1">
 					<ref bean="stripNonAlphaNumerics" />
 					<ref bean="surnameExtractor" />
-					<ref bean="whiteSpaceNormaliser" />					
+					<ref bean="whiteSpaceNormaliser" />
 					<!--ref bean="stripSoloCapitals" /-->
 				</util:list>
 			</property>
@@ -67,19 +68,28 @@
 					<ref bean="stripNonAlphaNumerics" />
 					<ref bean="surnameExtractor" />
 					<ref bean="whiteSpaceNormaliser" />
-					<!--ref bean="stripSoloCapitals" /-->					
+					<!--ref bean="stripSoloCapitals" /-->
 				</util:list>
 			</property>
-		</bean>	
+		</bean>
+
 		<bean class="org.kew.rmf.core.configuration.Property"
-			p:queryColumnName="fieldNumber" p:authorityColumnName="fieldNumber"
-			p:useInSelect="true" p:matcher-ref="exactMatch"
-			p:addOriginalAuthorityValue="true" p:addOriginalQueryValue="true">
-		</bean>	
+			p:queryColumnName="fieldNumber"
+			p:authorityColumnName="fieldNumber"
+			p:useInSelect="true"
+			p:matcher-ref="exactMatch"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
+		</bean>
+
 		<bean class="org.kew.rmf.core.configuration.Property"
-			p:queryColumnName="locality" p:authorityColumnName="locality"
-			p:useInSelect="false" p:matcher-ref="localityCompositeMatcher"
-			p:addOriginalAuthorityValue="true" p:addOriginalQueryValue="true">
+			p:queryColumnName="locality"
+			p:authorityColumnName="locality"
+			p:useInSelect="false"
+			p:matcher-ref="localityCompositeMatcher"
+			p:blanksMatch="true"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
 			<property name="queryTransformers">
 				<util:list id="1">
 					<ref bean="stripNonAlphaNumerics" />
@@ -90,11 +100,16 @@
 					<ref bean="stripNonAlphaNumerics" />
 				</util:list>
 			</property>
-		</bean>	
+		</bean>
+
 		<bean class="org.kew.rmf.core.configuration.Property"
-			p:queryColumnName="country" p:authorityColumnName="country"
-			p:useInSelect="false" p:matcher-ref="exactMatchBlanksOk"
-			p:addOriginalAuthorityValue="true" p:addOriginalQueryValue="true">
+			p:queryColumnName="country"
+			p:authorityColumnName="country"
+			p:useInSelect="false"
+			p:matcher-ref="exactMatch"
+			p:blanksMatch="true"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
 			<property name="queryTransformers">
 				<util:list id="1">
 					<ref bean="stripNulls" />
@@ -108,25 +123,30 @@
 				</util:list>
 			</property>
 		</bean>
+
 		<bean class="org.kew.rmf.core.configuration.Property"
-			p:queryColumnName="eventDate" p:authorityColumnName="eventDate"
-			p:useInSelect="true" p:matcher-ref="exactMatchBlanksOk"
-			p:addOriginalAuthorityValue="true" p:addOriginalQueryValue="true">
+			p:queryColumnName="eventDate"
+			p:authorityColumnName="eventDate"
+			p:useInSelect="true"
+			p:matcher-ref="exactMatch"
+			p:blanksMatch="true"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
 			<property name="queryTransformers">
-                            <util:list id="1">
-                                <ref bean="stripNulls"/>
-                                <ref bean="yearShrinker"/>
-                            </util:list>
-                        </property>
-                        <property name="authorityTransformers">
-                            <util:list id="1">
-                                <ref bean="stripNulls"/>
-                                <ref bean="yearShrinker"/>
-                            </util:list>
-                        </property>
+				<util:list id="1">
+					<ref bean="stripNulls" />
+					<ref bean="yearShrinker" />
+				</util:list>
+			</property>
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<ref bean="stripNulls" />
+					<ref bean="yearShrinker" />
+				</util:list>
+			</property>
 		</bean>
 	</util:list>
-	
+
 	<bean id="config" class="org.kew.rmf.core.configuration.MatchConfiguration"
 		p:name="BasicCollectionEventMatch"
 		p:authorityFile-ref="authorityfile"

@@ -24,17 +24,7 @@
 	<bean id="stripExAuthor" class="org.kew.rmf.transformers.authors.StripExAuthorTransformer"/>
 	<bean id="shrunkAuthor" class="org.kew.rmf.transformers.authors.ShrunkAuthors" p:shrinkTo="4"/>
 
-	<bean id="exactMatch" class="org.kew.rmf.matchers.ExactMatcher" p:blanksMatch="false" />
-	<bean id="exactMatchBlanksOk" class="org.kew.rmf.matchers.ExactMatcher" p:blanksMatch="true" />
-
-	<bean id="authorCompositeMatcher" class="org.kew.rmf.matchers.CompositeAnyMatcher">
-		<property name="matchers">
-			<util:list id="comp1">
-				<ref bean="exactMatchBlanksOk" />
-				<ref bean="ldMatchAuthor" />
-			</util:list>
-		</property>
-	</bean>
+	<bean id="exactMatch" class="org.kew.rmf.matchers.ExactMatcher" />
 
 	<bean id="alwaysMatch" class="org.kew.rmf.matchers.AlwaysMatchingMatcher"/>
 	<bean id="neverMatch" class="org.kew.rmf.matchers.NeverMatchingMatcher"/>
@@ -47,15 +37,22 @@
 
 	<util:list id="columnProperties">
 		<bean class="org.kew.rmf.core.configuration.Property"
-			p:queryColumnName="genus" p:authorityColumnName="genus"
-			p:useInSelect="true" p:matcher-ref="exactMatch"
-			p:addOriginalAuthorityValue="true" p:addOriginalQueryValue="true">
+			p:queryColumnName="genus"
+			p:authorityColumnName="genus"
+			p:useInSelect="true"
+			p:matcher-ref="exactMatch"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
 		</bean>
+
 		<bean class="org.kew.rmf.core.configuration.Property"
-			p:queryColumnName="species" p:authorityColumnName="species"
+			p:queryColumnName="species"
+			p:authorityColumnName="species"
 			p:indexInitial="true"
-			p:useInSelect="true" p:matcher-ref="ldMatch"
-			p:addOriginalAuthorityValue="true" p:addOriginalQueryValue="true">
+			p:useInSelect="true"
+			p:matcher-ref="ldMatch"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
 			<property name="queryTransformers">
 				<util:list id="1">
 					<ref bean="epithetTransformer" />
@@ -67,10 +64,15 @@
 				</util:list>
 			</property>
 		</bean>
+
 		<bean class="org.kew.rmf.core.configuration.Property"
-			p:queryColumnName="authors" p:authorityColumnName="b_authors"
-			p:useInSelect="false" p:matcher-ref="authorCompositeMatcher"
-			p:addOriginalAuthorityValue="true" p:addOriginalQueryValue="true">
+			p:queryColumnName="authors"
+			p:authorityColumnName="b_authors"
+			p:useInSelect="false"
+			p:matcher-ref="ldMatchAuthor"
+			p:blanksMatch="true"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
 			<property name="queryTransformers">
 				<util:list id="1">
 					<!--ref bean="stripNonAlphaNumerics" /-->

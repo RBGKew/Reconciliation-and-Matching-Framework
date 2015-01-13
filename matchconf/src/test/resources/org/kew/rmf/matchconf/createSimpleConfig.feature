@@ -17,8 +17,8 @@ Feature: Create a simple configuration
             | anotherTransformer | org.kew.rmf.transformers | StripNonAlphabeticCharactersTransformer |                |
             | a2BTransformer     | org.kew.rmf.transformers | A2BTransformer                          | a="a", b=" "   |
         And he has added a matcher for the second column:
-            | name         | packageName          | className    | params            |
-            | matchExactly | org.kew.rmf.matchers | ExactMatcher | blanksMatch=false |
+            | name         | packageName          | className    | params |
+            | matchExactly | org.kew.rmf.matchers | ExactMatcher |        |
         And he has wired them together at the second column
         And he has added the following reporters:
             | name              | fileName             | packageName           | className              | params |
@@ -51,8 +51,7 @@ Feature: Create a simple configuration
                 <bean id="funkyDict" class="org.kew.rmf.utils.CsvDictionary"
                     p:fileDelimiter="&#09;"
                     p:filePath="/some_other_path/dict.txt" />
-                <bean id="matchExactly" class="org.kew.rmf.matchers.ExactMatcher"
-                    p:blanksMatch="false"/>
+                <bean id="matchExactly" class="org.kew.rmf.matchers.ExactMatcher" />
                 <bean id="a2BTransformer" class="org.kew.rmf.transformers.A2BTransformer"
                     p:a="a"
                     p:b=" "/>
@@ -128,9 +127,9 @@ Feature: Create a simple configuration
             | 02BlankTransformer | org.kew.rmf.transformers | ZeroToBlankTransformer                  |        |
             | anotherTransformer | org.kew.rmf.transformers | StripNonAlphabeticCharactersTransformer |        |
         And he has added two matchers:
-            | name           | packageName          | className        | params            |
-            | matchExactly   | org.kew.rmf.matchers | ExactMatcher     | blanksMatch=false |
-            | matchIntegers  | org.kew.rmf.matchers | IntegerMatcher   | blanksMatch=true  |
+            | name           | packageName          | className        | params    |
+            | matchExactly   | org.kew.rmf.matchers | ExactMatcher     |           |
+            | matchIntegers  | org.kew.rmf.matchers | IntegerMatcher   | maxDiff=5 |
         And he has wired them together in the following way:
             | queryColumnName  | authorityColumnName | queryTransformers                      | authorityTransformers                  | matcher        | useInSelect |
             | data_col1        | data_col1           | anotherTransformer, 02BlankTransformer | 02BlankTransformer, anotherTransformer | matchExactly   | true        |
@@ -166,10 +165,9 @@ Feature: Create a simple configuration
                 <bean id="authorityfile" class="java.io.File">
                     <constructor-arg value="REPLACE_WITH_TMPDIR/some_path/authority.tsv" />
                 </bean>
-                <bean id="matchExactly" class="org.kew.rmf.matchers.ExactMatcher"
-                    p:blanksMatch="false"/>
+                <bean id="matchExactly" class="org.kew.rmf.matchers.ExactMatcher" />
                 <bean id="matchIntegers" class="org.kew.rmf.matchers.IntegerMatcher"
-                    p:blanksMatch="true"/>
+                    p:maxDiff="5"/>
                 <bean id="02BlankTransformer" class="org.kew.rmf.transformers.ZeroToBlankTransformer" />
                 <bean id="anotherTransformer" class="org.kew.rmf.transformers.StripNonAlphabeticCharactersTransformer" />
                 <util:list id="reporters">

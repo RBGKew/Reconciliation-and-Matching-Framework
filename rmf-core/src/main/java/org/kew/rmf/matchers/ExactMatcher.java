@@ -12,8 +12,6 @@
  */
 package org.kew.rmf.matchers;
 
-import org.apache.commons.lang.StringUtils;
-
 /**
  * This matcher tests for equality between the two inputs (exact matches).
  * @author nn00kg
@@ -22,7 +20,8 @@ import org.apache.commons.lang.StringUtils;
 public class ExactMatcher implements Matcher {
 
 	public static int COST = 0;
-	protected boolean blanksMatch = true;
+
+	private boolean nullToBlank = true;
 
 	@Override
 	public int getCost() {
@@ -31,19 +30,10 @@ public class ExactMatcher implements Matcher {
 
 	@Override
 	public boolean matches(String s1, String s2) {
-		boolean matches = false;
-		//if (s1 == null && s2 == null && this.blanksMatch) {
-		if (this.blanksMatch && (StringUtils.isBlank(s1) || StringUtils.isBlank(s2))) {
-			matches = true;
-		} else{
-			try{
-				matches = s1.equals(s2);
-			}
-			catch (Exception e) {
-				;
-			}
-		}
-		return matches;
+		if (nullToBlank && s1 == null) s1 = "";
+		if (nullToBlank && s2 == null) s2 = "";
+
+		return s1.equals(s2);
 	}
 
 	@Override
@@ -55,11 +45,12 @@ public class ExactMatcher implements Matcher {
 	public String getExecutionReport() {
 		return null;
 	}
-	
-	public boolean isBlanksMatch() {
-		return blanksMatch;
+
+	/* ••• Getters and setters ••• */
+	public boolean isNullToBlank() {
+		return nullToBlank;
 	}
-	public void setBlanksMatch(boolean blanksMatch) {
-		this.blanksMatch = blanksMatch;
+	public void setNullToBlank(boolean nullToBlank) {
+		this.nullToBlank = nullToBlank;
 	}
 }

@@ -52,8 +52,7 @@
 	</bean>
 
 	<!-- Matchers -->
-	<bean id="exactMatch" class="org.kew.rmf.matchers.ExactMatcher" p:blanksMatch="false"/>
-	<bean id="exactMatchBlanksOk" class="org.kew.rmf.matchers.ExactMatcher" p:blanksMatch="true"/>
+	<bean id="exactMatch" class="org.kew.rmf.matchers.ExactMatcher"/>
 
 	<bean id="alwaysMatch" class="org.kew.rmf.matchers.AlwaysMatchingMatcher"/>
 	<bean id="neverMatch" class="org.kew.rmf.matchers.NeverMatchingMatcher"/>
@@ -130,8 +129,8 @@
 			p:queryColumnName="event_date"
 			p:authorityColumnName="event_date"
 			p:useInSelect="true"
-			p:blanksMatch="false"
-			p:matcher-ref="exactMatchBlanksOk"
+			p:matcher-ref="exactMatch"
+			p:blanksMatch="true"
 			p:addOriginalAuthorityValue="true"
 			p:addOriginalQueryValue="true">
 			<property name="queryTransformers">
@@ -174,7 +173,8 @@
 			p:queryColumnName="country"
 			p:authorityColumnName="country"
 			p:useInSelect="true"
-			p:matcher-ref="exactMatchBlanksOk"
+			p:matcher-ref="exactMatch"
+			p:blanksMatch="true"
 			p:addOriginalAuthorityValue="true"
 			p:addOriginalQueryValue="true">
 			<property name="queryTransformers">

@@ -14,60 +14,67 @@ package org.kew.rmf.matchers;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-public class ExactMatchingMatcherTest {
+public class ExactMatcherTest {
 
 	@Test
-	public void testNullMatches() throws Exception {
-		Matcher matcher = new ExactMatcher();
-		assertTrue(matcher.matches(null, null));
-	}
-
-	@Test
-	public void testBlankMatches() throws Exception {
-		Matcher matcher = new ExactMatcher();
-		assertTrue(matcher.matches("", ""));
-	}
-
-	@Test
-	public void testNullBlankMatches() throws Exception {
+	public void testNullMatches() {
 		ExactMatcher matcher = new ExactMatcher();
 
-		assertTrue(matcher.matches("", null));
-		assertTrue(matcher.matches(null,""));
+		matcher.setNullToBlank(false);
+		try {
+			matcher.matches(null, null);
+			fail("Expected NPE");
+		}
+		catch (NullPointerException e) {
+		}
+		catch (Exception e) {
+			fail("Unexpected exception "+e);
+		}
 
-		matcher.setBlanksMatch(true); // Default
-		assertTrue(matcher.matches("", null));
-		assertTrue(matcher.matches(null,""));
-
-		matcher.setBlanksMatch(false);
-		assertFalse(matcher.matches("", null));
-		assertFalse(matcher.matches(null,""));
+		matcher.setNullToBlank(true);
+		try {
+			assertTrue(matcher.matches(null, null));
+			assertTrue(matcher.matches("", null));
+			assertTrue(matcher.matches(null, ""));
+		}
+		catch (Exception e) {
+			fail("Unexpected exception "+e);
+		}
 	}
 
 	@Test
-	public void testStringMatches() throws Exception {
-		Matcher matcher = new ExactMatcher();
+	public void testBlankMatches() {
+		ExactMatcher matcher = new ExactMatcher();
+		assertTrue(matcher.matches("", ""));
+		assertFalse(matcher.matches("", "x"));
+		assertFalse(matcher.matches("x", ""));
+	}
+
+	@Test
+	public void testStringMatches() {
+		ExactMatcher matcher = new ExactMatcher();
 		assertTrue(matcher.matches("one", "one"));
 	}
 
 	@Test
-	public void testStringCaseMatches() throws Exception {
-		Matcher matcher = new ExactMatcher();
+	public void testStringCaseMatches() {
+		ExactMatcher matcher = new ExactMatcher();
 		assertFalse(matcher.matches("one", "One"));
 	}
 
 	@Test
-	public void testStringTrimMatches() throws Exception {
-		Matcher matcher = new ExactMatcher();
+	public void testStringTrimMatches() {
+		ExactMatcher matcher = new ExactMatcher();
 		assertFalse(matcher.matches("one", "one "));
 	}
 
 	@Test
-	public void testStringWithWhitespaces () throws Exception {
-		Matcher matcher = new ExactMatcher();
+	public void testStringWithWhitespaces () {
+		ExactMatcher matcher = new ExactMatcher();
 		assertTrue(matcher.matches("hello kitty", "hello kitty"));
 	}
 }

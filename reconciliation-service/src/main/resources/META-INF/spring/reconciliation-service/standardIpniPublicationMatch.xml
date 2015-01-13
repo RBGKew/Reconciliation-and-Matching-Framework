@@ -40,34 +40,34 @@
 	<bean id="stripIpniTl2AuthorRefs" class="org.kew.rmf.transformers.RegexTransformer" p:pattern="[¹²³⁴⁵⁶⁷⁸⁹⁰]" p:replacement=" " />
 
 	<!-- Matchers -->
-	<bean id="exactMatchBlanksOk" class="org.kew.rmf.matchers.ExactMatcher" p:blanksMatch="true" />
+	<bean id="exactMatch" class="org.kew.rmf.matchers.ExactMatcher" />
 	<bean id="aCommonTokenMatcher" class="org.kew.rmf.matchers.CommonTokensMatcher" p:minRatio="0.1"/>
 	<bean id="commonTokensMatcher" class="org.kew.rmf.matchers.CommonTokensMatcher" p:minRatio="0.8"/>
 	<bean id="ld2Match" class="org.kew.rmf.matchers.LevenshteinMatcher" p:maxDistance="2"/>
 	<bean id="numberInRangeMatcher" class="org.kew.rmf.matchers.NumberInRangeMatcher" />
 
-	<bean id="exactOrBlankOrCommonToken" class="org.kew.rmf.matchers.CompositeAnyMatcher">
+	<bean id="exactOrCommonToken" class="org.kew.rmf.matchers.CompositeAnyMatcher">
 		<property name="matchers">
 			<util:list>
-				<ref bean="exactMatchBlanksOk"/>
+				<ref bean="exactMatch"/>
 				<ref bean="aCommonTokenMatcher"/>
 			</util:list>
 		</property>
 	</bean>
 
-	<bean id="blankOrInRange" class="org.kew.rmf.matchers.CompositeAnyMatcher">
+	<bean id="exactOrInRange" class="org.kew.rmf.matchers.CompositeAnyMatcher">
 		<property name="matchers">
 			<util:list>
-				<ref bean="exactMatchBlanksOk"/>
+				<ref bean="exactMatch"/>
 				<ref bean="numberInRangeMatcher"/>
 			</util:list>
 		</property>
 	</bean>
 
-	<bean id="exactOrBlankOrCommonTokens" class="org.kew.rmf.matchers.CompositeAnyMatcher">
+	<bean id="exactOrCommonTokens" class="org.kew.rmf.matchers.CompositeAnyMatcher">
 		<property name="matchers">
 			<util:list>
-				<ref bean="exactMatchBlanksOk"/>
+				<ref bean="exactMatch"/>
 				<ref bean="commonTokensMatcher"/>
 				<ref bean="ld2Match"/>
 			</util:list>
@@ -81,7 +81,8 @@
 			p:authorityColumnName="publication"
 			p:indexInitial="true"
 			p:useInSelect="true"
-			p:matcher-ref="exactOrBlankOrCommonTokens"
+			p:matcher-ref="exactOrCommonTokens"
+			p:blanksMatch="true"
 			p:addOriginalAuthorityValue="true"
 			p:addOriginalQueryValue="true">
 			<property name="queryTransformers">
@@ -101,7 +102,8 @@
 			p:queryColumnName="date"
 			p:authorityColumnName="date"
 			p:useInSelect="false"
-			p:matcher-ref="blankOrInRange"
+			p:matcher-ref="exactOrInRange"
+			p:blanksMatch="true"
 			p:addOriginalAuthorityValue="true"
 			p:addOriginalQueryValue="true">
 			<property name="queryTransformers">
@@ -121,7 +123,8 @@
 			p:queryColumnName="author"
 			p:authorityColumnName="author"
 			p:useInSelect="false"
-			p:matcher-ref="exactOrBlankOrCommonToken"
+			p:matcher-ref="exactOrCommonToken"
+			p:blanksMatch="true"
 			p:addOriginalAuthorityValue="true"
 			p:addOriginalQueryValue="true">
 			<property name="queryTransformers">
