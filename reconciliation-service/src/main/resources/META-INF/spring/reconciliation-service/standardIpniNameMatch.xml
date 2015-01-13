@@ -409,7 +409,7 @@
 		p:sortFieldName="id"
 		p:loadReportFrequency="25000"
 		p:assessReportFrequency="1000"
-		p:maxSearchResults="10000"
+		p:maxSearchResults="15000"
 		p:recordFilter=""
 		p:maximumLoadErrors="0"
 		p:reuseIndex="false"

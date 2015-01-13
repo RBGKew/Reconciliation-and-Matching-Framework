@@ -114,10 +114,10 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
         try {
             td = queryLucene(querystr, this.getIndexSearcher(), config.getMaxSearchResults());
             if (td.totalHits >= config.getMaxSearchResults()) {
-                logger.info("Error matching {}", "query");
-                throw new TooManyMatchesException(String.format("Number of max search results exceeded for record %s! You should either tweak your config to bring back less possible results making better use of the \"useInSelect\" switch (recommended) or raise the \"maxSearchResults\" number.", record));
+                logger.info("Error querying Lucene with {} ({}/{})", querystr, td.totalHits, config.getMaxSearchResults());
+                throw new TooManyMatchesException(String.format("%d potential results (maximum is %d) returned for record %s! You should either tweak your config to bring back less possible results making better use of the \"useInSelect\" switch (recommended) or raise the \"maxSearchResults\" number.", td.totalHits, config.getMaxSearchResults(), record));
             }
-            logger.debug("Found {} possibles to assess against {}", td.totalHits, fromId);
+            logger.debug("Found {} possible record to assess against {}", td.totalHits, fromId);
         }
         catch (ParseException | IOException e) {
             throw new MatchExecutionException("Error querying Lucene on query "+record, e);

@@ -191,7 +191,11 @@
 
 					$("#singleQueryResultTable").html(headers+body);
 
-				}, "json");
+				}, "json")
+				.fail(function(jqXHR, textStatus, errorThrown) {
+					$( "#singleQueryResult" ).html( "ERROR:\n" + jqXHR.responseText );
+					console.log(jqXHR);
+				});
 
 				return false;
 			});

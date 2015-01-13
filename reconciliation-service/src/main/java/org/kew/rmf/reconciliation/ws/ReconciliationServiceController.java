@@ -121,11 +121,17 @@ public class ReconciliationServiceController {
 			// Convert JSON to map of queries
 			Map<String,Query> qs = jsonMapper.readValue(queries, new TypeReference<Map<String,Query>>() {});
 			for (String key : qs.keySet()) {
-				Query q = qs.get(key);
-				QueryResult[] qres = doQuery(q, configName);
-				QueryResponse<QueryResult> response = new QueryResponse<>();
-				response.setResult(qres);
-				res.put(key,response);
+				try {
+					Query q = qs.get(key);
+					QueryResult[] qres = doQuery(q, configName);
+					QueryResponse<QueryResult> response = new QueryResponse<>();
+					response.setResult(qres);
+					res.put(key,response);
+				}
+				catch (MatchExecutionException | TooManyMatchesException e) {
+					// Only fail the one query, not the whole batch
+					logger.warn("{}: Query with key {} of multiple query call failed: {}", configName, key, e.getMessage());
+				}
 			}
 			jsonres = jsonMapper.writeValueAsString(res);
 		}
@@ -163,15 +169,19 @@ public class ReconciliationServiceController {
 			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		catch (IOException e) {
+			logger.error(configName + ": Query failed:", e);
 			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		catch (UnknownReconciliationServiceException e) {
+			logger.warn(configName + ": Query failed:", e);
 			return new ResponseEntity<String>(e.toString(), HttpStatus.NOT_FOUND);
 		}
 		catch (MatchExecutionException e) {
+			logger.error(configName + ": Query failed:", e);
 			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		catch (TooManyMatchesException e) {
+			logger.warn(configName + ": Query failed:", e);
 			return new ResponseEntity<String>(e.toString(), HttpStatus.CONFLICT);
 		}
 
@@ -376,7 +386,7 @@ public class ReconciliationServiceController {
 
 				String domainUpToSlash = targetUrl.substring(0, targetUrl.indexOf('/', 10));
 				String html = httpResponse.getBody();
-				html = html.replaceFirst("</head>", "<base href='"+domainUpToSlash+"/'/>");
+				html = html.replaceFirst("</head>", "<base href='"+domainUpToSlash+"/'/></head>");
 
 				FlyoutResponse jsonWrappedHtml = new FlyoutResponse(html);
 				logger.debug("JSON response is {}", wrapResponse(callback, jsonMapper.writeValueAsString(jsonWrappedHtml)));
