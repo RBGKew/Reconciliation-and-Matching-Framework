@@ -33,6 +33,7 @@ import org.kew.rmf.reconciliation.service.ReconciliationService;
 import org.kew.rmf.reconciliation.service.ReconciliationService.ConfigurationStatus;
 import org.kew.rmf.reconciliation.ws.dto.DisplayBean;
 import org.kew.rmf.transformers.Transformer;
+import org.kew.rmf.transformers.WeightedTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -149,7 +150,13 @@ public class ConfigurationController {
 
 			List<DisplayBean<Transformer>> p_t = new ArrayList<>();
 			for (Transformer t : p.getQueryTransformers()) {
-				p_t.add(new DisplayBean<Transformer>(t));
+				// Ignore WeightedTransformers, use the wrapped transformer instead.
+				if (t instanceof WeightedTransformer) {
+					p_t.add(new DisplayBean<Transformer>(((WeightedTransformer)t).getTransformer()));
+				}
+				else {
+					p_t.add(new DisplayBean<Transformer>(t));
+				}
 			}
 			p_transformers.put(p.getQueryColumnName(), p_t);
 		}
