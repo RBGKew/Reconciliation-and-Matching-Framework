@@ -22,7 +22,7 @@
 
 	<c:if test="${reconciliationConfiguration.description != null}">
 		<h2 id="description"><a href="#description">Service description</a></h2>
-		<p>${reconciliationConfiguration.description}</p>
+		<div>${reconciliationConfiguration.description}</div>
 
 		<c:if test="${total != null}">
 			<p>Contains <span class="badge">${total}</span> records.</p>
@@ -81,7 +81,7 @@
 
 	<p>For the JSON web service these should be URL-encoded HTTP GET parameters.</p>
 
-	<p>The CSV file uploaded must be in UTF-8 encoding, and must use these properties as header lines.</p>
+	<p>The CSV file uploaded is recommended to be in UTF-8 encoding, and must use these properties as header lines.</p>
 
 	<ul>
 		<li>id</li>
@@ -108,7 +108,7 @@
 							<option value="${charsetName}" selected="selected">${charsetName}</option>
 						</c:if>
 						<c:if test="${charsetName ne 'UTF-8'}">
-							<option style="display: block;" value="${charsetName}">${charsetName}</option><br/>
+							<option style="display: block;" value="${charsetName}">${charsetName}</option>
 						</c:if>
 					</c:forEach>
 				</select>
@@ -169,7 +169,7 @@
 				if ($.trim($("#unatomized").val()) == '') {
 					query = "web1";
 					properties = $("#atomizedProperties input").map(function() {
-						return {"pid": this.id, "v": this.value};
+						return this.value == '' ? null : {"pid": this.id, "v": this.value};
 					}).get();
 					var queryData = {"query":query, "properties":properties};
 				}
