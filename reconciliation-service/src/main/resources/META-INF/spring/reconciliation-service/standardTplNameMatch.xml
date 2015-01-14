@@ -29,6 +29,7 @@
 	<bean id="authorityFromTplDatabase" class="org.kew.rmf.reconciliation.service.DatabaseCursorRecordReader">
 		<property name="dataSource" ref="tplDatabase"/>
 		<property name="sql" value="SELECT t1ID AS id, genus, species, infraspecificEpithet AS infraspecies, primaryAuthors AS authors, taxonomicStatus, acceptedNameID FROM tpl2_final ${tpl.testWhere:};"/>
+		<property name="countSql" value="SELECT COUNT(*) FROM tpl2_final ${tpl.testWhere:};"/>
 	</bean>
 
 	<!-- Transformers -->
@@ -210,7 +211,7 @@
 		p:maxSearchResults="10000"
 		p:recordFilter=""
 		p:maximumLoadErrors="0"
-		p:reuseIndex="false"
+		p:reuseIndex="true"
 		p:queryStringToPropertiesExtractor-ref="genusSpeciesInfraspeciesToPropertiesConverter"
 		p:reconciliationResultFormatter-ref="reconciliationResultFormat"
 

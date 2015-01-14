@@ -76,11 +76,7 @@ public class LuceneDataLoader implements DataLoader {
 	@Override
 	public void load() throws DataLoadException, InterruptedException {
 		try {
-			indexWriter = openIndex();
-
-			if (getConfig().isReuseIndex()) {
-				logger.warn("{}: Reuse index not yet implemented, rereading", configName);
-			}
+			int count = -1;
 
 			/*
 			 * In case no file is specified we (assuming a de-duplication task) use the
@@ -102,12 +98,59 @@ public class LuceneDataLoader implements DataLoader {
 					config.setAuthorityFileDelimiter(config.getQueryFileDelimiter());
 					config.setAuthorityFileQuoteChar(config.getQueryFileQuoteChar());
 				}
-				this.load(config.getAuthorityFile());
+				// Count file
+				try {
+					count = this.count(config.getAuthorityFile());
+				}
+				catch (Exception e) {
+					logger.error("Error counting records in authority file", e);
+					count = -1;
+				}
 			}
 			else {
-				logger.info("{}: Starting data load", configName);
-				this.load(config.getAuthorityRecords());
+				// Count file
+				try {
+					count = this.count(config.getAuthorityRecords());
+				}
+				catch (Exception e) {
+					logger.error("Error counting records in authority database", e);
+					count = -1;
+				}
 			}
+
+			indexWriter = openIndex();
+
+			// Reuse index if configured, and if it contains the expected number of records.
+			if (getConfig().isReuseIndex()) {
+				if (count < 0) {
+					logger.info("{}: Cannot reuse index as required size is unknown", configName);
+				}
+				else {
+					logger.debug("{}: Checking whether to reuse index, expecting {} records", configName, count);
+
+					int numDocs = indexWriter.numDocs();
+					if (numDocs == count) {
+						logger.warn("{}: Reusing index, since it contains {} entries as expected", configName, numDocs);
+						return;
+					}
+					else {
+						logger.info("{}: Wiping incomplete ({}/{} records) index", configName, numDocs, count);
+						indexWriter.deleteAll();
+						indexWriter.commit();
+					}
+				}
+			}
+
+			logger.info("{}: Starting data load", configName);
+			if (config.getAuthorityRecords() == null) {
+				this.load(config.getAuthorityFile(), count);
+			}
+			else {
+				this.load(config.getAuthorityRecords(), count);
+			}
+
+			int numDocs = indexWriter.numDocs();
+			logger.info("{}: Completed index contains {} records", configName, numDocs);
 		}
 		catch (IOException e) {
 			throw new DataLoadException(configName + ": Problem creating/opening Lucene index", e);
@@ -133,16 +176,16 @@ public class LuceneDataLoader implements DataLoader {
 		IndexWriterConfig indexWriterConfig = new IndexWriterConfig(getLuceneVersion(), luceneAnalyzer);
 		indexWriterConfig.setRAMBufferSizeMB(RAM_BUFFER_SIZE);
 
-//		if (getConfig().isReuseIndex()) {
-//			// Reuse the index if it exists, otherwise create a new one.
-//			logger.debug("{}: Reusing existing index, if it exists", configName);
-//			indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-//		}
-//		else {
+		if (getConfig().isReuseIndex()) {
+			// Reuse the index if it exists, otherwise create a new one.
+			logger.debug("{}: Reusing existing index, if it exists", configName);
+			indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+		}
+		else {
 			// Create a new index, overwriting any that already exists.
 			logger.debug("{}: Overwriting existing index, if it exists", configName);
 			indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
-//		}
+		}
 
 		IndexWriter indexWriter;
 
@@ -163,7 +206,64 @@ public class LuceneDataLoader implements DataLoader {
 		return indexWriter;
 	}
 
-	private void load(DatabaseRecordSource recordSource) throws DataLoadException, InterruptedException {
+	/**
+	 * Count the number of records in a file.
+	 */
+	private int count(File file) throws DataLoadException, InterruptedException {
+		int i = 0;
+		int errors = 0;
+
+		logger.info("{}: Counting records in {}", configName, file);
+
+		char delimiter = this.config.getAuthorityFileDelimiter().charAt(0);
+		char quote = this.config.getAuthorityFileQuoteChar().charAt(0);
+		CsvPreference customCsvPref = new CsvPreference.Builder(quote, delimiter, "\n").build();
+
+		try (CsvMapReader mr = new CsvMapReader(new InputStreamReader(new FileInputStream(file), "UTF-8"), customCsvPref)) {
+			final String[] header = mr.getHeader(true);
+
+			Map<String, String> record;
+			record = mr.read(header);
+
+			while (record != null) {
+				// Read next record from CSV/datasource
+				try {
+					i++;
+					record = mr.read(header);
+				}
+				catch (Exception e) {
+					errors++;
+					String message = configName + ": Problem reading record " + i + " «" + mr.getUntokenizedRow() + "»";
+					if (errors < config.getMaximumLoadErrors()) {
+						logger.warn(message, e);
+					}
+					else{
+						throw new DataLoadException(message, e);
+					}
+				}
+			}
+
+			logger.info("{}: Counted {} records ({} errors)", configName, i, errors);
+			return i;
+		}
+		catch (Exception e) {
+			throw new DataLoadException(configName + ": Error "+e.getMessage()+" loading records at line " + i, e);
+		}
+	}
+
+	/**
+	 * Count the number of records in a file.
+	 */
+	private int count(DatabaseRecordSource recordSource) throws DataLoadException {
+		try {
+			return recordSource.count();
+		}
+		catch (SQLException e) {
+			throw new DataLoadException(this.config.getName() + ": Unable to count records", e);
+		}
+	}
+
+	private void load(DatabaseRecordSource recordSource, int total) throws DataLoadException, InterruptedException {
         int i = 0;
         int errors = 0;
 
@@ -212,7 +312,7 @@ public class LuceneDataLoader implements DataLoader {
 
                 // Log progress
                 if (i++ % this.config.getLoadReportFrequency() == 0) {
-                    logger.info("{}: Indexed {} documents", configName, i);
+                    logger.info("{}: Indexed {} records ({}%, {} errors)", configName, i-errors, total > 0 ? ((float)i)/total*100 : "?", errors);
                     logger.debug("{}: Most recent indexed document was {}", configName, doc);
                 }
 
@@ -220,7 +320,7 @@ public class LuceneDataLoader implements DataLoader {
                 if (i % 10000 == 0 && Thread.interrupted()) {
                     recordSource.close();
                     indexWriter.commit();
-                    logger.info("{}: Loader interrupted after indexing {} records", configName, i);
+                    logger.info("{}: Loader interrupted after indexing {}th record", configName, i);
                     throw new InterruptedException("Interrupted while loading data");
                 }
             }
@@ -237,7 +337,7 @@ public class LuceneDataLoader implements DataLoader {
         logger.info("{}: Indexed {} records", configName, i);
     }
 
-    private void load(File file) throws DataLoadException, InterruptedException {
+    private void load(File file, int total) throws DataLoadException, InterruptedException {
         int i = 0;
         int errors = 0;
 
@@ -280,14 +380,14 @@ public class LuceneDataLoader implements DataLoader {
 
                 // Log process
                 if (i++ % this.config.getLoadReportFrequency() == 0){
-                    logger.info("{}: Indexed {} documents", configName, i);
+                    logger.info("{}: Indexed {} records ({}%, {} errors)", configName, i-errors, total > 0 ? ((float)i)/total*100 : "?", errors);
                     logger.debug("{}: Most recent indexed document was {}", configName, doc);
                 }
 
                 // Check for interrupt
                 if (i % 10000 == 0 && Thread.interrupted()) {
                     indexWriter.commit();
-                    logger.info("{}: Loader interrupted after indexing {} records", configName, i);
+                    logger.info("{}: Loader interrupted after indexing {}th record", configName, i);
                     throw new InterruptedException("Interrupted while loading data");
                 }
 
@@ -315,7 +415,7 @@ public class LuceneDataLoader implements DataLoader {
         catch (Exception e) {
             throw new DataLoadException(configName + ": Error "+e.getMessage()+" loading records at line " + i, e);
         }
-        logger.info("{}: Indexed {} records", configName, i);
+        logger.info("{}: Read {} records, indexed {}, {} errors", configName, i, i-errors, errors);
     }
 
     /**

@@ -117,6 +117,7 @@
 	<bean id="authorityFromIpniDatabase" class="org.kew.rmf.reconciliation.service.DatabaseCursorRecordReader">
 		<property name="dataSource" ref="ipniFlatDatabase"/>
 		<property name="sql" value="SELECT id, rank, COALESCE(genus, COALESCE(infra_family, family)) AS epithet_1, COALESCE(infra_genus, species) AS epithet_2, infraspecies AS epithet_3, basionym_author, publishing_author, publication, reference_collation, publication_year, name_status, full_name FROM ipni_flat_topcopy_notsuppressed ${ipniflat.testWhere:};"/>
+		<property name="countSql" value="SELECT COUNT(*) FROM ipni_flat_topcopy_notsuppressed ${ipniflat.testWhere:};"/>
 		<property name="fetchSize" value="150000"/>
 	</bean>
 

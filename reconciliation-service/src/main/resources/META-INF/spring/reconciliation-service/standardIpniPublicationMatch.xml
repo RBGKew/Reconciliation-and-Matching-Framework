@@ -28,6 +28,7 @@
 	<bean id="authorityFromIpniDatabase" class="org.kew.rmf.reconciliation.service.DatabaseCursorRecordReader">
 		<property name="dataSource" ref="ipniDatabase"/>
 		<property name="sql" value="SELECT publication_id AS id, abbrev AS publication, publication_date AS date, tl2_author AS author FROM publication"/>
+		<property name="countSql" value="SELECT COUNT(*) FROM publication"/>
 		<property name="fetchSize" value="5000"/>
 	</bean>
 
@@ -168,7 +169,7 @@
 		p:maxSearchResults="10000"
 		p:recordFilter=""
 		p:maximumLoadErrors="0"
-		p:reuseIndex="false"
+		p:reuseIndex="true"
 		p:queryStringToPropertiesExtractor-ref="citationQueryStringExtractor"
 		p:reconciliationResultFormatter-ref="reconciliationResultFormat"
 

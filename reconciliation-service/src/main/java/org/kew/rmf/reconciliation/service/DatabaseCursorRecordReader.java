@@ -16,6 +16,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.sql.DataSource;
 
@@ -28,16 +29,15 @@ public class DatabaseCursorRecordReader implements DatabaseRecordSource {
 	private Connection connection;
 	private DataSource dataSource;
 	private String sql;
+	private String countSql;
 	private int fetchSize = 5000;
 
 	private PreparedStatement preparedStatement;
 	private ResultSet rs;
 
 	private void openCursor() throws SQLException {
-		connection = dataSource.getConnection();
-		connection.setAutoCommit(false); // Cursors in PostgreSQL (at least) don't work in autocommit mode.
-		preparedStatement = connection.prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-		if (dataSource.getConnection().getMetaData().getDatabaseProductName().equals("MySQL")) {
+		preparedStatement = getConnection().prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+		if (getConnection().getMetaData().getDatabaseProductName().equals("MySQL")) {
 			preparedStatement.setFetchSize(Integer.MIN_VALUE);
 		}
 		else {
@@ -48,7 +48,27 @@ public class DatabaseCursorRecordReader implements DatabaseRecordSource {
 		this.rs = preparedStatement.executeQuery();
 	}
 
+	@Override
+	public int count() throws SQLException {
+		if (countSql == null) {
+			return -1;
+		}
+		Statement s = getConnection().createStatement();
+		ResultSet r = s.executeQuery(countSql);
+		r.next();
+		return r.getInt(1);
+	}
+
 	/* • Getters and setters  */
+	private synchronized Connection getConnection() throws SQLException {
+		if (connection == null) {
+			connection = dataSource.getConnection();
+			connection.setAutoCommit(false); // Cursors in PostgreSQL (at least) don't work in autocommit mode.
+		}
+
+		return connection;
+	}
+
 	@Override
 	public ResultSet getResultSet() throws SQLException {
 		if (rs == null) {
@@ -83,6 +103,13 @@ public class DatabaseCursorRecordReader implements DatabaseRecordSource {
 	}
 	public void setSql(String sql) {
 		this.sql = sql;
+	}
+
+	public String getCountSql() {
+		return countSql;
+	}
+	public void setCountSql(String countSql) {
+		this.countSql = countSql;
 	}
 
 	public int getFetchSize() {
