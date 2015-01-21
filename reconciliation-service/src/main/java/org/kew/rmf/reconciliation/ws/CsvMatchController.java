@@ -252,7 +252,7 @@ public class CsvMatchController {
 		// Check for the user trying to do something suspicious
 		if (fileName.contains(File.separator)) {
 			logger.error("User attempting to download file named «{}»", fileName);
-			return new ResponseEntity<String>("Looks dodgy.", HttpStatus.FORBIDDEN);
+			return new ResponseEntity<String>("Looks dodgy.", baseController.getResponseHeaders(), HttpStatus.FORBIDDEN);
 		}
 
 		// Put back the .csv, as Spring has chopped it off.
@@ -260,16 +260,16 @@ public class CsvMatchController {
 
 		try {
 			if (downloadFile.canRead()) {
-				return new ResponseEntity<String>(FileUtils.readFileToString(downloadFile, "UTF-8"), HttpStatus.OK);
+				return new ResponseEntity<String>(FileUtils.readFileToString(downloadFile, "UTF-8"), baseController.getResponseHeaders(), HttpStatus.OK);
 			}
 			else {
 				logger.warn("User attempted to download file «{}» but it doesn't exist", fileName);
-				return new ResponseEntity<String>("This download does not exist", HttpStatus.NOT_FOUND);
+				return new ResponseEntity<String>("This download does not exist", baseController.getResponseHeaders(), HttpStatus.NOT_FOUND);
 			}
 		}
 		catch (IOException e) {
 			logger.error("Exception when user attempted to download file «{}»", fileName);
-			return new ResponseEntity<String>("Error retrieving download: "+e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>("Error retrieving download: "+e.getMessage(), baseController.getResponseHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 }

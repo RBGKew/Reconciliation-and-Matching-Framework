@@ -50,7 +50,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -63,6 +62,9 @@ public class ReconciliationServiceController {
 
 	@Autowired
 	private ReconciliationService reconciliationService;
+
+	@Autowired
+	private BaseController baseController;
 
 	@Autowired
 	private ServletContext servletContext;
@@ -87,15 +89,15 @@ public class ReconciliationServiceController {
 			metadata = reconciliationService.getMetadata(configName);
 		}
 		catch (UnknownReconciliationServiceException e) {
-			return new ResponseEntity<String>(e.toString(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(e.toString(), baseController.getResponseHeaders(), HttpStatus.NOT_FOUND);
 		}
 		catch (MatchExecutionException e) {
-			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(e.toString(), baseController.getResponseHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 		if (metadata != null) {
 			String metadataJson = jsonMapper.writeValueAsString(metadata).replace("LOCAL", myUrl).replace("BASE", basePath);
-			return new ResponseEntity<String>(wrapResponse(callback, metadataJson), HttpStatus.OK);
+			return new ResponseEntity<String>(wrapResponse(callback, metadataJson), baseController.getResponseHeaders(), HttpStatus.OK);
 		}
 		return null;
 	}
@@ -104,7 +106,7 @@ public class ReconciliationServiceController {
 	 * Perform multiple reconciliation queries (no callback)
 	 */
 	@RequestMapping(value = "/reconcile/{configName}", method={RequestMethod.GET,RequestMethod.POST}, params={"queries"}, produces="application/json; charset=UTF-8")
-	public @ResponseBody String doMultipleQueries(@PathVariable String configName, @RequestParam("queries") String queries) {
+	public ResponseEntity<String> doMultipleQueries(@PathVariable String configName, @RequestParam("queries") String queries) {
 		return doMultipleQueries(configName, queries, null);
 	}
 
@@ -112,7 +114,7 @@ public class ReconciliationServiceController {
 	 * Perform multiple reconciliation queries (no callback)
 	 */
 	@RequestMapping(value = "/reconcile/{configName}", method={RequestMethod.GET,RequestMethod.POST}, params={"queries","callback"}, produces="application/json; charset=UTF-8")
-	public @ResponseBody String doMultipleQueries(@PathVariable String configName, @RequestParam("queries") String queries, @RequestParam(value="callback",required=false) String callback) {
+	public ResponseEntity<String> doMultipleQueries(@PathVariable String configName, @RequestParam("queries") String queries, @RequestParam(value="callback",required=false) String callback) {
 		logger.info("{}: Multiple query request {}", configName, queries);
 
 		String jsonres = null;
@@ -138,7 +140,7 @@ public class ReconciliationServiceController {
 		catch (Exception e) {
 			logger.error(configName + ": Error with multiple query call", e);
 		}
-		return wrapResponse(callback, jsonres);
+		return new ResponseEntity<String>(wrapResponse(callback, jsonres), baseController.getResponseHeaders(), HttpStatus.OK);
 	}
 
 	/**
@@ -166,26 +168,26 @@ public class ReconciliationServiceController {
 		}
 		catch (JsonMappingException | JsonGenerationException e) {
 			logger.warn(configName + ": Error parsing JSON query", e);
-			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(e.toString(), baseController.getResponseHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		catch (IOException e) {
 			logger.error(configName + ": Query failed:", e);
-			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(e.toString(), baseController.getResponseHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		catch (UnknownReconciliationServiceException e) {
 			logger.warn(configName + ": Query failed:", e);
-			return new ResponseEntity<String>(e.toString(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(e.toString(), baseController.getResponseHeaders(), HttpStatus.NOT_FOUND);
 		}
 		catch (MatchExecutionException e) {
 			logger.error(configName + ": Query failed:", e);
-			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(e.toString(), baseController.getResponseHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		catch (TooManyMatchesException e) {
 			logger.warn(configName + ": Query failed:", e);
-			return new ResponseEntity<String>(e.toString(), HttpStatus.CONFLICT);
+			return new ResponseEntity<String>(e.toString(), baseController.getResponseHeaders(), HttpStatus.CONFLICT);
 		}
 
-		return new ResponseEntity<String>(wrapResponse(callback, jsonres), HttpStatus.OK);
+		return new ResponseEntity<String>(wrapResponse(callback, jsonres), baseController.getResponseHeaders(), HttpStatus.OK);
 	}
 
 	/**
@@ -210,7 +212,7 @@ public class ReconciliationServiceController {
 			return doSingleQuery(configName, jsonMapper.writeValueAsString(q), callback);
 		}
 		catch (IOException e) {
-			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(e.toString(), baseController.getResponseHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -238,19 +240,19 @@ public class ReconciliationServiceController {
 		}
 		catch (JsonMappingException | JsonGenerationException e) {
 			logger.warn(configName + ": Error parsing JSON query", e);
-			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(e.toString(), baseController.getResponseHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		catch (IOException e) {
-			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(e.toString(), baseController.getResponseHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		catch (UnknownReconciliationServiceException e) {
-			return new ResponseEntity<String>(e.toString(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(e.toString(), baseController.getResponseHeaders(), HttpStatus.NOT_FOUND);
 		}
 		catch (MatchExecutionException e) {
-			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(e.toString(), baseController.getResponseHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-		return new ResponseEntity<String>(wrapResponse(callback, jsonres), HttpStatus.OK);
+		return new ResponseEntity<String>(wrapResponse(callback, jsonres), baseController.getResponseHeaders(), HttpStatus.OK);
 	}
 
 	/**
@@ -273,17 +275,17 @@ public class ReconciliationServiceController {
 			String html = "<html><body><ul><li>"+type.getName()+" ("+type.getId()+")</li></ul></body></html>\n";
 			FlyoutResponse jsonWrappedHtml = new FlyoutResponse(html);
 
-			return new ResponseEntity<String>(wrapResponse(callback, jsonMapper.writeValueAsString(jsonWrappedHtml)), HttpStatus.OK);
+			return new ResponseEntity<String>(wrapResponse(callback, jsonMapper.writeValueAsString(jsonWrappedHtml)), baseController.getResponseHeaders(), HttpStatus.OK);
 		}
 		catch (IOException e) {
 			logger.warn(configName + ": Error in type flyout for id "+id, e);
-			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(e.toString(), baseController.getResponseHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		catch (UnknownReconciliationServiceException e) {
-			return new ResponseEntity<String>(e.toString(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(e.toString(), baseController.getResponseHeaders(), HttpStatus.NOT_FOUND);
 		}
 		catch (MatchExecutionException | NullPointerException e) {
-			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(e.toString(), baseController.getResponseHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -325,16 +327,16 @@ public class ReconciliationServiceController {
 		}
 		catch (JsonMappingException | JsonGenerationException e) {
 			logger.warn(configName + ": Error parsing JSON query", e);
-			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(e.toString(), baseController.getResponseHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		catch (IOException e) {
-			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(e.toString(), baseController.getResponseHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		catch (UnknownReconciliationServiceException e) {
-			return new ResponseEntity<String>(e.toString(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(e.toString(), baseController.getResponseHeaders(), HttpStatus.NOT_FOUND);
 		}
 
-		return new ResponseEntity<String>(wrapResponse(callback, jsonres), HttpStatus.OK);
+		return new ResponseEntity<String>(wrapResponse(callback, jsonres), baseController.getResponseHeaders(), HttpStatus.OK);
 	}
 
 	/**
@@ -348,11 +350,11 @@ public class ReconciliationServiceController {
 			String html = "<html><body><ul><li>"+id+"</li></ul></body></html>\n";
 			FlyoutResponse jsonWrappedHtml = new FlyoutResponse(html);
 
-			return new ResponseEntity<String>(wrapResponse(callback, jsonMapper.writeValueAsString(jsonWrappedHtml)), HttpStatus.OK);
+			return new ResponseEntity<String>(wrapResponse(callback, jsonMapper.writeValueAsString(jsonWrappedHtml)), baseController.getResponseHeaders(), HttpStatus.OK);
 		}
 		catch (IOException e) {
 			logger.warn(configName + ": Error in properties flyout for id "+id, e);
-			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(e.toString(), baseController.getResponseHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -372,7 +374,7 @@ public class ReconciliationServiceController {
 			targetUrl = reconciliationService.getReconciliationServiceConfiguration(configName).getSuggestFlyoutUrl();
 		}
 		catch (UnknownReconciliationServiceException e) {
-			return new ResponseEntity<String>(e.toString(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(e.toString(), baseController.getResponseHeaders(), HttpStatus.NOT_FOUND);
 		}
 
 		// If the configuration has a flyout configured use it
@@ -390,15 +392,15 @@ public class ReconciliationServiceController {
 
 				FlyoutResponse jsonWrappedHtml = new FlyoutResponse(html);
 				logger.debug("JSON response is {}", wrapResponse(callback, jsonMapper.writeValueAsString(jsonWrappedHtml)));
-				return new ResponseEntity<String>(wrapResponse(callback, jsonMapper.writeValueAsString(jsonWrappedHtml)), httpResponse.getStatusCode());
+				return new ResponseEntity<String>(wrapResponse(callback, jsonMapper.writeValueAsString(jsonWrappedHtml)), baseController.getResponseHeaders(), httpResponse.getStatusCode());
 			}
 			catch (NullPointerException e) {
 				logger.info(configName + ": Not found when retrieving URL for id "+id, e);
-				return new ResponseEntity<String>(e.toString(), HttpStatus.NOT_FOUND);
+				return new ResponseEntity<String>(e.toString(), baseController.getResponseHeaders(), HttpStatus.NOT_FOUND);
 			}
 			catch (IOException e) {
 				logger.warn(configName + ": Exception retrieving URL for id "+id, e);
-				return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+				return new ResponseEntity<String>(e.toString(), baseController.getResponseHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
 		// Otherwise create something very simple from the Properties
@@ -424,14 +426,14 @@ public class ReconciliationServiceController {
 
 				FlyoutResponse jsonWrappedHtml = new FlyoutResponse(flyout.toString());
 				logger.debug("JSON response is {}", wrapResponse(callback, jsonMapper.writeValueAsString(jsonWrappedHtml)));
-				return new ResponseEntity<String>(wrapResponse(callback, jsonMapper.writeValueAsString(jsonWrappedHtml)), HttpStatus.OK);
+				return new ResponseEntity<String>(wrapResponse(callback, jsonMapper.writeValueAsString(jsonWrappedHtml)), baseController.getResponseHeaders(), HttpStatus.OK);
 			}
 			catch (UnknownReconciliationServiceException e) {
-				return new ResponseEntity<String>(e.toString(), HttpStatus.NOT_FOUND);
+				return new ResponseEntity<String>(e.toString(), baseController.getResponseHeaders(), HttpStatus.NOT_FOUND);
 			}
 			catch (IOException e) {
 				logger.warn(configName + ": Exception creating entity flyout for id "+id, e);
-				return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+				return new ResponseEntity<String>(e.toString(), baseController.getResponseHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
 	}

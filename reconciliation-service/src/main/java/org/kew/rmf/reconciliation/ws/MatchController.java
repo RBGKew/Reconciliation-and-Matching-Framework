@@ -42,6 +42,9 @@ public class MatchController {
 	@Autowired
 	private ReconciliationService reconciliationService;
 
+	@Autowired
+	private BaseController baseController;
+
 	/**
 	 * Performs a single match query.
 	 */
@@ -67,12 +70,12 @@ public class MatchController {
 		}
 		catch (TooManyMatchesException | MatchExecutionException e) {
 			logger.error(configName + ": Problem handling match", e);
-			return new ResponseEntity<List<Map<String,String>>>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<List<Map<String,String>>>(null, baseController.getResponseHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 		// TODO: Reporter is needed to cause only configured properties to be returned in the JSON.
 
 		// matches will be returned as JSON
-		return new ResponseEntity<List<Map<String,String>>>(matches, HttpStatus.OK);
+		return new ResponseEntity<List<Map<String,String>>>(matches, baseController.getResponseHeaders(), HttpStatus.OK);
 	}
 }

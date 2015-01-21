@@ -39,6 +39,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -65,6 +66,7 @@ public class GeneralReconciliationServiceStepdefs extends WebMvcConfigurationSup
 
 	private String responseJson;
 
+	private ResultActions resultActions;
 	private MvcResult result;
 
 	public GeneralReconciliationServiceStepdefs() {
@@ -86,10 +88,10 @@ public class GeneralReconciliationServiceStepdefs extends WebMvcConfigurationSup
 	@When("^I query for metadata of the \"(.*?)\" reconciliation service$")
 	public void i_query_for_metadata_of_the_reconciliation_service(String configName) throws Throwable {
 		// Call
-		result = mockMvc.perform(get("/reconcile/"+configName).accept(JSON_UTF8))
+		resultActions = mockMvc.perform(get("/reconcile/"+configName).accept(JSON_UTF8))
 //				.andExpect(status().isOk())
-				.andExpect(content().contentType(JSON_UTF8_S))
-				.andReturn();
+				.andExpect(content().contentType(JSON_UTF8_S));
+		result = resultActions.andReturn();
 
 		if (result.getResponse().getStatus() == HttpStatus.OK.value()) {
 			responseJson = result.getResponse().getContentAsString();
@@ -100,6 +102,11 @@ public class GeneralReconciliationServiceStepdefs extends WebMvcConfigurationSup
 	@Then("^I receive an HTTP (\\d+) result\\.$")
 	public void i_receive_an_HTTP_result(int expectedStatus) throws Throwable {
 		Assert.assertThat("Expected HTTP Status "+expectedStatus, result.getResponse().getStatus(), Matchers.equalTo(expectedStatus));
+	}
+
+	@Then("^cross-site access is permitted$")
+	public void cross_site_access_is_permitted() throws Throwable {
+		resultActions.andExpect(header().string("Access-Control-Allow-Origin", "*"));
 	}
 
 	@Then("^I receive the following metadata response:$")
@@ -116,10 +123,10 @@ public class GeneralReconciliationServiceStepdefs extends WebMvcConfigurationSup
 	@When("^I make a match query for \"(.*?)\"$")
 	public void i_make_a_match_query_for(String queryString) throws Throwable {
 		// Call
-		result = mockMvc.perform(get("/match/generalTest?"+queryString).accept(JSON_UTF8))
+		resultActions = mockMvc.perform(get("/match/generalTest?"+queryString).accept(JSON_UTF8))
 				.andExpect(status().isOk())
-				.andExpect(content().contentType(JSON_UTF8_S))
-				.andReturn();
+				.andExpect(content().contentType(JSON_UTF8_S));
+		result = resultActions.andReturn();
 
 		responseJson = result.getResponse().getContentAsString();
 		log.debug("Response as string was {}", responseJson);
@@ -136,10 +143,10 @@ public class GeneralReconciliationServiceStepdefs extends WebMvcConfigurationSup
 
 		log.debug("Query is {}", "/reconcile/generalTest?query="+mapper.writeValueAsString(query));
 
-		result = mockMvc.perform(post("/reconcile/generalTest?query={query}", mapper.writeValueAsString(query)).accept(JSON_UTF8))
+		resultActions = mockMvc.perform(post("/reconcile/generalTest?query={query}", mapper.writeValueAsString(query)).accept(JSON_UTF8))
 				.andExpect(status().isOk())
-				.andExpect(content().contentType(JSON_UTF8_S))
-				.andReturn();
+				.andExpect(content().contentType(JSON_UTF8_S));
+		result = resultActions.andReturn();
 
 		responseJson = result.getResponse().getContentAsString();
 		log.debug("Response as string was {}", responseJson);
@@ -162,10 +169,10 @@ public class GeneralReconciliationServiceStepdefs extends WebMvcConfigurationSup
 
 		log.debug("Query is {}", "/reconcile/generalTest?queries="+mapper.writeValueAsString(queries));
 
-		result = mockMvc.perform(post("/reconcile/generalTest?queries={queries}", mapper.writeValueAsString(queries)).accept(JSON_UTF8))
+		resultActions = mockMvc.perform(post("/reconcile/generalTest?queries={queries}", mapper.writeValueAsString(queries)).accept(JSON_UTF8))
 				.andExpect(status().isOk())
-				.andExpect(content().contentType(JSON_UTF8_S))
-				.andReturn();
+				.andExpect(content().contentType(JSON_UTF8_S));
+		result = resultActions.andReturn();
 
 		responseJson = result.getResponse().getContentAsString();
 		log.debug("Response as string was {}", responseJson);
@@ -184,10 +191,10 @@ public class GeneralReconciliationServiceStepdefs extends WebMvcConfigurationSup
 
 	@When("^I make the reconciliation suggest query with prefix \"(.*?)\"$")
 	public void i_make_the_reconciliation_suggest_query_with_prefix(String prefix) throws Throwable {
-		result = mockMvc.perform(get("/reconcile/generalTest?prefix="+prefix).accept(JSON_UTF8))
+		resultActions = mockMvc.perform(get("/reconcile/generalTest?prefix="+prefix).accept(JSON_UTF8))
 				.andExpect(status().isOk())
-				.andExpect(content().contentType(JSON_UTF8_S))
-				.andReturn();
+				.andExpect(content().contentType(JSON_UTF8_S));
+		result = resultActions.andReturn();
 
 		responseJson = result.getResponse().getContentAsString();
 		log.debug("Response as string was {}", responseJson);
@@ -195,10 +202,10 @@ public class GeneralReconciliationServiceStepdefs extends WebMvcConfigurationSup
 
 	@When("^I make the reconciliation suggest property query with prefix \"(.*?)\"$")
 	public void i_make_the_reconciliation_suggest_property_query_with_prefix(String prefix) throws Throwable {
-		result = mockMvc.perform(get("/reconcile/generalTest/suggestProperty?prefix="+prefix).accept(JSON_UTF8))
+		resultActions = mockMvc.perform(get("/reconcile/generalTest/suggestProperty?prefix="+prefix).accept(JSON_UTF8))
 				.andExpect(status().isOk())
-				.andExpect(content().contentType(JSON_UTF8_S))
-				.andReturn();
+				.andExpect(content().contentType(JSON_UTF8_S));
+		result = resultActions.andReturn();
 
 		responseJson = result.getResponse().getContentAsString();
 		log.debug("Response as string was {}", responseJson);
@@ -206,10 +213,10 @@ public class GeneralReconciliationServiceStepdefs extends WebMvcConfigurationSup
 
 	@When("^I make the reconciliation suggest type query with prefix \"(.*?)\"$")
 	public void i_make_the_reconciliation_suggest_type_query_with_prefix(String prefix) throws Throwable {
-		result = mockMvc.perform(get("/reconcile/generalTest/suggestType?prefix="+prefix).accept(JSON_UTF8))
+		resultActions = mockMvc.perform(get("/reconcile/generalTest/suggestType?prefix="+prefix).accept(JSON_UTF8))
 				.andExpect(status().isOk())
-				.andExpect(content().contentType(JSON_UTF8_S))
-				.andReturn();
+				.andExpect(content().contentType(JSON_UTF8_S));
+		result = resultActions.andReturn();
 
 		responseJson = result.getResponse().getContentAsString();
 		log.debug("Response as string was {}", responseJson);
@@ -219,20 +226,20 @@ public class GeneralReconciliationServiceStepdefs extends WebMvcConfigurationSup
 	public void i_make_a_bulk_match_query_with_a_file_containing_these_rows(String allRows) throws Throwable {
 		MockMultipartFile multipartFile = new MockMultipartFile("file", allRows.getBytes());
 
-		result = mockMvc.perform(MockMvcRequestBuilders.fileUpload("/filematch/generalTest/")
+		resultActions = mockMvc.perform(MockMvcRequestBuilders.fileUpload("/filematch/generalTest/")
 				.file(multipartFile)
 				.param("charset", "UTF-8"))
-				.andExpect(status().is(200))
-				.andReturn();
+				.andExpect(status().is(200));
+		result = resultActions.andReturn();
 	}
 
 	@Then("^I receive the following result file:$")
 	public void i_receive_the_following_result_file(String expectedFile) throws Throwable {
 		String fileName = result.getResponse().getHeader("X-File-Download");
 
-		result = mockMvc.perform(get("/download/"+fileName))
-				.andExpect(status().is(200))
-				.andReturn();
+		resultActions = mockMvc.perform(get("/download/"+fileName))
+				.andExpect(status().is(200));
+		result = resultActions.andReturn();
 
 		String actualFile = result.getResponse().getContentAsString();
 		log.info("File received is\n{}", actualFile);

@@ -46,10 +46,12 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 				]
 			}
 			"""
+		And cross-site access is permitted
 
 	Scenario: Ensure appropriate reconciliation metadata is returned (error check).
 		When I query for metadata of the "nonExistent" reconciliation service
 		Then I receive an HTTP 404 result.
+		And cross-site access is permitted
 
 	Scenario: Ensure a single reconciliation query gives the correct response
 		When I make the reconciliation query:
@@ -91,6 +93,7 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 				]
 			}
 			"""
+		And cross-site access is permitted
 
 	Scenario: Ensure a multiple reconciliation query gives the correct response
 		When I make the reconciliation queries:
@@ -169,6 +172,7 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 				}
 			}
 			"""
+		And cross-site access is permitted
 
 	Scenario: When queried without the key property (first property, here genus) the query
 		is taken to be the key property.
@@ -229,6 +233,7 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 				"result" : []
 			}
 			"""
+		And cross-site access is permitted
 
 	Scenario: Provide a "best effort" match when queried with only a single string, without
 		genus, species etc parameters.
@@ -257,6 +262,7 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 				]
 			}
 			"""
+		And cross-site access is permitted
 
 	Scenario: Match score should be related to the closeness of the match, and match result false if there's more than one.
 		When I make the reconciliation query:
@@ -296,6 +302,7 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 				]
 			}
 			"""
+		And cross-site access is permitted
 
 	Scenario: The Suggest call returns possible reconciliation matches when queried with a prefix.
 		In Open Refine, the result is shown when the user uses the "Search for match" function.
@@ -319,6 +326,7 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 				]
 			}
 			"""
+		And cross-site access is permitted
 
 	Scenario: The Suggest Flyout returns HTML wrapped in a JSON object when queried with an id.
 		In Open Refine, the HTML is shown when the user "Search for match" function and highlights a result.
@@ -329,6 +337,7 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 				"html" : "<html><body>tro-50269022</body></html>"
 			}
 			"""
+		And cross-site access is permitted
 
 	Scenario: The Suggest Type call returns possible types when queried with a prefix.
 		In Open Refine, the result is shown when the user begins typing in the "Reconcile against type" box.
@@ -344,6 +353,7 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 				]
 			}
 			"""
+		And cross-site access is permitted
 
 	Scenario: The Suggest Property call returns possible properties when queried with a prefix.
 		In Open Refine, the result is shown when the user begins typing in the "As Property" boxes.
@@ -359,3 +369,4 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 				]
 			}
 			"""
+		And cross-site access is permitted

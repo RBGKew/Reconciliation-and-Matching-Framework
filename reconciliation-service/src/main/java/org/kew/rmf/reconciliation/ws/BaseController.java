@@ -24,6 +24,7 @@ import org.kew.web.model.MenuItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,6 +42,19 @@ public class BaseController {
 
 	private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
 
+	private HttpHeaders responseHeaders = new HttpHeaders();
+
+	/* • Constructors • */
+	public BaseController() {
+		responseHeaders.set("Access-Control-Allow-Origin", "*");
+	}
+
+	/* • HTTP • */
+	public HttpHeaders getResponseHeaders() {
+		return responseHeaders;
+	}
+
+	/* • Menus • */
 	public void menuAndBreadcrumbs(String activeHref, Model model) {
 		MenuItem menu = makeMenu(activeHref);
 		List<MenuItem> breadcrumbs = menu.toBreadcrumbTrail();
@@ -94,6 +108,7 @@ public class BaseController {
 		return topMenu;
 	}
 
+	/* • Errors • */
 	/**
 	 * Error handler for things not caught by the Exception Resolver.
 	 */

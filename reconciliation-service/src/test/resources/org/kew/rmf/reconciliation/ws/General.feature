@@ -25,6 +25,7 @@ Feature: Basic functionality of the application: responding to a match query.
 				}
 			]
 			"""
+		And cross-site access is permitted
 
 	Scenario: Reconcile records by file upload
 		When I make a bulk match query with a file containing these rows:
@@ -43,6 +44,7 @@ Feature: Basic functionality of the application: responding to a match query.
 			3,
 			4,tro-50269022|kew-46562
 			"""
+		And cross-site access is permitted
 
 #	Scenario: Ensure many simultaneous / rapid queries give the correct responses
 #		It's not clear how to test this.
