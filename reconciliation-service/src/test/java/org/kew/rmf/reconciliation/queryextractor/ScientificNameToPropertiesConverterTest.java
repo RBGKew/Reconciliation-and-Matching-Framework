@@ -149,4 +149,40 @@ public class ScientificNameToPropertiesConverterTest {
 		assertThat(asList(extractor.extractProperties("Quercus alba L. f. latiloba (Sarg.) E.J.Palmer & Steyerm.")), hasItems(expectedEpithet1, expectedEpithet2, expectedEpithet3, expectedBasionymAuthor, expectedPublishingAuthor));
 		assertThat(asList(extractor.extractProperties("Quercus alba L. f. latiloba (Sarg.) E.J.Palmer & Steyerm.")).size(), equalTo(5));
 	}
+
+	@Test
+	public void testExtractPropertiesMoreExamples() {
+		QueryStringToPropertiesExtractor extractor = new ScientificNameToPropertiesConverter();
+
+		Property expectedEpithet1 = new Property();
+		Property expectedEpithet2 = new Property();
+		Property expectedEpithet3 = new Property();
+		Property expectedBasionymAuthor = new Property();
+		Property expectedPublishingAuthor = new Property();
+
+		expectedEpithet1.setP("epithet_1");
+		expectedEpithet1.setPid("epithet_1");
+		expectedEpithet2.setP("epithet_2");
+		expectedEpithet2.setPid("epithet_2");
+		expectedEpithet3.setP("epithet_3");
+		expectedEpithet3.setPid("epithet_3");
+		expectedBasionymAuthor.setP("basionym_author");
+		expectedBasionymAuthor.setPid("basionym_author");
+		expectedPublishingAuthor.setP("publishing_author");
+		expectedPublishingAuthor.setPid("publishing_author");
+
+		// Fagaceæ — Æ ligature
+		expectedEpithet1.setV("Fagaceæ");
+		assertThat(asList(extractor.extractProperties("Fagaceæ")), hasItems(expectedEpithet1));
+		assertThat(asList(extractor.extractProperties("Fagaceæ")).size(), equalTo(1));
+
+		// Quercus alba L. f. latiloba (Sarg.) E.J.Palmer & Steyerm. — spaces are a mess
+		expectedEpithet1.setV("Quercus");
+		expectedEpithet2.setV("alba");
+		expectedEpithet3.setV("latiloba");
+		expectedBasionymAuthor.setV("Sarg.");
+		expectedPublishingAuthor.setV("E.J.Palmer & Steyerm.");
+		assertThat(asList(extractor.extractProperties("   Quercus   alba   L.   f.   latiloba   (Sarg.)   E.J.Palmer   &   Steyerm.  ")), hasItems(expectedEpithet1, expectedEpithet2, expectedEpithet3, expectedBasionymAuthor, expectedPublishingAuthor));
+		assertThat(asList(extractor.extractProperties("   Quercus   alba   L.   f.   latiloba   (Sarg.)   E.J.Palmer   &   Steyerm.  ")).size(), equalTo(5));
+	}
 }

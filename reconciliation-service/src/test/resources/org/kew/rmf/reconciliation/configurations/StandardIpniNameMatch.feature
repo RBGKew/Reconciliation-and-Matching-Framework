@@ -61,6 +61,9 @@ Feature: Reconcile against IPNI, using a standard configuration (not to lax, not
 			| 46      | Abrotanellinae H.Rob., G.D.Carr, R.M.King & A.M.Powell          |
 			| 47      | Abesina Neck.                                                   |
 			| 48      | Asteraceae Bercht. & J.Presl                                    |
+			| 49      | Thymelæaceæ                                                     |
+			| 4A      | Gnidia gœtzeana Gilg                                            |
+			| 4B      |   Artemisia   absinthium     L.                                 |
 		Then the results are
 			| queryId | results                                                  | remarks                                                  |
 			| 41      | 1056033-2 179148-1 179151-1 300106-2 60439431-2 926141-1 |                                                          |
@@ -71,3 +74,6 @@ Feature: Reconcile against IPNI, using a standard configuration (not to lax, not
 			| 46      | 999406-1                                                 |                                                          |
 			| 47      | 7368-1                                                   |                                                          |
 			| 48      | 319342-2                                                 |                                                          |
+			| 49      | 50000375-1                                               |                                                          |
+			| 4A      | 831763-1                                                 |                                                          |
+			| 4B      | 179151-1 300106-2                                        |                                                          |
