@@ -93,13 +93,16 @@
 			Otherwise, choose a column unique to each record, like an identifier.
 		</li>
 		<li>
-			Click the column heading, and choose <em>Reconcile</em> → <em>Start
+			<spring:url var="img" value="/img/reconcile-start-reconciling.png" />
+			<img class="aside" src="${img}" alt="" />
+			Click the column menu, and choose <em>Reconcile</em> → <em>Start
 			reconciling…</em>.
 		</li>
-		<li>
+		<li class="clear-aside">
 			If this is the first time you’ve reconciled against a
-			particular service, you will need to click <em>Add Standard
-			Service</em>. Enter the URL from the Reconciliation Service website,
+			particular service, you may need to click <em>Add Standard
+			Service</em>.  (Some services are already included.)
+			Enter the URL from the Reconciliation Service website,
 			for example <code><a href="${reconcileIpniNameUrl}">http://${serverAndPort}${reconcileIpniNameUrl}</a></code>,
 			and click OK.
 		</li>
@@ -112,7 +115,7 @@
 			boxes for <em>Also use relevant details from other columns</em>.
 			The values to fill in come from those listed on the website
 			describing the service (in this case, <code>epithet_1</code>, <code>epithet_2</code>
-			etc).<br />
+			etc, <a href="${aboutIpniNameUrl}#properties}">listed here</a>).<br />
 			<spring:url var="img" value="/img/reconciling-select-properties.png"/>
 			<img src="${img}" alt="" />
 		</li>
@@ -120,26 +123,44 @@
 			Click <em>Start Reconciling</em>
 		</li>
 		<li>
-			Results appear after a while. Where there’s a single
-			possibility it will have been automatically selected. Otherwise,
-			you can select the match using the tick boxes.<br />
 			<spring:url var="img" value="/img/reconciling-results.png"/>
-			<img src="${img}" alt="" /><br/>
-			It’s likely you will receive multiple results where IPNI has
-			duplicate names.  We hope to hide the duplicates from IPNI in the near future.
+			<img class="aside" src="${img}" alt="" />
+			<p>
+				Results appear after a while. Where there’s a single
+				possibility it will have been automatically selected. Otherwise,
+				you can select the match using the tick boxes.
+			</p>
+			<p>
+				It’s likely you will receive multiple results where IPNI has
+				duplicate names.  We hope to hide the duplicates from IPNI in the near future.
+			</p>
 		</li>
-		<li>
+		<li class="clear-aside">
 			If matching hasn’t worked you can also click <em>Search
 			for match</em> and adjust the query.<br />
-			<spring:url var="img" value="/img/reconciling-suggest-entity.png"/>
+			<spring:url var="img" value="/img/reconciling-suggest-entity.png" />
 			<img src="${img}" alt="" />
 		</li>
 		<li>
-			To get the identifiers: click the column, choose <em>Add column based on this column…</em>
-			and use the expression <code>cell.recon.match.id</code>.  To get the name
-			use <code>cell.recon.match.name</code> instead.  This is a GREL expression — see the
-			<a href="https://github.com/OpenRefine/OpenRefine/wiki/GREL-Functions">GREL Functions Documentation</a>
-			for more information.
+			<spring:url var="img" value="/img/add-column-based-on-this-column.png"/>
+			<img class="aside" src="${img}" alt="" />
+			<p>
+				To get the identifiers: click the column’s menu and choose <em>Add column based on this column…</em>.
+			</p>
+			<p class="clear-aside">
+				Then use the expression <code>cell.recon.match.id</code>.
+			</p>
+			<spring:url var="img" value="/img/add-column-cell-recon-match-id.png"/>
+			<img class="clear-aside" src="${img}" alt="" />
+			<p>
+				To get the name
+				use <code>cell.recon.match.name</code> instead.
+			</p>
+			<p>
+				These are GREL expressions — see the
+				<a href="https://github.com/OpenRefine/OpenRefine/wiki/GREL-Functions">GREL Functions Documentation</a>
+				for more information.
+			</p>
 		</li>
 	</ol>
 
