@@ -87,14 +87,22 @@
 				</tr>
 			</table>
 
-			<h4 id="rs-fields"><a href="#fields">Presence or absence of fields</a></h4>
+			<h4 id="rs-fields"><a href="#rs-fields">Presence or absence of fields</a></h4>
 
 			<ul>
 				<li><code>epithet_1</code> is mandatory.</li>
-				<li><code>epithet_2</code> and <code>epithet_3</code>, if present in the query, will be present in all results.  If not in the query only names without a second or third epithet will be returned.</li>
+				<li>
+					<p><code>epithet_2</code> and <code>epithet_3</code>, if present in the query, will be present in all results.  If not in the query only names without a second or third epithet will be returned.</p>
+					<p>For example, if a genus and species are supplied as <code>epithet_1</code> and <code>epithet_3</code>, no infraspecific names will be returned.</p>
+				</li>
 				<li><code>full_name</code> is ignored, it’s there due to a limitation of the software at present.</li>
-				<li>Other fields will be matched (on either side) by a blank field.</li>
+				<li>
+					<p>Other fields will be matched (on either side) by a blank field.</p>
+					<p>For example, if you don’t supply a year then results may or may not include a year.  If you do supply a year then results will either match your year, or won’t contain a year.</p>
+				</li>
 			</ul>
+
+			<h4 id="rs-names-available"><a href="#rs-names-available">Names available</a></h4>
 		]]>
 	</value></constructor-arg></bean>
 

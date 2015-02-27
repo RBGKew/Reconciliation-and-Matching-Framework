@@ -25,7 +25,7 @@
 		<div>${reconciliationConfiguration.description}</div>
 
 		<c:if test="${total != null}">
-			<p>Contains <span class="badge">${total}</span> records.</p>
+			<p>This reconciliation service contains <span class="badge">${total}</span> records.</p>
 		</c:if>
 	</c:if>
 
