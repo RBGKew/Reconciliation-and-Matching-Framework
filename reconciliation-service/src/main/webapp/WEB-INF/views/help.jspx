@@ -39,8 +39,8 @@
 
 	<p>
 		<strong>Users at Kew:</strong> OpenRefine has been installed on the network.  Go to <code>X:\apps\OpenRefine\</code>
-		and double-click <code>refine.bat</code>.  When you have finished, press <em>Control C</em>
-		in the black window that pops up to close the program properly.
+		and double-click <code>OpenRefine.bat</code>.  A black window should pop up, where any technical error messages appear.
+		When you have finished with OpenRefine, click this window and press <em>Control C</em> to close the program properly.
 	</p>
 
 	<p>
