@@ -55,15 +55,19 @@ public class ReconciliationServiceConfiguration extends MatchConfiguration imple
 		reconciliationServiceMetadata.setIdentifierSpace(identifierSpace);
 		reconciliationServiceMetadata.setSchemaSpace(schemaSpace);
 
-		MetadataView metadataView = new MetadataView();
-		metadataView.setUrl(viewUrl);
-		reconciliationServiceMetadata.setView(metadataView);
+		if (viewUrl != null) {
+			MetadataView metadataView = new MetadataView();
+			metadataView.setUrl(viewUrl);
+			reconciliationServiceMetadata.setView(metadataView);
+		}
 
-		MetadataPreview metadataPreview = new MetadataPreview();
-		metadataPreview.setUrl(previewUrl);
-		metadataPreview.setWidth(previewWidth);
-		metadataPreview.setHeight(previewHeight);
-		reconciliationServiceMetadata.setPreview(metadataPreview);
+		if (previewUrl != null) {
+			MetadataPreview metadataPreview = new MetadataPreview();
+			metadataPreview.setUrl(previewUrl);
+			metadataPreview.setWidth(previewWidth);
+			metadataPreview.setHeight(previewHeight);
+			reconciliationServiceMetadata.setPreview(metadataPreview);
+		}
 
 		MetadataSuggestDetails metadataSuggestTypeDetails = new MetadataSuggestDetails();
 		metadataSuggestTypeDetails.setService_url("LOCAL");
