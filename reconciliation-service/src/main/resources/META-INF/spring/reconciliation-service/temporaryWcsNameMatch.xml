@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+
+	<!-- • TEMPORARY WCS NAME MATCH CONFIGURATION • -->
+
+	<bean id="description" class="java.lang.String"><constructor-arg><value>
+		<![CDATA[
+			<p>
+				<strong>Temporary</strong> matching service for the World Checklist.  This is the same as the <a href="IpniName">IpniName</a> one, but uses the "Checklist Flat" database.
+				That means it <em>doesn’t include A to Z names</em>, and only includes generic, specific and infraspecific epithets.  Identifiers returned are from the Checklist, which should
+				be accepted by the WCS MQL service.
+			</p>
+		]]>
+	</value></constructor-arg></bean>
+
+	<!-- WCS Flat datasource for authority data -->
+	<bean id="wcsFlatDatabase" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${ipniflat.database.driverClassName}" />
+		<property name="url" value="jdbc:postgresql://postgres.ad.kew.org:5433/checklistflat" />
+		<property name="username" value="checklistflat" />
+		<property name="password" value="checklistflat" />
+		<property name="defaultAutoCommit" value="false" />
+		<property name="defaultReadOnly" value="true" />
+		<property name="maxIdle" value="0" />
+		<property name="maxWaitMillis" value="10000" />
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+		<property name="timeBetweenEvictionRunsMillis" value="300000" />
+		<property name="minIdle" value="0" />
+		<property name="removeAbandonedTimeout" value="1200" />
+		<property name="removeAbandonedOnMaintenance" value="true" />
+	</bean>
+	<bean id="authorityFromWcsDatabase" class="org.kew.rmf.reconciliation.service.DatabaseCursorRecordReader">
+		<property name="dataSource" ref="wcsFlatDatabase"/>
+		<property name="sql" value="SELECT plant_name_id AS id, rank, genus AS epithet_1, species epithet_2, infraspecific_epithet AS epithet_3, parenthetical_author AS basionym_author, primary_author AS publishing_author, place_of_publication AS publication, volume_and_page AS reference_collation, first_published AS publication_year, nomenclatural_remarks AS name_status, full_name_with_family_b_authors AS full_name FROM checklist_flat_plant;"/>
+		<property name="countSql" value="SELECT COUNT(*) FROM checklist_flat_plant;"/>
+		<property name="fetchSize" value="150000"/>
+	</bean>
+
+	<!-- Transformers -->
+	<bean id="lowercase" class="org.kew.rmf.transformers.LowerCaseTransformer"/>
+	<bean id="stripNonAlphas" class="org.kew.rmf.transformers.StripNonAlphabeticCharactersTransformer" p:replacement=""/>
+	<bean id="epithetTransformer" class="org.kew.rmf.transformers.botany.EpithetTransformer"/>
+	<bean id="fakeHybridSignCleaner" class="org.kew.rmf.transformers.botany.FakeHybridSignCleaner" />
+	<bean id="doubleLettersTransformer" class="org.kew.rmf.transformers.RegexTransformer" p:pattern="(\p{L})\1+" p:replacement="$1"/>
+
+	<bean id="rankTransformer" class="org.kew.rmf.transformers.RegexTransformer" p:pattern="[^\p{L}0-9*]" p:replacement=""/>
+
+	<bean id="removeBracketsTransformer" class="org.kew.rmf.transformers.RegexTransformer" p:pattern="[\(\)]" p:replacement=""/>
+	<bean id="stripInAuthor" class="org.kew.rmf.transformers.authors.StripInAuthorTransformer"/>
+	<bean id="stripExAuthor" class="org.kew.rmf.transformers.authors.StripExAuthorTransformer"/>
+	<bean id="shrunkAuthor" class="org.kew.rmf.transformers.authors.ShrunkAuthors" p:shrinkTo="3"/>
+	<bean id="stripBasionymAuthorTransformer" class="org.kew.rmf.transformers.authors.StripBasionymAuthorTransformer"/>
+	<bean id="stripPublishingAuthorTransformer" class="org.kew.rmf.transformers.authors.StripPublishingAuthorTransformer"/>
+
+	<bean id="stripNonAlphanumerics" class="org.kew.rmf.transformers.StripNonAlphanumericCharactersTransformer"/>
+	<bean id="shrinkTo3Transformer" class="org.kew.rmf.transformers.RegexExtractorTransformer" p:regex="(^| )[^ ]{1,3}"/>
+	<bean id="removeBracketedTextTransformer" class="org.kew.rmf.transformers.RemoveBracketedTextTransformer" />
+	<bean id="romanNumeralTransformer" class="org.kew.rmf.transformers.RomanNumeralTransformer" />
+
+	<bean id="notEmptyToXTransformer" class="org.kew.rmf.transformers.RegexTransformer" p:pattern="^.+$" p:replacement="_X_"/>
+	<bean id="emptyToXTransformer" class="org.kew.rmf.transformers.RegexTransformer" p:pattern="^$" p:replacement="_X_"/>
+	<bean id="notXToBlankTransformer" class="org.kew.rmf.transformers.RegexTransformer" p:pattern="^(?!_X_$).*" p:replacement=""/>
+
+	<!-- Dictionary transformers -->
+	<bean id="rankDictionaryTransformer" class="org.kew.rmf.transformers.DictionaryTransformer">
+		<property name="dictionary">
+			<bean class="org.kew.rmf.utils.CsvDictionary"
+				p:fileDelimiter="&#09;"
+				p:filePath="${dataDir}/dictionaries/rankDictionary.tsv" />
+		</property>
+	</bean>
+
+	<bean id="authorDictionaryTransformer" class="org.kew.rmf.transformers.DictionaryTransformer">
+		<property name="dictionary">
+			<bean class="org.kew.rmf.utils.CsvDictionary"
+				p:fileDelimiter="&#09;"
+				p:filePath="${dataDir}/dictionaries/authorDictionary.tsv" />
+		</property>
+	</bean>
+
+	<bean id="publicationDictionaryTransformer" class="org.kew.rmf.transformers.DictionaryTransformer">
+		<property name="dictionary">
+			<bean class="org.kew.rmf.utils.CsvDictionary"
+				p:fileDelimiter="&#09;"
+				p:filePath="${dataDir}/dictionaries/publication_dictionary.tsv" />
+		</property>
+	</bean>
+
+	<!-- Matchers -->
+	<bean id="exactMatch" class="org.kew.rmf.matchers.ExactMatcher"/>
+	<bean id="commonTokensMatcher" class="org.kew.rmf.matchers.CommonTokensMatcher" p:minRatio="0.5"/>
+	<bean id="alwaysMatch" class="org.kew.rmf.matchers.AlwaysMatchingMatcher"/>
+	<bean id="ld1Match" class="org.kew.rmf.matchers.LevenshteinMatcher" p:maxDistance="1"/>
+
+	<bean id="numberMatcher" class="org.kew.rmf.matchers.NumberMatcher" p:minRatio="0.5"/>
+
+	<util:list id="reporters"/>
+
+	<util:list id="columnProperties">
+		<!-- First epithet -->
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="epithet_1"
+			p:authorityColumnName="epithet_1"
+			p:useInSelect="true"
+			p:matcher-ref="exactMatch"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.125" p:transformer-ref="lowercase"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="3" p:weight="0.125" p:transformer-ref="stripNonAlphas"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="4" p:weight="0.125" p:transformer-ref="doubleLettersTransformer"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="5" p:weight="0.125" p:transformer-ref="epithetTransformer"/>
+				</util:list>
+			</property>
+			<property name="queryTransformers">
+				<util:list id="1">
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.100" p:transformer-ref="lowercase"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="2" p:weight="0.100" p:transformer-ref="fakeHybridSignCleaner"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="3" p:weight="0.100" p:transformer-ref="stripNonAlphas"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="4" p:weight="0.100" p:transformer-ref="doubleLettersTransformer"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="5" p:weight="0.100" p:transformer-ref="epithetTransformer"/>
+				</util:list>
+			</property>
+		</bean>
+
+		<!-- Second epithet -->
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="epithet_2"
+			p:authorityColumnName="epithet_2"
+			p:indexInitial="true"
+			p:useInSelect="true"
+			p:matcher-ref="exactMatch"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.125" p:transformer-ref="lowercase"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="3" p:weight="0.125" p:transformer-ref="stripNonAlphas" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="4" p:weight="0.125" p:transformer-ref="doubleLettersTransformer" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="5" p:weight="0.125" p:transformer-ref="epithetTransformer" />
+				</util:list>
+			</property>
+			<property name="queryTransformers">
+				<util:list id="1">
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.100" p:transformer-ref="lowercase"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="2" p:weight="0.100" p:transformer-ref="fakeHybridSignCleaner" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="3" p:weight="0.100" p:transformer-ref="stripNonAlphas" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="4" p:weight="0.100" p:transformer-ref="doubleLettersTransformer" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="5" p:weight="0.100" p:transformer-ref="epithetTransformer" />
+				</util:list>
+			</property>
+		</bean>
+
+		<!-- Third epithet -->
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="epithet_3"
+			p:authorityColumnName="epithet_3"
+			p:indexInitial="true"
+			p:useInSelect="true"
+			p:matcher-ref="ld1Match"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true"><!-- Change true to false. -->
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.125" p:transformer-ref="lowercase"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="3" p:weight="0.125" p:transformer-ref="stripNonAlphas" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="4" p:weight="0.125" p:transformer-ref="doubleLettersTransformer" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="5" p:weight="0.125" p:transformer-ref="epithetTransformer" />
+				</util:list>
+			</property>
+			<property name="queryTransformers">
+				<util:list id="1">
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.100" p:transformer-ref="lowercase"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="2" p:weight="0.100" p:transformer-ref="fakeHybridSignCleaner" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="3" p:weight="0.100" p:transformer-ref="stripNonAlphas" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="4" p:weight="0.100" p:transformer-ref="doubleLettersTransformer" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="5" p:weight="0.100" p:transformer-ref="epithetTransformer" />
+				</util:list>
+			</property>
+		</bean>
+
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="rank"
+			p:authorityColumnName="rank"
+			p:useInSelect="true"
+			p:matcher-ref="exactMatch"
+			p:blanksMatch="true">
+			<property name="queryTransformers">
+				<util:list id="1">
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.167" p:transformer-ref="lowercase"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="2" p:weight="0.167" p:transformer-ref="rankTransformer"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="3" p:weight="0.166" p:transformer-ref="rankDictionaryTransformer"/>
+				</util:list>
+			</property>
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.167" p:transformer-ref="lowercase"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="2" p:weight="0.167" p:transformer-ref="rankTransformer"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="3" p:weight="0.166" p:transformer-ref="rankDictionaryTransformer"/>
+				</util:list>
+			</property>
+		</bean>
+
+		<!-- Basionym author -->
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="basionym_author"
+			p:authorityColumnName="basionym_author"
+			p:useInSelect="false"
+			p:matcher-ref="commonTokensMatcher"
+			p:blanksMatch="true"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
+			<property name="queryTransformers">
+				<util:list id="1">
+					<!-- Strip publishing author transformer disabled, since it doesn't cope with a basionym without brackets. -->
+					<!--ref bean="stripPublishingAuthorTransformer" /-->
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.100" p:transformer-ref="authorDictionaryTransformer" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="2" p:weight="0.100" p:transformer-ref="stripExAuthor" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="3" p:weight="0.100" p:transformer-ref="stripInAuthor" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="4" p:weight="0.100" p:transformer-ref="shrunkAuthor"/>
+				</util:list>
+			</property>
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<ref bean="removeBracketsTransformer"/><!-- Basionym authors in the database have brackets. -->
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.083" p:transformer-ref="authorDictionaryTransformer" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="2" p:weight="0.083" p:transformer-ref="stripExAuthor" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="3" p:weight="0.083" p:transformer-ref="stripInAuthor" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="4" p:weight="0.083" p:transformer-ref="shrunkAuthor"/>
+				</util:list>
+			</property>
+		</bean>
+
+		<!-- Publishing author -->
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="publishing_author"
+			p:authorityColumnName="publishing_author"
+			p:useInSelect="false"
+			p:matcher-ref="commonTokensMatcher"
+			p:blanksMatch="true"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
+			<property name="queryTransformers">
+				<util:list id="1">
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.100" p:transformer-ref="stripBasionymAuthorTransformer" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="2" p:weight="0.100" p:transformer-ref="authorDictionaryTransformer" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="3" p:weight="0.100" p:transformer-ref="stripExAuthor" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="4" p:weight="0.100" p:transformer-ref="stripInAuthor" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="5" p:weight="0.100" p:transformer-ref="shrunkAuthor"/>
+				</util:list>
+			</property>
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="2" p:weight="0.125" p:transformer-ref="authorDictionaryTransformer" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="3" p:weight="0.125" p:transformer-ref="stripExAuthor" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="4" p:weight="0.125" p:transformer-ref="stripInAuthor" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="5" p:weight="0.125" p:transformer-ref="shrunkAuthor"/>
+				</util:list>
+			</property>
+		</bean>
+
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="publication"
+			p:authorityColumnName="publication"
+			p:matcher-ref="commonTokensMatcher"
+			p:blanksMatch="true">
+			<property name="queryTransformers">
+				<util:list id="1">
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.125" p:transformer-ref="publicationDictionaryTransformer"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="2" p:weight="0.125" p:transformer-ref="removeBracketedTextTransformer"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="3" p:weight="0.125" p:transformer-ref="stripNonAlphanumerics"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="4" p:weight="0.125" p:transformer-ref="shrinkTo3Transformer"/>
+				</util:list>
+			</property>
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.125" p:transformer-ref="publicationDictionaryTransformer"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="2" p:weight="0.125" p:transformer-ref="removeBracketedTextTransformer"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="3" p:weight="0.125" p:transformer-ref="stripNonAlphanumerics"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="4" p:weight="0.125" p:transformer-ref="shrinkTo3Transformer"/>
+				</util:list>
+			</property>
+		</bean>
+
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="collation"
+			p:authorityColumnName="reference_collation"
+			p:matcher-ref="numberMatcher"
+			p:blanksMatch="true">
+			<property name="queryTransformers">
+				<util:list id="1">
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.250" p:transformer-ref="removeBracketedTextTransformer"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="2" p:weight="0.250" p:transformer-ref="romanNumeralTransformer"/>
+				</util:list>
+			</property>
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.250" p:transformer-ref="removeBracketedTextTransformer"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="2" p:weight="0.250" p:transformer-ref="romanNumeralTransformer"/>
+				</util:list>
+			</property>
+		</bean>
+
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="year"
+			p:authorityColumnName="publication_year"
+			p:matcher-ref="numberMatcher"
+			p:blanksMatch="true"/>
+
+		<!--bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="family"
+			p:authorityColumnName="family"
+			p:matcher-ref="AlwaysMatchingMatcher">
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.100" p:transformer-ref="familyDictionaryTransformer"/>
+				</util:list>
+			</property>
+		</bean-->
+
+		<!-- Full name, for output -->
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:authorityColumnName="full_name"
+			p:queryColumnName="full_name"
+			p:useInSelect="false"
+			p:blanksMatch="true"
+			p:matcher-ref="alwaysMatch"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="false">
+		</bean>
+
+		<!-- Name status — just for output -->
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="name_status"
+			p:authorityColumnName="name_status"
+			p:addOriginalAuthorityValue="true"
+			p:matcher-ref="alwaysMatch"
+			p:blanksMatch="true"/>
+	</util:list>
+
+	<bean id="scientificNameToPropertiesConverter" class="org.kew.rmf.reconciliation.queryextractor.ScientificNameToPropertiesConverter" />
+
+	<bean id="reconciliationResultFormat" class="org.kew.rmf.reconciliation.service.resultformatter.ReconciliationResultPropertyFormatter"
+		p:format="%s %s %s %s"
+		p:stripRepeats=" ">
+		<property name="properties">
+			<util:list id="1">
+				<value>full_name</value>
+				<value>publication</value>
+				<value>reference_collation</value>
+				<value>publication_year</value>
+			</util:list>
+		</property>
+	</bean>
+
+	<bean id="config" class="org.kew.rmf.core.configuration.ReconciliationServiceConfiguration"
+		p:name="WcsName"
+		p:description-ref="description"
+		p:authorityRecords-ref="authorityFromWcsDatabase"
+
+		p:properties-ref="columnProperties"
+		p:sortFieldName="id"
+		p:loadReportFrequency="25000"
+		p:assessReportFrequency="1000"
+		p:maxSearchResults="15000"
+		p:recordFilter=""
+		p:maximumLoadErrors="0"
+		p:reuseIndex="true"
+		p:queryStringToPropertiesExtractor-ref="scientificNameToPropertiesConverter"
+		p:reconciliationResultFormatter-ref="reconciliationResultFormat"
+
+		p:title="WCS Name Temporary Reconciliation Service"
+		p:identifierSpace=""
+		p:schemaSpace="http://rdf.freebase.com/ns/type.object.id"
+		p:viewUrl="http://apps.kew.org/wcsp/namedetail.do?name_id={{id}}">
+		<property name="defaultTypes">
+			<util:list id="2">
+				<bean class="org.kew.rmf.refine.domain.metadata.Type"
+					p:id="/biology/organism_classification/scientific_name"
+					p:name="Scientific name"/>
+			</util:list>
+		</property>
+	</bean>
+
+	<!-- import the generic application-context (equal for dedup/match configurations) -->
+	<import resource="classpath:/META-INF/spring/reconciliation-service/generic.xml" />
+	<!-- add the matching-specific bit -->
+	<import resource="classpath:/META-INF/spring/reconciliation-service/match.xml" />
+</beans>
