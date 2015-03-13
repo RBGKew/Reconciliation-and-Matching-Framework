@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.kew.rmf</groupId>
 		<artifactId>reconciliation-and-matching-framework</artifactId>
-		<version>0.2.2-SNAPSHOT</version>
+		<version>0.3.0</version>
 	</parent>
 	<artifactId>matchconf</artifactId>
 	<packaging>war</packaging>
