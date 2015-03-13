@@ -147,6 +147,7 @@
 			p:authorityColumnName="authors"
 			p:useInSelect="false"
 			p:matcher-ref="commonTokensMatcher"
+			p:blanksMatch="true"
 			p:addOriginalAuthorityValue="true"
 			p:addOriginalQueryValue="true"
 			p:addTransformedQueryValue="true"
