@@ -22,16 +22,40 @@ This project was started at the [Royal Botanic Gardens, Kew](http://www.kew.org/
 
 ### Project layout
 
-This is a multi-module Maven project.  It consists of:
+       ╔════════════════╗ ╔═════════════════════════╗
+       ║   Web browser  ║ ║        OpenRefine       ║
+       ╚═══╤═════════╤══╝ ╚═════╤╤╤══════════════╤══╝
+           │         │          │││              │
+           │         │          │││1. Reconcile  │ 2. Extend
+           │         │          │││              │
+           │         │          │││              │
+    ┏━━━━━━┷━━━━━━━┳━┷━━━━━━━━━━┷┷┷━━━━━━━━┓   ╔═╧══════════════╗
+    ┃  MatchConf   ┃Reconciliation Service ┃   ║Kew MQL services║
+    ┃(Expert users)┃ (Match names to IPNI) ┃   ║    e.g TPL     ║
+    ┣━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━┫   ╚════════════════╝
+    ┃Reconciliation and Matching Framework ┃
+    ┃                Core                  ┃
+    ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+    ┃         String transformers          ┃
+    ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-* the deduplicator (incl. the CoreApp): a command-line tool for deduplication
-  and string matching tasks
-* matchconf: a wrapper around the app providing a UI with (persistent)
-  configuration functionality
-* reconciliation-service: a wrapper around the app exposing premade match
-  configurations as [OpenRefine](http://www.openrefine.org/) reconciliation
-  services
+#### Maven submodules:
+
+* rmf-core: previously been referred to as the "Deduplicator" or "Name Matcher".
+  It's a command-line tool for deduplication and string matching tasks.
+* matchconf: provides an expert interface for producing custom matching configurations.
+  It provides a UI with persistent configuration functionality.
+  At present there are no active users.
+* reconciliation-service is a wrapper around the core, exposing pre-made configurations
+  as [OpenRefine](http://www.openrefine.org/) reconciliation services.
+  It's best used through OpenRefine, but also presents a web interface
+  for individual queries and bulk CSV upload.
 * reconciliation-service-model: domain objects for the reconciliation service.
+
+#### External pieces shown above:
+
+* The String Transformers library
+* MQL services
 
 ### Testing
 
