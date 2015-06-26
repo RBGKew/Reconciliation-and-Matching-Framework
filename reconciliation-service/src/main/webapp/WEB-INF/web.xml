@@ -11,6 +11,11 @@
 		<env-entry-value>reconciliation-service</env-entry-value>
 	</env-entry>
 
+	<session-config>
+		<!-- Disables URL-based sessions (no more 'jsessionid' in the URL using Tomcat) -->
+		<tracking-mode>COOKIE</tracking-mode>
+	</session-config>
+
 	<error-page>
 		<location>/error</location>
 	</error-page>
