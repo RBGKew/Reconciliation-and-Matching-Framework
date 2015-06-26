@@ -101,4 +101,24 @@ public class WebInterfaceStepdefs {
 	public void the_matcher_is(List<Map<String,String>> values) throws Throwable {
 		throw new PendingException();
 	}
+
+	@When("^I type in the atomized name details:$")
+	public void i_type_in_the_atomized_name_details(Map<String,String> details) throws Throwable {
+		throw new PendingException();
+	}
+
+	@When("^run the query$")
+	public void run_the_query() throws Throwable {
+		throw new PendingException();
+	}
+
+	@Then("^the results are$")
+	public void the_results_are(Map<String,String> results) throws Throwable {
+		throw new PendingException();
+	}
+
+	@When("^I type in the unatomized name \"(.*?)\"$")
+	public void i_type_in_the_unatomized_name(String arg1) throws Throwable {
+		throw new PendingException();
+	}
 }
