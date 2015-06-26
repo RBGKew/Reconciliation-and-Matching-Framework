@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+
+	<!-- • TEMPORARY EMONOCOT TAXONOMIC INDEX MATCH CONFIGURATION • -->
+
+	<!-- This matches against a backbone taxonomy stored in eMonocot/POWOP/WFO, used for Darwin Core Archive matching. -->
+	<!-- It uses a downloaded file, since the database reader isn't available in this module. -->
+
+	<!-- Darwin Core data -->
+	<bean id="sourcefile" class="java.io.File">
+		<constructor-arg value="/home/mb10kg/GBIF-Specimens-Matching/occurrence.csv" />
+	</bean>
+
+	<!-- eMonocot taxonomy -->
+	<!-- SELECT identifier AS id, taxonRank AS rank, scientificName AS epithet_1, scientificName AS epithet_2, scientificName AS epithet_3, scientificNameAuthorship AS basionym_author, scientificNameAuthorship AS publishing_author, namePublishedInString AS publication, namePublishedInString AS reference_collation, namePublishedInYear AS publication_year, nomenclaturalStatus AS name_status, scientificName + ' ' + scientificNameAuthorship AS full_name FROM taxon; -->
+	<bean id="lookupfile" class="java.io.File">
+		<constructor-arg value="/home/mb10kg/Workspace/deduplicator-framework/reconciliation-service/data/2015-06-16/temporary-worldflora-name-match.csv" />
+	</bean>
+
+	<!-- Transformers -->
+	<bean id="lowercase" class="org.kew.rmf.transformers.LowerCaseTransformer"/>
+	<bean id="stripNonAlphas" class="org.kew.rmf.transformers.StripNonAlphabeticCharactersTransformer" p:replacement=""/>
+	<bean id="epithetTransformer" class="org.kew.rmf.transformers.botany.EpithetTransformer"/>
+	<bean id="fakeHybridSignCleaner" class="org.kew.rmf.transformers.botany.FakeHybridSignCleaner" />
+	<bean id="doubleLettersTransformer" class="org.kew.rmf.transformers.RegexTransformer" p:pattern="(\p{L})\1+" p:replacement="$1"/>
+
+	<bean id="rankTransformer" class="org.kew.rmf.transformers.RegexTransformer" p:pattern="[^\p{L}0-9*]" p:replacement=""/>
+
+	<bean id="removeBracketsTransformer" class="org.kew.rmf.transformers.RegexTransformer" p:pattern="[\(\)]" p:replacement=""/>
+	<bean id="stripInAuthor" class="org.kew.rmf.transformers.authors.StripInAuthorTransformer"/>
+	<bean id="stripExAuthor" class="org.kew.rmf.transformers.authors.StripExAuthorTransformer"/>
+	<bean id="shrunkAuthor" class="org.kew.rmf.transformers.authors.ShrunkAuthors" p:shrinkTo="3"/>
+	<bean id="stripBasionymAuthorTransformer" class="org.kew.rmf.transformers.authors.StripBasionymAuthorTransformer"/>
+	<bean id="stripPublishingAuthorTransformer" class="org.kew.rmf.transformers.authors.StripPublishingAuthorTransformer"/>
+
+	<bean id="stripNonAlphanumerics" class="org.kew.rmf.transformers.StripNonAlphanumericCharactersTransformer"/>
+	<bean id="shrinkTo3Transformer" class="org.kew.rmf.transformers.RegexExtractorTransformer" p:regex="(^| )[^ ]{1,3}"/>
+	<bean id="removeBracketedTextTransformer" class="org.kew.rmf.transformers.RemoveBracketedTextTransformer" />
+	<bean id="romanNumeralTransformer" class="org.kew.rmf.transformers.RomanNumeralTransformer" />
+
+	<bean id="notEmptyToXTransformer" class="org.kew.rmf.transformers.RegexTransformer" p:pattern="^.+$" p:replacement="_X_"/>
+	<bean id="emptyToXTransformer" class="org.kew.rmf.transformers.RegexTransformer" p:pattern="^$" p:replacement="_X_"/>
+	<bean id="notXToBlankTransformer" class="org.kew.rmf.transformers.RegexTransformer" p:pattern="^(?!_X_$).*" p:replacement=""/>
+
+	<bean id="extractEpithet1Transformer" class="org.kew.rmf.transformers.TokenExtractorTransformer" p:index="0"/>
+	<bean id="extractEpithet2Transformer" class="org.kew.rmf.transformers.TokenExtractorTransformer" p:index="1"/>
+	<bean id="extractEpithet3Transformer" class="org.kew.rmf.transformers.TokenExtractorTransformer" p:index="3"/>
+
+	<bean id="extractAuthorsTransformer" class="org.kew.rmf.transformers.RegexTransformer" p:pattern="^[A-Z][^A-Z(]+" p:replacement=""/>
+
+	<!-- Dictionary transformers -->
+	<bean id="rankDictionaryTransformer" class="org.kew.rmf.transformers.DictionaryTransformer">
+		<property name="dictionary">
+			<bean class="org.kew.rmf.utils.CsvDictionary"
+				p:fileDelimiter="&#09;"
+				p:filePath="/home/mb10kg/Workspace/deduplicator-framework/reconciliation-service/dictionaries/rankDictionary.tsv" />
+		</property>
+	</bean>
+
+	<bean id="authorDictionaryTransformer" class="org.kew.rmf.transformers.DictionaryTransformer">
+		<property name="dictionary">
+			<bean class="org.kew.rmf.utils.CsvDictionary"
+				p:fileDelimiter="&#09;"
+				p:filePath="/home/mb10kg/Workspace/deduplicator-framework/reconciliation-service/dictionaries/authorDictionary.tsv" />
+		</property>
+	</bean>
+
+	<bean id="publicationDictionaryTransformer" class="org.kew.rmf.transformers.DictionaryTransformer">
+		<property name="dictionary">
+			<bean class="org.kew.rmf.utils.CsvDictionary"
+				p:fileDelimiter="&#09;"
+				p:filePath="/home/mb10kg/Workspace/deduplicator-framework/reconciliation-service/dictionaries/publication_dictionary.tsv" />
+		</property>
+	</bean>
+
+	<!-- Matchers -->
+	<bean id="exactMatch" class="org.kew.rmf.matchers.ExactMatcher"/>
+	<bean id="commonTokensMatcher" class="org.kew.rmf.matchers.CommonTokensMatcher" p:minRatio="0.5"/>
+	<bean id="alwaysMatch" class="org.kew.rmf.matchers.AlwaysMatchingMatcher"/>
+	<bean id="ld1Match" class="org.kew.rmf.matchers.LevenshteinMatcher" p:maxDistance="1"/>
+
+	<bean id="numberMatcher" class="org.kew.rmf.matchers.NumberMatcher" p:minRatio="0.5"/>
+
+	<util:list id="reporters">
+		<!--bean class="org.kew.rmf.reporters.MatchReporter"
+			p:name="MatchReporter"
+			p:configName="DWC_Match"
+			p:delimiter="&#09;"
+			p:idDelimiter="|">
+			<property name="file">
+				<bean class="java.io.File">
+					<constructor-arg value="/home/mb10kg/GBIF-Specimens-Matching/results-20000.tsv" />
+				</bean>
+			</property>
+		</bean-->
+
+		<bean class="org.kew.rmf.reporters.DarwinCoreArchiveExtensionReporter"
+			p:name="DWCReporter"
+			p:configName="DWC_Match"
+			p:delimiter="&#09;">
+			<property name="file">
+				<bean class="java.io.File">
+					<constructor-arg value="/home/mb10kg/GBIF-Specimens-Matching/output/identifiers.txt" />
+				</bean>
+			</property>
+		</bean>
+	</util:list>
+
+	<util:list id="columnProperties">
+		<!-- First epithet -->
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="genus"
+			p:authorityColumnName="epithet_1"
+			p:useInSelect="true"
+			p:matcher-ref="exactMatch"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<ref bean="extractEpithet1Transformer"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.125" p:transformer-ref="lowercase"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="3" p:weight="0.125" p:transformer-ref="stripNonAlphas"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="4" p:weight="0.125" p:transformer-ref="doubleLettersTransformer"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="5" p:weight="0.125" p:transformer-ref="epithetTransformer"/>
+				</util:list>
+			</property>
+			<property name="queryTransformers">
+				<util:list id="1">
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.100" p:transformer-ref="lowercase"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="2" p:weight="0.100" p:transformer-ref="fakeHybridSignCleaner"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="3" p:weight="0.100" p:transformer-ref="stripNonAlphas"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="4" p:weight="0.100" p:transformer-ref="doubleLettersTransformer"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="5" p:weight="0.100" p:transformer-ref="epithetTransformer"/>
+				</util:list>
+			</property>
+		</bean>
+
+		<!-- Second epithet -->
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="specificEpithet"
+			p:authorityColumnName="epithet_2"
+			p:indexInitial="true"
+			p:useInSelect="true"
+			p:matcher-ref="exactMatch"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<ref bean="extractEpithet2Transformer"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.125" p:transformer-ref="lowercase"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="3" p:weight="0.125" p:transformer-ref="stripNonAlphas" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="4" p:weight="0.125" p:transformer-ref="doubleLettersTransformer" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="5" p:weight="0.125" p:transformer-ref="epithetTransformer" />
+				</util:list>
+			</property>
+			<property name="queryTransformers">
+				<util:list id="1">
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.100" p:transformer-ref="lowercase"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="2" p:weight="0.100" p:transformer-ref="fakeHybridSignCleaner" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="3" p:weight="0.100" p:transformer-ref="stripNonAlphas" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="4" p:weight="0.100" p:transformer-ref="doubleLettersTransformer" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="5" p:weight="0.100" p:transformer-ref="epithetTransformer" />
+				</util:list>
+			</property>
+		</bean>
+
+		<!-- Third epithet -->
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="infraspecificEpithet"
+			p:authorityColumnName="epithet_3"
+			p:indexInitial="true"
+			p:useInSelect="true"
+			p:matcher-ref="ld1Match"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<ref bean="extractEpithet3Transformer"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.125" p:transformer-ref="lowercase"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="3" p:weight="0.125" p:transformer-ref="stripNonAlphas" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="4" p:weight="0.125" p:transformer-ref="doubleLettersTransformer" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="5" p:weight="0.125" p:transformer-ref="epithetTransformer" />
+				</util:list>
+			</property>
+			<property name="queryTransformers">
+				<util:list id="1">
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.100" p:transformer-ref="lowercase"/>
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="2" p:weight="0.100" p:transformer-ref="fakeHybridSignCleaner" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="3" p:weight="0.100" p:transformer-ref="stripNonAlphas" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="4" p:weight="0.100" p:transformer-ref="doubleLettersTransformer" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="5" p:weight="0.100" p:transformer-ref="epithetTransformer" />
+				</util:list>
+			</property>
+		</bean>
+
+		<!-- Basionym author -->
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="scientificName"
+			p:authorityColumnName="basionym_author"
+			p:useInSelect="false"
+			p:matcher-ref="commonTokensMatcher"
+			p:blanksMatch="true"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
+			<property name="queryTransformers">
+				<util:list id="1">
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="0" p:weight="0.000" p:transformer-ref="extractAuthorsTransformer" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.100" p:transformer-ref="stripPublishingAuthorTransformer" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.100" p:transformer-ref="removeBracketsTransformer" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.100" p:transformer-ref="authorDictionaryTransformer" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="2" p:weight="0.100" p:transformer-ref="stripExAuthor" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="3" p:weight="0.100" p:transformer-ref="stripInAuthor" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="4" p:weight="0.100" p:transformer-ref="shrunkAuthor"/>
+				</util:list>
+			</property>
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<ref bean="stripPublishingAuthorTransformer" />
+					<ref bean="removeBracketsTransformer"/><!-- Basionym authors in the database have brackets. -->
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.083" p:transformer-ref="authorDictionaryTransformer" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="2" p:weight="0.083" p:transformer-ref="stripExAuthor" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="3" p:weight="0.083" p:transformer-ref="stripInAuthor" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="4" p:weight="0.083" p:transformer-ref="shrunkAuthor"/>
+				</util:list>
+			</property>
+		</bean>
+
+		<!-- Publishing author -->
+		<bean class="org.kew.rmf.core.configuration.Property"
+			p:queryColumnName="scientificName"
+			p:authorityColumnName="publishing_author"
+			p:useInSelect="false"
+			p:matcher-ref="commonTokensMatcher"
+			p:blanksMatch="true"
+			p:addOriginalAuthorityValue="true"
+			p:addOriginalQueryValue="true">
+			<property name="queryTransformers">
+				<util:list id="1">
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="0" p:weight="0.000" p:transformer-ref="extractAuthorsTransformer" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="1" p:weight="0.100" p:transformer-ref="stripBasionymAuthorTransformer" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="2" p:weight="0.100" p:transformer-ref="authorDictionaryTransformer" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="3" p:weight="0.100" p:transformer-ref="stripExAuthor" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="4" p:weight="0.100" p:transformer-ref="stripInAuthor" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="5" p:weight="0.100" p:transformer-ref="shrunkAuthor"/>
+				</util:list>
+			</property>
+			<property name="authorityTransformers">
+				<util:list id="1">
+					<ref bean="stripBasionymAuthorTransformer" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="2" p:weight="0.125" p:transformer-ref="authorDictionaryTransformer" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="3" p:weight="0.125" p:transformer-ref="stripExAuthor" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="4" p:weight="0.125" p:transformer-ref="stripInAuthor" />
+					<bean class="org.kew.rmf.transformers.WeightedTransformer" p:order="5" p:weight="0.125" p:transformer-ref="shrunkAuthor"/>
+				</util:list>
+			</property>
+		</bean>
+	</util:list>
+
+	<bean id="config" class="org.kew.rmf.core.configuration.MatchConfiguration"
+		p:queryFile-ref="sourcefile"
+		p:queryFileEncoding="UTF8"
+		p:queryFileDelimiter="&#09;"
+		p:queryFileQuoteChar="€"
+		p:authorityFile-ref="lookupfile"
+		p:authorityFileEncoding="UTF8"
+		p:authorityFileDelimiter="&#09;"
+		p:authorityFileQuoteChar="&quot;"
+
+		p:properties-ref="columnProperties"
+		p:sortFieldName="id"
+		p:loadReportFrequency="25000"
+		p:assessReportFrequency="1000"
+		p:maxSearchResults="10000"
+		p:recordFilter=""
+		p:maximumLoadErrors="0"
+		p:reuseIndex="true"
+		
+		p:reporters-ref="reporters"/>
+
+	<bean id="lucene_directory" class="java.lang.String">
+		<constructor-arg value="/tmp/matchconf/lucene_directory/"/>
+	</bean>
+	<!-- import the generic application-context (equal for dedup/match configurations) -->
+	<import resource="classpath*:application-context.xml"/>
+	<!-- add the matching-specific bit -->
+	<import resource="classpath*:application-context-match.xml"/>
+</beans>

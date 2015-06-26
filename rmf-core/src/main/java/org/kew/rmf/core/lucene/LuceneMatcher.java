@@ -57,7 +57,10 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
 
     protected MatchConfiguration matchConfig;
 
-	@Override // from DataHandler
+    long count = 0;
+    long time = System.currentTimeMillis();
+
+    @Override // from DataHandler
 	public void loadData() throws DataLoadException, InterruptedException {
 		this.dataLoader.setConfig(this.getConfig());
 		this.dataLoader.load();
@@ -71,6 +74,11 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
      * @throws MatchExecutionException For other errors finding a match
      */
     public List<Map<String,String>> getMatches(Map<String, String> record) throws TooManyMatchesException, MatchExecutionException {
+        if (++count % 1000 == 0) {
+            logger.warn("{} match queries processed in {}ms", count, System.currentTimeMillis() - time);
+            time = System.currentTimeMillis();
+        }
+
         // pipe everything through to the output where an existing filter evaluates to false;
         try {
             if (!StringUtils.isBlank(config.getRecordFilter()) && !jsEnv.evalFilter(config.getRecordFilter(), record)) {
@@ -115,7 +123,8 @@ public class LuceneMatcher extends LuceneHandler<MatchConfiguration> implements 
             td = queryLucene(querystr, this.getIndexSearcher(), config.getMaxSearchResults());
             if (td.totalHits >= config.getMaxSearchResults()) {
                 logger.info("Error querying Lucene with {} ({}/{})", querystr, td.totalHits, config.getMaxSearchResults());
-                throw new TooManyMatchesException(String.format("%d potential results (maximum is %d) returned for record %s! You should either tweak your config to bring back less possible results making better use of the \"useInSelect\" switch (recommended) or raise the \"maxSearchResults\" number.", td.totalHits, config.getMaxSearchResults(), record));
+                //throw new TooManyMatchesException(String.format("%d potential results (maximum is %d) returned for record %s! You should either tweak your config to bring back less possible results making better use of the \"useInSelect\" switch (recommended) or raise the \"maxSearchResults\" number.", td.totalHits, config.getMaxSearchResults(), record));
+                return null;
             }
             logger.debug("Found {} possible record to assess against {}", td.totalHits, fromId);
         }

@@ -102,6 +102,7 @@ public abstract class Reporter implements AutoCloseable {
             if (this.wantHeader) this.writeHeader();
             this.setStart(false);
         }
+        logger.debug("Reporting record {} with results {}", record, results);
         this.reportResults(record, results);
     }
 
