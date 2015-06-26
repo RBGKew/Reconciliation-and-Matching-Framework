@@ -5,14 +5,14 @@
 	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
 		<withJansi>true</withJansi>
 		<encoder>
-			<pattern>%highlight(%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n)</pattern>
+			<pattern>%highlight(%d %-5level %logger{36} - %msg%n)</pattern>
 		</encoder>
 	</appender>
 
 	<appender name="greenStdout" class="ch.qos.logback.core.ConsoleAppender">
 		<withJansi>true</withJansi>
 		<encoder>
-			<pattern>%green(%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n)</pattern>
+			<pattern>%green(%d %-5level %logger{36} - %msg%n)</pattern>
 		</encoder>
 		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
 			<level>info</level>
