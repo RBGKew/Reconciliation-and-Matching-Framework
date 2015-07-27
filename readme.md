@@ -65,13 +65,6 @@ Some tests in the `reconciliation-service` package connect to databases to check
 
 `mvn clean install -Dipni.database.password=XXX -Dipniflat.database.password=XXX -Dtpl.database.password=XXX`
 
-## Local deployment of matchconf
-The following starts a local server on port 8080.
-
-1. `mvn clean install`
-2. `cd matchconf`
-3. `mvn jetty:deploy-war`
-
 ### Detailed information
 
 Read in the submodules:
