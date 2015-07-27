@@ -6,17 +6,17 @@ For more information on what it does, see the [Kew Reconciliation Services websi
 
 ## Credits
 
-This project was started at the [Royal Botanic Gardens, Kew](http://www.kew.org/) in 2012.  Contributors in chronological order are:
+This project is developed and maintained by the [Biodiversity Informatics team](http://www.kew.org/science-conservation/people-and-data/science-directory/teams/biodiversity-informatics-and-spatial) at the [Royal Botanic Gardens, Kew](http://www.kew.org/). Development started in 2012.  Contributors in chronological order are:
 
-* Nicky Nicolson
-* Nick Black
-* Alecs Geuder
-* The Data Improvement Team:
-	* Anna Lynch
-	* Rachel Witherow
-	* Malin Rivers
-	* Eszter Wainwright-Deri
-* Matthew Blissett (current maintainer)
+* Nicky Nicolson (2012- )
+* Alecs Geuder (2013-14)
+* Matthew Blissett (2014-)
+
+Development and maintenance have been supported by several projects:
+
+* Science and Horticulture Systems project, funded by the UK government (Department for Environment, Food and Rural Affairs). Supported initial development, and a data improvement team (Anna Lynch, Rachel Witherow, Malin Rivers, Eszter Wainwright-Deri). 
+* Medicinal Plant Names Services project, funded by the Wellcome Trust (technical contributions from Nick Black)
+* Plants of the World Online (on-going)
 
 ## Developer information
 
