@@ -11,8 +11,10 @@
 
 	<!-- • TEST CONFIGURATION • Used for cucumber tests • -->
 
+	<bean id="current" class="java.util.Date"/>
+	
 	<bean id="lucene_directory" class="java.lang.String">
-		<constructor-arg value="target/deduplicator" />
+		<constructor-arg value='#{"target/deduplicator-"+current.time}' />
 	</bean>
 
 	<bean id="authorityfile" class="java.io.File">

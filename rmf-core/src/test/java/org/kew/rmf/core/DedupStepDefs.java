@@ -14,6 +14,7 @@ package org.kew.rmf.core;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.Files;
@@ -21,8 +22,11 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.io.FileDeleteStrategy;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cucumber.api.DataTable;
 import cucumber.api.java.After;
@@ -32,7 +36,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
 public class DedupStepDefs {
-	//private final static Logger log = LoggerFactory.getLogger(DedupStepDefs.class);
+	private final static Logger log = LoggerFactory.getLogger(DedupStepDefs.class);
 
 	// define input and output files; like this we make them available as variables for the scope
 	// of all steps in the scenario, but we actually create and delete them in a controlled way
@@ -58,8 +62,24 @@ public class DedupStepDefs {
 
 	@After
 	public void after() throws Exception {
-		FileUtils.deleteDirectory(tempDir.toFile());
-		FileUtils.deleteDirectory(new File("target/deduplicator")); // removes the lucene index after scenario
+		try{
+			// Force a system gc to release lucene files so can delete
+			System.gc();
+			FileDeleteStrategy.FORCE.delete(tempDir.toFile());
+			File dir = new File("target");
+			File [] files = dir.listFiles(new FilenameFilter() {
+			    @Override
+			    public boolean accept(File dir, String name) {
+			        return name.startsWith("deduplicator");
+			    }
+			});
+			for (File indexFile : files) {
+				FileDeleteStrategy.FORCE.delete(indexFile); // removes the lucene index after scenario
+			}
+		}
+		catch(Exception e){
+			log.error("Problem clearing up temp files / lucene index");
+		}
 	}
 
 	private void writeDataTableToFile(DataTable dataTable, Path path) throws Exception {
