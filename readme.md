@@ -61,6 +61,10 @@ This project was started at the [Royal Botanic Gardens, Kew](http://www.kew.org/
 
 `mvn clean test`
 
+Some tests in the `reconciliation-service` package connect to databases to check reconciliation results.  Passwords need to be supplied on the command line:
+
+`mvn clean install -Dipni.database.password=XXX -Dipniflat.database.password=XXX -Dtpl.database.password=XXX`
+
 ## Local deployment of matchconf
 The following starts a local server on port 8080.
 
