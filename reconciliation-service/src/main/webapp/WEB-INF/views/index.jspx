@@ -8,7 +8,7 @@
 	<spring:url var="helpUrl" value="/help"/>
 	<spring:url var="availableConfigurationsUrl" value="/about"/>
 
-	<h1>Kew Reconciliation Services (preview)</h1>
+	<h1>Kew Reconciliation Services</h1>
 
 	<h2>Reconciliation</h2>
 
@@ -22,7 +22,7 @@
 	<p>
 		Kew is exposing some of our data resources through this website to encourage reconciliation
 		against them.  Once reconciled entities can be extended using other data — for
-		example, the taxonomic status of a name, or the grid reference of a specimen.
+		example, the taxonomic status of a name, or the georeference of a specimen.
 		They can also be more easily integrated into portals like <a href="http://emonocot.org/">eMonocot</a>.
 	</p>
 
@@ -39,7 +39,7 @@
 
 	<p>
 		Tools exist to make using the reconciliation service straightforward.  The most user-friendly
-		is <em>Open Refine</em> (previously called <em>Google Refine</em>), which provides
+		is <em>OpenRefine</em> (previously called <em>Google Refine</em>), which provides
 		a spreadsheet interface to reconcile data and extend it using Kew’s resources.
 		See the <a href="${helpUrl}">help page</a> for instructions.
 		Alternatively, <abbr title="comma-separated value">CSV</abbr> files can be uploaded to
@@ -50,8 +50,8 @@
 	<h2>Feedback</h2>
 
 	<p>
-		This is a preview service.  We would appreciate feedback on the interface, usage (with OpenRefine
+		This is a preview service.  We appreciate feedback on the interface, usage (with OpenRefine
 		or otherwise) and quality of the matches produced.
-		Please send any feedback to <a href="mailto:M.Blissett@kew.org?subject=Reconciliation%20service%20preview">Matthew Blissett</a>.
+		Please send any feedback to the <a href="mailto:bi@kew.org?subject=Reconciliation%20service">Biodiversity Informatics team</a>.
 	</p>
 </div>

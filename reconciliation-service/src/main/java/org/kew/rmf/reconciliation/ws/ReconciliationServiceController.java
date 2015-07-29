@@ -505,7 +505,7 @@ public class ReconciliationServiceController {
 		for (Map<String,String> match : matches) {
 			QueryResult res = new QueryResult();
 			res.setId(match.get("id"));
-			// Set match to true if there's only one (which allows Open Refine to autoselect it), false otherwise
+			// Set match to true if there's only one (which allows OpenRefine to autoselect it), false otherwise
 			res.setMatch(matches.size() == 1);
 			// Set score to 100 * match score (which is in range 0..1)
 			res.setScore(100 * Double.parseDouble(match.get(Configuration.MATCH_SCORE)));

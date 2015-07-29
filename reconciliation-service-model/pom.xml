@@ -10,7 +10,7 @@
 
 	<name>OpenRefine Reconciliation Service Domain Model</name>
 	<description>
-		This module provides JavaBeans which represent the query and response objects used in an Open Refine / Google Refine reconciliation call.
+		This module provides JavaBeans which represent the query and response objects used in an OpenRefine / Google Refine reconciliation call.
 		These are annotated to allow conversion to / from JSON.
 		See https://github.com/OpenRefine/OpenRefine/wiki/Reconciliation-Service-API for further details.
 	</description>

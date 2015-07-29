@@ -266,7 +266,7 @@ public class ReconciliationService {
 		if (reconcilationConfig != null) {
 			Metadata metadata = reconcilationConfig.getReconciliationServiceMetadata();
 			if (metadata.getDefaultTypes() == null || metadata.getDefaultTypes().length == 0) {
-				throw new MatchExecutionException("No default type specified, Open Refine 2.6 would fail");
+				throw new MatchExecutionException("No default type specified, OpenRefine 2.6 would fail");
 			}
 			return metadata;
 		}

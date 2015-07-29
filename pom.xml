@@ -7,7 +7,7 @@
 	<packaging>pom</packaging>
 
 	<name>Reconciliation and Matching Framework</name>
-	<url>http://www.kew.org</url>
+	<url>http://data1.kew.org/reconciliation/</url>
 	<description>
 		The Reconciliation and Matching Framework contains string transformations and matchers, both general and specific to taxonomy,
 		a framework to link these together to find matches between strings, a tool to produce configurations

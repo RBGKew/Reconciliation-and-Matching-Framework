@@ -93,7 +93,7 @@
 	<h2 id="endpoints"><a href="#endpoints">Service endpoints</a></h2>
 
 	<ul>
-		<li><strong>Open Refine reconciliation service:</strong> <input type="text" class="form-inline" style="border: none; width: 60%" value="http://${serverAndPort}${reconciliationServiceUrl}"/></li>
+		<li><strong>OpenRefine reconciliation service:</strong> <input type="text" class="form-inline" style="border: none; width: 60%" value="http://${serverAndPort}${reconciliationServiceUrl}"/></li>
 
 		<li><strong>JSON web service:</strong> <input type="text" class="form-inline" style="border: none; width: 60%" value="http://${serverAndPort}${matchServiceUrl}"/></li>
 

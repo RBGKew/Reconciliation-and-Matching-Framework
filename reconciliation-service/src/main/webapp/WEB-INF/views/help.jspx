@@ -27,7 +27,7 @@
 
 	<p>
 		Watch the three introductory videos — these instructions assume some familiarity
-		with Open Refine.  There’s also <a href="http://openrefine.org/documentation.html">written
+		with OpenRefine.  There’s also <a href="http://openrefine.org/documentation.html">written
 		documentation</a>.
 	</p>
 
@@ -45,11 +45,11 @@
 
 	<p>
 		<strong>Users elsewhere:</strong>
-		Open Refine needs Java to run.  If your computer supports it choose 64-bit Java — this allows working
+		OpenRefine needs Java to run.  If your computer supports it choose 64-bit Java — this allows working
 		on larger datasets that consume more memory.
 		A version of OpenRefine including the Kew extension is available
 		<a href="https://github.com/RBGKew/OpenRefine/releases/tag/2.6-beta.1-kew-preview.1">via GitHub</a> (recommended).
-		Alternatively, download Open Refine from <a href="http://openrefine.org/download.html">the download page</a>.
+		Alternatively, download OpenRefine from <a href="http://openrefine.org/download.html">the download page</a>.
 		Choose the development version, currently <code>2.6-beta1</code>.  This does not include the
 		<a href="https://github.com/RBGKew/OpenRefine-Kew-Extension">Kew extension</a>, so
 		the functionality to extend data using The Plant List will not be available.
@@ -62,7 +62,7 @@
 		<code>Quercus alba L.</code> or
 		<code>Quercus alba f. latiloba Sarg.</code>.  Better results can sometimes be obtained with a column
 		for each necessary part (e.g. generic epithet, species epithet, publication title etc).
-		You can use Open Refine to do this — see the videos — or any other program.
+		You can use OpenRefine to do this — see the videos — or any other program.
 	</p>
 
 	<p>
@@ -73,7 +73,7 @@
 	<p>
 		<spring:url var="about" value="/about" />
 		Find the configuration you want to use from the <a href="${about}">list here</a>.
-		Note the two <em>endpoints</em>: the Open Refine reconciliation service, and the
+		Note the two <em>endpoints</em>: the OpenRefine reconciliation service, and the
 		<abbr title="JavaScript Object Notation">JSON</abbr> web service.  These instructions
 		will assume you have a list of plant names and wish to reconcile them against the
 		<spring:url var="aboutIpniNameUrl" value="/about/IpniName" />
@@ -115,7 +115,7 @@
 			boxes for <em>Also use relevant details from other columns</em>.
 			The values to fill in come from those listed on the website
 			describing the service (in this case, <code>epithet_1</code>, <code>epithet_2</code>
-			etc, <a href="${aboutIpniNameUrl}#properties}">listed here</a>).<br />
+			etc, <a href="${aboutIpniNameUrl}#properties">listed here</a>).<br />
 			<spring:url var="img" value="/img/reconciling-select-properties.png"/>
 			<img src="${img}" alt="" />
 		</li>
@@ -167,7 +167,7 @@
 	<h2 id="extending"><a href="#extending">Extending data using the Metaweb Query Language service</a></h2>
 
 	<p>
-		Data that has already been (partially!) reconciled against IPNI and presented through a
+		Data that has been (partially!) reconciled against IPNI and presented through a
 		<em>MQL</em> service can be added to your data.  At present, only some data from
 		<a href="http://www.theplantlist.org/">The Plant List</a> is available in this way.
 	</p>
@@ -175,7 +175,10 @@
 	<ol>
 		<li>
 			Click a reconciled column heading and choose <em>Edit column</em> → <em>Add
-			column by fetching URLs</em>. 
+			column using MQL</em>.
+		</li>
+		<li>
+			Select a service from the list on the left, or add a new one.
 		</li>
 		<li>
 			This shows a list of available properties — choose one or
@@ -183,18 +186,22 @@
 			<spring:url var="img" value="/img/mql-tpl-example.png"/>
 			<img src="${img}" alt="" />
 		</li>
+		<li>
+			The data values are retrieved and added as extra columns.  If they are entities themselves (for example,
+			more plant names) then it’s possible to run further MQL queries from those columns.
+		</li>
 	</ol>
 
 	<h2 id="exporting"><a href="#exporting">Using the results</a></h2>
 
 	<p>
-		You can then export the results into CSV (or other standard formats) using the <em>Export</em> menu.
+		You can then export the results into standard formats, including CSV, using the <em>Export</em> menu.
 	</p>
 
 	<h2 id="troubleshooting"><a href="#troubleshooting">Troubleshooting</a></h2>
 
 	<p>
-		This section will be completed as we discover problems — <a href="mailto:M.Blissett@kew.org?subject=Reconciliation%20service%20preview">please let us know!</a>.
+		This section will be completed as we discover problems — <a href="mailto:bi@kew.org?subject=Reconciliation%20service">please let us know</a>!
 		Allocating more memory may help, refer to the <a href="https://github.com/OpenRefine/OpenRefine/wiki/FAQ:-Allocate-More-Memory">OpenRefine documentation</a> on this.
 	</p>
 

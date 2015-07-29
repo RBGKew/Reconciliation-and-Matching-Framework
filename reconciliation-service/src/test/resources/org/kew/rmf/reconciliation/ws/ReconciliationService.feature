@@ -1,6 +1,6 @@
 # Copyright © 2014 Royal Botanic Gardens, Kew.  See LICENSE.md for details.
 
-Feature: The application exposes reconciliation (matching) functionality as an Open Refine Reconciliation Service.
+Feature: The application exposes reconciliation (matching) functionality as an OpenRefine Reconciliation Service.
 
 	Scenario: Ensure appropriate reconciliation metadata is returned
 		When I query for metadata of the "generalTest" reconciliation service
@@ -305,7 +305,7 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 		And cross-site access is permitted
 
 	Scenario: The Suggest call returns possible reconciliation matches when queried with a prefix.
-		In Open Refine, the result is shown when the user uses the "Search for match" function.
+		In OpenRefine, the result is shown when the user uses the "Search for match" function.
 		When I make the reconciliation suggest query with prefix "Congea villosa Voigt"
 		Then I receive the following match response:
 			"""
@@ -329,7 +329,7 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 		And cross-site access is permitted
 
 	Scenario: The Suggest Flyout returns HTML wrapped in a JSON object when queried with an id.
-		In Open Refine, the HTML is shown when the user "Search for match" function and highlights a result.
+		In OpenRefine, the HTML is shown when the user "Search for match" function and highlights a result.
 		When I make the reconciliation suggest flyout request with id "tro-50269022"
 		Then I receive the following flyout response:
 			"""
@@ -340,7 +340,7 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 		And cross-site access is permitted
 
 	Scenario: The Suggest Type call returns possible types when queried with a prefix.
-		In Open Refine, the result is shown when the user begins typing in the "Reconcile against type" box.
+		In OpenRefine, the result is shown when the user begins typing in the "Reconcile against type" box.
 		When I make the reconciliation suggest type query with prefix "x"
 		Then I receive the following match response:
 			"""
@@ -356,7 +356,7 @@ Feature: The application exposes reconciliation (matching) functionality as an O
 		And cross-site access is permitted
 
 	Scenario: The Suggest Property call returns possible properties when queried with a prefix.
-		In Open Refine, the result is shown when the user begins typing in the "As Property" boxes.
+		In OpenRefine, the result is shown when the user begins typing in the "As Property" boxes.
 		When I make the reconciliation suggest property query with prefix "s"
 		Then I receive the following match response:
 			"""
