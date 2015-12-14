@@ -72,3 +72,5 @@ Read in the submodules:
 * [rmf-core/readme.md](rmf-core/readme.md)
 * [matchconf/readme.md](matchconf/readme.md)
 * [reconciliation-service/readme.md](reconciliation-service/readme.md)
+
+[![Analytics](https://ga-beacon.appspot.com/UA-71369843-1/Reconciliation-and-Matching-Framework/readme.md?pixel)](https://github.com/igrigorik/ga-beacon)
