@@ -31,7 +31,7 @@ public abstract class TokeniserMatcher implements Matcher {
 
 		// if delimiter is blank we want every element to be represented as one item in the array;
 		// however, the first and last element swould be blank, which we correct here.
-		if (this.getDelimiter().isEmpty()) a = Arrays.copyOfRange(a, 1, a.length -1);
+		if (this.getDelimiter().isEmpty()) a = Arrays.copyOfRange(a, 0, a.length -1);
 
 		// remove elements that are too short
 		if (minLength > 0) {

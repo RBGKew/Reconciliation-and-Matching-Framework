@@ -14,7 +14,7 @@ package org.kew.rmf.reconciliation.config;
 
 import java.util.Properties;
 
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.kew.rmf.reconciliation.ws.ReconciliationExceptionResolver;
 import org.perf4j.slf4j.aop.TimingAspect;
 import org.springframework.context.annotation.Bean;

@@ -15,7 +15,7 @@ package org.kew.rmf.refine.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
 import org.junit.Test;
 import org.kew.rmf.refine.domain.metadata.Metadata;

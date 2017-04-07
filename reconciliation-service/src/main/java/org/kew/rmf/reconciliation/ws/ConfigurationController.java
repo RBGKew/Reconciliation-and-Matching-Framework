@@ -22,8 +22,8 @@ import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import org.kew.rmf.core.configuration.Property;
 import org.kew.rmf.core.configuration.ReconciliationServiceConfiguration;
 import org.kew.rmf.matchers.Matcher;

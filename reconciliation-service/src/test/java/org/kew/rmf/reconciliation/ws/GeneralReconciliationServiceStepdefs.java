@@ -19,9 +19,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Map;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-import org.codehaus.jackson.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.kew.rmf.refine.domain.metadata.Metadata;
@@ -70,7 +70,7 @@ public class GeneralReconciliationServiceStepdefs extends WebMvcConfigurationSup
 	private MvcResult result;
 
 	public GeneralReconciliationServiceStepdefs() {
-		mapper.setSerializationInclusion(Inclusion.NON_NULL);
+		mapper.setSerializationInclusion(Include.NON_NULL);
 	}
 
 	@Before

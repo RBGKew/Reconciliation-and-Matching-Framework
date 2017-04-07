@@ -31,7 +31,7 @@
 		<project.build.timestamp>${maven.build.timestamp}</project.build.timestamp>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- versions -->
-		<aspectj.version>1.7.0</aspectj.version>
+		<aspectj.version>1.8.10</aspectj.version>
 		<cglib.version>2.2</cglib.version>
 		<commons-io.version>2.4</commons-io.version>
 		<commons-jexl.version>1.1</commons-jexl.version>
@@ -41,13 +41,13 @@
 		<gbif-name-parser.version>2.4</gbif-name-parser.version>
 		<gson.version>2.2.4</gson.version>
 		<hamcrest-all.version>1.3</hamcrest-all.version>
-		<jackson-mapper.version>1.9.12</jackson-mapper.version>
-		<java.version>7</java.version>
+		<jackson.version>2.8.7</jackson.version>
+		<java.version>8</java.version>
 		<javax.mail.version>1.4</javax.mail.version>
 		<javax.servlet.version>3.0.1</javax.servlet.version>
 		<jsp.api.version>2.1</jsp.api.version>
 		<jstl.api.version>1.2</jstl.api.version>
-		<junit.version>4.11</junit.version>
+		<junit.version>4.12</junit.version>
 		<liquibase.version>3.0.1</liquibase.version>
 		<logback.version>1.0.13</logback.version>
 		<logback-evaluators.version>1.0.4</logback-evaluators.version>
@@ -55,9 +55,9 @@
 		<maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
 		<perf4j.version>0.9.16</perf4j.version>
 		<reflections.version>0.9.9-RC1</reflections.version>
-		<roo.version>1.2.5.RELEASE</roo.version>
+		<roo.version>1.3.2.RELEASE</roo.version>
 		<slf4j.version>1.7.5</slf4j.version>
-		<spring.version>3.2.8.RELEASE</spring.version>
+		<spring.version>4.3.7.RELEASE</spring.version>
 		<string-transformers.version>0.2.0</string-transformers.version>
 		<super-csv.version>2.1.0</super-csv.version>
 	</properties>
@@ -385,9 +385,9 @@
 				<version>2.1</version>
 			</dependency>
 			<dependency>
-				<groupId> org.codehaus.jackson</groupId>
-				<artifactId>jackson-mapper-asl</artifactId>
-				<version>${jackson-mapper.version}</version>
+				<groupId> com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${jackson.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.commons</groupId>
